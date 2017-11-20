@@ -1,0 +1,278 @@
+#!/bin/bash
+
+# Auto temperature control v0019-1.4.1, experimental edits by papampi
+# By Maxximus007
+# for nvOC by fullzero
+
+export DISPLAY=:0
+
+sleep 2
+
+source ~/1bash
+
+# Creating a log file to record restarts
+LOG_FILE="/home/m1/nvoc_logs/6_autotemplog"
+if [ -e "$LOG_FILE" ] ; then
+  #Limit the logfile, just keep the last 2K
+  echo "$( cat $LOG_FILE | grep WARNING | tail -n 2k)" > $LOG_FILE
+fi
+
+
+
+if [ $INDIVIDUAL_POWERLIMIT == "YES" -o $INDIVIDUAL_TARGET_TEMPS == "YES" ]
+then
+  TARGET_TEMP[0]=$TARGET_TEMP_0
+  TARGET_TEMP[1]=$TARGET_TEMP_1
+  TARGET_TEMP[2]=$TARGET_TEMP_2
+  TARGET_TEMP[3]=$TARGET_TEMP_3
+  TARGET_TEMP[4]=$TARGET_TEMP_4
+  TARGET_TEMP[5]=$TARGET_TEMP_5
+  TARGET_TEMP[6]=$TARGET_TEMP_6
+  TARGET_TEMP[7]=$TARGET_TEMP_7
+  TARGET_TEMP[8]=$TARGET_TEMP_8
+  TARGET_TEMP[9]=$TARGET_TEMP_9
+  TARGET_TEMP[10]=$TARGET_TEMP_10
+  TARGET_TEMP[11]=$TARGET_TEMP_11
+  TARGET_TEMP[12]=$TARGET_TEMP_12
+  TARGET_TEMP[13]=$TARGET_TEMP_13
+  TARGET_TEMP[14]=$TARGET_TEMP_14
+  TARGET_TEMP[15]=$TARGET_TEMP_15
+  TARGET_TEMP[16]=$TARGET_TEMP_16
+  TARGET_TEMP[17]=$TARGET_TEMP_17
+  TARGET_TEMP[18]=$TARGET_TEMP_18
+  POWER_LIMIT[0]=$INDIVIDUAL_POWERLIMIT_0
+  POWER_LIMIT[1]=$INDIVIDUAL_POWERLIMIT_1
+  POWER_LIMIT[2]=$INDIVIDUAL_POWERLIMIT_2
+  POWER_LIMIT[3]=$INDIVIDUAL_POWERLIMIT_3
+  POWER_LIMIT[4]=$INDIVIDUAL_POWERLIMIT_4
+  POWER_LIMIT[5]=$INDIVIDUAL_POWERLIMIT_5
+  POWER_LIMIT[6]=$INDIVIDUAL_POWERLIMIT_6
+  POWER_LIMIT[7]=$INDIVIDUAL_POWERLIMIT_7
+  POWER_LIMIT[8]=$INDIVIDUAL_POWERLIMIT_8
+  POWER_LIMIT[9]=$INDIVIDUAL_POWERLIMIT_9
+  POWER_LIMIT[10]=$INDIVIDUAL_POWERLIMIT_10
+  POWER_LIMIT[11]=$INDIVIDUAL_POWERLIMIT_11
+  POWER_LIMIT[12]=$INDIVIDUAL_POWERLIMIT_12
+  POWER_LIMIT[13]=$INDIVIDUAL_POWERLIMIT_13
+  POWER_LIMIT[14]=$INDIVIDUAL_POWERLIMIT_14
+  POWER_LIMIT[15]=$INDIVIDUAL_POWERLIMIT_15
+  POWER_LIMIT[16]=$INDIVIDUAL_POWERLIMIT_16
+  POWER_LIMIT[17]=$INDIVIDUAL_POWERLIMIT_17
+  POWER_LIMIT[18]=$INDIVIDUAL_POWERLIMIT_18
+fi
+
+if [ $INDIVIDUAL_TARGET_TEMPS == "NO" ]
+then
+  TARGET_TEMP[0]=$TARGET_TEMP
+  TARGET_TEMP[1]=$TARGET_TEMP
+  TARGET_TEMP[2]=$TARGET_TEMP
+  TARGET_TEMP[3]=$TARGET_TEMP
+  TARGET_TEMP[4]=$TARGET_TEMP
+  TARGET_TEMP[5]=$TARGET_TEMP
+  TARGET_TEMP[6]=$TARGET_TEMP
+  TARGET_TEMP[7]=$TARGET_TEMP
+  TARGET_TEMP[8]=$TARGET_TEMP
+  TARGET_TEMP[9]=$TARGET_TEMP
+  TARGET_TEMP[10]=$TARGET_TEMP
+  TARGET_TEMP[11]=$TARGET_TEMP
+  TARGET_TEMP[12]=$TARGET_TEMP
+  TARGET_TEMP[13]=$TARGET_TEMP
+  TARGET_TEMP[14]=$TARGET_TEMP
+  TARGET_TEMP[15]=$TARGET_TEMP
+  TARGET_TEMP[16]=$TARGET_TEMP
+  TARGET_TEMP[17]=$TARGET_TEMP
+  TARGET_TEMP[18]=$TARGET_TEMP
+fi
+
+if [ $INDIVIDUAL_POWERLIMIT == "NO" ]
+then
+  POWER_LIMIT[0]=$POWERLIMIT_WATTS
+  POWER_LIMIT[1]=$POWERLIMIT_WATTS
+  POWER_LIMIT[2]=$POWERLIMIT_WATTS
+  POWER_LIMIT[3]=$POWERLIMIT_WATTS
+  POWER_LIMIT[4]=$POWERLIMIT_WATTS
+  POWER_LIMIT[5]=$POWERLIMIT_WATTS
+  POWER_LIMIT[6]=$POWERLIMIT_WATTS
+  POWER_LIMIT[7]=$POWERLIMIT_WATTS
+  POWER_LIMIT[8]=$POWERLIMIT_WATTS
+  POWER_LIMIT[9]=$POWERLIMIT_WATTS
+  POWER_LIMIT[10]=$POWERLIMIT_WATTS
+  POWER_LIMIT[11]=$POWERLIMIT_WATTS
+  POWER_LIMIT[12]=$POWERLIMIT_WATTS
+  POWER_LIMIT[13]=$POWERLIMIT_WATTS
+  POWER_LIMIT[14]=$POWERLIMIT_WATTS
+  POWER_LIMIT[15]=$POWERLIMIT_WATTS
+  POWER_LIMIT[16]=$POWERLIMIT_WATTS
+  POWER_LIMIT[17]=$POWERLIMIT_WATTS
+  POWER_LIMIT[18]=$POWERLIMIT_WATTS
+fi
+
+FAN_ADJUST=$__FAN_ADJUST
+
+sleep 2
+echo ""
+echo "INDIVIDUAL_POWERLIMIT_0:  ${POWER_LIMIT[0]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_1:  ${POWER_LIMIT[1]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_2:  ${POWER_LIMIT[2]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_3:  ${POWER_LIMIT[3]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_4:  ${POWER_LIMIT[4]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_5:  ${POWER_LIMIT[5]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_6:  ${POWER_LIMIT[6]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_7:  ${POWER_LIMIT[7]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_8:  ${POWER_LIMIT[8]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_9:  ${POWER_LIMIT[9]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_10:  ${POWER_LIMIT[10]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_11:  ${POWER_LIMIT[11]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_12:  ${POWER_LIMIT[12]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_13:  ${POWER_LIMIT[13]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_14:  ${POWER_LIMIT[14]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_15:  ${POWER_LIMIT[15]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_16:  ${POWER_LIMIT[16]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_17:  ${POWER_LIMIT[17]}" | tee -a ${LOG_FILE}
+echo "INDIVIDUAL_POWERLIMIT_18:  ${POWER_LIMIT[18]}" | tee -a ${LOG_FILE}
+echo "" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_0: ${TARGET_TEMP[0]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_1: ${TARGET_TEMP[1]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_2: ${TARGET_TEMP[2]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_3: ${TARGET_TEMP[3]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_4: ${TARGET_TEMP[4]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_5: ${TARGET_TEMP[5]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_6: ${TARGET_TEMP[6]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_7: ${TARGET_TEMP[7]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_8: ${TARGET_TEMP[8]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_9: ${TARGET_TEMP[9]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_10: ${TARGET_TEMP[10]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_11: ${TARGET_TEMP[11]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_12: ${TARGET_TEMP[12]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_13: ${TARGET_TEMP[13]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_14: ${TARGET_TEMP[14]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_15: ${TARGET_TEMP[15]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_16: ${TARGET_TEMP[16]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_17: ${TARGET_TEMP[17]}" | tee -a ${LOG_FILE}
+echo "TARGET_TEMP_18: ${TARGET_TEMP[18]}" | tee -a ${LOG_FILE}
+echo "" | tee -a ${LOG_FILE}
+echo "FAN_ADJUST:  $FAN_ADJUST" | tee -a ${LOG_FILE}
+echo "POWER_ADJUST:  $POWER_ADJUST" | tee -a ${LOG_FILE}
+echo "ALLOWED_TEMP_DIFF:  $ALLOWED_TEMP_DIFF" | tee -a ${LOG_FILE}
+echo "RESTORE_POWER_LIMIT:  $RESTORE_POWER_LIMIT" | tee -a ${LOG_FILE}
+echo "MINIMAL_FAN_SPEED:  $MINIMAL_FAN_SPEED" | tee -a ${LOG_FILE}
+echo "" | tee -a ${LOG_FILE}
+sleep 2
+
+# Creating a log file to record restarts for web
+ALERT_LOG_FILE="/home/m1/7_temp_alertlog"
+if [ -e "$ALERT_LOG_FILE" ] ; then
+  #Limit the logfile, just keep the last 2K
+  echo "$( cat $ALERT_LOG_FILE | grep WARNING | tail -n 2k)" > $ALERT_LOG_FILE
+fi
+
+if [ $TELEGRAM_TYPE != "papampi" -o $BaliMiner_TELEGRAM_ALERTS == "NO" ]
+then
+  echo "$(date) - Starting autotemp script." | tee -a ${LOG_FILE}
+fi
+
+if [[ $TELEGRAM_TYPE == "papampi" && $BaliMiner_TELEGRAM_ALERTS == "YES" ]]
+then
+  echo "$(date) - Starting autotemp script." | tee -a ${LOG_FILE}
+fi
+
+GPUS=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
+NVD=nvidia-settings
+SMI="sudo nvidia-smi"
+gpu=0
+
+# Setting persistance mode on, will keep settings in between sessions
+# Have to decide if this is needed - if so, better to move it to oneBash
+#${SMI} -pm 1
+#echo ""
+
+if [ "$MINIMAL_FAN_SPEED" -lt "30" ]
+then
+  MINIMAL_FAN_SPEED=30
+fi
+
+while true
+do
+  sleep 30
+  gpu=0
+  while [ $gpu -lt $GPUS ]
+  do
+    { IFS=', ' read CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $gpu --query-gpu=temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
+    
+    POWERLIMIT=$PWRLIMIT
+    POWERLIMIT=$(echo -n $PWRLIMIT | tail -c -6 | head -c -3 )
+    
+    TEMP_DIFF=$((${TARGET_TEMP[${gpu}]} - $CURRENT_TEMP))
+    NEW_FAN_SPEED=$CURRENT_FAN
+    
+    if [ $TELEGRAM_TYPE != "papampi" -o $BaliMiner_TELEGRAM_ALERTS == "NO" ]
+    then
+      echo "GPU $gpu, Target temp: ${TARGET_TEMP[${gpu}]}, Current: $CURRENT_TEMP, Diff: $TEMP_DIFF, Fan: $CURRENT_FAN, Power: $POWERLIMIT"
+      echo "" #| tee -a ${LOG_FILE}
+    fi
+    
+    if [[ $TELEGRAM_TYPE == "papampi"  ]]
+    then
+      echo "GPU $gpu, Target temp: ${TARGET_TEMP[${gpu}]}, Current: $CURRENT_TEMP, Diff: $TEMP_DIFF, Fan: $CURRENT_FAN, Power: $POWERLIMIT" | tee -a ${LOG_FILE}
+      echo ""
+    fi
+    
+    if [ "$CURRENT_TEMP" -gt "${TARGET_TEMP[${gpu}]}" ]
+    then
+      # This can be far more advanced
+      # for now if difference is more than 5 C multiply adjustement by 2
+      if [ $TEMP_DIFF -lt "-5" ]
+      then
+        FAN_ADJUST_CALCULATED=$(($FAN_ADJUST * 2))
+      else
+        FAN_ADJUST_CALCULATED=$FAN_ADJUST
+      fi
+      NEW_FAN_SPEED=$(($CURRENT_FAN + $FAN_ADJUST_CALCULATED))
+      if [ $NEW_FAN_SPEED -gt 100 ]
+      then
+        NEW_FAN_SPEED=100
+        # Fan speed was already (very close to) 100, so have to drop the power limit a bit
+        echo "WARNING: $(date) - Fan speed was already (very close to) 100, so have to drop the power limit a bit" |  tee -a  ${LOG_FILE} ${ALERT_LOG_FILE}
+        NEW_POWER_LIMIT=$(($POWERLIMIT - $POWER_ADJUST))
+        echo "$(date) - Adjusting Power limit for gpu:$gpu. Old limit: $POWERLIMIT New limit: $NEW_POWER_LIMIT Fan speed: $NEW_FAN_SPEED" | tee -a ${LOG_FILE}  ${ALERT_LOG_FILE}
+        echo ""
+        ${SMI} -i $gpu -pl ${NEW_POWER_LIMIT}
+      fi
+    else
+      # Current temp is lower than target, so we can relax fan speed,
+      # and restore original power limit if applicable
+      if [ $TEMP_DIFF -gt $ALLOWED_TEMP_DIFF ]
+      then
+        # This can be far more advanced too
+        NEW_FAN_SPEED=$(($CURRENT_FAN - $FAN_ADJUST))
+        # Set to minimal fan speed if calculated is below
+        if [ $NEW_FAN_SPEED -lt $MINIMAL_FAN_SPEED ]
+        then
+          NEW_FAN_SPEED=$MINIMAL_FAN_SPEED
+        fi
+        # Restore original power limit when possible using fan speed
+        if [ ${POWER_LIMIT[${gpu}]} -ne $POWERLIMIT ]
+        then
+          if [ $NEW_FAN_SPEED -lt $RESTORE_POWER_LIMIT ]
+          then
+            NEW_POWER_LIMIT=${POWER_LIMIT[${gpu}]}
+            echo "$(date) - Restoring Power limit for gpu:$gpu. Old limit: $POWERLIMIT New limit: $NEW_POWER_LIMIT Fan speed: $NEW_FAN_SPEED" | tee -a ${LOG_FILE} #  ${ALERT_LOG_FILE}
+            echo ""
+            ${SMI} -i $gpu -pl ${NEW_POWER_LIMIT}
+          fi
+        fi
+      fi
+    fi
+    
+    if [ "$NEW_FAN_SPEED" -ne "$CURRENT_FAN" ]
+    then
+      echo "$(date) - Adjusting Fan for gpu:$gpu. Old: $CURRENT_FAN New: $NEW_FAN_SPEED Temp: $CURRENT_TEMP" | tee -a ${LOG_FILE}
+      ${NVD} -a [gpu:${gpu}]/GPUFanControlState=1 -a [fan:${gpu}]/GPUTargetFanSpeed=${NEW_FAN_SPEED}
+    fi
+    
+    let gpu=gpu+1
+  done
+  echo "$(date) - All good, will check again soon"
+  echo ""
+done
+

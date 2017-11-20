@@ -1,0 +1,2365 @@
+#!/bin/bash
+# nvOC v0019-1.4.1 by fullzero , experimental edits by papampi & stubo
+
+source ~/1bash
+
+#########################################################################
+#########################################################################
+#########################################################################
+#########################################################################
+
+echo ""
+echo " nvOC_v0019-1.4.1, experimental edits by papampi & stubo"
+
+IP=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+echo ""
+echo ""
+echo "rig IP: $IP"
+echo ""
+echo ""
+echo "rig MAC: $MAC"
+
+# Default values if not set by 1bash
+# Set Miner Password if unset
+if [ -z ${MINER_PWD+x} ]
+then
+  MINER_PWD="x"
+fi
+# Set EWBF Miner optional arguments if unset
+if [ -z ${EWBF_OPTS+x} ]
+then
+  EWBF_OPTS=""
+fi
+# Set ZM Miner optional arguments if unset
+if [ -z ${ZM_OPTS+x} ]
+then
+  ZM_OPTS=""
+fi
+
+SALFTER="NO"
+
+if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
+then
+  SALFTER="YES"
+fi
+
+if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
+then
+  SALFTER="YES"
+fi
+
+if [ $CLEAR_LOGS_ON_BOOT == "YES" ]
+then
+  sudo bash '/home/m1/clear_logs'
+fi
+
+if [ $LOG_ROTATE == "YES" ]
+then
+  HCD='/home/m1/log_rotate'
+  running=$(ps -ef | awk '$NF~"log_rotate" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r LOG_ROTATE -e "bash /home/m1/log_rotate"
+    running=""
+  fi
+fi
+
+if [ $SALFTER == "NO" ]
+then
+  pkill -e miner
+fi
+
+if [ $LOCALorREMOTE == "REMOTE" ]
+then
+  export DISPLAY=:0
+fi
+
+___1050_or_1050ti="NO"
+
+NORMAL="NO"
+
+P106_100="NO"
+
+nvidia-smi -L > /tmp/tempa
+
+if grep -q "1050" /tmp/tempa;
+then
+  ___1050_or_1050ti="YES"
+fi
+
+if grep -q "1060" /tmp/tempa;
+then
+  NORMAL="YES"
+fi
+
+if grep -q "1070" /tmp/tempa;
+then
+  NORMAL="YES"
+fi
+
+if grep -q "1080" /tmp/tempa;
+then
+  NORMAL="YES"
+fi
+
+if grep -q "1080ti" /tmp/tempa;
+then
+  NORMAL="YES"
+fi
+
+if grep -q "P106-100" /tmp/tempa;
+then
+  ___1050_or_1050ti="YES"
+  P106_100="YES"
+fi
+
+rm /tmp/tempa
+
+XORG="FAIL"
+
+if grep -q "28800" /etc/X11/xorg.conf;
+then
+  XORG="OK"
+fi
+
+if [ $P106_100 == "YES" ]
+then
+  XORG="OK"
+fi
+
+sudo ldconfig /usr/local/cuda/lib64
+if [ $SLOW_USB_KEY_MODE == "YES" ]
+then
+  sleep 6
+fi
+
+if [ $XORG == "FAIL" ]
+then
+  sudo cp '/etc/X11/xorg.conf.backup' '/etc/X11/xorg.conf'
+  echo ''
+  echo "Xorg PROBLEM DETECTED"
+  echo ''
+  echo "Restoring Xorg"
+  echo ''
+  echo "Rebooting in 5"
+  sleep 5
+  sudo reboot
+fi
+
+echo ""
+echo ''
+lspci | grep VGA
+
+if [ $SLOW_USB_KEY_MODE == "YES" ]
+then
+  sleep 6
+fi
+
+echo ""
+echo ''
+nvidia-smi
+echo ""
+
+if [ $SLOW_USB_KEY_MODE == "YES" ]
+then
+  sleep 6
+fi
+
+if [ $USE_ENVIRONMENTAL_VARIBLES == "YES" ]
+then
+  export GPU_FORCE_64BIT_PTR="0"
+  export GPU_MAX_HEAP_SIZE="100"
+  export GPU_USE_SYNC_OBJECTS="1"
+  export GPU_MAX_ALLOC_PERCENT="100"
+  echo ""
+  echo ENVIRONMENTAL VARIBLES SET
+fi
+
+if [ $POWERLIMIT == "YES" ]
+then
+  sudo nvidia-smi -pl $POWERLIMIT_WATTS
+fi
+
+if [ $INDIVIDUAL_POWERLIMIT == "YES" ]
+then
+  sudo nvidia-smi -i 0 -pl $INDIVIDUAL_POWERLIMIT_0
+  sudo nvidia-smi -i 1 -pl $INDIVIDUAL_POWERLIMIT_1
+  sudo nvidia-smi -i 2 -pl $INDIVIDUAL_POWERLIMIT_2
+  sudo nvidia-smi -i 3 -pl $INDIVIDUAL_POWERLIMIT_3
+  sudo nvidia-smi -i 4 -pl $INDIVIDUAL_POWERLIMIT_4
+  sudo nvidia-smi -i 5 -pl $INDIVIDUAL_POWERLIMIT_5
+  sudo nvidia-smi -i 6 -pl $INDIVIDUAL_POWERLIMIT_6
+  sudo nvidia-smi -i 7 -pl $INDIVIDUAL_POWERLIMIT_7
+  sudo nvidia-smi -i 8 -pl $INDIVIDUAL_POWERLIMIT_8
+  sudo nvidia-smi -i 9 -pl $INDIVIDUAL_POWERLIMIT_9
+  sudo nvidia-smi -i 10 -pl $INDIVIDUAL_POWERLIMIT_10
+  sudo nvidia-smi -i 11 -pl $INDIVIDUAL_POWERLIMIT_11
+  sudo nvidia-smi -i 12 -pl $INDIVIDUAL_POWERLIMIT_12
+  sudo nvidia-smi -i 13 -pl $INDIVIDUAL_POWERLIMIT_13
+  sudo nvidia-smi -i 14 -pl $INDIVIDUAL_POWERLIMIT_14
+  sudo nvidia-smi -i 15 -pl $INDIVIDUAL_POWERLIMIT_15
+  sudo nvidia-smi -i 16 -pl $INDIVIDUAL_POWERLIMIT_16
+  sudo nvidia-smi -i 17 -pl $INDIVIDUAL_POWERLIMIT_17
+  sudo nvidia-smi -i 18 -pl $INDIVIDUAL_POWERLIMIT_18
+fi
+
+if [ $TEAMVIEWER == "YES" ]
+then
+  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
+  if [ "$running" == "" ]
+  then
+    sudo teamviewer --daemon enable
+    sleep 2
+    guake -n teamviewer -r teamviewer -e "teamviewer"
+    running=""
+  fi
+fi
+
+if [ $TEAMVIEWER == "NO" ]
+then
+  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
+  if [ "$running" != "" ]
+  then
+    sudo teamviewer --daemon disable
+    sleep 2
+    running=""
+  fi
+fi
+
+if [ $SSH == "YES" ]
+then
+  sudo cp '/etc/init/ssh.conf-on' '/etc/init/ssh.conf'
+fi
+
+if [ $SSH == "NO" ]
+then
+  sudo cp '/etc/init/ssh.conf-off' '/etc/init/ssh.conf'
+fi
+
+if [ $SRR == "YES" ]
+then
+  sleep 2
+  HCD='SRR'
+  running=$(ps -ef | awk '$NF~"SRR" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r SRR -e "bash /home/m1/SRR"
+    running=""
+  fi
+fi
+
+if [ $plusCPU == "YES" ]
+then
+  HCD='/home/m1/cpuOPT/cpuminer'
+  XMRADDR="$XMR_ADDRESS.$XMR_WORKER"
+  echo ""
+  echo ""
+  echo "LAUNCHING:  plusCPU"
+  if [[ `ps -ef |grep cpuminer |grep -v grep |wc -l` -eq 0 ]]
+  then
+    if [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      guake -n $HCD -r plusCPU -e "$HCD -a cryptonight -o stratum+tcp://$XMR_POOL -u $XMRADDR -p $MINER_PWD -t $threadCOUNT"
+    else
+      screen -dmSL plusCPU $HCD -a cryptonight -o stratum+tcp://$XMR_POOL -u $XMRADDR -p $MINER_PWD -t $threadCOUNT
+    fi
+    echo ""
+    echo "plusCPU process in guake terminal Tab (f12)"
+    echo ""
+    running=""
+  fi
+fi
+
+if [ $AUTO_REBOOT == "YES" ]
+then
+  HCD='/home/m1/reboot'
+  running=$(ps -ef | awk '$NF~"reboot" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r AUTO_REBOOT -e "bash /home/m1/reboot"
+    running=""
+  fi
+fi
+
+if [ $BaliMiner_TELEGRAM_ALERTS == "YES" ]
+then
+  HCD='/home/m1/telegram'
+  running=$(ps -ef | awk '$NF~"BaliMiner_TELEGRAM_ALERTS" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r AUTO_GRAM -e "bash /home/m1/BaliMiner_TELEGRAM_ALERTS"
+    running=""
+  fi
+fi
+
+if [ $_Parallax_MODE == "YES" ]
+then
+  HCD='/home/m1/upPASTE'
+  running=$(ps -ef | awk '$NF~"upPASTE" {print $2}')
+  if [ "$running" == "" ]
+  then
+    echo ""
+    echo ""
+    echo "LAUNCHING:  _Parallax_and_lost_post_upPASTE"
+    echo ""
+    echo "process in guake terminal Tab (f12)"
+    echo ""
+    guake -n $HCD -r PX_LP_upPASTE -e "bash /home/m1/upPASTE"
+    running=""
+  fi
+fi
+
+sleep 2
+
+if [ $IAmNotAJeep_and_Maxximus007_WATCHDOG == "YES" ]
+then
+  HCD='/home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG'
+  echo ""
+  echo "LAUNCHING:  IAmNotAJeep_and_Maxximus007_WATCHDOG"
+  sleep 2
+  running=$(ps -ef | awk '$NF~"IAmNotAJeep_and_Maxximus007_WATCHDOG" {print $2}')
+  if [ "$running" == "" ]
+  then
+    if [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      guake -n $HCD -r IJ_M7_WATCHDOG -e "bash $HCD"
+      echo ""
+      echo "process in guake terminal Tab (f12)"
+      echo ""
+      running=""
+    fi
+    if [ $LOCALorREMOTE == "REMOTE" ]
+    then
+      screen -dmS wdog bash /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG
+      echo ""
+      echo "process in screen wdog; attach with: screen -r wdog"
+      echo ""
+      running=""
+    fi
+  fi
+fi
+
+if [ $Maxximus007_AUTO_TEMPERATURE_CONTROL == "YES" ]
+then
+  reup=0
+  running=$(ps -ef | awk '$NF~"Maxximus007_AUTO_TEMPERATURE_CONTROL" {print $2}')
+  
+  if [ "$running" != "" ]
+  then
+    target=$(ps -ef | awk '$NF~"Maxximus007_AUTO_TEMPERATURE_CONTROL" {print $2}')
+    kill $target
+    reup=1
+  fi
+  sleep 2
+  echo ""
+  echo "LAUNCHING:  Maxximus007_AUTO_TEMPERATURE_CONTROL "
+  HCD='/home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL'
+  running=$(ps -ef | awk '$NF~"Maxximus007_AUTO_TEMPERATURE_CONTROL" {print $2}')
+  remote_running=$(ps -ef | awk '$NF~"Maxximus007_AUTO_TEMPERATURE_CONTROL" {print $2}')
+  if [ "$running" == "" ]
+  then
+    if [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      guake -n $HCD -r Maxximus007_AUTO_TEMPERATURE_CONTROL -e "bash /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL"
+      echo ""
+      echo "process in guake terminal Tab (f12)"
+      echo ""
+      running=""
+    fi
+  fi
+  if [ "$remote_running" == "" ]
+  then
+    if [ $LOCALorREMOTE == "REMOTE" ]
+    then
+      screen -dmS temp bash /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL
+      echo ""
+      echo "process in screen temp; attach with: screen -r temp"
+      echo ""
+      remote_running=""
+    fi
+  fi
+fi
+
+if [ "$FAN_SPEED" -lt "40" ]
+then
+  FAN_SPEED=40
+fi
+
+GPUS=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
+
+NVD=nvidia-settings
+
+if [ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]
+then
+  
+  echo ""
+  echo "LAUNCHING:  PAPAMPI_WTM_AUTO_SWITCH "
+  echo ""
+  
+cat <<EOF >/home/m1/WTM.json
+{
+ "WTM_URL": "$WTM_AUTO_SWITCH_URL",
+ "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+ "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
+ "currency":"$WTM_CURRENCY"
+}
+EOF
+  
+  HCD='/home/m1/PAPAMPI_WTM'
+  running=$(ps -ef | awk '$NF~"PAPAMPI_WTM" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r PAPAMPI_WTM_AUTO_SWITCH -e "bash /home/m1/PAPAMPI_WTM"
+    running=""
+  fi
+fi
+
+
+if [[ $PAPAMPI_WTM_PROFIT_INFO == "YES" ]] && [[ $PAPAMPI_WTM_AUTO_SWITCH == "NO" ]]
+then
+  
+  echo ""
+  echo "LAUNCHING:  PAPAMPI_WTM_PROFIT_CHECK "
+  echo ""
+  
+cat <<EOF >/home/m1/WTM.json
+{
+ "WTM_URL": "$WTM_AUTO_SWITCH_URL",
+ "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+ "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
+ "currency":"$WTM_CURRENCY"
+}
+EOF
+  
+  HCD='/home/m1/PAPAMPI_WTM'
+  running=$(ps -ef | awk '$NF~"PAPAMPI_WTM" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r PAPAMPI_WTM_PROFIT_CHECK -e "bash /home/m1/PAPAMPI_PROFIT_CHECK"
+    running=""
+  fi
+fi
+
+
+if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
+then
+  HOSTEDIT="YES"
+  if grep -q "api.nicehash.com" /etc/hosts;
+  then
+    HOSTEDIT="NO"
+  fi
+  
+  if [ $HOSTEDIT == "YES" ]
+  then
+    sudo -- sh -c -e "echo '' >> /etc/hosts";
+    sudo -- sh -c -e "echo '104.20.158.21 api.nicehash.com' >> /etc/hosts";
+    echo UPDATED HOSTS FILE WITH IPv6 FIX
+    echo ""
+    echo ""
+  fi
+  
+  sleep 2
+  cd /home/m1
+  
+  if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
+  then
+    gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13]"
+    
+    mem_clks_daggerhashimoto="[$MEMORY_OVERCLOCK_0,$MEMORY_OVERCLOCK_1,$MEMORY_OVERCLOCK_2,$MEMORY_OVERCLOCK_3,$MEMORY_OVERCLOCK_4,$MEMORY_OVERCLOCK_5,$MEMORY_OVERCLOCK_6,$MEMORY_OVERCLOCK_7,$MEMORY_OVERCLOCK_8,$MEMORY_OVERCLOCK_9,$MEMORY_OVERCLOCK_10,$MEMORY_OVERCLOCK_11,$MEMORY_OVERCLOCK_12,$MEMORY_OVERCLOCK_13]"
+    
+    gpu_clks_equihash=$gpu_clks_daggerhashimoto
+    mem_clks_equihash=$mem_clks_daggerhashimoto
+    gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
+    mem_clks_neoscrypt=$mem_clks_daggerhashimoto
+    gpu_clks_lyra2rev2=$gpu_clks_daggerhashimoto
+    mem_clks_lyra2rev2=$mem_clks_daggerhashimoto
+    gpu_clks_lbry=$gpu_clks_daggerhashimoto
+    mem_clks_lbry=$mem_clks_daggerhashimoto
+  else
+    gpu_clks_daggerhashimoto="$__daggerhashimoto_CORE_OVERCLOCK"
+    mem_clks_daggerhashimoto="$daggerhashimoto_MEMORY_OVERCLOCK"
+    gpu_clks_equihash="$__equihash_CORE_OVERCLOCK"
+    mem_clks_equihash="$equihash_MEMORY_OVERCLOCK"
+    gpu_clks_neoscrypt="$__neoscrypt_CORE_OVERCLOCK"
+    mem_clks_neoscrypt="$neoscrypt_MEMORY_OVERCLOCK"
+    gpu_clks_lyra2rev2="$__lyra2rev2_CORE_OVERCLOCK"
+    mem_clks_lyra2rev2="$lyra2rev2_MEMORY_OVERCLOCK"
+    gpu_clks_lbry="$__lbry_CORE_OVERCLOCK"
+    mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
+  fi
+  
+  if [ "$INDIVIDUAL_POWERLIMIT" == "YES" ]
+  then
+    pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13]"
+    pwr_lim_equihash=$pwr_lim_daggerhashimoto
+    pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
+    pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
+    pwr_lim_lbry=$pwr_lim_daggerhashimoto
+  else
+    pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
+    pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
+    pwr_lim_neoscrypt=$neoscrypt_POWERLIMIT_WATTS
+    pwr_lim_lyra2rev2=$lyra2rev2_POWERLIMIT_WATTS
+    pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
+  fi
+  
+cat <<EOF >/home/m1/conf.json
+{
+ "currency": "$CURRENCY",
+ "pwrcost": $POWER_COST,
+ "min_profit": $MINIMUM_PROFIT,
+ "payment_addr": "$PAYMENT_ADDRESS",
+ "miner_name": "$WORKER_NAME",
+ "performance":
+ {
+   "daggerhashimoto": {
+     "speed": 0.087, "power": 0.397,
+     "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
+     "cmd": "/home/m1/eth/ethminer_12dev2/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
+   },
+   "equihash": {
+     "speed": 0.000001140, "power": 0.397,
+     "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
+     "cmd": "/home/m1/zec/v3_4/miner --eexit 3 --fee 0 --pec --server equihash.usa.nicehash.com --user {ADDR}.{MINER} --pass z --port 3357"
+   },
+   "neoscrypt": {
+     "speed": 0.002160, "power": 0.397,
+     "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
+     "cmd": "/home/m1/KTccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
+   },
+   "lyra2rev2": {
+     "speed": 0.081, "power": 0.386,
+     "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
+     "cmd": "/home/m1/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
+   },
+   "lbry": {
+     "speed": 0.639, "power": 0.392,
+     "power_limit": $pwr_lim_lbry, "gpu_oc": $gpu_clks_lbry, "mem_oc": $mem_clks_lbry, "fan": 0,
+     "cmd": "/home/m1/SPccminer/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
+   }
+ }
+}
+EOF
+  
+  echo "LAUNCHING:  SALFTER_NICEHASH_PROFIT_SWITCHING "
+  echo ""
+  
+  python2.7 '/home/m1/switch' /home/m1/conf.json
+  
+  if [ $LOCALorREMOTE == "LOCAL" ]
+  then
+    guake -n 1 -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
+  fi
+  
+  BITCOIN="theGROUND"
+  
+  while [ $BITCOIN == "theGROUND" ]
+  do
+    echo ""
+    cat current-profit
+    echo ""
+    
+    if [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      guake -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
+      echo ""
+      echo "mining process in Guake Tab"
+      echo ""
+      sleep $PROFIT_CHECK_TIMEOUT
+      python2.7 '/home/m1/switch' /home/m1/conf.json
+    fi
+    
+    if [ $LOCALorREMOTE == "REMOTE" ]
+    then
+      echo "ENTER:"
+      echo ""
+      echo "screen -r miner"
+      echo ""
+      echo "in a terminal to view mining process"
+      sleep $PROFIT_CHECK_TIMEOUT
+      python2.7 '/home/m1/switch' /home/m1/conf.json
+    fi
+  done
+fi
+
+
+if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
+then
+  
+  cd /home/m1
+  
+  if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
+  then
+    gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13]"
+    
+    mem_clks_daggerhashimoto="[$MEMORY_OVERCLOCK_0,$MEMORY_OVERCLOCK_1,$MEMORY_OVERCLOCK_2,$MEMORY_OVERCLOCK_3,$MEMORY_OVERCLOCK_4,$MEMORY_OVERCLOCK_5,$MEMORY_OVERCLOCK_6,$MEMORY_OVERCLOCK_7,$MEMORY_OVERCLOCK_8,$MEMORY_OVERCLOCK_9,$MEMORY_OVERCLOCK_10,$MEMORY_OVERCLOCK_11,$MEMORY_OVERCLOCK_12,$MEMORY_OVERCLOCK_13]"
+    
+    gpu_clks_equihash=$gpu_clks_daggerhashimoto
+    mem_clks_equihash=$mem_clks_daggerhashimoto
+    gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
+    mem_clks_neoscrypt=$mem_clks_daggerhashimoto
+    gpu_clks_lyra2rev2=$gpu_clks_daggerhashimoto
+    mem_clks_lyra2rev2=$mem_clks_daggerhashimoto
+    gpu_clks_lbry=$gpu_clks_daggerhashimoto
+    mem_clks_lbry=$mem_clks_daggerhashimoto
+    __Blake_Vanilla_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Blake_Vanilla_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Cryptonight_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Cryptonight_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Keccak_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Keccak_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Myriad_Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Myriad_Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Qubit_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Qubit_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Scrypt_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Scrypt_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Sia_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Sia_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Skein_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Skein_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __X11_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    X11_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+  else
+    gpu_clks_daggerhashimoto="$__daggerhashimoto_CORE_OVERCLOCK"
+    mem_clks_daggerhashimoto="$daggerhashimoto_MEMORY_OVERCLOCK"
+    gpu_clks_equihash="$__equihash_CORE_OVERCLOCK"
+    mem_clks_equihash="$equihash_MEMORY_OVERCLOCK"
+    gpu_clks_neoscrypt="$__neoscrypt_CORE_OVERCLOCK"
+    mem_clks_neoscrypt="$neoscrypt_MEMORY_OVERCLOCK"
+    gpu_clks_lyra2rev2="$__lyra2rev2_CORE_OVERCLOCK"
+    mem_clks_lyra2rev2="$lyra2rev2_MEMORY_OVERCLOCK"
+    gpu_clks_lbry="$__lbry_CORE_OVERCLOCK"
+    mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
+  fi
+  
+  if [ "$INDIVIDUAL_POWERLIMIT" == "YES" ]
+  then
+    pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13]"
+    pwr_lim_equihash=$pwr_lim_daggerhashimoto
+    pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
+    pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
+    pwr_lim_lbry=$pwr_lim_daggerhashimoto
+    Blake_Vanilla_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Cryptonight_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Keccak_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Myriad_Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Qubit_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Scrypt_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Sia_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Skein_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto5
+  else
+    pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
+    pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
+    pwr_lim_neoscrypt=$neoscrypt_POWERLIMIT_WATTS
+    pwr_lim_lyra2rev2=$lyra2rev2_POWERLIMIT_WATTS
+    pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
+  fi
+  
+cat <<EOF >/home/m1/mph_conf.json
+{
+  "user_name": "$MPH_USERNAME",
+  "miner_name": "$WORKER_NAME",
+  "card_type": "nvidia",
+  "currency": "$CURRENCY",
+  "pwrcost": $POWER_COST,
+  "min_profit": $MINIMUM_PROFIT,
+  "miners":
+  {
+    "Blake-Vanilla":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Blake_Vanilla_POWERLIMIT_WATTS, "gpu_oc": $__Blake_Vanilla_CORE_OVERCLOCK, "mem_oc": $Blake_Vanilla_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 12.3, "power": 0.389
+    },
+    "Cryptonight":
+    {
+      "bin": "/home/m1/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.000002, "power": 0.325
+    },
+    "Equihash":
+    {
+      "bin": "/home/m1/zec/v3_4/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",
+      "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
+      "speed": 0.000001140, "power": 0.397
+    },
+    "Ethash":
+    {
+      "bin": "/home/m1/eth/ethminer_12dev2/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
+      "speed": 0.087, "power": 0.397
+    },
+    "Groestl":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Groestl_CORE_OVERCLOCK, "mem_oc": $Groestl_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.0853, "power": 0.392
+    },
+    "Keccak":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Keccak_POWERLIMIT_WATTS, "gpu_oc": $__Keccak_CORE_OVERCLOCK, "mem_oc": $Keccak_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 1.45, "power": 0.391
+    },
+    "Lyra2RE2":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
+      "speed": 0.081, "power": 0.386
+    },
+    "Myriad-Groestl":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Myriad_Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Myriad_Groestl_CORE_OVERCLOCK, "mem_oc": $Myriad_Groestl_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.158, "power": 0.391
+    },
+    "NeoScrypt":
+    {
+      "bin": "/home/m1/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
+      "speed": 0.002160, "power": 0.397
+    },
+    "Qubit":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Qubit_POWERLIMIT_WATTS, "gpu_oc": $__Qubit_CORE_OVERCLOCK, "mem_oc": $Qubit_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.0509, "power": 0.382
+    },
+    "Scrypt":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Scrypt_POWERLIMIT_WATTS, "gpu_oc": $__Scrypt_CORE_OVERCLOCK, "mem_oc": $Scrypt_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.00224, "power": 0.403
+    },
+    "Sia":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Sia_POWERLIMIT_WATTS, "gpu_oc": $__Sia_CORE_OVERCLOCK, "mem_oc": $Sia_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 3.700, "power": 0.403
+    },
+    "Skein":
+    {
+      "bin": "/home/m1/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Skein_POWERLIMIT_WATTS, "gpu_oc": $__Skein_CORE_OVERCLOCK, "mem_oc": $Skein_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.835, "power": 0.383
+    },
+    "X11":
+    {
+      "bin": "/home/m1/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $X11_POWERLIMIT_WATTS, "gpu_oc": $__X11_CORE_OVERCLOCK, "mem_oc": $X11_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.0327, "power": 0.403
+    }
+  }
+}
+EOF
+  
+  echo "LAUNCHING:  SALFTER_MPH_PROFIT_SWITCHING "
+  echo ""
+  
+  python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+  
+  if [ $LOCALorREMOTE == "LOCAL" ]
+  then
+    guake -n 1 -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
+  fi
+  
+  BITCOIN="theGROUND"
+  
+  while [ $BITCOIN == "theGROUND" ]
+  do
+    echo ""
+    cat current-profit
+    echo ""
+    
+    if [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      guake -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
+      echo ""
+      echo "mining process in Guake Tab"
+      echo ""
+      sleep $PROFIT_CHECK_TIMEOUT
+      python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+    fi
+    
+    if [ $LOCALorREMOTE == "REMOTE" ]
+    then
+      echo "ENTER:"
+      echo ""
+      echo "screen -r miner"
+      echo ""
+      echo "in a terminal to view mining process"
+      sleep $PROFIT_CHECK_TIMEOUT
+      python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+    fi
+  done
+fi
+
+
+if [ $SALFTER == "NO" ]
+then
+  
+  if [ $INDIVIDUAL_CLOCKS == "YES" ]
+  then
+    __CORE_OVERCLOCK[0]=$__CORE_OVERCLOCK_0
+    MEMORY_OVERCLOCK[0]=$MEMORY_OVERCLOCK_0
+    __CORE_OVERCLOCK[1]=$__CORE_OVERCLOCK_1
+    MEMORY_OVERCLOCK[1]=$MEMORY_OVERCLOCK_1
+    __CORE_OVERCLOCK[2]=$__CORE_OVERCLOCK_2
+    MEMORY_OVERCLOCK[2]=$MEMORY_OVERCLOCK_2
+    __CORE_OVERCLOCK[3]=$__CORE_OVERCLOCK_3
+    MEMORY_OVERCLOCK[3]=$MEMORY_OVERCLOCK_3
+    __CORE_OVERCLOCK[4]=$__CORE_OVERCLOCK_4
+    MEMORY_OVERCLOCK[4]=$MEMORY_OVERCLOCK_4
+    __CORE_OVERCLOCK[5]=$__CORE_OVERCLOCK_5
+    MEMORY_OVERCLOCK[5]=$MEMORY_OVERCLOCK_5
+    __CORE_OVERCLOCK[6]=$__CORE_OVERCLOCK_6
+    MEMORY_OVERCLOCK[6]=$MEMORY_OVERCLOCK_6
+    __CORE_OVERCLOCK[7]=$__CORE_OVERCLOCK_7
+    MEMORY_OVERCLOCK[7]=$MEMORY_OVERCLOCK_7
+    __CORE_OVERCLOCK[8]=$__CORE_OVERCLOCK_8
+    MEMORY_OVERCLOCK[8]=$MEMORY_OVERCLOCK_8
+    __CORE_OVERCLOCK[9]=$__CORE_OVERCLOCK_9
+    MEMORY_OVERCLOCK[9]=$MEMORY_OVERCLOCK_9
+    __CORE_OVERCLOCK[10]=$__CORE_OVERCLOCK_10
+    MEMORY_OVERCLOCK[10]=$MEMORY_OVERCLOCK_10
+    __CORE_OVERCLOCK[11]=$__CORE_OVERCLOCK_11
+    MEMORY_OVERCLOCK[11]=$MEMORY_OVERCLOCK_11
+    __CORE_OVERCLOCK[12]=$__CORE_OVERCLOCK_12
+    MEMORY_OVERCLOCK[12]=$MEMORY_OVERCLOCK_12
+    __CORE_OVERCLOCK[13]=$__CORE_OVERCLOCK_13
+    MEMORY_OVERCLOCK[13]=$MEMORY_OVERCLOCK_13
+    __CORE_OVERCLOCK[14]=$__CORE_OVERCLOCK_14
+    MEMORY_OVERCLOCK[14]=$MEMORY_OVERCLOCK_14
+    __CORE_OVERCLOCK[15]=$__CORE_OVERCLOCK_15
+    MEMORY_OVERCLOCK[15]=$MEMORY_OVERCLOCK_15
+    __CORE_OVERCLOCK[16]=$__CORE_OVERCLOCK_16
+    MEMORY_OVERCLOCK[16]=$MEMORY_OVERCLOCK_16
+    __CORE_OVERCLOCK[17]=$__CORE_OVERCLOCK_17
+    MEMORY_OVERCLOCK[17]=$MEMORY_OVERCLOCK_17
+    __CORE_OVERCLOCK[18]=$__CORE_OVERCLOCK_18
+    MEMORY_OVERCLOCK[18]=$MEMORY_OVERCLOCK_18
+  fi
+  
+  if [ $INDIVIDUAL_CLOCKS == "NO" ]
+  then
+    __CORE_OVERCLOCK[0]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[0]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[1]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[1]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[2]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[2]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[3]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[3]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[4]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[4]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[5]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[5]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[6]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[6]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[7]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[7]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[8]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[8]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[9]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[9]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[10]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[10]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[11]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[11]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[12]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[12]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[13]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[13]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[14]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[14]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[15]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[15]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[16]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[16]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[17]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[17]=$MEMORY_OVERCLOCK
+    __CORE_OVERCLOCK[18]=$__CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[18]=$MEMORY_OVERCLOCK
+  fi
+  
+  TI="3"
+  
+  if [ $___1050_or_1050ti == "YES" ]
+  then
+    TI="2"
+    if [ $NORMAL == "YES" ]
+    then
+      TI="2 3"
+    fi
+  fi
+  
+  if [ $SLOW_USB_KEY_MODE == "YES" ]
+  then
+    sleep 6
+  fi
+  
+  
+  if [ $P106_100_FULL_HEADLESS_MODE == "NO" ]
+  then
+    
+    gpu=0
+    while [ $gpu -lt $GPUS ]
+    do
+      for j in $TI
+      do
+        CORE=${__CORE_OVERCLOCK[${gpu}]}
+        MEM=${MEMORY_OVERCLOCK[${gpu}]}
+        ${NVD} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE
+        ${NVD} -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM
+        gpu=$(($gpu+1))
+      done
+    done
+    
+    if [[ $MANUAL_FAN == "YES" && $Maxximus007_AUTO_TEMPERATURE_CONTROL == "NO" ]]
+    then
+      gpu=0
+      while [ $gpu -lt $GPUS ]
+      do
+        ${NVD} -a [gpu:$gpu]/GPUFanControlState=1
+        ${NVD} -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}
+        gpu=$(($gpu+1))
+      done
+    fi
+    
+    if [[ $MANUAL_FAN == "NO" && $Maxximus007_AUTO_TEMPERATURE_CONTROL == "NO" ]]
+    then
+      gpu=0
+      while [ $gpu -lt $GPUS ]
+      do
+        ${NVD} -a [gpu:$gpu]/GPUFanControlState=0
+        gpu=$(($gpu+1))
+      done
+    fi
+  fi
+  
+  UPDATE="YES"
+  
+  if [ $P106_100_FULL_HEADLESS_MODE == "YES" ]
+  then
+    if grep -q "XORG_UPDATED" /home/m1/xorg_flag;
+    then
+      sleep 2
+      UPDATE="NO"
+    fi
+    if [ $UPDATE == "YES" ]
+    then
+      sudo nvidia-xconfig --enable-all-gpus --cool-bits=12
+      cd /home/m1
+      echo XORG_UPDATED > '/home/m1/xorg_flag'
+      sleep 4
+      echo "XORG UPDATED"
+      echo ''
+      echo "Rebooting in 5"
+      echo ''
+      echo "disconnect monitor if connected"
+      sleep 5
+      sudo reboot
+    fi
+    sleep 4
+    ${NVD} -a GPUGraphicsClockOffset[2]=${__CORE_OVERCLOCK}
+    ${NVD} -a GPUMemoryTransferRateOffset[2]=${MEMORY_OVERCLOCK}
+  fi
+  
+  if [ $GPUPowerMizerMode_Adjust == "YES" ]
+  then
+    gpu=0
+    while [ $gpu -lt $GPUS ]
+    do
+      sudo ${NVD} -a [gpu:$gpu]/GPUPowerMizerMode=${GPUPowerMizerMode}
+      gpu=$(($gpu+1))
+    done
+  fi
+  
+  if [ $SLOW_USB_KEY_MODE == "YES" ]
+  then
+    sleep 6
+  fi
+  
+  if [ $LOCALorREMOTE == "REMOTE" ]
+  then
+    echo ""
+    echo "LAUNCHING:  Mining Process"
+    sleep 2
+    echo ""
+    echo "process in screen miner; attach with: screen -r miner"
+    echo ""
+  fi
+  
+  if [ $COIN == "NICE_ETHASH" ]
+  then
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+    then
+      HCD='/home/m1/eth/Genoil-U/ethminer'
+      
+      NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
+      
+      screen -dmSL miner $HCD -SP 2 -S $GENOIL_NICE_ETHASH_POOL -O $NICEADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+    then
+      HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+      
+      NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
+      
+      screen -dmSL miner $HCD -SP 2 -S $GENOIL_NICE_ETHASH_POOL -O $NICEADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+    then
+      
+      HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+      
+      NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
+      
+      screen -dmSL miner $HCD -epool $NICE_ETHASH_POOL -ewal $NICEADDR -epsw x -esm 3 -allpools 1 -estale 0 -dbg -1 $NICE_ETHASH_EXTENSION_ARGUMENTS
+    fi
+  fi
+  
+  if [ $COIN == "ONION" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$ONION_ADDRESS"
+    
+    screen -dmSL miner $HCD -a x13 -o stratum+tcp://$ONION_POOL:$ONION_PORT -u $ADDR -p c=ONION
+  fi
+  
+  if [ $COIN == "SMART" ]
+  then
+    HCD='/home/m1/ASccminer/ccminer'
+    ADDR="$SMART_ADDRESS.$SMART_WORKER"
+    screen -dmSL miner $HCD -a keccak -o stratum+tcp://$SMART_POOL:$SMART_PORT -u $ADDR -p $MINER_PWD -i $SMART_INTENSITY
+  fi
+  
+  if [ $COIN == "BTG" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    BTGADDR="$BTG_ADDRESS.$BTG_WORKER"
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $BTG_POOL --user $BTGADDR --pass $MINER_PWD --port $BTG_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $BTG_POOL --user $BTGADDR --pass $MINER_PWD --port $BTG_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "ZEC" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    ZECADDR="$ZEC_ADDRESS.$ZEC_WORKER"
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $ZEC_POOL --user $ZECADDR --pass $MINER_PWD --port $ZEC_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZEC_POOL --user $ZECADDR --pass $MINER_PWD --port $ZEC_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "ZCL" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    ZCLADDR="$ZCL_ADDRESS.$ZCL_WORKER"
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $ZCL_POOL --user $ZCLADDR --pass $MINER_PWD --port $ZCL_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZCL_POOL --user $ZCLADDR --pass $MINER_PWD --port $ZCL_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "NICE_EQUIHASH" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    NICE_EQUIHASHADDR="$NICE_EQUIHASH_ADDRESS.$NICE_EQUIHASH_WORKER"
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $NICE_EQUIHASH_POOL --user $NICE_EQUIHASHADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $NICE_EQUIHASH_POOL --user $NICE_EQUIHASHADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "BTCZ" ]
+  then
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    BTCZADDR="$BTCZ_ADDRESS.$BTCZ_WORKER"
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $BTCZ_POOL --user $BTCZADDR --pass $MINER_PWD --port $BTCZ_PORT $ZM_OPTS;
+    fi
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $BTCZ_POOL --user $BTCZADDR --pass $MINER_PWD --port $BTCZ_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "KMD" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    KMDADDR="$KMD_ADDRESS.$KMD_WORKER"
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $KMD_POOL --user $KMDADDR --pass $MINER_PWD --port $KMD_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $KMD_POOL --user $KMDADDR --pass $MINER_PWD --port $KMD_PORT $EWBF_OPTS;
+    fi
+  fi
+  if [ $COIN == "ZEN" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    ZENADDR="$ZEN_ADDRESS.$ZEN_WORKER"
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $ZEN_POOL --user $ZENADDR --pass $MINER_PWD --port $ZEN_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZEN_POOL --user $ZENADDR --pass $MINER_PWD --port $ZEN_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "HUSH" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    HUSHADDR="$HUSH_ADDRESS.$HUSH_WORKER"
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $HUSH_POOL --user $HUSHADDR --pass $MINER_PWD --port $HUSH_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $HUSH_POOL --user $HUSHADDR --pass $MINER_PWD --port $HUSH_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "MPH_EQUIHASH" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    MPHADDR="$MPH_USERNAME.$MPH_WORKER"
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $MPH_EQUIHASH_POOL --user $MPHADDR --pass $MINER_PWD --port $MPH_EQUIHASH_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $MPH_EQUIHASH_POOL --user $MPHADDR --pass $MINER_PWD --port $MPH_EQUIHASH_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "ZPOOL_EQUIHASH" ]
+  then
+    
+    if [ $EWBF_VERSION == "3_3" ]
+    then
+      HCD='/home/m1/zec/v3_3/miner'
+    fi
+    
+    if [ $EWBF_VERSION == "3_4" ]
+    then
+      HCD='/home/m1/zec/v3_4/miner'
+    fi
+    
+    if [ $ZM_or_EWBF == "ZM" ]
+    then
+      HCD='/home/m1/zec/zm/latest/zm_miner'
+      screen -dmSL miner $HCD --server $ZPOOL_EQUIHASH_POOL --user $BTC_ADDRESS --pass $ZPOOLPASS --port $ZPOOL_EQUIHASH_PORT $ZM_OPTS;
+    fi
+    
+    if [ $ZM_or_EWBF == "EWBF" ]
+    then
+      screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZPOOL_EQUIHASH_POOL --user $BTC_ADDRESS --pass $ZPOOLPASS --port $ZPOOL_EQUIHASH_PORT $EWBF_OPTS;
+    fi
+  fi
+  
+  if [ $COIN == "ZCOIN" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    
+    ADDR="$ZCOIN_ADDRESS.$ZCOIN_WORKER"
+    
+    screen -dmSL miner $HCD -a lyra2z -o stratum+tcp://$ZCOIN_POOL:$ZCOIN_PORT -u $ADDR -p $MINER_PWD
+  fi
+  
+  if [ $COIN == "BTX" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$BTX_ADDRESS.$BTX_WORKER"
+    
+    screen -dmSL miner $HCD -a timetravel10 -o stratum+tcp://$BTX_POOL:$BTX_PORT -u $ADDR -p $MINER_PWD -i $BTX_INTENSITY
+  fi
+  
+  if [ $COIN == "ZPOOL_LYRA2V2" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    
+    screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$ZPOOL_LYRA2V2_POOL:$ZPOOL_LYRA2V2_PORT -u $BTC_ADDRESS -p $ZPOOLPASS -i $ZPOOL_LYRA2V2_INTENSITY
+  fi
+  
+  if [ $COIN == "ZPOOL_LBRY" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    
+    screen -dmSL miner $HCD -a lbry -o stratum+tcp://$ZPOOL_LBRY_POOL:$ZPOOL_LBRY_PORT -u $BTC_ADDRESS -p $ZPOOLPASS -i $ZPOOL_LBRY_INTENSITY
+  fi
+  
+  if [ $COIN == "ZPOOL_NEOSCRYPT" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    
+    screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$ZPOOL_NEOSCRYPT_POOL:$ZPOOL_NEOSCRYPT_PORT -u $BTC_ADDRESS -p $ZPOOLPASS -i $ZPOOL_NEOSCRYPT_INTENSITY
+  fi
+  
+  if [ $COIN == "ZPOOL_SKEIN" ]
+  then
+    HCD='/home/m1/ASccminer/ccminer'
+    
+    screen -dmSL miner $HCD -a skein -o stratum+tcp://$ZPOOL_SKEIN_POOL:$ZPOOL_SKEIN_PORT -u $BTC_ADDRESS -p $ZPOOLPASS -i $ZPOOL_SKEIN_INTENSITY
+  fi
+  
+  if [ $COIN == "ZPOOL_BLAKE2S" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    
+    screen -dmSL miner $HCD -a blake2s -o stratum+tcp://$ZPOOL_BLAKE2S_POOL:$ZPOOL_BLAKE2S_PORT -u $BTC_ADDRESS -p $ZPOOLPASS -i $ZPOOL_BLAKE2S_INTENSITY
+  fi
+  
+  if [ $COIN == "MONA" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    ADDR="$MONA_ADDRESS.$MONA_WORKER"
+    
+    screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$MONA_POOL:$MONA_PORT -u $ADDR -p $MINER_PWD -i $MONA_INTENSITY
+  fi
+  
+  if [ $COIN == "DMD" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$DMD_ADDRESS.$DMD_WORKER"
+    
+    screen -dmSL miner $HCD -a dmd-gr -o stratum+tcp://$DMD_POOL:$DMD_PORT -u $ADDR -p $MINER_PWD
+  fi
+  
+  if [ $COIN == "GRS" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$GRS_ADDRESS.$GRS_WORKER"
+    
+    screen -dmSL miner $HCD -a groestl -o stratum+tcp://$GRS_POOL:$GRS_PORT -u $ADDR -p $MINER_PWD
+  fi
+  
+  if [ $COIN == "XMY" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$XMY_ADDRESS.$XMY_WORKER"
+    
+    screen -dmSL miner $HCD -a myr-gr -o stratum+tcp://$XMY_POOL:$XMY_PORT -u $ADDR -p $MINER_PWD -i $XMY_INTENSITY
+  fi
+  
+  if [ $COIN == "VTC" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    ADDR="$VTC_ADDRESS.$VTC_WORKER"
+    
+    if [ $VTC_AUTOCONVERT_TO_BTC == "YES" ]
+    then
+      ADDR="$BTC_ADDRESS.$VTC_WORKER"
+      
+      screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$VTC_POOL:$VTC_PORT -u $ADDR -p c=BTC
+    fi
+    if [ $VTC_AUTOCONVERT_TO_BTC == "NO" ]
+    then
+      
+      screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$VTC_POOL:$VTC_PORT -u $ADDR -p c=VTC -i $VTC_INTENSITY
+    fi
+  fi
+  
+  if [ $COIN == "DGB" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$DGB_ADDRESS"
+    
+    if [ $DGB_AUTOCONVERT_TO_BTC == "YES" ]
+    then
+      ADDR="$BTC_ADDRESS"
+      
+      screen -dmSL miner $HCD -a skein -o stratum+tcp://$DGB_POOL:$DGB_PORT -u $ADDR -p c=BTC -i $DGB_INTENSITY
+    fi
+    if [ $DGB_AUTOCONVERT_TO_BTC == "NO" ]
+    then
+      
+      screen -dmSL miner $HCD -a skein -o stratum+tcp://$DGB_POOL:$DGB_PORT -u $ADDR -p c=DGB -i $DGB_INTENSITY
+    fi
+  fi
+  
+  if [ $COIN == "ZPOOL_SKUNK" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$SKUNK_ADDRESS.$SKUNK_WORKER"
+    
+    if [ $SKUNK_AUTOCONVERT_TO_BTC == "YES" ]
+    then
+      ADDR="$BTC_ADDRESS.$SKUNK_WORKER"
+      
+      screen -dmSL miner $HCD -a skunk -o stratum+tcp://$SKUNK_POOL:$SKUNK_PORT -u $ADDR -p $ZPOOLPASS -i $SKUNK_INTENSITY
+    fi
+    
+    if [ $SKUNK_AUTOCONVERT_TO_BTC == "NO" ]
+    then
+      
+      screen -dmSL miner $HCD -a skunk -o stratum+tcp://$SKUNK_POOL:$SKUNK_PORT -u $ADDR -p c=SIGT -i $SKUNK_INTENSITY
+    fi
+  fi
+  
+  if [ $COIN == "LBC" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    ADDR="$LBC_ADDRESS.$LBC_WORKER"
+    
+    screen -dmSL miner $HCD -a lbry -o stratum+tcp://$LBC_POOL:$LBC_PORT -u $ADDR -p $MINER_PWD -i $LBC_INTENSITY
+  fi
+  
+  if [ $COIN == "FTC" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    ADDR="$FTC_ADDRESS.$FTC_WORKER"
+    
+    screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$FTC_POOL:$FTC_PORT -u $ADDR -p $MINER_PWD -i $FTC_INTENSITY
+  fi
+  
+  if [ $COIN == "KRB" ]
+  then
+    HCD='/home/m1/KTccminer-cryptonight/ccminer'
+    ADDR="$KRB_ADDRESS"
+    
+    screen -dmSL miner $HCD -o stratum+tcp://$KRB_POOL:$KRB_PORT -u $ADDR -p $MINER_PWD
+  fi
+  
+  if [ $COIN == "ORB" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$ORB_ADDRESS.$ORB_WORKER"
+    
+    screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$ORB_POOL:$ORB_PORT -u $ADDR -p $MINER_PWD -i $ORB_INTENSITY
+  fi
+  
+  if [ $COIN == "PXC" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$PXC_ADDRESS/$PXC_WORKER"
+    
+    screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$PXC_POOL:$PXC_PORT  -u $ADDR -p $MINER_PWD -i $PXC_INTENSITY
+  fi
+  
+  if [ $COIN == "SIB" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$SIB_ADDRESS.$SIB_WORKER"
+    
+    screen -dmSL miner $HCD -a sib -o stratum+tcp://$SIB_POOL:$SIB_PORT -u $ADDR -p $MINER_PWD -i $SIB_INTENSITY
+  fi
+  if [ $COIN == "SIGT" ]
+  then
+    HCD='/home/m1/TPccminer/ccminer'
+    ADDR="$SIGT_ADDRESS.$SIGT_WORKER"
+    
+    screen -dmSL miner $HCD -a skunk -o stratum+tcp://$SIGT_POOL:$SIGT_PORT -u $ADDR -p $MINER_PWD -i $SIGT_INTENSITY
+  fi
+  
+  if [ $COIN == "XMR" ]
+  then
+    HCD='/home/m1/xmr/stakGPU/bin/xmr-stak-nvidia'
+    ADDR="$XMR_ADDRESS.$XMR_WORKER"
+    
+    GPUS_FOR_XMR=0
+    echo "" > /home/m1/tmp_threads
+    
+    while [ $GPUS_FOR_XMR != $GPUS ]
+    do
+      
+cat <<EOF >>/home/m1/tmp_threads
+{ "index" : $GPUS_FOR_XMR,
+    "threads" : 32, "blocks" : 18,
+    "bfactor" : 8, "bsleep" :  10,
+    "affine_to_cpu" : false,
+  },
+EOF
+      GPUS_FOR_XMR=$(($GPUS_FOR_XMR+1))
+    done
+    
+    THREADS=$(cat /home/m1/tmp_threads)
+    
+cat <<EOF >/home/m1/xmr/stakGPU/bin/config.txt
+
+"gpu_threads_conf" : [
+$THREADS
+],
+
+"use_tls" : false,
+"tls_secure_algo" : true,
+"tls_fingerprint" : "",
+
+"pool_address" : "$XMR_POOL:$XMR_PORT",
+"wallet_address" : "$ADDR",
+"pool_password" : "x",
+
+"call_timeout" : 10,
+"retry_time" : 10,
+"giveup_limit" : 0,
+
+"verbose_level" : 4,
+
+"h_print_time" : 60,
+
+"output_file" : "",
+
+"httpd_port" : 0,
+
+"prefer_ipv4" : true
+EOF
+    
+    cd /home/m1/xmr/stakGPU/bin
+    
+    screen -dmSL miner $HCD
+    
+    rm /home/m1/tmp_threads
+  fi
+  
+  
+  if [ $COIN == "UBQ" ]
+  then
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+    then
+      HCD='/home/m1/eth/Genoil-U/ethminer'
+      
+      UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $UBQ_POOL:$UBQ_PORT -O $UBQADDR:x -SP 1 -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+    then
+      HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+      
+      UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $UBQ_POOL:$UBQ_PORT -O $UBQADDR:x -SP 1 -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+    then
+      
+      HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+      
+      UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQADDR -epsw x -mode 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
+    fi
+  fi
+  
+  if [ $COIN == "ETC" ]
+  then
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+    then
+      HCD='/home/m1/eth/Genoil-U/ethminer'
+      
+      ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $ETC_POOL:$ETC_PORT -O $ETCADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+    then
+      HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+      
+      ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $ETC_POOL:$ETC_PORT -O $ETCADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+    then
+      
+      HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+      
+      ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -mode 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+    fi
+  fi
+  
+  if [ $COIN == "EXP" ]
+  then
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+    then
+      HCD='/home/m1/eth/Genoil-U/ethminer'
+      
+      EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
+      
+      screen -dmSL miner $HCD -S $EXP_POOL:$EXP_PORT -O $EXPADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+    then
+      HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+      
+      EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $EXP_POOL:$EXP_PORT -O $EXPADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+    then
+      
+      HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+      
+      EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
+      
+      screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -mode 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
+    fi
+  fi
+  
+  if [ $COIN == "ETH" ]
+  then
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+    then
+      HCD='/home/m1/eth/Genoil-U/ethminer'
+      
+      ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $ETH_POOL:$ETH_PORT -O $ETHADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+    then
+      HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+      
+      ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $ETH_POOL:$ETH_PORT -O $ETHADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+    then
+      
+      HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+      
+      ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -mode 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
+    fi
+  fi
+  
+  if [ $COIN == "MPH_ETHASH" ]
+  then
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+    then
+      HCD='/home/m1/eth/Genoil-U/ethminer'
+      
+      MPH_ETHASH_ADDR="$MPH_ADDRESS/$MPH_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -O $MPH_ETHASH_ADDR:x -U
+    fi
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+    then
+      HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+      
+      MPH_ETHASH_ADDR="$MPH_ADDRESS/$MPH_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -O $MPH_ETHASH_ADDR:x -U
+    fi
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+    then
+      
+      HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+      
+      MPH_ETHASH_ADDR="$MPH_ADDRESS/$MPH_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -epool $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -ewal $MPH_ETHASH_ADDR -epsw x -mode 1 -dbg -1 $MPH_EXTENSION_ARGUMENTS
+    fi
+  fi
+  
+  if [ $COIN == "MUSIC" ]
+  then
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+    then
+      HCD='/home/m1/eth/Genoil-U/ethminer'
+      
+      MUSICADDR="$MUSIC_ADDRESS.$MUSIC_WORKER"
+      
+      screen -dmSL miner $HCD -S $MUSIC_POOL:$MUSIC_PORT -O $MUSICADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+    then
+      HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+      
+      MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        MUSICADDR="$MUSIC_ADDRESS.$MUSIC_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $MUSIC_POOL:$MUSIC_PORT -O $MUSICADDR:x -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+    then
+      
+      HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+      
+      MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
+      
+      screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -mode 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
+    fi
+  fi
+  
+  if [ $COIN == "SOIL" ]
+  then
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+    then
+      HCD='/home/m1/eth/Genoil-U/ethminer'
+      
+      SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+      
+      screen -dmSL miner $HCD -S $SOIL_POOL:$SOIL_PORT -O $SOILADDR:x -SP 1 -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+    then
+      HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+      
+      SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+      
+      if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+      then
+        SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
+      fi
+      
+      screen -dmSL miner $HCD -S $SOIL_POOL:$SOIL_PORT -O $SOILADDR:x -SP 1 -U
+    fi
+    
+    if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+    then
+      
+      HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+      
+      SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+      
+      screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOILADDR -epsw x -mode 1 -allpools 1 -dbg -1 $SOIL_EXTENSION_ARGUMENTS
+    fi
+  fi
+  
+  if [ $COIN == "DCR" ]
+  then
+    HCD='/home/m1/pasc/sgminer'
+    ADDR="$DCR_ADDRESS.$DCR_WORKER"
+    
+    screen -dmSL miner $HCD -k decred -o stratum+tcp://$DCR_POOL:$DCR_PORT -u $ADDR -p $MINER_PWD -I 21 -w 64 -g2
+  fi
+  
+  if [ $COIN == "PASC" ]
+  then
+    HCD='/home/m1/pasc/sgminer'
+    ADDR="$PASC_ADDRESS..$PASC_WORKER"
+    
+    screen -dmSL miner $HCD -k pascal -o $PASC_POOL:$PASC_PORT -u $ADDR -p $MINER_PWD  -I 21 -w 64 -g2
+  fi
+  
+  if [ $COIN == "PASL" ]
+  then
+    HCD='/home/m1/pasc/sgminer'
+    ADDR="$PASL_ADDRESS..$PASL_WORKER"
+    
+    screen -dmSL miner $HCD -k pascal -o stratum+tcp://$PASL_POOL:$PASL_PORT -u $ADDR -p $MINER_PWD  -I 21 -w 64 -g2
+  fi
+  
+  if [ $COIN == "SIA" ]
+  then
+    HCD='/home/m1/SPccminer/ccminer'
+    SCADDR="$SC_ADDRESS/$SC_WORKER"
+    
+    screen -dmSL miner $HCD -a sia -o $SC_GW_POOL:$SC_GW_PORT -u $SCADDR -p $MINER_PWD
+  fi
+  
+  if [ $COIN == "DUAL_NICEHASH" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETHASH_ADDR="$DUAL_BTC_ADDRESS.$DUAL_WORKER"
+    DCR_ADDR="$DUAL_BTC_ADDRESS.$DUAL_WORKER"
+    
+    screen -dmSL miner $HCD -epool $DUAL_ETHASH_POOL -ewal $ETHASH_ADDR -epsw x -allcoins 1 -allpools 1 -dpool $DUAL_DCR_POOL -dwal $DCR_ADDR -dpsw x $DUAL_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETC_DCR" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+    fi
+    
+    DADDR="$DCR_ADDRESS.$DCR_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETC_PASC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+    fi
+    
+    ADDR="$PASC_ADDRESS..$PASC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETC_PASL" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+    fi
+    
+    ADDR="$PASL_ADDRESS..$PASL_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETC_LBC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+    fi
+    
+    ADDR="$LBC_ADDRESS.$LBC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETC_SC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+    fi
+    
+    SCADDR="$SC_ADDRESS/$SC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_EXP_DCR" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
+    DADDR="$DCR_ADDRESS.$DCR_WORKER"
+    
+    screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dcoin drc -allcoins 1 -allpools 1 -dpsw x $EXP_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_EXP_PASC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
+    ADDR="$PASC_ADDRESS..$PASC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_EXP_PASL" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
+    ADDR="$PASL_ADDRESS..$PASL_WORKER"
+    
+    screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_EXP_LBC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
+    ADDR="$LBC_ADDRESS.$LBC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_EXP_SC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
+    SCADDR="$SC_ADDRESS/$SC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_MUSIC_DCR" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
+    DADDR="$DCR_ADDRESS.$DCR_WORKER"
+    
+    screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_MUSIC_PASC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
+    ADDR="$PASC_ADDRESS..$PASC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_MUSIC_PASL" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
+    ADDR="$PASL_ADDRESS..$PASL_WORKER"
+    
+    screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_MUSIC_LBC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
+    ADDR="$LBC_ADDRESS.$LBC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_MUSIC_SC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
+    SCADDR="$SC_ADDRESS/$SC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETH_DCR" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+    fi
+    
+    DADDR="$DCR_ADDRESS.$DCR_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETH_PASC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+    fi
+    
+    ADDR="$PASC_ADDRESS..$PASC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETH_PASL" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+    fi
+    
+    ADDR="$PASL_ADDRESS..$PASL_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETH_LBC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+    fi
+    
+    ADDR="$LBC_ADDRESS.$LBC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_ETH_SC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+    fi
+    
+    SCADDR="$SC_ADDRESS/$SC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_SOIL_DCR" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
+    fi
+    
+    DADDR="$DCR_ADDRESS.$DCR_WORKER"
+    
+    screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $SOIL_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_SOIL_PASC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
+    fi
+    
+    ADDR="$PASC_ADDRESS..$PASC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dcoin pasc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_SOIL_PASL" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
+    fi
+    
+    ADDR="$PASL_ADDRESS..$PASL_WORKER"
+    
+    screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dcoin pasc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_SOIL_LBC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
+    fi
+    
+    ADDR="$LBC_ADDRESS.$LBC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_SOIL_SC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
+    fi
+    
+    SCADDR="$SC_ADDRESS/$SC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_UBQ_DCR" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+    fi
+    
+    DADDR="$DCR_ADDRESS.$DCR_WORKER"
+    
+    screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_UBQ_PASC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+    fi
+    
+    ADDR="$PASC_ADDRESS..$PASC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_UBQ_PASL" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+    fi
+    
+    ADDR="$PASL_ADDRESS..$PASL_WORKER"
+    
+    screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_UBQ_LBC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+    fi
+    
+    ADDR="$LBC_ADDRESS.$LBC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
+  fi
+  
+  if [ $COIN == "DUAL_UBQ_SC" ]
+  then
+    
+    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    
+    UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+    
+    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+    then
+      UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+    fi
+    
+    SCADDR="$SC_ADDRESS/$SC_WORKER"
+    
+    screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
+  fi
+fi
+
+# Show Miner if local
+if [ $LOCALorREMOTE == "LOCAL" ]
+then
+  if [[ `screen -ls |grep miner |wc -l` -gt 0 ]]
+  then
+    screen -r miner
+  fi
+fi
+
+# Infinite Loop
+while true
+do
+  sleep 60
+done
