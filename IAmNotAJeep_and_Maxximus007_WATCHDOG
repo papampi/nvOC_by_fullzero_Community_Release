@@ -1,0 +1,202 @@
+#!/bin/bash
+
+# Miner restart script v0019-1.4.1, experimental edits by papampi & stubo
+# By Maxximus007 && IAmNotAJeep
+# for nvOC by fullzero
+
+export DISPLAY=:0
+# Log file to record wdog in tmpfs
+LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
+if [ -e "$LOG_FILE" ] ; then
+  #Limit the logfile, just keep the last 2K
+  echo "$(cat $LOG_FILE | grep WARNING | grep -v LAST | tail -n 2k | ts "LAST ")" > $LOG_FILE
+fi
+
+# Alert log file to record and keep problems after reboot
+ALERT_LOG_FILE="/home/m1/7_wdog_alertlog"
+if [ -e "$ALERT_LOG_FILE" ] ; then
+  #Limit the logfile, just keep the last 2K
+  echo "$( cat $ALERT_LOG_FILE | grep WARNING | grep -v LAST | tail -n 2k | ts "LAST ")" > $ALERT_LOG_FILE
+fi
+
+echo "$(date) - Starting miner restart script." | tee -a ${LOG_FILE}
+echo "" #| tee -a ${LOG_FILE}
+sleep 2
+bash '/home/m1/telegram'
+# Give oneBash time to start to prevent reboot
+echo "$(date) - waiting 70 seconds before going 'on watch'"
+sleep 60
+THRESHOLD=90
+RESTART=0
+GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
+COUNT=$((6 * $GPU_COUNT))
+#reinit=6
+while true
+do
+  #If WTM_AUTO_SWITCH python script stucked and running time is more than 30 Sec kill it
+  source /home/m1/1bash
+  if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ]
+  then
+    WTM_A_S_PID=`ps -ef | grep WTM_AUTO_SWITCH | grep -v grep |awk '{print $2}'`
+    if  [[  -n "$WTM_A_S_PID"  ]]
+    then
+      WTM_A_S_PID_TIME=`ps -eo pid,etimes | grep $WTM_A_S_PID | awk  '$2> 30 { print $1}'` 2>&1
+      if  [[  -n "$WTM_A_S_PID_TIME"  ]]
+      then
+        echo "WARNING: $(date) - WTM python sync was stucked, Killed it" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        ps -eo pid,etimes | grep `pgrep -f WTM_AUTO_SWITCH` | awk  '$2> 30 { print $1}'  | xargs kill -9
+      fi
+    fi
+  fi
+  
+  # Delay before checking GPU status/usage
+  sleep 10
+  #IAmNotAJeep MOD from V002
+  JEEP=0
+  #IAmNotAJeep MOD from V002
+  GPU=0
+  REBOOTRESET=$(($REBOOTRESET + 1))
+  
+  #IAmNotAJeep MOD from V002
+  echo ""
+  echo "      GPU_COUNT: " $GPU_COUNT # | tee -a ${LOG_FILE}
+  #IAmNotAJeep MOD from V002
+  UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
+  echo ""
+  echo "GPU UTILIZATION: " $UTILIZATIONS # | tee -a ${LOG_FILE}
+  echo ""
+  numtest='^[0-9]+$'
+  for UTIL in $UTILIZATIONS
+  do
+    if ! [[ $UTIL =~ $numtest ]]
+    then
+      # Not numeric so: Help we've lost a GPU, so reboot
+      echo "WARNING: $(date) - Lost GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      echo "" #| tee -a ${LOG_FILE}
+      #Hope PCI BUS info will help find the faulty GPU
+      nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      echo "WARNING: $(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      echo ""
+      bash '/home/m1/telegram'
+      sleep 10
+      sudo reboot
+    fi
+    
+    # If utilization is lower than threshold count them:
+    if [ $UTIL -lt $THRESHOLD ]
+    then
+      echo "WARNING: $(date) - GPU under threshold found - GPU UTILIZATION: " $UTILIZATIONS  | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      echo ""
+      COUNT=$(($COUNT - 1))
+      #IAmNotAJeep MOD from V002
+      JEEP=$(($JEEP + 1))
+      #IAmNotAJeep MOD from V002
+    fi
+    GPU=$(($GPU + 1))
+  done
+  #IAmNotAJeep MOD from V002
+  if [ $JEEP -gt 0 ]
+  then
+    # Look for no miner screen and get right to miner restart
+    echo "Debug: JEEP=$JEEP, COUNT=$COUNT, RESTART=$RESTART"
+    if [[ `screen -ls |grep miner |wc -l` -eq 0 ]]
+    then
+      COUNT=0
+      echo "WARNING: $(date) - Found no miner, jumping to 3main restart" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+    fi
+    # End Stubo Mod
+    if [ $COUNT -le 0 ]
+    then
+      ### Begin Stubo Mod
+      # Check for Internet and wait if down
+      while ! nc -vzw1 google.com 443;
+      do
+        echo "WARNING: $(date) - Internet is down, checking again in 30 seconds..." | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        sleep 30
+      done
+      echo ""
+      # Check if pool:port is up or not
+      source /home/m1/1bash
+      if [[ $COIN == *SALFTER* || $COIN == *NICEHASH*  ]]
+      then
+        if nc -vzw2 google.com 443
+        then
+          INTERNET_IS_GO=1
+        else
+          echo "WARNING: $(date) - Cant reach google" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+          INTERNET_IS_GO=0
+        fi
+      elif [[  $COIN == *DUAL*  ]]
+      then
+        CURRENT_COIN=$( head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//' | sed 's/DUAL_//' | cut -d _ -f 1)
+        CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
+        POOL_SERVER=$(cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
+        CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
+        PING_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
+        PING_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
+        echo "Dual mining, check main server $PING_SERVER:$PING_PORT " # | tee -a ${LOG_FILE}
+        if nc -vzw2 $PING_SERVER $PING_PORT;
+        then
+          echo "Dual mining, main pool $PING_SERVER:$PING_PORT is up"
+          INTERNET_IS_GO=1
+        else
+          echo "WARNING: $(date) - Cant reach main pool, $PING_SERVER:$PING_PORT is DOWN" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+          INTERNET_IS_GO=0
+        fi
+      else
+        CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+        CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
+        POOL_SERVER=$(cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
+        CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
+        PING_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
+        PING_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
+        echo "Check mining pool, $PING_SERVER:$PING_PORT "
+        if nc -vzw2 $PING_SERVER $PING_PORT
+        then
+          echo "Mining pool up" #  | tee -a ${LOG_FILE}
+          INTERNET_IS_GO=1
+        else
+          echo "WARNING: $(date) - Cant reach mining pool, $PING_SERVER:$PING_PORT is DOWN"   | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+          INTERNET_IS_GO=0
+        fi
+      fi
+      if [[ $RESTART -gt 4 && $INTERNET_IS_GO == 1 ]]
+      then
+        echo "WARNING: $(date) - Internet is up, Pool is up and Miner is running BUT Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        echo "" #| tee -a ${LOG_FILE}
+        bash '/home/m1/telegram'
+        sleep 10
+        sudo reboot
+      fi
+      # If miner runs in screen 'miner' kill the screen to be sure it's gone
+      pkill -e miner
+      bash '/home/m1/telegram'
+      echo "WARNING: $(date) - Problem may be found in miner last logs: See diagnostics below:" | tee -a ${ALERT_LOG_FILE}
+      tail -15 /home/m1/nvoc_logs/screenlog.0 | ts "WARNING: $(date) - " | tee -a ${ALERT_LOG_FILE}
+      echo "WARNING: $(date) - Utilization is too low: restart 3main..." | tee -a ${ALERT_LOG_FILE}
+      # Best to restart oneBash - settings might be adjusted already
+      target=$(ps -ef | awk '$NF~"3main" {print $2}')
+      kill $target #| tee -a ${LOG_FILE}
+      echo "" #| tee -a ${LOG_FILE}
+      RESTART=$(($RESTART + 1))
+      REBOOTRESET=0
+      COUNT=$GPU_COUNT
+      # Give oneBash time to restart to prevent reboot
+      sleep 60
+    else
+      echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are 6 consecutive failures" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      echo ""
+    fi
+  else
+    # All is good, reset the counter
+    COUNT=$((6 * $GPU_COUNT))
+    echo "$(date) - No mining issues detected."
+  fi
+  # No need for a reboot after a while
+  if [ $REBOOTRESET -gt 5 ]
+  then
+    RESTART=0
+    REBOOTRESET=0
+  fi
+done
+

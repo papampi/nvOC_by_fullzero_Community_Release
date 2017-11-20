@@ -1,0 +1,59 @@
+#!/bin/bash
+echo " Testing version for moving log files to tmpfs, new simplified 3main by stubu, add dstm zm 5_5 version, edits by stubu for wdog, new 1bash for separate pool and ports for wdog checking if pool is online, add Warning to wdog and temp logs and more ..."
+echo " Backup your old 1bash and any important stuff"
+echo " wait 30 seconds, if you are not sure hit ctrl+c now"
+sleep 30
+
+echo " Stopping miner, wdog, temp"
+pkill -e screen
+
+echo "make tmpfs nvoc_logs folder for logs"
+mkdir /home/m1/nvoc_logs
+sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab
+sudo mount -a
+
+echo " move miner screenlog.o to tmpfs"
+sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc
+sudo apt install -y moreutils
+
+
+echo " Download dstm zm miner 5_5"
+cd /home/m1/Downloads
+wget https://www.dropbox.com/s/z670ia89j8x1gp7/DSTM_0.5.5.tar.gz
+mv /home/m1/Downloads/5_5 /home/m1/zec/zm/5_5
+chmod a+x /home/m1/zec/zm/5_5/zm
+mkdir /home/m1/zec/zm/latest
+cp /home/m1/zec/zm/5_5/zm /home/m1/zec/zm/latest/zm_miner
+
+echo " Download 19-1.4.1 edits"
+wget https://www.dropbox.com/s/stqwkghu01471ds/nvOC-19-1.4.1.tar.gz
+tar -xvzf nvOC-19-1.4.1.tar.gz
+dos2unix /home/m1/Downloads/nvOC-19-1.4.1/*
+cp /home/m1/1bash /home/m1/1bash-back
+cp /home/m1/3main /home/m1/3main-back
+cp /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL-back
+cp /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG-back
+cp /home/m1/Downloads/nvOC-19-1.4.1/1bash /home/m1/1bash
+cp /home/m1/Downloads/nvOC-19-1.4.1/3main /home/m1/3main
+cp /home/m1/Downloads/nvOC-19-1.4.1/log_rotate /home/m1/log_rotate
+cp /home/m1/Downloads/nvOC-19-1.4.1/minerinfo /home/m1/www/cgi-bin/minerinfo
+cp /home/m1/Downloads/nvOC-19-1.4.1/telegram /home/m1/telegram
+cp /home/m1/Downloads/nvOC-19-1.4.1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL
+cp /home/m1/Downloads/nvOC-19-1.4.1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG
+cp /home/m1/Downloads/nvOC-19-1.4.1/PAPAMPI_PROFIT_CHECK /home/m1/PAPAMPI_PROFIT_CHECK
+chmod a+x /home/m1/www/cgi-bin/minerinfo
+chmod a+x /home/m1/www/cgi-bin/clearalerts
+touch /home/m1/nvoc_logs/5_restartlog
+touch /home/m1/nvoc_logs/6_autotemplog
+touch /home/m1/nvoc_logs/screenlog.0
+touch /home/m1/7_wdog_alertlog
+touch /home/m1/7_temp_alertlog
+chmod 666 /home/m1/nvoc_logs/*
+chmod 666 /home/m1/7_*
+
+
+echo "Edit your 1bash and reboot the rig"
+echo "Old 1bash, 3main, wdog and temp are copied to /home/m1/*-back"
+
+
+
