@@ -42,7 +42,7 @@ sleep 2
 SLEEP_TIME=$(($GPU_COUNT * 10))
 MINER_PID=$(ps ax | grep -i screen | grep miner)
 if  [ -z  "$MINER_PID" ]
-  then
+then
   echo "$(date) - Miner not started yet, Waiting 10 more seconds" | tee -a $LOG_FILE #$ALERT_LOG_FILE
   sleep 10
 fi
@@ -61,7 +61,7 @@ while true
 do
 
   #If WTM_AUTO_SWITCH python script running time is more than 30 Sec kill it
-  source ~/1bash
+
   WTM_A_S_PID=`ps -ef | grep WTM_AUTO_SWITCH | grep -v grep |awk '{print $2}'`
   if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ] || [ PAPAMPI_WTM_PROFIT_INFO == "YES" ] &&  [[ -n "$WTM_A_S_PID" ]]
   then
