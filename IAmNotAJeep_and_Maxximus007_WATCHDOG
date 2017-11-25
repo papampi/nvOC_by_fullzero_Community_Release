@@ -39,11 +39,19 @@ echo "$(date) - Starting miner restart script." | tee -a $LOG_FILE
 echo "" #| tee -a $LOG_FILE
 sleep 2
 
+SLEEP_TIME=$(($GPU_COUNT * 10))
+MINER_PID=$(ps ax | grep -i screen | grep miner)
+if  [ -z  "$MINER_PID" ]
+  then
+  echo "$(date) - Miner not started yet, Waiting 10 more seconds" | tee -a $LOG_FILE #$ALERT_LOG_FILE
+  sleep 10
+fi
+
 bash '/home/m1/telegram'
 # Give oneBash time to start to prevent reboot
-echo "$(date) - waiting 70 seconds before going 'on watch'" | tee -a $LOG_FILE
+echo "$(date) - waiting $SLEEP_TIME seconds before going 'on watch'" | tee -a $LOG_FILE
 
-sleep 60
+sleep $SLEEP_TIME
 
 THRESHOLD=90
 RESTART=0
@@ -55,7 +63,7 @@ do
   #If WTM_AUTO_SWITCH python script running time is more than 30 Sec kill it
   source ~/1bash
   WTM_A_S_PID=`ps -ef | grep WTM_AUTO_SWITCH | grep -v grep |awk '{print $2}'`
-  if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ] &&  [[ -n "$WTM_A_S_PID" ]]
+  if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ] || [ PAPAMPI_WTM_PROFIT_INFO == "YES" ] &&  [[ -n "$WTM_A_S_PID" ]]
   then
     WTM_A_S_PID_TIME=`ps -eo pid,etimes | grep $WTM_A_S_PID | awk  '$2> 30 { print $1}'` 2>&1
     echo "WTM Auto Switch Syncing"
@@ -64,8 +72,6 @@ do
       echo "WARNING: $(date) - WTM python stucked, Killing it" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
       ps -eo pid,etimes | grep `pgrep -f WTM_AUTO_SWITCH` | awk  '$2> 30 { print $1}'  | xargs kill -9
     fi
-    #else
-    #echo " WTM_AUTO_SWITCH Not Running,No More Killing"
   fi
 
 
@@ -135,7 +141,7 @@ do
       done
       echo ""
       # Check if pool:port is up or not
-      if [[  $COIN == *DUAL*  ]] && [[ $COIN != *NICEHASH* ]]
+      if [[  $COIN == *DUAL*  ]] && [[ $COIN != *NICE* ]]
       then
         CURRENT_COIN=$( head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//' | sed 's/DUAL_//' | cut -d _ -f 1)
         CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
@@ -194,7 +200,7 @@ do
       REBOOTRESET=0
       COUNT=$GPU_COUNT
       # Give oneBash time to restart to prevent reboot
-      sleep 60
+      sleep $SLEEP_TIME
     else
       echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are 6 consecutive failures" | tee -a $LOG_FILE $ALERT_LOG_FILE
       echo ""
@@ -211,4 +217,3 @@ do
     REBOOTRESET=0
   fi
 done
-
