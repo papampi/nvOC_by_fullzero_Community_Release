@@ -20,6 +20,8 @@ if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
   echo "hostname has conflict, temporarily fixing it"
   sudo hostname m1-desktop
+else
+  echo "No Problems Found"
 fi
 
 sleep 1;echo "";echo ""
