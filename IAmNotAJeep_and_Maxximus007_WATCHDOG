@@ -63,7 +63,7 @@ do
   #If WTM_AUTO_SWITCH python script running time is more than 30 Sec kill it
 
   WTM_A_S_PID=`ps -ef | grep WTM_AUTO_SWITCH | grep -v grep |awk '{print $2}'`
-  if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ] || [ PAPAMPI_WTM_PROFIT_INFO == "YES" ] &&  [[ -n "$WTM_A_S_PID" ]]
+  if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ] || [ $PAPAMPI_WTM_PROFIT_INFO == "YES" ] &&  [[ -n "$WTM_A_S_PID" ]]
   then
     WTM_A_S_PID_TIME=`ps -eo pid,etimes | grep $WTM_A_S_PID | awk  '$2> 30 { print $1}'` 2>&1
     echo "WTM Auto Switch Syncing"
