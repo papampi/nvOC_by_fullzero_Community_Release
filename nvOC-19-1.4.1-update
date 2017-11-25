@@ -4,14 +4,23 @@ echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB
 echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes."
 echo " Backup your old 1bash and any important stuff"
 echo " wait 30 seconds, if you have not backed up hit ctrl+c now"
+sleep 1;echo "";echo ""
+echo " DO NOT OPEN THE TERMINAL UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
+echo "";echo ""
 sleep 30;echo "";echo ""
 
 echo " Stopping gnome-terminal, miner, wdog, temp, ..."
+echo "pkill -f gnome-terminal"
 pkill -f gnome-terminal
+echo "pkill -f DOG"
 pkill -f DOG
+echo "pkill -f GRAM"
 pkill -f GRAM
+echo "pkill -f TEMP"
 pkill -f TEMP
+echo "pkill -f PAPAMPI"
 pkill -f PAPAMPI
+echo "pkill -e screen"
 pkill -e screen
 
 sleep 1;echo "";echo ""
@@ -19,9 +28,10 @@ echo "Checking hostname conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
   echo "hostname has conflict, temporarily fixing it"
+  echo "sudo hostname m1-desktop"
   sudo hostname m1-desktop
 else
-  echo "No Problems Found"
+  echo "No Problems found"
 fi
 
 sleep 1;echo "";echo ""
@@ -29,30 +39,43 @@ sleep 1;echo "";echo ""
 echo "Updating and Upgrading system packages and installing needed packages"
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y moreutils gawk
+sudo apt autoclean -y
+sudo apt autoremove -y
 
 sleep 1;echo "";echo ""
 
 echo "Moving miner screenlog.o to tmpf to lower disk read/writes"
+echo "sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc"
 sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc
 sleep 1;echo "";echo ""
 
 echo "making tmpfs nvoc_logs folder for logs"
 sleep 1;echo "";echo ""
+echo "mkdir -p /home/m1/nvoc_logs"
 mkdir -p /home/m1/nvoc_logs
+echo "sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab"
 sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab
+echo "sudo mount -a"
 sudo mount -a
 
 sleep 1;echo "";echo ""
 echo "Downloading dstm zm miner 5_5"
+echo "cd /home/m1/Downloads"
 cd /home/m1/Downloads
 wget https://www.dropbox.com/s/z670ia89j8x1gp7/DSTM_0.5.5.tar.gz
 echo "Extracting the zm miner"
 tar -xvzf DSTM_0.5.5.tar.gz
+echo "mkdir -p /home/m1/zec/zm/5_5"
 mkdir -p /home/m1/zec/zm/5_5
+echo "mv /home/m1/Downloads/5_5 /home/m1/zec/zm"
 mv /home/m1/Downloads/5_5 /home/m1/zec/zm
+echo "chmod a+x /home/m1/zec/zm/5_5/zm"
 chmod a+x /home/m1/zec/zm/5_5/zm
+echo "mkdir -p /home/m1/zec/zm/latest"
 mkdir -p /home/m1/zec/zm/latest
+echo "cp /home/m1/zec/zm/5_5/zm /home/m1/zec/zm/latest/zm_miner"
 cp /home/m1/zec/zm/5_5/zm /home/m1/zec/zm/latest/zm_miner
+echo "chmod a+x /home/m1/zec/zm/latest/zm_miner"
 chmod a+x /home/m1/zec/zm/latest/zm_miner
 
 sleep 1;echo "";echo ""
@@ -68,41 +91,73 @@ echo " Checking hostname and permanently fixing it if there is conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
   echo "hostanema has conflict, Permanently fixing it"
+  echo "sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts"
   sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts
+  echo "sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname"  
   sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname
 else
   echo "hostname had no conflicts"
 fi
 
 echo "Making a backup of 1bash, 3main, wdog and temp in /home/m1/backups"
+echo "mkdir -p /home/m1/backups"
 mkdir -p /home/m1/backups
 sleep 1;echo "";echo ""
+
+echo "cp /home/m1/1bash /home/m1/backups/1bash.bak"
 cp /home/m1/1bash /home/m1/backups/1bash.bak
+echo "cp /home/m1/3main /home/m1/backups/3main.bak"
 cp /home/m1/3main /home/m1/backups/3main.bak
+echo "cp /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak"
 cp /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak
+echo "cp /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak"
 cp /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak
 echo "Copying updates"
-sleep 1;echo "";echo ""
+sleep 1
+echo " "
+echo " "
+
+echo "cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner"
 cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner
+echo "cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash"
 cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
+echo "cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main"
 cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main
+echo "cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate"
 cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate
+echo "cp /home/m1/Downloads/nvOC-19-2/www/minerinfo /home/m1/www/cgi-bin/minerinfo"
 cp /home/m1/Downloads/nvOC-19-2/www/minerinfo /home/m1/www/cgi-bin/minerinfo
+echo "cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram"
 cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram
+echo "cp /home/m1/Downloads/nvOC-19-2/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL"
 cp /home/m1/Downloads/nvOC-19-2/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL
+echo "cp /home/m1/Downloads/nvOC-19-2/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG"
 cp /home/m1/Downloads/nvOC-19-2/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG
+echo "cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_PROFIT_CHECK /home/m1/PAPAMPI_PROFIT_CHECK"
 cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_PROFIT_CHECK /home/m1/PAPAMPI_PROFIT_CHECK
+echo "cat /home/m1/8_wtmautoswitchlog | grep switch > /home/m1//WTM_switch_history"
+cat /home/m1/8_wtmautoswitchlog | grep switch > /home/m1//WTM_switch_history
 
 sleep 1;echo "";echo ""
+echo "chmod a+x /home/m1/www/cgi-bin/minerinfo"
 chmod a+x /home/m1/www/cgi-bin/minerinfo
+echo "chmod a+x /home/m1/www/cgi-bin/clearalerts"
 chmod a+x /home/m1/www/cgi-bin/clearalerts
+echo "touch /home/m1/nvoc_logs/5_restartlog"
 touch /home/m1/nvoc_logs/5_restartlog
+echo "touch /home/m1/nvoc_logs/6_autotemplog" 
 touch /home/m1/nvoc_logs/6_autotemplog
+echo "touch /home/m1/WTM_switch_histrory"
 touch /home/m1/WTM_switch_histrory
+echo "touch /home/m1/nvoc_logs/screenlog.0"
 touch /home/m1/nvoc_logs/screenlog.0
+echo "touch /home/m1/7_wdog_alertlog"
 touch /home/m1/7_wdog_alertlog
+echo "touch /home/m1/7_temp_alertlog"
 touch /home/m1/7_temp_alertlog
+echo "chmod 666 /home/m1/nvoc_logs/*"
 chmod 666 /home/m1/nvoc_logs/*
+echo "chmod 666 /home/m1/7_*"
 chmod 666 /home/m1/7_*
 
 sleep 1;echo "";echo ""
