@@ -133,6 +133,8 @@ echo "cp /home/m1/Downloads/nvOC-19-2/Maxximus007_AUTO_TEMPERATURE_CONTROL /home
 cp /home/m1/Downloads/nvOC-19-2/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL
 echo "cp /home/m1/Downloads/nvOC-19-2/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG"
 cp /home/m1/Downloads/nvOC-19-2/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG
+echo "cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_WTM /home/m1/PAPAMPI_WTM"
+cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_WTM /home/m1/PAPAMPI_WTM
 echo "cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_PROFIT_CHECK /home/m1/PAPAMPI_PROFIT_CHECK"
 cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_PROFIT_CHECK /home/m1/PAPAMPI_PROFIT_CHECK
 echo "cat /home/m1/8_wtmautoswitchlog | grep switch > /home/m1//WTM_switch_history"
