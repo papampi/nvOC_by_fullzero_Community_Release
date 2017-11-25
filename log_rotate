@@ -1,51 +1,59 @@
 #!/bin/bash
-# log rotation for nvOC by fullzero v0019-1.4.1, experimental by papampi
+# log rotation for nvOC by fullzero , v0019.2 unofficial by papampi
 
 source /home/m1/1bash
 
 while true
 do
-  
+
   TIMEIN=$LOG_ROTATE_INTERVAL
   TIMEOUT=$(($TIMEIN * 3600))
-  
+
   # Rotating wdog logs
   WDOG_LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
   if [ -e "$WDOG_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$( cat $WDOG_LOG_FILE | grep WARNING | tail -n 2k)" > $WDOG_LOG_FILE
   fi
-  
+
   # Rotating wdog alerts log
   WDOG_ALERT_LOG_FILE="/home/m1/7_wdog_alertlog"
   if [ -e "$WDOG_ALERT_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$( cat $WDOG_ALERT_LOG_FILE | grep WARNING | tail -n 2k)" > $WDOG_ALERT_LOG_FILE
   fi
-  
+
   # Rotating temp logs
   TEMP_LOG_FILE="/home/m1/nvoc_logs/6_autotemplog"
   if [ -e "$TEMP_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$( cat $TEMP_LOG_FILE | grep WARNING | tail -n 2k)" > $TEMP_LOG_FILE
   fi
-  
+
   # Rotating temp alerts
   TEMP_ALERT_LOG_FILE="/home/m1/7_temp_alertlog"
   if [ -e "$TEMP_ALERT_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$( cat $TEMP_ALERT_LOG_FILE | grep WARNING | tail -n 2k)" > $TEMP_ALERT_LOG_FILE
   fi
-  
+
   # Rotating miner screenlog
   MINER_LOG_FILE="/home/m1/nvoc_logs/screenlog.0"
   if [ -e "$MINER_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$( cat $MINER_LOG_FILE | tail -n 2k)" > $MINER_LOG_FILE
   fi
-  
+
+  # Rotating wtm auto switch logs
+  WTM_LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
+  if [ -e "$WTM_LOG_FILE" ] ; then
+    #Limit the logfile, just keep the last 2k
+    echo "$( cat $WTM_LOG_FILE | tail -n 2k)" > $WTM_LOG_FILE
+  fi
+
+
   echo "Rotate again in $TIMEIN Hours"
-  
+
   sleep $TIMEOUT
 done
 

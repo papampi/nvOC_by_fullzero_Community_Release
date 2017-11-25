@@ -1,35 +1,45 @@
-3main edits (by stubo):
-Beautify the source code by running it through the python script I tracked down
-Removed the infinite loops and put one at the end to cover all mining blocks
-Removed repetitive if LOCAL then "screen -r miner" from each mining block and put one at the end to cover all mining blocks
-Added support for BTG as per forum posts
-Changed ZM lines to use the latest ZM miner 0.5.5 (s/5_3/5_4/g)
-Added telemetry/api to EWBF and ZM miner launches so that you can hit <host>:42000 to see this miner output
-Added the ability to pass in a miner password for all miners that have the "--pass" arg. 
-Changed instances of "--pass x" and "--pass x"  and "-p x" to "--pass $MINER_PWD" 
-Note that I left the SALFTER inline stuff alone since I don't know much about it [yet]. 
-Also left the instances of "--pass $ZPOOLPASS" alone but it would be nice to consolidate miner password handling.
-Changed dstm zm location to "~/zec/zm/latest/" for easier future updates (papampi mod)
-Changed all miner start scripts to use separate pool and port from 1bash so watchdog can check the pool connection easier (papampi mod)
-Added log rotate settings (papampi mod)
+
+  3main edits :
+  Beautify the source code by running it through the python script I tracked down (stubo)
+  Removed the infinite loops and put one at the end to cover all mining blocks (stubo)
+  Removed repetitive if LOCAL then "screen -r miner" from each mining block and put one at the end to cover all mining blocks (stubo)
+  Added support for BTG as per forum posts
+  Changed ZM lines to use the latest ZM miner 0.5.5 (s/5_3/5_4/g)
+  Added telemetry/api to EWBF and ZM miner launches so that you can hit <host>:42000 to see this miner output (stubo)
+  Added the ability to pass in a miner password for all miners that have the "--pass" arg. (stubo)
+  Changed instances of "--pass x" and "--pass x"  and "-p x" to "--pass $MINER_PWD" (stubo)
+  Changed dstm zm location to "~/zec/zm/latest/" for easier future updates (papampi mod)
+  Changed all miner start scripts to use separate pool and port from 1bash so watchdog can check the pool connection easier (papampi mod)
+  Added log rotate settings (papampi mod)
+  Moved miner start from 3main to 0miner, to make 3main lighter and better handle of miner start (papampi) 
+  Added auto start miner yes or no ( in case you need to edit or debug the rig) (papampi)
+  
+
+  1bash edits:
+  Added EWBF_OPTS and ZM_OPTS for telemetry/api to EWBF and ZM miner (Stubu mod)
+  Added MINER_PWD for miner passwords (Stubu mod)
+  Unified and separated all pool address and pool ports so wdog can check if pool is up or no if needed (papampi mod)
+    
+  Jeep wdog edits:
+  Added check if miner is running or not when utilization dropped to restart miner faster (stubo mod)
+  Added check for internet and wait 10 seconds if its down before going to restart miner and reboot system (stubo mod)
+  Added check mining pool:port if internet is up before going to reboot system (papampi mod)
+  Added "Warning" to log output of alerts to catch them easier (papampi mod)
+  Changed logfile location to tmpfs (papampi mod)
+  Changed logging system to only keep last "warnings" with max 2k size.
+  Added checking number of gpus installed vs system reported gpus at start of wdog, so you know if a gpu is not working.
 
 
-1bash edits:
-Added EWBF_OPTS and ZM_OPTS for telemetry/api to EWBF and ZM miner (Stubu mod)
-Added MINER_PWD for miner passwords (Stubu mod)
-Unified and separated all pool address and pool ports so wdog can check easier if needed (papampi mod)
-Added log rotate settings (papampi mod)
+  Maxximus temp edits:
+  Added "Warning" to log output of alerts to catch them easier (papampi mod)
 
-Jeep wdog edits:
-Added check if miner is running or not when utilization dropped to restart miner faster (stubo mod)
-Added check for internet and wait 30 seconds if its down before going to restart miner and reboot system (stubo mod)
-Added check mining pool:port if internet is up before going to reboot system (papampi mod)
-Added "Warning" to log output of alerts to catch them easier (papampi mod)
-Changed logfile location to tmpfs (papampi mod)
-Changed logging system to only keep last warnings with max 2k size.
+  Added log rotation (papampi mod)
+  changed minerinfo and papampi-telegram for new log locations (papampi mod)
+  Create tmpfs partition to change logfile location to tmpfs to lower read/writes to HDD/USB (papampi mod)
+  changed minerinfo web so those who dont use wtm dont see empty or no wtm entries
+  
 
-Maxximus temp edits:
-Added "Warning" to log output of alerts to catch them easier (papampi mod)
-
-changed minerinfo and papampi-telegram for new log locations (papampi mod)
-Create tmpfs partition to change logfile location to tmpfs to lower read/writes to HDD/USB (papampi mod)
+  
+  And so many more
+  
+  Keep calm and carry on mining ...

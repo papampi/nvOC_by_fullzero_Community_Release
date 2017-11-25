@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Auto temperature control v0019-1.4.1, experimental edits by papampi
+# Auto temperature control script for nvOC by fullzero , v0019.2 unofficial by papampi
+
 # By Maxximus007
 # for nvOC by fullzero
 
@@ -8,7 +9,7 @@ export DISPLAY=:0
 
 sleep 2
 
-source ~/1bash
+source /home/m1/1bash
 
 # Creating a log file to record restarts
 LOG_FILE="/home/m1/nvoc_logs/6_autotemplog"
@@ -17,6 +18,12 @@ if [ -e "$LOG_FILE" ] ; then
   echo "$( cat $LOG_FILE | grep WARNING | tail -n 2k)" > $LOG_FILE
 fi
 
+# Creating a log file to record restarts for web
+ALERT_LOG_FILE="/home/m1/7_temp_alertlog"
+if [ -e "$ALERT_LOG_FILE" ] ; then
+  #Limit the logfile, just keep the last 2K
+  echo "$( cat $ALERT_LOG_FILE | grep WARNING | tail -n 2k)" > $ALERT_LOG_FILE
+fi
 
 
 if [ $INDIVIDUAL_POWERLIMIT == "YES" -o $INDIVIDUAL_TARGET_TEMPS == "YES" ]
@@ -159,22 +166,7 @@ echo "MINIMAL_FAN_SPEED:  $MINIMAL_FAN_SPEED" | tee -a ${LOG_FILE}
 echo "" | tee -a ${LOG_FILE}
 sleep 2
 
-# Creating a log file to record restarts for web
-ALERT_LOG_FILE="/home/m1/7_temp_alertlog"
-if [ -e "$ALERT_LOG_FILE" ] ; then
-  #Limit the logfile, just keep the last 2K
-  echo "$( cat $ALERT_LOG_FILE | grep WARNING | tail -n 2k)" > $ALERT_LOG_FILE
-fi
-
-if [ $TELEGRAM_TYPE != "papampi" -o $BaliMiner_TELEGRAM_ALERTS == "NO" ]
-then
-  echo "$(date) - Starting autotemp script." | tee -a ${LOG_FILE}
-fi
-
-if [[ $TELEGRAM_TYPE == "papampi" && $BaliMiner_TELEGRAM_ALERTS == "YES" ]]
-then
-  echo "$(date) - Starting autotemp script." | tee -a ${LOG_FILE}
-fi
+echo "$(date) - Starting autotemp script." | tee -a ${LOG_FILE}
 
 GPUS=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
 NVD=nvidia-settings
@@ -198,25 +190,25 @@ do
   while [ $gpu -lt $GPUS ]
   do
     { IFS=', ' read CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $gpu --query-gpu=temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
-    
+
     POWERLIMIT=$PWRLIMIT
     POWERLIMIT=$(echo -n $PWRLIMIT | tail -c -6 | head -c -3 )
-    
+
     TEMP_DIFF=$((${TARGET_TEMP[${gpu}]} - $CURRENT_TEMP))
     NEW_FAN_SPEED=$CURRENT_FAN
-    
+
     if [ $TELEGRAM_TYPE != "papampi" -o $BaliMiner_TELEGRAM_ALERTS == "NO" ]
     then
-      echo "GPU $gpu, Target temp: ${TARGET_TEMP[${gpu}]}, Current: $CURRENT_TEMP, Diff: $TEMP_DIFF, Fan: $CURRENT_FAN, Power: $POWERLIMIT"
+      echo "GPU $gpu, Target temp: ${TARGET_TEMP[${gpu}]}, Current: $CURRENT_TEMP, Diff: $TEMP_DIFF, Fan: $CURRENT_FAN, Power: $POWERLIMIT" | tee -a ${LOG_FILE}
       echo "" #| tee -a ${LOG_FILE}
     fi
-    
-    if [[ $TELEGRAM_TYPE == "papampi"  ]]
+
+    if [[ $TELEGRAM_TYPE == "papampi" && $BaliMiner_TELEGRAM_ALERTS == "YES" ]]
     then
       echo "GPU $gpu, Target temp: ${TARGET_TEMP[${gpu}]}, Current: $CURRENT_TEMP, Diff: $TEMP_DIFF, Fan: $CURRENT_FAN, Power: $POWERLIMIT" | tee -a ${LOG_FILE}
       echo ""
     fi
-    
+
     if [ "$CURRENT_TEMP" -gt "${TARGET_TEMP[${gpu}]}" ]
     then
       # This can be far more advanced
@@ -237,6 +229,7 @@ do
         echo "$(date) - Adjusting Power limit for gpu:$gpu. Old limit: $POWERLIMIT New limit: $NEW_POWER_LIMIT Fan speed: $NEW_FAN_SPEED" | tee -a ${LOG_FILE}  ${ALERT_LOG_FILE}
         echo ""
         ${SMI} -i $gpu -pl ${NEW_POWER_LIMIT}
+        bash '/home/m1/telegram'
       fi
     else
       # Current temp is lower than target, so we can relax fan speed,
@@ -256,20 +249,20 @@ do
           if [ $NEW_FAN_SPEED -lt $RESTORE_POWER_LIMIT ]
           then
             NEW_POWER_LIMIT=${POWER_LIMIT[${gpu}]}
-            echo "$(date) - Restoring Power limit for gpu:$gpu. Old limit: $POWERLIMIT New limit: $NEW_POWER_LIMIT Fan speed: $NEW_FAN_SPEED" | tee -a ${LOG_FILE} #  ${ALERT_LOG_FILE}
+            echo "$(date) - Restoring Power limit for gpu:$gpu. Old limit: $POWERLIMIT New limit: $NEW_POWER_LIMIT Fan speed: $NEW_FAN_SPEED" | tee -a ${LOG_FILE}
             echo ""
             ${SMI} -i $gpu -pl ${NEW_POWER_LIMIT}
           fi
         fi
       fi
     fi
-    
+
     if [ "$NEW_FAN_SPEED" -ne "$CURRENT_FAN" ]
     then
       echo "$(date) - Adjusting Fan for gpu:$gpu. Old: $CURRENT_FAN New: $NEW_FAN_SPEED Temp: $CURRENT_TEMP" | tee -a ${LOG_FILE}
       ${NVD} -a [gpu:${gpu}]/GPUFanControlState=1 -a [fan:${gpu}]/GPUTargetFanSpeed=${NEW_FAN_SPEED}
     fi
-    
+
     let gpu=gpu+1
   done
   echo "$(date) - All good, will check again soon"

@@ -1,33 +1,28 @@
 #!/bin/bash
+# whttomine.com profit check for nvOC by fullzero , v0019.2 unofficial by papampi
 
-source ~/1bash
-
-BITCOIN="theGROUND"
+source /home/m1/1bash
 
 # Creating a log file to record coin switch
-LOG_FILE="/home/m1/8_wtmautoswitchlog"
+LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
 
 if [ -e "$LOG_FILE" ] ; then
   #Limit the logfile, just keep the last 2K
-#  LASTLOG=$(tail -n 2k  $LOG_FILE)
-#  echo "$LASTLOG" 
-#  echo ""
- echo "$(cat $LOG_FILE | grep switched | tail -n 2k)" > $LOG_FILE 
-
+  echo "$(cat $LOG_FILE | tail -n 2k)" > $LOG_FILE
 fi
 
-while [ $BITCOIN == "theGROUND" ]
+while true
 do
 
-python2.7 '/home/m1/WTM_AUTO_SWITCH' /home/m1/WTM.json
-sleep 5
-CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
-TOP_COIN=$(cat WTM_top_coin | grep : | sed 's/:[0-9][0-9]//' | sed 's/[0-9]//')
-TIMEIN=$WTM_PROFIT_CHECK_INTERVAL
-TIMEOUT=$(($TIMEIN * 60))
-echo ""
-echo "Check again in $TIMEOUT seconds" #| tee -a ${LOG_FILE}
-sleep $TIMEOUT
+  python2.7 '/home/m1/WTM_AUTO_SWITCH' /home/m1/WTM.json | tee -a $LOG_FILE
+  sleep 5
+  CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+  TOP_COIN=$(cat WTM_top_coin | grep : | sed 's/:[0-9][0-9]//' | sed 's/[0-9]//')
+  TIMEIN=$WTM_PROFIT_CHECK_INTERVAL
+  TIMEOUT=$(($TIMEIN * 60))
+  echo ""
+  echo "Check again in $TIMEOUT seconds" #| tee -a ${LOG_FILE}
+  sleep $TIMEOUT
 
 done
 
