@@ -742,7 +742,7 @@ X11_MEMORY_OVERCLOCK=100
 ###########################################################################
 ###########################################################################
 
-INDIVIDUAL_POWERLIMIT="YES"   	# YES NO
+INDIVIDUAL_POWERLIMIT="NO"   	# YES NO
 
 # Set individual powerlimits here if INDIVIDUAL_POWERLIMIT="YES"
 INDIVIDUAL_POWERLIMIT_0=100
@@ -790,7 +790,7 @@ TARGET_TEMP_17=75
 TARGET_TEMP_18=75
 
 
-INDIVIDUAL_CLOCKS="YES"      	# YES NO
+INDIVIDUAL_CLOCKS="NO"      	# YES NO
 
 # Set individual clocks here if INDIVIDUAL_CLOCKS="YES"
 __CORE_OVERCLOCK_0=100
