@@ -1,7 +1,7 @@
 #!/bin/bash
 echo " nvOC by fullzero, unofficial 19.2 by papampi" 
 echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB/HDD read /writes, added option to auto start miner or not in 1bash, new 1bash for unified and separated pool and ports for wdog checking if pool is online, new separated 0miner to make 3main lighter and easier start miner, fix hostname conflict, add Warning to wdog and temp logs to ,  and many more edits and bug fixes"
-echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes.
+echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes."
 echo " Backup your old 1bash and any important stuff"
 echo " wait 30 seconds, if you have not backed up hit ctrl+c now"
 sleep 30;echo "";echo ""
