@@ -21,7 +21,7 @@ if [ -e "$ALERT_LOG_FILE" ] ; then
 fi
 
 GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
-if [[ -z "$NUMBER_GPUS_INSTALLED"  ]]
+if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
 then
   if [[ $GPU_COUNT -ne $NUMBER_GPUS_INSTALLED ]]
   then
@@ -30,14 +30,10 @@ then
     echo ""
   else
     echo ""
-    echo "Installed GPUs  $NUMBER_GPUS_INSTALLED, Connected GPUs: $GPU_COUNT"
+    echo "Installed GPUs: $NUMBER_GPUS_INSTALLED, Connected GPUs: $GPU_COUNT"
     echo ""
   fi
 fi
-
-echo "$(date) - Starting miner restart script." | tee -a $LOG_FILE
-echo "" #| tee -a $LOG_FILE
-sleep 2
 
 SLEEP_TIME=$(($GPU_COUNT * 10))
 MINER_PID=$(ps ax | grep -i screen | grep miner)
@@ -45,6 +41,10 @@ if  [ -z  "$MINER_PID" ]
 then
   echo "$(date) - Miner not started yet, Waiting 10 more seconds" | tee -a $LOG_FILE #$ALERT_LOG_FILE
   sleep 10
+  echo "$(date) - Starting miner restart script." | tee -a $LOG_FILE
+else
+  echo "$(date) - Starting miner restart script." | tee -a $LOG_FILE
+  echo "" #| tee -a $LOG_FILE
 fi
 
 bash '/home/m1/telegram'
@@ -53,7 +53,7 @@ echo "$(date) - waiting $SLEEP_TIME seconds before going 'on watch'" | tee -a $L
 
 sleep $SLEEP_TIME
 
-THRESHOLD=90
+THRESHOLD=85
 RESTART=0
 COUNT=$((6 * $GPU_COUNT))
 #reinit=6
@@ -217,3 +217,4 @@ do
     REBOOTRESET=0
   fi
 done
+
