@@ -1,5 +1,5 @@
 #!/bin/bash
-# minerinfo written by papampi for nvOC ### v0019-1.4.1, experimental edits by papampi
+# minerinfo written by papampi for nvOC
 # feel free to edit, copy and use as you want.
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -27,7 +27,7 @@ GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,
 TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/6_autotemplog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | awk '{print $0,"<br>"}' )
 TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/7_temp_alertlog |  awk '{print $0,"<br>"}')
 WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/7_wdog_alertlog |  awk '{print $0,"<br>"}')
-LOST_GPU=$(tail -n 20 /home/m1/nvoc_logs/6_autotemplog  | grep Unable | tail -n $GPU_COUNT | awk '{print $0,"<br>"}' | tee -a /home/m1/7_temp_alertlog)
+LOST_GPU=$(tail -n 20 /home/m1/6_autotemplog  | grep Unable | tail -n $GPU_COUNT | awk '{print $0,"<br>"}' | tee -a /home/m1/7_temp_alertlog)
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
 
 if [ $Maxximus007_AUTO_TEMPERATURE_CONTROL == "YES" ]
@@ -76,16 +76,22 @@ AUTO_SWITCH=("Salfter Nicehash Auto Switch")
 elif [ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]
 then
 CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
-MINING_HISTORY=$(cat /home/m1/8_wtmautoswitchlog | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
+MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
+P_MINING_HISTORY="$MINING_HISTORY <br>"
 WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+P_WTM_PROFIT="$WTM_PROFIT <br>"
 WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+P_WTM_REV=$"$WTM_REV <br>"
 WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
-BTC_PRICE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
-#CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
-#POOL_SERVER=$(cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
-#LAST_20=$( bash /home/m1/WTM_SPENT_TIME)
-#WTM_LAST_20=$(cat /home/m1/WTM_LAST_20  | awk '{print $0,"<br>"}')
-#check if WTM running or not
+P_WTM_AVERAGE_REV="$WTM_AVERAGE_REV <br>"
+BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
+BTC_PRICE="BTC PRICE: "  
+WTM_Current_Profitabilty="WTM Current Profitabilty:"
+WTM_Current_Revenue="WTM Current Revenue: "
+Average_Revenue="24H Average Revenue: " 
+LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
+
+
 if ps aux | grep -v grep | grep -q PAPAMPI_WTM
 then
 WTM_SWITCH=("Running")
@@ -104,13 +110,19 @@ AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH  $WTM_A_S")
 elif [ $PAPAMPI_WTM_PROFIT_INFO == "YES" ] && [ $PAPAMPI_WTM_AUTO_SWITCH == "NO" ]
 then
 CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
-MINING_HISTORY=("No Auto Switch History")
+MINING_HISTORY=""
 WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+P_WTM_PROFIT="$WTM_PROFIT <br>"
 WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+P_WTM_REV=$"$WTM_REV <br>"
 WTM_SWITCH=("WTM Profit Check Running. ")
-BTC_PRICE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
-WTM_AVERAGE_REV=("WTM Auto Switch Not Running.")
-
+BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
+BTC_PRICE="BTC PRICE: "  
+WTM_AVERAGE_REV=""
+WTM_Current_Profitabilty="WTM Current Profitabilty: "
+WTM_Current_Revenue="WTM Current Revenue: "
+Average_Revenue="" 
+LAST_10_AUTO_SWITCHES=""
 #if python script syncing
 if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
 then
@@ -120,23 +132,28 @@ AUTO_SWITCH=("$WTM_SWITCH $WTM_A_S" )
  
 
 else
-CURRENT_COIN=$(head -n 130 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
-AUTO_SWITCH=("No Auto Switch")
-MINING_HISTORY=("No Auto Switch History")
-BTC_PRICE=("WTM Not Running")
-WTM_PROFIT=("WTM Not Running")
-WTM_REV=("WTM Not Running")
-WTM_AVERAGE_REV=("WTM Not Running")
+CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+AUTO_SWITCH="No Auto Switch"
+MINING_HISTORY=""
+BTC_PRICE=""
+BTC_PRICE_VALUE="" 
+WTM_PROFIT=""
+WTM_REV=""
+WTM_AVERAGE_REV=""
+WTM_CURRENCY=""
+LAST_10_AUTO_SWITCHES=""
+WTM_Current_Profitabilty=""
+WTM_Current_Revenue=""
 fi
 
 ##################################################################
 ########################### Miner Logs ###########################
 
-if [  $COIN == "BTCZ"  ] || $COIN == "ZEC"  ] || [  $COIN == "ZEN"  ] || [  $COIN == "ZCL"  ] || [  $COIN == "HUSH"  ] || [  $COIN == "KMD"  ] && [  $ZM_or_EWBF == "ZM"  ]
+if [ $COIN == "BTG" ] || [ $COIN == "MPH_EQUIHASH" ] || [ $COIN == "BTCZ" ] || [ $COIN == "ZEC"  ] || [  $COIN == "ZEN"  ] || [  $COIN == "ZCL"  ] || [  $COIN == "HUSH"  ] || [  $COIN == "KMD"  ] && [  $ZM_or_EWBF == "ZM"  ]
 then
 MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
-elif [  $COIN == "BTCZ"  ] || [  $COIN == "ZEC"  ] || [  $COIN == "ZEN"  ] || [  $COIN == "ZCL"  ] || [  $COIN == "HUSH"  ] || [  $COIN == "KMD"  ] && [  $ZM_or_EWBF == "EWBF"  ]
+elif [ $COIN == "BTG" ] || [ $COIN == "MPH_EQUIHASH" ] || [  $COIN == "BTCZ"  ] || [  $COIN == "ZEC"  ] || [  $COIN == "ZEN"  ] || [  $COIN == "ZCL"  ] || [  $COIN == "HUSH"  ] || [  $COIN == "KMD"  ] && [  $ZM_or_EWBF == "EWBF"  ]
 then
 MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
@@ -206,22 +223,16 @@ echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURREN
 
 echo "Auto Switcher: " "<tt style=\"text-align:left; color:white\">" "$AUTO_SWITCH <br></tt>"
 
-echo "BTC Price:: " "<tt style=\"text-align:left; color:white\">" "$BTC_PRICE $WTM_CURRENCY<br> </tt>"
+echo "$BTC_PRICE " "<tt style=\"text-align:left; color:white\">" "$BTC_PRICE_VALUE $WTM_CURRENCY<br> </tt>"
 
-echo "WTM Current Profitabilty:" "<tt style=\"text-align:left; color:white\">" "$WTM_PROFIT <br></tt>"
+echo "$WTM_Current_Profitabilty" "<tt style=\"text-align:left; color:white\">" "$P_WTM_PROFIT </tt>"
 
-echo "WTM Current $WTM_CURRENCY Revenue: " "<tt style=\"text-align:left; color:white\">" "$WTM_REV <br></tt>"
+echo "$WTM_Current_Revenue" "<tt style=\"text-align:left; color:white\">" "$P_WTM_REV </tt>"
 
-echo "24H Average Revenue: " "<tt style=\"text-align:left; color:white\">" "$WTM_AVERAGE_REV $WTM_CURRENCY <br></tt>"
+echo "$Average_Revenue" "<tt style=\"text-align:left; color:white\">" "$P_WTM_AVERAGE_REV   </tt>"
 
-#echo "WTM LAST 20: " "<tt style=\"text-align:left; color:white\">" "$WTM_LAST_20 <br></tt>"
+echo "$LAST_10_AUTO_SWITCHES  " "<tt style=\"text-align:left; color:white\">" "$P_MINING_HISTORY </tt>"
 
-echo " <br>"
-
-
-echo "Last 10 Auto Switch : <br>" "<tt style=\"text-align:left; color:white\">" "$MINING_HISTORY <br> </tt>"
-
-echo " <br>"
 echo "Miner Hash Rate / Output: <br>" "<tt style=\"text-align:left; color:white\">" "$MINER_LOG <br> </tt>"
 
 echo "GPU Temp, Fan and Power Info: <br>"  "<tt style=\"text-align:left; color:white\">" "$TEMP_FAN_POWER <br> </tt>"
