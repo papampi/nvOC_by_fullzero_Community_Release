@@ -10,14 +10,14 @@ export DISPLAY=:0
 LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
 if [ -e "$LOG_FILE" ] ; then
   #Limit the logfile, just keep the last 2K
-  echo "$(cat $LOG_FILE | grep WARNING | tail -n 2k )" > $LOG_FILE
+  echo "$(cat $LOG_FILE | tail -n 2k )" > $LOG_FILE
 fi
 
 # Creating alert log file to record problems
 ALERT_LOG_FILE="/home/m1/7_wdog_alertlog"
 if [ -e "$ALERT_LOG_FILE" ] ; then
   #Limit the logfile, just keep the last 2K
-  echo "$(cat $ALERT_LOG_FILE | grep WARNING | tail -n 2k | ts "LAST ")" > $ALERT_LOG_FILE
+  echo "$(cat $ALERT_LOG_FILE | grep WARNING | tail -n 2k " > $ALERT_LOG_FILE
 fi
 
 GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
@@ -36,24 +36,27 @@ then
 fi
 
 SLEEP_TIME=$((($GPU_COUNT * 5 ) + 10 ))
-MINER_PID=$(ps ax | grep -i screen | grep miner)
-if  [ -z  "$MINER_PID" ]
+
+
+MINER_PID_1=$(ps ax | grep -i screen | grep miner)
+if  [[ -z  $MINER_PID_1 ]]
 then
-  echo "$(date) - Miner not started yet, Waiting 10 more seconds" | tee -a $LOG_FILE #$ALERT_LOG_FILE
+  echo "$(date) - miner not running, waiting 10 seconds" | tee -a $LOG_FILE
   sleep 10
-  echo "$(date) - Starting miner restart script." | tee -a $LOG_FILE
+fi
+
+MINER_PID_2=$(ps ax | grep -i screen | grep miner)
+if  [[ -z  $MINER_PID_2 ]]
+then
+  echo "WARNING: $(date) - miner still not running, starting miner restart script" | tee -a $LOG_FILE $ALERT_LOG_FILE
 else
-  echo "$(date) - Starting miner restart script." | tee -a $LOG_FILE
-  echo "" #| tee -a $LOG_FILE
+  echo "$(date) - miner is running, waiting $SLEEP_TIME seconds before going 'on watch'" | tee -a $LOG_FILE
+  sleep $SLEEP_TIME
 fi
 
 bash '/home/m1/telegram'
-# Give oneBash time to start to prevent reboot
-echo "$(date) - waiting $SLEEP_TIME seconds before going 'on watch'" | tee -a $LOG_FILE
 
-sleep $SLEEP_TIME
-
-THRESHOLD=85
+THRESHOLD=90
 RESTART=0
 COUNT=$((6 * $GPU_COUNT))
 #reinit=6
