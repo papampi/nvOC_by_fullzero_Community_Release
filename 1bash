@@ -149,12 +149,12 @@ AUTO_START_MINER="NO" ###  YES  NO ### Set this to YES after you edited 1bash wi
 
 PAPAMPI_WTM_AUTO_SWITCH="NO"  #( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
 
-PAPAMPI_WTM_PROFIT_INFO="NO" # whattomine.com Profit check for web info
+PAPAMPI_WTM_PROFIT_INFO="YES" # whattomine.com Profit check for webinfo
 
 # note!! all selected COINS must HAVE ADDRESSES below (no need address if switch=no and profit=yes )
 # select which coins you want to mine/check profit (profit switch only using this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
 
-WTM_AUTO_SWITCH_COINS="ZEC;ZEN;ETH;ETC;FTC" ### coins to check profit or make the switch with format "ZEC;ETH;ETC;XMR"
+WTM_AUTO_SWITCH_COINS="ZEC;ZEN;ETH;BTG;FTC" ### coins to check profit or make the switch with format "ZEC;ETH;ETC;XMR"
 
 WTM_AUTO_SWITCH_SYNC_INTERVAL="3" # Time to sync with WTM for best coin
 
@@ -164,12 +164,14 @@ WTM_MIN_DIFFERENCE="5" # Mininumum difference in percent when switch to new coin
 
 WTM_CURRENCY="USD" # USD, AUD, BRL, CAD, CHF, CLP, CNY, DKK, EUR, GBP, HKD, INR, ISK, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD
 
-WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json"
+#Read below for how to change the url"
+WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_280x=0&adapt_q_380=0&adapt_q_fury=0&adapt_q_470=1&adapt_q_480=3&adapt_q_570=0&adapt_q_580=0&adapt_q_750Ti=0&adapt_q_1050Ti=1&adapt_q_10606=6&adapt_10606=true&adapt_q_1070=1&adapt_q_1080=1&adapt_q_1080Ti=1&eth=true&factor%5Beth_hr%5D=135.0&factor%5Beth_p%5D=540.0&grof=true&factor%5Bgro_hr%5D=123.0&factor%5Bgro_p%5D=540.0&x11gf=true&factor%5Bx11g_hr%5D=43.2&factor%5Bx11g_p%5D=540.0&cn=true&factor%5Bcn_hr%5D=2580.0&factor%5Bcn_p%5D=420.0&eq=true&factor%5Beq_hr%5D=1620.0&factor%5Beq_p%5D=540.0&lre=true&factor%5Blrev2_hr%5D=121800.0&factor%5Blrev2_p%5D=540.0&ns=true&factor%5Bns_hr%5D=3000.0&factor%5Bns_p%5D=540.0&lbry=true&factor%5Blbry_hr%5D=1020.0&factor%5Blbry_p%5D=540.0&bk2bf=true&factor%5Bbk2b_hr%5D=5940.0&factor%5Bbk2b_p%5D=480.0&bk14=true&factor%5Bbk14_hr%5D=9300.0&factor%5Bbk14_p%5D=540.0&pas=true&factor%5Bpas_hr%5D=3480.0&factor%5Bpas_p%5D=540.0&skh=true&factor%5Bskh_hr%5D=108.0&factor%5Bskh_p%5D=540.0&factor%5Bl2z_hr%5D=420.0&factor%5Bl2z_p%5D=300.0&factor%5Bcost%5D=0.0&sort=Profit&volume=0&revenue=current&factor%5Bexchanges%5D%5B%5D=&factor%5Bexchanges%5D%5B%5D=abucoins&factor%5Bexchanges%5D%5B%5D=bitfinex&factor%5Bexchanges%5D%5B%5D=bittrex&factor%5Bexchanges%5D%5B%5D=bleutrade&factor%5Bexchanges%5D%5B%5D=c_cex&factor%5Bexchanges%5D%5B%5D=cryptopia&factor%5Bexchanges%5D%5B%5D=hitbtc&factor%5Bexchanges%5D%5B%5D=poloniex&factor%5Bexchanges%5D%5B%5D=yobit&dataset=Main&commit=Calculate"
 
-## Go to [ https://whattomine.com/coins ] select your cards, hash rate, power...
-# Select "Sort by" and Difficulty Revenue" better set both to current profit and current dificulty.
-# Click calculate, then add .json to coins at the begining of the address after you click calculate!!!
-# Default url is for 3x480
+## Go to [ https://whattomine.com/coins ] select your cards, hash rate, power, algos, exchanges, ...
+# Set "Sort by" and Difficulty for Revenue" to "Current profit" and "Current dificulty" ... "Average last ***" not good for auto switch.
+# Click calculate, and wait for page to load, copy the new url and add .json to /coins at the begining of the url. 
+# like this " https://whattomine.com/coins.json?utf8=✓&adapt....."
+# Above url is for 6x1060
 
 Maxximus007_AUTO_TEMPERATURE_CONTROL="YES"
 
@@ -876,7 +878,7 @@ then
 
   # Equihash
 
-  if [ $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE_EQUIHASH" -o $COIN == "VOTE" ]
+  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE_EQUIHASH" -o $COIN == "VOTE" ]
   then
     POWERLIMIT_WATTS=76
     __CORE_OVERCLOCK=150
