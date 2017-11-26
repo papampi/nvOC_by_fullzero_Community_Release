@@ -7,7 +7,6 @@ source /home/m1/1bash
 
 # Creating a log file to record coin switch
 LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
-
 if [ -e "$LOG_FILE" ] ; then
   #Limit the logfile, just keep the last 5K
   echo "$(cat $LOG_FILE | grep switched | tail -n 5k)" > $LOG_FILE
@@ -18,6 +17,7 @@ if [ -e "$WTM_HISTORY" ] ; then
   #Limit the logfile, just keep the last 2K
   echo "$(cat $WTM_HISTORY | grep switched | tail -n 2k)" > $WTM_HISTORY
 fi
+
 while true
 do
 
@@ -45,7 +45,7 @@ do
 
       while [ -z  "$MINER_PID" ]
       do
-        echo "miner no started yet" | tee -a $LOG_FILE $ALERT_LOG_FILE
+        echo "miner not started yet" | tee -a $LOG_FILE $ALERT_LOG_FILE
         sleep 5
       done
 
@@ -57,15 +57,53 @@ do
         if [ $IAmNotAJeep_and_Maxximus007_WATCHDOG == "YES" ]
         then
           #restart wdog
-          pkill -f DOG
+          pkill -f IAmNotAJeep_and_Maxximus007_WATCHDOG
           sleep 1
           screen -dmS wdog bash /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG
           echo ""
           echo "wdog restarted in screen wdog; attach with: screen -r wdog"
           echo ""
-          running=""
         fi
 
+        if [ $damNmad_ALGO_SPECIFIC_OC == "YES" ] && [ $INDIVIDUAL_CLOCKS == "NO" ]
+        then
+
+          if [ $Maxximus007_AUTO_TEMPERATURE_CONTROL == "YES" ] && [ $INDIVIDUAL_POWERLIMIT == "NO" ]
+          then
+            pkill -f Maxximus007_AUTO_TEMPERATURE_CONTROL
+            sleep 1
+            screen -dmS temp bash /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL
+            echo ""
+            echo "temp control restarted in screen temp; attach with: screen -r temp"
+            echo ""
+          fi
+
+          GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+          NVD=nvidia-settings
+
+          if [ $P106_100_FULL_HEADLESS_MODE == "NO" ]
+          then
+            gpu=0
+            while [ $gpu -lt $GPUS ]
+            do
+              for j in $TI
+              do
+                CORE=${__CORE_OVERCLOCK[${gpu}]}
+                MEM=${MEMORY_OVERCLOCK[${gpu}]}
+                ${NVD} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE
+                ${NVD} -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM
+              done
+              gpu=$(($gpu+1))
+            done
+          fi
+
+          if [ $P106_100_FULL_HEADLESS_MODE == "YES" ]
+          then
+            ${NVD} -a GPUGraphicsClockOffset[2]=${__CORE_OVERCLOCK}
+            ${NVD} -a GPUMemoryTransferRateOffset[2]=${MEMORY_OVERCLOCK}
+          fi
+
+        fi
         #start new miner
         bash /home/m1/0miner
         echo "miner started with:" | tee -a $LOG_FILE
