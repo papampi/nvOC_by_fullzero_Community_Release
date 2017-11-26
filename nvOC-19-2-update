@@ -1,5 +1,5 @@
 #!/bin/bash
-echo " nvOC by fullzero, unofficial 19.2 by papampi" 
+echo " nvOC by fullzero, unofficial 19.2 by papampi"
 echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB/HDD read /writes, added option to auto start miner or not in 1bash, new 1bash for unified and separated pool and ports for wdog checking if pool is online, new separated 0miner to make 3main lighter and easier start miner, fix hostname conflict, add Warning to wdog and temp logs to ,  and many more edits and bug fixes"
 echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes."
 echo " Backup your old 1bash and any important stuff"
@@ -44,19 +44,30 @@ sudo apt autoremove -y
 
 sleep 1;echo "";echo ""
 
-echo "Moving miner screenlog.o to tmpf to lower disk read/writes"
-echo "sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc"
-sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc
-sleep 1;echo "";echo ""
+if [[ -z  $(cat /etc/screenrc | grep nvoc_log) ]]
+then
+  echo "Moving miner screenlog.o to tmpf to lower disk read/writes"
+  echo "sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc"
+  sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc
+  sleep 1;echo "";echo ""
+else
+  echo "screen settings for screenlog.0 is ok"
+fi
 
-echo "making tmpfs nvoc_logs folder for logs"
-sleep 1;echo "";echo ""
-echo "mkdir -p /home/m1/nvoc_logs"
-mkdir -p /home/m1/nvoc_logs
-echo "sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab"
-sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab
-echo "sudo mount -a"
-sudo mount -a
+if [[ -z  $(cat /etc/fstab | grep nvoc_log) ]]
+then
+  echo "making tmpfs nvoc_logs folder for logs"
+  sleep 1;echo "";echo ""
+  echo "mkdir -p /home/m1/nvoc_logs"
+  mkdir -p /home/m1/nvoc_logs
+  echo "sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab"
+  sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab
+  echo "sudo mount -a"
+  sudo mount -a
+else
+  echo "tmpfs nvoc_logs already created"
+fi
+
 
 sleep 1;echo "";echo ""
 echo "Downloading dstm zm miner 5_5"
@@ -93,7 +104,7 @@ then
   echo "hostanema has conflict, Permanently fixing it"
   echo "sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts"
   sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts
-  echo "sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname"  
+  echo "sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname"
   sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname
 else
   echo "hostname had no conflicts"
@@ -147,7 +158,7 @@ echo "chmod a+x /home/m1/www/cgi-bin/clearalerts"
 chmod a+x /home/m1/www/cgi-bin/clearalerts
 echo "touch /home/m1/nvoc_logs/5_restartlog"
 touch /home/m1/nvoc_logs/5_restartlog
-echo "touch /home/m1/nvoc_logs/6_autotemplog" 
+echo "touch /home/m1/nvoc_logs/6_autotemplog"
 touch /home/m1/nvoc_logs/6_autotemplog
 echo "touch /home/m1/WTM_switch_histrory"
 touch /home/m1/WTM_switch_histrory
