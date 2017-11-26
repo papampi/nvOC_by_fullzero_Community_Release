@@ -68,7 +68,7 @@ else
   echo "tmpfs nvoc_logs already created"
 fi
 
-
+if [ ! -d /home/m1/zec/zm/5_6/ ]; then
 sleep 1;echo "";echo ""
 echo "Downloading dstm zm miner 5_6"
 echo "cd /home/m1/Downloads"
@@ -88,6 +88,7 @@ echo "cp /home/m1/zec/zm/5_6/zm_miner /home/m1/zec/zm/latest/zm_miner"
 cp /home/m1/zec/zm/5_6/zm_miner /home/m1/zec/zm/latest/zm_miner
 echo "chmod a+x /home/m1/zec/zm/latest/zm_miner"
 chmod a+x /home/m1/zec/zm/latest/zm_miner
+fi
 
 sleep 1;echo "";echo ""
 
@@ -128,10 +129,13 @@ sleep 1
 echo " "
 echo " "
 
+if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then 
+  echo "cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash"
+  cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
+fi
+
 echo "cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner"
 cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner
-echo "cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash"
-cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
 echo "cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main"
 cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main
 echo "cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate"
