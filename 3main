@@ -1006,14 +1006,14 @@ then
     echo ""
     echo "    Auto Start Miner is Set to YES"
     echo "    "
-    echo "    LAUNCHING Miner:"
+    echo "    Commencing Miner Start Command"
     running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
       if [ $LOCALorREMOTE == "REMOTE" ]
       then
         bash /home/m1/0miner
-        echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
+        echo "    "$(ps ax | grep miner | grep -o 'SCREEN.*')
         echo "    "
         echo "    "
         echo "process in screen miner; attach with: screen -r miner"
