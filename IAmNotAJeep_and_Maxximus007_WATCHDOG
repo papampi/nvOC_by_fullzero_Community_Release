@@ -38,8 +38,6 @@ fi
 SLEEP_TIME=$((($GPU_COUNT * 10 ) + 10 ))
 MINER_TIME=$((($GPU_COUNT * 2 ) + 10 ))
 
-
-
 if  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
 then
   echo "$(date) - miner not running, waiting $MINER_TIME seconds" | tee -a $LOG_FILE
@@ -64,18 +62,17 @@ while true
 do
 
   #If WTM_AUTO_SWITCH python script running time is more than 30 Sec kill it
-
+if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ] || [ $PAPAMPI_WTM_PROFIT_INFO == "YES" ] ;then
   WTM_A_S_PID=`ps -ef | grep WTM_AUTO_SWITCH | grep -v grep |awk '{print $2}'`
-  if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ] || [ $PAPAMPI_WTM_PROFIT_INFO == "YES" ] &&  [[ -n "$WTM_A_S_PID" ]]
-  then
-    WTM_A_S_PID_TIME=`ps -eo pid,etimes | grep $WTM_A_S_PID | awk  '$2> 30 { print $1}'` 2>&1
+ if  [[ -n $WTM_A_S_PID ]];  then
+    WTM_A_S_PID_TIME=`ps -eo pid,etimes | grep $WTM_A_S_PID | awk  '$2> 30 { print $1}'`
     echo "WTM Auto Switch Syncing"
-    if  [[ -n "$WTM_A_S_PID_TIME" ]]
-    then
+    if  [[ -n "$WTM_A_S_PID_TIME" ]] ; then
       echo "WARNING: $(date) - WTM python stucked, Killing it" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
       ps -eo pid,etimes | grep `pgrep -f WTM_AUTO_SWITCH` | awk  '$2> 30 { print $1}'  | xargs kill -9
     fi
   fi
+fi
 
 
   # Delay before checking GPU status/usage
