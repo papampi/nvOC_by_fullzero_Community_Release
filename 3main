@@ -9,7 +9,7 @@ source /home/m1/1bash
 #########################################################################
 
 echo ""
-echo " nvOC_v0019-2, Beta"
+echo " nvOC_v0019-2, unofficial by papampi"
 echo ""
 echo ""
 echo "rig IP: $IPW"
