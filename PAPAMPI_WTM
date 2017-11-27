@@ -65,7 +65,6 @@ do
           echo ""
         fi
 
-        
         #start new miner
         bash /home/m1/0miner
         echo "miner started with:" | tee -a $LOG_FILE

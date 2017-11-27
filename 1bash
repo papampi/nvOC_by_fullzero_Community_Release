@@ -169,7 +169,7 @@ WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_28
 
 ## Go to [ https://whattomine.com/coins ] select your cards, hash rate, power, algos, exchanges, ...
 # Set "Sort by" and Difficulty for Revenue" to "Current profit" and "Current dificulty" ... "Average last ***" are not good for auto switch.
-# Click calculate, and wait for page to load, copy the new url and add .json to /coins at the begining of the url. 
+# Click calculate, and wait for page to load, copy the new url and add .json to /coins at the begining of the url.
 # like this " https://whattomine.com/coins.json?utf8=✓&adapt....."
 # Above url is for 6x1060
 

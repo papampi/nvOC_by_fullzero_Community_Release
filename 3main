@@ -9,7 +9,7 @@ source /home/m1/1bash
 #########################################################################
 
 echo ""
-echo " nvOC_v0019-2, unofficial by papampi"
+echo " nvOC_v0019-2, Beta"
 echo ""
 echo ""
 echo "rig IP: $IPW"
@@ -559,9 +559,7 @@ EOF
     guake -n 1 -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
   fi
 
-  BITCOIN="theGROUND"
-
-  while [ $BITCOIN == "theGROUND" ]
+  while true
   do
     echo ""
     cat current-profit
@@ -776,9 +774,9 @@ EOF
     guake -n 1 -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
   fi
 
-  BITCOIN="theGROUND"
 
-  while [ $BITCOIN == "theGROUND" ]
+
+  while true
   do
     echo ""
     cat current-profit
@@ -1008,9 +1006,7 @@ then
     echo ""
     echo "    Auto Start Miner is Set to YES"
     echo "    "
-    echo "    Commencing Miner Launch Command:"
-    echo "    "
-    echo "    "
+    echo "    LAUNCHING Miner:"
     running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
