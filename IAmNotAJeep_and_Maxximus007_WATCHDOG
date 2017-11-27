@@ -39,15 +39,14 @@ SLEEP_TIME=$((($GPU_COUNT * 10 ) + 10 ))
 MINER_TIME=$((($GPU_COUNT * 2 ) + 10 ))
 
 
-MINER_PID_1=$(ps ax | grep -i screen | grep miner)
-if  [[ -z  $MINER_PID_1 ]]
+
+if  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
 then
   echo "$(date) - miner not running, waiting $MINER_TIME seconds" | tee -a $LOG_FILE
-  sleep 1$MINER_TIME
+  sleep $MINER_TIME
 fi
 
-MINER_PID_2=$(ps ax | grep -i screen | grep miner)
-if  [[ -z  $MINER_PID_2 ]]
+if  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
 then
   echo "WARNING: $(date) - miner still not running, starting miner restart script" | tee -a $LOG_FILE $ALERT_LOG_FILE
 else
