@@ -84,6 +84,7 @@ do
       elif  [[ $damNmad_ALGO_SPECIFIC_OC == "YES" ]]
       then
         echo "'damNmad_ALGO_SPECIFIC_OC=YES', restarting 3main for OC settings to take effect"  | tee -a $LOG_FILE
+        echo "If you dont want too many open guake terminals, in 1bash set LOCALorREMOTE=REMOTE "   
         pkill -f 3main
       fi
       sleep $TIMEOUT
