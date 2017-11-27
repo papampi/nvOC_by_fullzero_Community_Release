@@ -149,10 +149,10 @@ fi
         CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
         PING_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
         PING_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
-        echo "Dual mining, check main server $PING_SERVER:$PING_PORT " # | tee -a $LOG_FILE
+        echo "Dual mining, check main server $PING_SERVER:$PING_PORT "  | tee -a $LOG_FILE
         if nc -vzw2 $PING_SERVER $PING_PORT;
         then
-          echo "Dual mining, main pool $PING_SERVER:$PING_PORT is up"
+          echo "Dual mining, main pool $PING_SERVER:$PING_PORT is up" | tee -a $LOG_FILE
           INTERNET_IS_GO=1
         else
           echo "WARNING: $(date) - Cant reach main pool, $PING_SERVER:$PING_PORT is DOWN" | tee -a $LOG_FILE $ALERT_LOG_FILE
@@ -166,10 +166,10 @@ fi
         CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
         PING_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
         PING_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
-        echo "Check mining pool, $PING_SERVER:$PING_PORT "
+        echo "Check mining pool, $PING_SERVER:$PING_PORT " | tee -a $LOG_FILE
         if nc -vzw2 $PING_SERVER $PING_PORT
         then
-          echo "Mining pool up" #  | tee -a $LOG_FILE
+          echo "Mining pool up"   | tee -a $LOG_FILE
           INTERNET_IS_GO=1
         else
           echo "WARNING: $(date) - Cant reach mining pool, $PING_SERVER:$PING_PORT is DOWN"   | tee -a $LOG_FILE $ALERT_LOG_FILE
@@ -202,7 +202,7 @@ fi
       # Give oneBash time to restart to prevent reboot
       sleep $SLEEP_TIME
     else
-      echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are 6 consecutive failures" | tee -a $LOG_FILE $ALERT_LOG_FILE
+      echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are 6 consecutive failures" | tee -a $LOG_FILE
       echo ""
     fi
   else
