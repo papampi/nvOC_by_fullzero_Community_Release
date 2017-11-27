@@ -1008,7 +1008,9 @@ then
     echo ""
     echo "    Auto Start Miner is Set to YES"
     echo "    "
-    echo "    LAUNCHING:  Miner:"
+    echo "    Commencing Miner Launch Command:"
+    echo "    "
+    echo "    "
     running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
