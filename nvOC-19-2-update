@@ -178,6 +178,24 @@ echo "chmod 666 /home/m1/7_*"
 chmod 666 /home/m1/7_*
 
 sleep 1;echo "";echo ""
+touch /home/m1/.bash_aliases
+if [[ -z  $(cat .bash_aliases | grep master-log) ]]
+then
+  echo " Adding master-log alias"
+  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/5_restartlog /home/m1/nvoc_logs/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
+  echo "type master-log in guake or ssh sessions, to watch all your logs live"
+  echo " "
+fi
+
+if [[ -z  $(cat .bash_aliases | grep miner-restart) ]]
+then
+  echo "Adding miner-restart alias"
+  echo "alias miner-restart='pkill -f 3main'" | tee -a /home/m1/.bash_aliases
+  echo "type miner-restart in guake or ssh sessions, to restart 3main"
+  echo " "
+fi
+
+sleep 1;echo "";echo ""
 
 echo "All Done"
 echo "Old 1bash, 3main, wdog and temp are copied to /home/m1/backups/*.bak"
