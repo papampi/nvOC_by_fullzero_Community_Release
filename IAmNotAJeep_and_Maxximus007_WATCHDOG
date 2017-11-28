@@ -8,14 +8,14 @@ source /home/m1/1bash
 export DISPLAY=:0
 # Creating a log file to record restarts in tmpfs
 LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
-if [ -e "$LOG_FILE" ] ; then
+if [[ -e "$LOG_FILE" ]] ; then
   #Limit the logfile, just keep the last 2K
   echo "$(cat $LOG_FILE | tail -n 2k )" > $LOG_FILE
 fi
 
 # Creating alert log file to record problems
 ALERT_LOG_FILE="/home/m1/7_wdog_alertlog"
-if [ -e "$ALERT_LOG_FILE" ] ; then
+if [[ -e "$ALERT_LOG_FILE" ]] ; then
   #Limit the logfile, just keep the last 2K
   echo "$(cat $ALERT_LOG_FILE | grep WARNING | tail -n 2k )" > $ALERT_LOG_FILE
 fi
@@ -52,7 +52,7 @@ else
   sleep $SLEEP_TIME
 fi
 
-if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "NO"  ]
+if [[  $PAPAMPI_WTM_AUTO_SWITCH  ==  "NO"  ]]
 then
   bash '/home/m1/telegram'
 fi
@@ -65,7 +65,7 @@ while true
 do
 
   #If WTM_AUTO_SWITCH python script running time is more than 30 Sec kill it
-  if [  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ] || [ $PAPAMPI_WTM_PROFIT_INFO == "YES" ]
+  if [[  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ]] || [[ $PAPAMPI_WTM_PROFIT_INFO == "YES" ]]
   then
     WTM_A_S_PID=`ps -ef | grep WTM_AUTO_SWITCH | grep -v grep |awk '{print $2}'`
     if  [[ -n $WTM_A_S_PID ]]
