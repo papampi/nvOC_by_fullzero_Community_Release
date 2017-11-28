@@ -48,14 +48,14 @@ do
         echo "" | tee -a $LOG_FILE
 
 
-        while [ -z  $(ps ax | grep -i screen | grep miner) ]
+        while [[ -z  $(ps ax | grep -i screen | grep miner) ]]
         do
           echo "miner not started yet" | tee -a $LOG_FILE $ALERT_LOG_FILE
           echo "" | tee -a $LOG_FILE
           sleep 5
         done
 
-        if [ -n  $(ps ax | grep -i screen | grep miner) ]
+        if [[ -n  $(ps ax | grep -i screen | grep miner) ]]
         then
           echo "miner is running, lets make the switch" | tee -a $LOG_FILE
           #kill miner
