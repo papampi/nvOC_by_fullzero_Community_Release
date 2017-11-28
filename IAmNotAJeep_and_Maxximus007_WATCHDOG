@@ -220,11 +220,12 @@ do
     # All is good, reset the counter
     COUNT=$((6 * $GPU_COUNT))
     echo "$(date) - No mining issues detected."  | tee -a $LOG_FILE
-  fi
+  #fi
   # No need for a reboot after a while
   if [ $REBOOTRESET -gt 5 ]
   then
     RESTART=0
     REBOOTRESET=0
   fi
+fi  
 done
