@@ -20,7 +20,7 @@
   Added MINER_PWD for miner passwords (Stubu mod)
   Unified and separated all pool address and pool ports so wdog can check if pool is up or no if needed (papampi mod)
     
-  Jeep wdog edits:
+  IAmNotAJeep wdog edits:
   Added check if miner is running or not when utilization dropped to restart miner faster (stubo mod)
   Added check for internet and wait 10 seconds if its down before going to restart miner and reboot system (stubo mod)
   Added check mining pool:port if internet is up before going to reboot system (papampi mod)
@@ -28,7 +28,7 @@
   Changed logfile location to tmpfs (papampi mod)
   Changed logging system to only keep last "warnings" with max 2k size.
   Added checking number of gpus installed vs system reported gpus at start of wdog, so you know if a gpu is not working.
-
+  Added dynamic wait time based on gpu count for wdog to start check 
 
   Maxximus temp edits:
   Added "Warning" to log output of alerts to catch them easier (papampi mod)
