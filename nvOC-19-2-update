@@ -190,7 +190,7 @@ fi
 if [[ -z  $(cat /home/m1/.bash_aliases | grep miner-restart) ]]
 then
   echo "Adding miner-restart alias"
-  echo "alias miner-restart='pkill -f 3main'" | tee -a /home/m1/.bash_aliases
+  echo "alias miner-restart='pkill -f WATCHDOG & pkill -f 3main'" | tee -a /home/m1/.bash_aliases
   echo "type miner-restart in guake or ssh sessions, to restart 3main"
   echo " "
 fi
