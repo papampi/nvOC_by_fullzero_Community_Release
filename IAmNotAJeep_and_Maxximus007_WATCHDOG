@@ -182,7 +182,6 @@ do
           INTERNET_IS_GO=1
         fi
         while ! nc -vzw2 $PING_SERVER $PING_PORT ; do
-
           echo "WARNING: $(date) - Cant reach mining pool, $PING_SERVER:$PING_PORT is DOWN"   | tee -a $LOG_FILE $ALERT_LOG_FILE
           INTERNET_IS_GO=0
           RESTART=0
