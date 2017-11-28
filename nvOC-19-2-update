@@ -5,7 +5,7 @@ echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 versio
 echo " Backup your old 1bash and any important stuff"
 echo " wait 30 seconds, if you have not backed up hit ctrl+c now"
 sleep 1;echo "";echo ""
-echo " DO NOT OPEN THE TERMINAL UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
+echo " DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
 echo "";echo ""
 sleep 30;echo "";echo ""
 
