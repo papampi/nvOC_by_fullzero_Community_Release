@@ -12,8 +12,8 @@ sleep 30;echo "";echo ""
 echo " Stopping gnome-terminal, miner, wdog, temp, ..."
 echo "pkill -f gnome-terminal"
 pkill -f gnome-terminal
-echo "pkill -f DOG"
-pkill -f DOG
+echo "pkill -f WATCHDOG"
+pkill -f WATCHDOG
 echo "pkill -f GRAM"
 pkill -f GRAM
 echo "pkill -f TEMP"
