@@ -7,13 +7,13 @@ source /home/m1/1bash
 
 # Creating a log file to record coin switch
 LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
-if [ -e "$LOG_FILE" ] ; then
+if [[ -e "$LOG_FILE" ]] ; then
   #Limit the logfile, just keep the last 5K
   echo "$(cat $LOG_FILE | grep switched | tail -n 5k)" > $LOG_FILE
 fi
 
 WTM_HISTORY="/home/m1//WTM_switch_history"
-if [ -e "$WTM_HISTORY" ] ; then
+if [[ -e "$WTM_HISTORY" ]] ; then
   #Limit the logfile, just keep the last 2K
   echo "$(cat $WTM_HISTORY | grep switched | tail -n 2k)" > $WTM_HISTORY
 fi
@@ -21,7 +21,7 @@ fi
 while true
 do
 
-  if [ $AUTO_START_MINER == "YES" ]
+  if [[ $AUTO_START_MINER == "YES" ]]
   then
 
     python2.7 '/home/m1/WTM_AUTO_SWITCH' /home/m1/WTM.json  | tee -a $LOG_FILE
@@ -33,7 +33,7 @@ do
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
 
-    if [ "$CURRENT_COIN" != "$TOP_COIN" ]
+    if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]
     then
       sed -i 's/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
       cat /home/m1/WTM_current_revenue | grep `cat /home/m1/WTM_top_coin | awk -F: '{print $1}'` | awk -F: '{print $2}' >> /home/m1/WTM_24H_REV
