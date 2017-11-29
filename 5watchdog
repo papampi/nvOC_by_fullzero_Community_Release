@@ -21,6 +21,7 @@ if [[ -e "$ALERT_LOG_FILE" ]] ; then
 fi
 
 GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+
 if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
 then
   if [[ $GPU_COUNT -ne $NUMBER_GPUS_INSTALLED ]]
@@ -98,6 +99,7 @@ do
   echo "GPU UTILIZATION: " $UTILIZATIONS  | tee -a $LOG_FILE
   echo ""
   numtest='^[0-9]+$'
+
   for UTIL in $UTILIZATIONS
   do
     if ! [[ $UTIL =~ $numtest ]]
@@ -126,60 +128,97 @@ do
     fi
     GPU=$(($GPU + 1))
   done
+
   #IAmNotAJeep MOD from V002
   if [ $JEEP -gt 0 ]
   then
-    
+
     if [ $COUNT -le 0 ]
     then
+
       # Check for Internet and wait if down
       while ! nc -vzw5 google.com 80;
       do
         echo "WARNING: $(date) - Internet is down, checking again in 5 seconds..." | tee -a $LOG_FILE $ALERT_LOG_FILE
         sleep 5
+        REBOOTRESET=0; RESTART=0; COUNT=$((6 * $GPU_COUNT))
+        if [[ nc -vzw5 google.com 80 ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
+        then
+          echo "Internet is up, and miner is running"
+          sleep $MINER_TIME
+        elif [[ nc -vzw5 google.com 80 ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
+        then
+          echo "Internet is up, but miner is not running, restart miner"
+          bash 0miner
+          sleep $SLEEP_TIME
+        fi
+
       done
-      echo ""
+
       # Check if pool:port is up or not
       if [[  $COIN == *DUAL*  ]] && [[ $COIN != *NICE* ]]
       then
         CURRENT_COIN=$( head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//' | sed 's/DUAL_//' | cut -d _ -f 1)
         CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
         CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
-        PING_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
-        PING_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
-        echo "Dual mining, check main server $PING_SERVER:$PING_PORT "  | tee -a $LOG_FILE
-        while ! nc -vzw2 $PING_SERVER $PING_PORT ; do
-          echo "WARNING: $(date) - Cant reach main pool: $PING_SERVER:$PING_PORT, check again in 5 seconds..." | tee -a $LOG_FILE $ALERT_LOG_FILE
-          INTERNET_IS_GO=0
+        POOL_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
+        POOL_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
+        echo "Dual mining, check main server $POOL_SERVER:$POOL_PORT"  | tee -a $LOG_FILE
+        while ! nc -vzw2 $POOL_SERVER $POOL_PORT ; do
+          echo "WARNING: $(date) - Cant reach main pool: $POOL_SERVER:$POOL_PORT, check again in 5 seconds..." | tee -a $LOG_FILE $ALERT_LOG_FILE
           RESTART=0
           sleep 5
+          REBOOTRESET=0; RESTART=0; COUNT=$((6 * $GPU_COUNT))
+          if [[ nc -vzw2 $POOL_SERVER $POOL_PORT ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
+          then
+            echo "Internet is up, and miner is running"
+            sleep $MINER_TIME
+          elif [[ nc -vzw2 $POOL_SERVER $POOL_PORT ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
+          then
+            echo "Internet is up, but miner is not running, restart miner"
+            bash 0miner
+            sleep $SLEEP_TIME
+          fi
         done
+
+      elif [[  $COIN == *SALFTER*  ]] || [[ $COIN == *NICE* ]]
+      then
+        echo ""
 
       else
         CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
         CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
         CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
-        PING_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
-        PING_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
-        echo "Check mining pool, $PING_SERVER:$PING_PORT "  | tee -a $LOG_FILE
-
-        while ! nc -vzw2 $PING_SERVER $PING_PORT ; do
-          echo "WARNING: $(date) - Cant reach mining pool: $PING_SERVER:$PING_PORT, check again in 5 seconds..."   | tee -a $LOG_FILE $ALERT_LOG_FILE
-          INTERNET_IS_GO=0
+        POOL_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
+        POOL_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
+        echo "Check mining pool, $POOL_SERVER:$POOL_PORT"  | tee -a $LOG_FILE
+        while ! nc -vzw2 $POOL_SERVER $POOL_PORT ; do
+          echo "WARNING: $(date) - Cant reach mining pool: $POOL_SERVER:$POOL_PORT, check again in 5 seconds..."   | tee -a $LOG_FILE $ALERT_LOG_FILE
           RESTART=0
           sleep 5
+          REBOOTRESET=0; RESTART=0; COUNT=$((6 * $GPU_COUNT))
+          if [[ nc -vzw2 $POOL_SERVER $POOL_PORT ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
+          then
+            echo "Internet is up, and miner is running"
+            sleep $MINER_TIME
+          elif [[ nc -vzw2 $POOL_SERVER $POOL_PORT ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
+          then
+            echo "Internet is up, but miner is not running, restart miner"
+            bash 0miner
+            sleep $SLEEP_TIME
+          fi
         done
-      fi
-      
-      # Look for no miner screen and get right to miner restart
-      echo "Debug: JEEP=$JEEP, COUNT=$COUNT, RESTART=$RESTART"
-      if [[ `screen -ls |grep miner |wc -l` -eq 0 ]]
-      then
-         COUNT=0
-         echo "WARNING: $(date) - Found no miner, jumping to 3main restart" | tee -a $LOG_FILE $ALERT_LOG_FILE
+
       fi
 
-      if [[ $RESTART -gt 4 && $INTERNET_IS_GO == 1 ]]
+      # Look for no miner screen and get right to miner restart
+      if [[ `screen -ls |grep miner |wc -l` -eq 0 ]]
+      then
+        COUNT=0
+        echo "WARNING: $(date) - Found no miner, jumping to 3main restart" | tee -a $LOG_FILE $ALERT_LOG_FILE
+      fi
+
+      if [[ $RESTART -gt 4  ]]
       then
         echo "WARNING: $(date) - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a $LOG_FILE $ALERT_LOG_FILE
         echo "" #| tee -a $LOG_FILE
@@ -187,6 +226,7 @@ do
         sleep 10
         sudo reboot
       fi
+
       # If miner runs in screen 'miner' kill the screen to be sure it's gone
       ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*' |  ts "DEBUG: $(date) - Miner command before killing it: " |  tee -a $LOG_FILE $ALERT_LOG_FILE
       echo "DEBUG: $(date) - Problem found: See diagnostics below:" | tee -a $LOG_FILE $ALERT_LOG_FILE
@@ -207,16 +247,21 @@ do
       echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are $COUNT more consecutive failures" | tee -a $LOG_FILE
       echo ""
     fi
+
   else
     # All is good, reset the counter
     COUNT=$((6 * $GPU_COUNT))
     echo "$(date) - No mining issues detected."  | tee -a $LOG_FILE
-  #fi
-  # No need for a reboot after a while
-  if [ $REBOOTRESET -gt 5 ]
-  then
-    RESTART=0
-    REBOOTRESET=0
+    #fi
+    # No need for a reboot after a while
+
+    if [ $REBOOTRESET -gt 5 ]
+    then
+      RESTART=0
+      REBOOTRESET=0
+    fi
+
   fi
-fi  
+  echo "Debug: JEEP=$JEEP, COUNT=$COUNT, RESTART=$RESTART, REBOOTRESET=$REBOOTRESET"
+
 done
