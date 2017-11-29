@@ -29,7 +29,7 @@ TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/7_temp_alertlog | grep WARNING | awk '{pri
 WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/7_wdog_alertlog | grep WARNING | awk '{print $0,"<br>"}')
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
 
-if [ $Maxximus007_AUTO_TEMPERATURE_CONTROL == "YES" ]
+if [ $MINER_TEMP_CONTROL == "YES" ]
 then
   AUTO_TEMPERATURE_CONTROL=("Enabled,")
   if ps aux | grep -v grep | grep -q temp
@@ -42,7 +42,7 @@ else
   AUTO_TEMPERATURE_CONTROL=("Disbaled")
 fi
 
-if [ $IAmNotAJeep_and_Maxximus007_WATCHDOG == "YES" ]
+if [ $MINER_WATCHDOG == "YES" ]
 then
   WATCHDOG=("Enabled,")
   if ps aux | grep -v grep | grep -q wdog
@@ -72,7 +72,7 @@ then
   AUTO_SWITCH=("Salfter Nicehash Auto Switch")
 
 
-elif [ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]
+elif [ $WTM_AUTO_SWITCH == "YES" ]
 then
   CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
   MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
@@ -91,7 +91,7 @@ then
   LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
 
 
-  if ps aux | grep -v grep | grep -q PAPAMPI_WTM
+  if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
   then
     WTM_SWITCH=("Running")
   else
@@ -99,14 +99,14 @@ then
   fi
 
 #if python script syncing
-  if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
+  if ps aux | grep -v grep | grep -q WTM_SWITCHER
   then
     WTM_A_S="Syncing data with WTM.com"
   fi
-  AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH  $WTM_A_S")
+  AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH $WTM_A_S")
 
 
-elif [ $PAPAMPI_WTM_PROFIT_INFO == "YES" ] && [ $PAPAMPI_WTM_AUTO_SWITCH == "NO" ]
+elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
 then
   CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
   MINING_HISTORY=""
