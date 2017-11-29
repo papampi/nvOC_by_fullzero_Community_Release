@@ -312,18 +312,18 @@ fi
 
 sleep 2
 
-if [ $IAmNotAJeep_and_Maxximus007_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ]
+if [ $5_MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ]
 then
-  HCD='/home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG'
+  HCD='/home/m1/5_MINER_WATCHDOG'
   echo ""
-  echo "LAUNCHING:  IAmNotAJeep_and_Maxximus007_WATCHDOG"
+  echo "LAUNCHING:  5_MINER_WATCHDOG"
   sleep 2
-  running=$(ps -ef | awk '$NF~"IAmNotAJeep_and_Maxximus007_WATCHDOG" {print $2}')
+  running=$(ps -ef | awk '$NF~"5_MINER_WATCHDOG" {print $2}')
   if [ "$running" == "" ]
   then
     if [ $LOCALorREMOTE == "LOCAL" ]
     then
-      guake -n $HCD -r IJ_M7_WATCHDOG -e "bash $HCD"
+      guake -n $HCD -r MINER_WATCHDOG -e "bash $HCD"
       echo ""
       echo "process in guake terminal Tab (f12)"
       echo ""
@@ -331,14 +331,14 @@ then
     fi
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -dmS wdog bash /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG
+      screen -dmS wdog bash /home/m1/5_MINER_WATCHDOG
       echo ""
       echo "process in screen wdog; attach with: screen -r wdog"
       echo ""
       running=""
     fi
   fi
-elif [ $IAmNotAJeep_and_Maxximus007_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "NO" ]
+elif [ $5_MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "NO" ]
 then
   echo "  "
   echo "  "
@@ -347,28 +347,28 @@ then
   echo "  "
 fi
 
-if [ $Maxximus007_AUTO_TEMPERATURE_CONTROL == "YES" ]
+if [ $6_MINER_TEMP_CONTROL == "YES" ]
 then
   reup=0
-  running=$(ps -ef | awk '$NF~"Maxximus007_AUTO_TEMPERATURE_CONTROL" {print $2}')
+  running=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
 
   if [ "$running" != "" ]
   then
-    target=$(ps -ef | awk '$NF~"Maxximus007_AUTO_TEMPERATURE_CONTROL" {print $2}')
+    target=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
     kill $target
     reup=1
   fi
   sleep 2
   echo ""
-  echo "LAUNCHING:  Maxximus007_AUTO_TEMPERATURE_CONTROL "
-  HCD='/home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL'
-  running=$(ps -ef | awk '$NF~"Maxximus007_AUTO_TEMPERATURE_CONTROL" {print $2}')
-  remote_running=$(ps -ef | awk '$NF~"Maxximus007_AUTO_TEMPERATURE_CONTROL" {print $2}')
+  echo "LAUNCHING:  6_MINER_TEMP_CONTROL "
+  HCD='/home/m1/6_MINER_TEMP_CONTROL'
+  running=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
+  remote_running=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
   if [ "$running" == "" ]
   then
     if [ $LOCALorREMOTE == "LOCAL" ]
     then
-      guake -n $HCD -r Maxximus007_AUTO_TEMPERATURE_CONTROL -e "bash /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL"
+      guake -n $HCD -r MINER_TEMP_CONTROL -e "bash /home/m1/6_MINER_TEMP_CONTROL"
       echo ""
       echo "process in guake terminal Tab (f12)"
       echo ""
@@ -379,7 +379,7 @@ then
   then
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -dmS temp bash /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL
+      screen -dmS temp bash /home/m1/6_MINER_TEMP_CONTROL
       echo ""
       echo "process in screen temp; attach with: screen -r temp"
       echo ""
@@ -926,7 +926,7 @@ then
       gpu=$(($gpu+1))
     done
 
-    if [[ $MANUAL_FAN == "YES" && $Maxximus007_AUTO_TEMPERATURE_CONTROL == "NO" ]]
+    if [[ $MANUAL_FAN == "YES" && $6_MINER_TEMP_CONTROL == "NO" ]]
     then
       gpu=0
       while [ $gpu -lt $GPUS ]
@@ -937,7 +937,7 @@ then
       done
     fi
 
-    if [[ $MANUAL_FAN == "NO" && $Maxximus007_AUTO_TEMPERATURE_CONTROL == "NO" ]]
+    if [[ $MANUAL_FAN == "NO" && $6_MINER_TEMP_CONTROL == "NO" ]]
     then
       gpu=0
       while [ $gpu -lt $GPUS ]
