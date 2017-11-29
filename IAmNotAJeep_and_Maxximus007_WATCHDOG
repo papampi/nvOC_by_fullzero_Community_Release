@@ -17,7 +17,7 @@ fi
 ALERT_LOG_FILE="/home/m1/7_wdog_alertlog"
 if [[ -e "$ALERT_LOG_FILE" ]] ; then
   #Limit the logfile, just keep the last 2K
-  echo "$(cat $ALERT_LOG_FILE | grep WARNING | tail -n 2k )" > $ALERT_LOG_FILE
+  echo "$(cat $ALERT_LOG_FILE |  tail -n 2k )" > $ALERT_LOG_FILE
 fi
 
 GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
