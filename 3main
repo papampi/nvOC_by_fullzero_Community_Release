@@ -397,11 +397,11 @@ GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
 
 NVD=nvidia-settings
 
-if [ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]
+if [ $WTM_AUTO_SWITCH == "YES" ]
 then
 
   echo ""
-  echo "LAUNCHING:  PAPAMPI_WTM_AUTO_SWITCH "
+  echo "LAUNCHING:  WTM AUTO SWITCH "
   echo ""
 
   cat <<EOF >/home/m1/WTM.json
@@ -413,21 +413,21 @@ then
 }
 EOF
 
-  HCD='/home/m1/PAPAMPI_WTM'
-  running=$(ps -ef | awk '$NF~"PAPAMPI_WTM" {print $2}')
+  HCD='/home/m1/8_WTM_SWITCH'
+  running=$(ps -ef | awk '$NF~"8_WTM_SWITCH" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r PAPAMPI_WTM_AUTO_SWITCH -e "bash /home/m1/PAPAMPI_WTM"
+    guake -n $HCD -r 8_WTM_SWITCH -e "bash /home/m1/8_WTM_SWITCH"
     running=""
   fi
 fi
 
 
-if [[ $PAPAMPI_WTM_PROFIT_INFO == "YES" ]] && [[ $PAPAMPI_WTM_AUTO_SWITCH == "NO" ]]
+if [[ $WTM_PROFIT_CHECK == "YES" ]] && [[ $WTM_AUTO_SWITCH == "NO" ]]
 then
 
   echo ""
-  echo "LAUNCHING:  PAPAMPI_WTM_PROFIT_CHECK "
+  echo "LAUNCHING:  WTM PROFIT CHECK "
   echo ""
 
   cat <<EOF >/home/m1/WTM.json
@@ -439,11 +439,11 @@ then
 }
 EOF
 
-  HCD='/home/m1/PAPAMPI_PROFIT_CHECK'
-  running=$(ps -ef | awk '$NF~"PAPAMPI_PROFIT_CHECK" {print $2}')
+  HCD='/home/m1/8_WTM_PROFIT'
+  running=$(ps -ef | awk '$NF~"8_WTM_PROFIT" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r PAPAMPI_WTM_PROFIT_CHECK -e "bash /home/m1/PAPAMPI_PROFIT_CHECK"
+    guake -n $HCD -r WTM_PROFIT -e "bash /home/m1/8_WTM_PROFIT"
     running=""
   fi
 fi
