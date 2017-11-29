@@ -413,11 +413,11 @@ then
 }
 EOF
 
-  HCD='/home/m1/8_WTM_AUTO_SWITCH'
-  running=$(ps -ef | awk '$NF~"8_WTM_AUTO_SWITCH" {print $2}')
+  HCD='/home/m1/8wtm_auto_switch'
+  running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8_WTM_AUTO_SWITCH"
+    guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
     running=""
   fi
 fi
@@ -439,11 +439,11 @@ then
 }
 EOF
 
-  HCD='/home/m1/8_WTM_PROFIT_CHECK'
-  running=$(ps -ef | awk '$NF~"8_WTM_PROFIT_CHECK" {print $2}')
+  HCD='/home/m1/8wtm_profit_check'
+  running=$(ps -ef | awk '$NF~"8wtm_profit_check" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r WTM_PROFIT_CHECK -e "bash /home/m1/8_WTM_PROFIT_CHECK"
+    guake -n $HCD -r WTM_PROFIT_CHECK -e "bash /home/m1/8wtm_profit_check"
     running=""
   fi
 fi
