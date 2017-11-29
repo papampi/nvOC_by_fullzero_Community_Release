@@ -70,10 +70,10 @@ then
   WDOG_WARNINGS=$(tail -10 /home/m1/7_wdog_alertlog |grep WARNING)
   TEMP_WARNINGS=$(tail -10 /home/m1/7_temp_alertlog |grep WARNING)
 
-  MINER_PID=$(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}' )
-  if [ -n  "$MINER_PID" ]
-  then
-    MINER_UP_TIME=$(ps -p $MINER_PID -o etime | grep -v ELAPSED)
+  if [[ -n  $(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}') ]]
+    then
+  MINER_PID=$(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}')
+  MINER_UP_TIME=$(ps -p $MINER_PID -o etime | grep -v ELAPSED)
   else
     MINER_UP_TIME=("Not Running")
   fi
