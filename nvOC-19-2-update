@@ -164,18 +164,18 @@ cat /home/m1/8_wtmautoswitchlog | grep switch > /home/m1//WTM_switch_history
 
 
 sleep 1;echo "";echo ""
+echo "mv /home/m1/5_restartlog /home/m1/nvoc_logs/5_restartlog"
+mv /home/m1/5_restartlog /home/m1/nvoc_logs/5_restartlog
+echo "mv /home/m1/screenlog.0 /home/m1/nvoc_logs/screenlog.0"
+mv /home/m1/screenlog.0 /home/m1/nvoc_logs/screenlog.0
+echo "/home/m1/6_autotemplog /home/m1/nvoc_logs/6_autotemplog"
+mv /home/m1/6_autotemplog /home/m1/nvoc_logs/6_autotemplog
 echo "chmod a+x /home/m1/www/cgi-bin/minerinfo"
 chmod a+x /home/m1/www/cgi-bin/minerinfo
 echo "chmod a+x /home/m1/www/cgi-bin/clearalerts"
 chmod a+x /home/m1/www/cgi-bin/clearalerts
-echo "touch /home/m1/nvoc_logs/5_restartlog"
-touch /home/m1/nvoc_logs/5_restartlog
-echo "touch /home/m1/nvoc_logs/6_autotemplog"
-touch /home/m1/nvoc_logs/6_autotemplog
 echo "touch /home/m1/WTM_switch_histrory"
 touch /home/m1/WTM_switch_histrory
-echo "touch /home/m1/nvoc_logs/screenlog.0"
-touch /home/m1/nvoc_logs/screenlog.0
 echo "touch /home/m1/7_wdog_alertlog"
 touch /home/m1/7_wdog_alertlog
 echo "touch /home/m1/7_temp_alertlog"
@@ -184,6 +184,14 @@ echo "chmod 666 /home/m1/nvoc_logs/*"
 chmod 666 /home/m1/nvoc_logs/*
 echo "chmod 666 /home/m1/7_*"
 chmod 666 /home/m1/7_*
+
+echo "chmod 666  /home/m1/nvoc_logs/5_restartlog"
+chmod 666  /home/m1/nvoc_logs/5_restartlog
+echo "chmod 666 /home/m1/nvoc_logs/screenlog.0"
+chmod 666  /home/m1/nvoc_logs/screenlog.0
+echo "chmod 666 /home/m1/nvoc_logs/6_autotemplog"
+chmod 666 /home/m1/nvoc_logs/6_autotemplog
+
 
 sleep 1;echo "";echo ""
 touch /home/m1/.bash_aliases
