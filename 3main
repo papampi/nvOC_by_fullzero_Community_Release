@@ -314,11 +314,11 @@ sleep 2
 
 if [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ]
 then
-  HCD='/home/m1/5_MINER_WATCHDOG'
+  HCD='/home/m1/5miner_watchdog'
   echo ""
-  echo "LAUNCHING:  5_MINER_WATCHDOG"
+  echo "LAUNCHING:  MINER WATCHDOG"
   sleep 2
-  running=$(ps -ef | awk '$NF~"5_MINER_WATCHDOG" {print $2}')
+  running=$(ps -ef | awk '$NF~"5miner_watchdog" {print $2}')
   if [ "$running" == "" ]
   then
     if [ $LOCALorREMOTE == "LOCAL" ]
@@ -331,7 +331,7 @@ then
     fi
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -dmS wdog bash /home/m1/5_MINER_WATCHDOG
+      screen -dmS wdog bash /home/m1/5miner_watchdog
       echo ""
       echo "process in screen wdog; attach with: screen -r wdog"
       echo ""
@@ -350,25 +350,25 @@ fi
 if [ $MINER_TEMP_CONTROL == "YES" ]
 then
   reup=0
-  running=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
+  running=$(ps -ef | awk '$NF~"6miner_temp_control" {print $2}')
 
   if [ "$running" != "" ]
   then
-    target=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
+    target=$(ps -ef | awk '$NF~"6miner_temp_control" {print $2}')
     kill $target
     reup=1
   fi
   sleep 2
   echo ""
-  echo "LAUNCHING:  6_MINER_TEMP_CONTROL "
-  HCD='/home/m1/6_MINER_TEMP_CONTROL'
-  running=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
-  remote_running=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
+  echo "LAUNCHING:  MINER TEMP CONTROL "
+  HCD='/home/m1/6miner_temp_control'
+  running=$(ps -ef | awk '$NF~"6miner_temp_control" {print $2}')
+  remote_running=$(ps -ef | awk '$NF~"6miner_temp_control" {print $2}')
   if [ "$running" == "" ]
   then
     if [ $LOCALorREMOTE == "LOCAL" ]
     then
-      guake -n $HCD -r MINER_TEMP_CONTROL -e "bash /home/m1/6_MINER_TEMP_CONTROL"
+      guake -n $HCD -r MINER_TEMP_CONTROL -e "bash /home/m1/6miner_temp_control"
       echo ""
       echo "process in guake terminal Tab (f12)"
       echo ""
@@ -379,7 +379,7 @@ then
   then
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -dmS temp bash /home/m1/6_MINER_TEMP_CONTROL
+      screen -dmS temp bash /home/m1/6miner_temp_control
       echo ""
       echo "process in screen temp; attach with: screen -r temp"
       echo ""
