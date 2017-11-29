@@ -21,43 +21,38 @@ LOAD_AVERAGE=$(cat /proc/loadavg | awk '{print $1,$2,$3}')
 GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
 REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
 #MINER_PID=$(ps ax | grep miner | grep -v grep | cut -f1 -d" " - | awk '{print $0}')
+MINER_PID=$(pgrep -f -o  miner)
+MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
 TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/6_autotemplog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
-TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/7_temp_alertlog |  awk '{print $0,"<br>"}' | grep WARNING)
-WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/7_wdog_alertlog |  awk '{print $0,"<br>"}' | grep WARNING)
+TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/7_temp_alertlog | grep WARNING | awk '{print $0,"<br>"}')
+WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/7_wdog_alertlog | grep WARNING | awk '{print $0,"<br>"}')
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
 
-if [ -n  $(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}') ]
- MINER_PID=$(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}' )
- then
-   MINER_UP_TIME=$(ps -p $MINER_PID -o etime | grep -v ELAPSED)
-else
-   MINER_UP_TIME=("Not Running")
-fi
 if [ $Maxximus007_AUTO_TEMPERATURE_CONTROL == "YES" ]
 then
-AUTO_TEMPERATURE_CONTROL=("Enabled,")
-if ps aux | grep -v grep | grep -q temp
-then
-TEMP_CHECK=(" Running")
+  AUTO_TEMPERATURE_CONTROL=("Enabled,")
+  if ps aux | grep -v grep | grep -q temp
+  then
+    TEMP_CHECK=(" Running")
+  else
+    TEMP_CHECK=("<tt style=\"text-align:left; color:red\"> Not Running</tt>")
+  fi
 else
-TEMP_CHECK=("<tt style=\"text-align:left; color:red\"> Not Running</tt>")
-fi
-else
-AUTO_TEMPERATURE_CONTROL=("Disbaled")
+  AUTO_TEMPERATURE_CONTROL=("Disbaled")
 fi
 
 if [ $IAmNotAJeep_and_Maxximus007_WATCHDOG == "YES" ]
 then
-WATCHDOG=("Enabled,")
-if ps aux | grep -v grep | grep -q wdog
-then
-WDOG_CHECK=(" Running")
+  WATCHDOG=("Enabled,")
+  if ps aux | grep -v grep | grep -q wdog
+  then
+    WDOG_CHECK=(" Running")
+  else
+    WDOG_CHECK=("<tt style=\"text-align:left; color:red\"> Not Running</tt>")
+  fi
 else
-WDOG_CHECK=("<tt style=\"text-align:left; color:red\"> Not Running</tt>")
-fi
-else
-WATCHDOG=("Disbaled")
+  WATCHDOG=("Disbaled")
 fi
 
 #################################################################
@@ -65,89 +60,89 @@ fi
 
 if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
 then
-CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
-AUTO_SWITCH=("Salfter MPH Auto Switch")
+  CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
+  MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
+  AUTO_SWITCH=("Salfter MPH Auto Switch")
 
 
 elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
 then
-CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
-AUTO_SWITCH=("Salfter Nicehash Auto Switch")
+  CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
+  MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
+  AUTO_SWITCH=("Salfter Nicehash Auto Switch")
 
 
 elif [ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]
 then
-CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
-MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
-P_MINING_HISTORY="$MINING_HISTORY <br>"
-WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
-P_WTM_PROFIT="$WTM_PROFIT <br>"
-WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
-P_WTM_REV=$"$WTM_REV <br>"
-WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
-P_WTM_AVERAGE_REV="$WTM_AVERAGE_REV <br>"
-BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
-BTC_PRICE="BTC PRICE: "  
-WTM_Current_Profitabilty="WTM Current Profitabilty:"
-WTM_Current_Revenue="WTM Current Revenue: "
-Average_Revenue="24H Average Revenue: " 
-LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
+  CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
+  P_MINING_HISTORY="$MINING_HISTORY <br>"
+  WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+  P_WTM_PROFIT="$WTM_PROFIT <br>"
+  WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+  P_WTM_REV=$"$WTM_REV <br>"
+  WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
+  P_WTM_AVERAGE_REV="$WTM_AVERAGE_REV <br>"
+  BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
+  BTC_PRICE="BTC PRICE: "
+  WTM_Current_Profitabilty="WTM Current Profitabilty:"
+  WTM_Current_Revenue="WTM Current Revenue: "
+  Average_Revenue="24H Average Revenue: "
+  LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
 
 
-if ps aux | grep -v grep | grep -q PAPAMPI_WTM
-then
-WTM_SWITCH=("Running")
-else
-WTM_SWITCH=("<tt style=\"text-align:left; color:red\">Not Running</tt>")
-fi
+  if ps aux | grep -v grep | grep -q PAPAMPI_WTM
+  then
+    WTM_SWITCH=("Running")
+  else
+    WTM_SWITCH=("<tt style=\"text-align:left; color:red\">Not Running</tt>")
+  fi
 
 #if python script syncing
-if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
-then
-WTM_A_S="Syncing data with WTM.com"
-fi
-AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH  $WTM_A_S")
+  if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
+  then
+    WTM_A_S="Syncing data with WTM.com"
+  fi
+  AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH  $WTM_A_S")
 
 
 elif [ $PAPAMPI_WTM_PROFIT_INFO == "YES" ] && [ $PAPAMPI_WTM_AUTO_SWITCH == "NO" ]
 then
-CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
-MINING_HISTORY=""
-WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
-P_WTM_PROFIT="$WTM_PROFIT <br>"
-WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
-P_WTM_REV=$"$WTM_REV <br>"
-WTM_SWITCH=("WTM Profit Check Running. ")
-BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
-BTC_PRICE="BTC PRICE: "  
-WTM_AVERAGE_REV=""
-WTM_Current_Profitabilty="WTM Current Profitabilty: "
-WTM_Current_Revenue="WTM Current Revenue: "
-Average_Revenue="" 
-LAST_10_AUTO_SWITCHES=""
+  CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  MINING_HISTORY=""
+  WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+  P_WTM_PROFIT="$WTM_PROFIT <br>"
+  WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+  P_WTM_REV=$"$WTM_REV <br>"
+  WTM_SWITCH=("WTM Profit Check Running. ")
+  BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
+  BTC_PRICE="BTC PRICE: "
+  WTM_AVERAGE_REV=""
+  WTM_Current_Profitabilty="WTM Current Profitabilty: "
+  WTM_Current_Revenue="WTM Current Revenue: "
+  Average_Revenue=""
+  LAST_10_AUTO_SWITCHES=""
 #if python script syncing
-if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
-then
-WTM_A_S="Syncing data with WTM.com"
-fi
-AUTO_SWITCH=("$WTM_SWITCH $WTM_A_S" )
- 
+  if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
+  then
+    WTM_A_S="Syncing data with WTM.com"
+  fi
+  AUTO_SWITCH=("$WTM_SWITCH $WTM_A_S" )
+
 
 else
-CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
-AUTO_SWITCH="No Auto Switch"
-MINING_HISTORY=""
-BTC_PRICE=""
-BTC_PRICE_VALUE="" 
-WTM_PROFIT=""
-WTM_REV=""
-WTM_AVERAGE_REV=""
-WTM_CURRENCY=""
-LAST_10_AUTO_SWITCHES=""
-WTM_Current_Profitabilty=""
-WTM_Current_Revenue=""
+  CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  AUTO_SWITCH="No Auto Switch"
+  MINING_HISTORY=""
+  BTC_PRICE=""
+  BTC_PRICE_VALUE=""
+  WTM_PROFIT=""
+  WTM_REV=""
+  WTM_AVERAGE_REV=""
+  WTM_CURRENCY=""
+  LAST_10_AUTO_SWITCHES=""
+  WTM_Current_Profitabilty=""
+  WTM_Current_Revenue=""
 fi
 
 ##################################################################
@@ -155,30 +150,30 @@ fi
 
 if [ $COIN == "BTG" ] || [ $COIN == "MPH_EQUIHASH" ] || [ $COIN == "BTCZ" ] || [ $COIN == "ZEC"  ] || [  $COIN == "ZEN"  ] || [  $COIN == "ZCL"  ] || [  $COIN == "HUSH"  ] || [  $COIN == "KMD"  ] && [  $ZM_or_EWBF == "ZM"  ]
 then
-MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif [ $COIN == "BTG" ] || [ $COIN == "MPH_EQUIHASH" ] || [  $COIN == "BTCZ"  ] || [  $COIN == "ZEC"  ] || [  $COIN == "ZEN"  ] || [  $COIN == "ZCL"  ] || [  $COIN == "HUSH"  ] || [  $COIN == "KMD"  ] && [  $ZM_or_EWBF == "EWBF"  ]
 then
-MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  [  $COIN == "SIB"  ] || [  $COIN == "LBC"  ] || [  $COIN == "MONA"  ] || [  $COIN == "SIA"  ] || [  $COIN == "ZPOOL_LYRA2V2"  ] || [  $COIN == "ZPOOL_LBRY"  ]  || [  $COIN == "ZPOOL_BLAKE2S"  ]
 then
-MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "S/A/T" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "S/A/T" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
-elif [ $COIN == "FTC"  ] || [ $COIN == "ORB"  ] || [ $COIN == "PXC"  ] || [ $COIN == "KRB"  ] 
+elif [ $COIN == "FTC"  ] || [ $COIN == "ORB"  ] || [ $COIN == "PXC"  ] || [ $COIN == "KRB"  ]
 then
-MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif [ $COIN == "ETH"  ] || [  $COIN == "ETC"  ] || [  $COIN == "EXP"  ] || [  $COIN == "UBQ"  ] || [  $COIN == "MUSIC"  ] || [  $COIN == "SOIL"  ]  && [  $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER"  ]
 then
-MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "ethminer" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "ethminer" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif [ $COIN == "ETH"  ] || [  $COIN == "ETC"  ] || [  $COIN == "EXP"  ] || [  $COIN == "UBQ"  ] || [  $COIN == "MUSIC"  ] || [  $COIN == "SOIL"  ] || [  $COIN == "DUAL_*"  ] && [  $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE"  ]
 then
-MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 else
-MINER_LOG=$(tail -n $TAIL_GPU_COUNT /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n $TAIL_GPU_COUNT /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 fi
 
 
