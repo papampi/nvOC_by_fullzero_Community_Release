@@ -197,7 +197,7 @@ do
         sudo reboot
       fi
       # If miner runs in screen 'miner' kill the screen to be sure it's gone
-      ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*' |  ts "WARNING: $(date) - Miner command before killing it: " |  tee -a $LOG_FILE $ALERT_LOG_FILE
+      ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*' |  ts "DEBUG: $(date) - Miner command before killing it: " |  tee -a $LOG_FILE $ALERT_LOG_FILE
       echo "DEBUG: $(date) - Problem found: See diagnostics below:" | tee -a $LOG_FILE $ALERT_LOG_FILE
       tail -15 /home/m1/nvoc_logs/screenlog.0 | ts "DEBUG: " | tee -a $LOG_FILE $ALERT_LOG_FILE
       echo "WARNING: $(date) - Utilization is too low: restart 3main..." | tee -a $LOG_FILE $ALERT_LOG_FILE
@@ -213,7 +213,7 @@ do
       # Give oneBash time to restart to prevent reboot
       sleep $SLEEP_TIME
     else
-      echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are $COUNT more consecutive failures"
+      echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are $COUNT more consecutive failures" | tee -a $LOG_FILE
       echo ""
     fi
   else
