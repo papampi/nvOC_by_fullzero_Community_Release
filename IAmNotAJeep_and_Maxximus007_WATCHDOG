@@ -142,8 +142,8 @@ do
       # Check for Internet and wait if down
       while ! nc -vzw5 google.com 80;
       do
-        echo "WARNING: $(date) - Internet is down, checking again in 10 seconds..." | tee -a $LOG_FILE $ALERT_LOG_FILE
-        sleep 10
+        echo "WARNING: $(date) - Internet is down, checking again in 5 seconds..." | tee -a $LOG_FILE $ALERT_LOG_FILE
+        sleep 5
       done
       echo ""
       # Check if pool:port is up or not
@@ -156,16 +156,11 @@ do
         PING_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
         PING_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
         echo "Dual mining, check main server $PING_SERVER:$PING_PORT "  | tee -a $LOG_FILE
-        if nc -vzw2 $PING_SERVER $PING_PORT;
-        then
-          echo "Dual mining, main pool $PING_SERVER:$PING_PORT is up" | tee -a $LOG_FILE
-          INTERNET_IS_GO=1
-        fi
         while ! nc -vzw2 $PING_SERVER $PING_PORT ; do
-          echo "WARNING: $(date) - Cant reach main pool, $PING_SERVER:$PING_PORT is DOWN" | tee -a $LOG_FILE $ALERT_LOG_FILE
+          echo "WARNING: $(date) - Cant reach main pool: $PING_SERVER:$PING_PORT, check again in 5 seconds..." | tee -a $LOG_FILE $ALERT_LOG_FILE
           INTERNET_IS_GO=0
           RESTART=0
-          sleep 10
+          sleep 5
         done
 
       else
@@ -176,18 +171,15 @@ do
         PING_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
         PING_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
         echo "Check mining pool, $PING_SERVER:$PING_PORT "  | tee -a $LOG_FILE
-        if nc -vzw2 $PING_SERVER $PING_PORT
-        then
-          echo "Mining pool up"  | tee -a $LOG_FILE
-          INTERNET_IS_GO=1
-        fi
+
         while ! nc -vzw2 $PING_SERVER $PING_PORT ; do
-          echo "WARNING: $(date) - Cant reach mining pool, $PING_SERVER:$PING_PORT is DOWN"   | tee -a $LOG_FILE $ALERT_LOG_FILE
+          echo "WARNING: $(date) - Cant reach mining pool: $PING_SERVER:$PING_PORT, check again in 5 seconds..."   | tee -a $LOG_FILE $ALERT_LOG_FILE
           INTERNET_IS_GO=0
           RESTART=0
-          sleep 10
+          sleep 5
         done
       fi
+      
       if [[ $RESTART -gt 4 && $INTERNET_IS_GO == 1 ]]
       then
         echo "WARNING: $(date) - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a $LOG_FILE $ALERT_LOG_FILE
