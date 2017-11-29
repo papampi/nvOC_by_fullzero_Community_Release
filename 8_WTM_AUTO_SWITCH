@@ -12,7 +12,7 @@ if [[ -e "$LOG_FILE" ]] ; then
   echo "$(cat $LOG_FILE | grep switched | tail -n 5k)" > $LOG_FILE
 fi
 
-WTM_HISTORY="/home/m1//WTM_switch_history"
+WTM_HISTORY="/home/m1/WTM_switch_history"
 if [[ -e "$WTM_HISTORY" ]] ; then
   #Limit the logfile, just keep the last 2K
   echo "$(cat $WTM_HISTORY | grep switched | tail -n 2k)" > $WTM_HISTORY
@@ -24,7 +24,7 @@ do
   if [[ $AUTO_START_MINER == "YES" ]]
   then
 
-    python2.7 '/home/m1/WTM_AUTO_SWITCH' /home/m1/WTM.json  | tee -a $LOG_FILE
+    python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json  | tee -a $LOG_FILE
     sleep 5
 
     CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
