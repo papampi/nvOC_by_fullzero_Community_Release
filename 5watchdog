@@ -129,14 +129,7 @@ do
   #IAmNotAJeep MOD from V002
   if [ $JEEP -gt 0 ]
   then
-    # Look for no miner screen and get right to miner restart
-    echo "Debug: JEEP=$JEEP, COUNT=$COUNT, RESTART=$RESTART"
-    if [[ `screen -ls |grep miner |wc -l` -eq 0 ]]
-    then
-      COUNT=0
-      echo "WARNING: $(date) - Found no miner, jumping to 3main restart" | tee -a $LOG_FILE $ALERT_LOG_FILE
-    fi
-
+    
     if [ $COUNT -le 0 ]
     then
       # Check for Internet and wait if down
@@ -178,6 +171,14 @@ do
         done
       fi
       
+      # Look for no miner screen and get right to miner restart
+      echo "Debug: JEEP=$JEEP, COUNT=$COUNT, RESTART=$RESTART"
+      if [[ `screen -ls |grep miner |wc -l` -eq 0 ]]
+      then
+         COUNT=0
+         echo "WARNING: $(date) - Found no miner, jumping to 3main restart" | tee -a $LOG_FILE $ALERT_LOG_FILE
+      fi
+
       if [[ $RESTART -gt 4 && $INTERNET_IS_GO == 1 ]]
       then
         echo "WARNING: $(date) - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a $LOG_FILE $ALERT_LOG_FILE
