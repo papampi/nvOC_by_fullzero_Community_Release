@@ -171,8 +171,11 @@ fi
 # sudo nvidia-smi -pm 1
 #
 # Next line to be deleted after being moved to 3main:
+# added for salfter auto switch compatibilty
+if [[  $COIN != *"SALFTER"* ]] 
+then
 sudo nvidia-smi -pm 1 >/dev/null 2>&1
-
+fi
 
 
 # How often should TEMP_CONTROL check and adjust the fans
