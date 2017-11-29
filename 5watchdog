@@ -81,7 +81,6 @@ do
     fi
   fi
 
-
   # Delay before checking GPU status/usage
   sleep 10
   #IAmNotAJeep MOD from V002
@@ -142,11 +141,11 @@ do
       sleep 5
       if [[ nc -vzw5 google.com 80 ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
       then
-        echo "Internet is up, and miner is running"
+        echo "Internet is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
         sleep $MINER_TIME
       elif [[ nc -vzw5 google.com 80 ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
       then
-        echo "Internet is up, but miner is not running, restart miner"
+        echo "Internet is up, but miner is not running, restarting miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
         bash /home/m1/0miner
         sleep $SLEEP_TIME
       fi
@@ -168,11 +167,11 @@ do
         sleep 5
         if [[ nc -vzw2 $PING_SERVER $PING_PORT ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "Internet is up, and miner is running"
+          echo "Internet is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
           sleep $MINER_TIME
         elif [[ nc -vzw2 $PING_SERVER $PING_PORT ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "Internet is up, but miner is not running, restart miner"
+          echo "Internet is up, but miner is not running, restart miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
           bash /home/m1/0miner
           sleep $SLEEP_TIME
         fi
@@ -196,11 +195,11 @@ do
         sleep 5
         if [[ nc -vzw2 $PING_SERVER $PING_PORT ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "Internet is up, and miner is running"
+          echo "Internet is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
           sleep $MINER_TIME
         elif [[ nc -vzw2 $PING_SERVER $PING_PORT ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "Internet is up, but miner is not running, restart miner"
+          echo "Internet is up, but miner is not running, restart miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
           bash /home/m1/0miner
           sleep $SLEEP_TIME
         fi
