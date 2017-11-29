@@ -94,7 +94,7 @@ then
     AUTO_SWITCH=("Salfter Nicehash Auto Switch")
 
 
-  elif [ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]
+  elif [ $WTM_AUTO_SWITCH == "YES" ]
   then
 
     CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
@@ -103,7 +103,7 @@ then
     WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
     WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
     BTC_PRICE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
-    if ps aux | grep -v grep | grep -q PAPAMPI_WTM
+    if ps aux | grep -v grep | grep -q 8_WTM_AUTO_SWITCH
     then
       WTM_SWITCH=("Running")
     else
@@ -111,7 +111,7 @@ then
     fi
     AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH  $WTM_A_S")
 
-  elif [ $PAPAMPI_WTM_PROFIT_INFO == "YES" ] && [ $PAPAMPI_WTM_AUTO_SWITCH == "NO" ]
+  elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
   then
     CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
     MINING_HISTORY=("No Auto Switch History")
