@@ -63,9 +63,9 @@ do
           if [[ $MINER_WATCHDOG == "YES" ]]
           then
             #restart wdog
-            pkill -f 5miner_watchdog
+            pkill -f 5watchdog
             sleep 1
-            screen -dmS wdog bash /home/m1/5miner_watchdog
+            screen -dmS wdog bash /home/m1/5watchdog
             echo "" | tee -a $LOG_FILE
             echo "wdog restarted in screen wdog; attach with: screen -r wdog" | tee -a $LOG_FILE
             echo "" | tee -a $LOG_FILE
