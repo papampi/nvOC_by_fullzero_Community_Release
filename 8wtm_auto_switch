@@ -60,12 +60,12 @@ do
           echo "miner is running, lets make the switch" | tee -a $LOG_FILE
           #kill miner
           pkill -e miner
-          if [ $IAmNotAJeep_and_Maxximus007_WATCHDOG == "YES" ]
+          if [[ $MINER_WATCHDOG == "YES" ]]
           then
             #restart wdog
-            pkill -f IAmNotAJeep_and_Maxximus007_WATCHDOG
+            pkill -f 5miner_watchdog
             sleep 1
-            screen -dmS wdog bash /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG
+            screen -dmS wdog bash /home/m1/5miner_watchdog
             echo "" | tee -a $LOG_FILE
             echo "wdog restarted in screen wdog; attach with: screen -r wdog" | tee -a $LOG_FILE
             echo "" | tee -a $LOG_FILE
@@ -84,7 +84,7 @@ do
       elif  [[ $damNmad_ALGO_SPECIFIC_OC == "YES" ]]
       then
         echo "'damNmad_ALGO_SPECIFIC_OC=YES', restarting 3main for OC settings to take effect"  | tee -a $LOG_FILE
-        echo "If you dont like too many guake tabs, in 1bash set LOCALorREMOTE=REMOTE "
+        echo "If you dont like too many open guake tabs, in 1bash set LOCALorREMOTE=REMOTE "
         pkill -f 3main
       fi
       sleep $TIMEOUT
