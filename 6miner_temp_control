@@ -148,11 +148,6 @@ fi
 
 WD_LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
 
-#################### To be removed soon - BEGIN
-# Papampi, there is no need for second log file, web-stats should read from our main log.
-# I will leave it for now to not break compatibility with the web-stats
-# but this should be removed when web-stats code is updated to read from our main log file
-#
 # Creating a log file to keep the warnings after reboot
 ALERT_LOG_FILE="/home/m1/7_temp_alertlog"
 if [ -e "$ALERT_LOG_FILE" ]; then
@@ -160,9 +155,6 @@ if [ -e "$ALERT_LOG_FILE" ]; then
 else
   touch $ALERT_LOG_FILE     # if log file does not exist, create one
 fi
-################### To be removed soon - END
-
-
 
 # Setting persistance mode on, will keep settings in between sessions
 # fullzero, Papampi, Stubo..., we need to decide if we gonna use Persistane Mode.
