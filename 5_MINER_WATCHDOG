@@ -52,7 +52,7 @@ else
   sleep $SLEEP_TIME
 fi
 
-if [[  $PAPAMPI_WTM_AUTO_SWITCH  ==  "NO"  ]]
+if [[  $WTM_AUTO_SWITCH  ==  "NO"  ]]
 then
   bash '/home/m1/telegram'
 fi
@@ -65,17 +65,17 @@ while true
 do
 
   #If WTM_AUTO_SWITCH python script running time is more than 30 Sec kill it
-  if [[  $PAPAMPI_WTM_AUTO_SWITCH  ==  "YES"  ]] || [[ $PAPAMPI_WTM_PROFIT_INFO == "YES" ]]
+  if [[  $WTM_AUTO_SWITCH  ==  "YES"  ]] || [[ $WTM_PROFIT_CHECK == "YES" ]]
   then
-    WTM_A_S_PID=`ps -ef | grep WTM_AUTO_SWITCH | grep -v grep |awk '{print $2}'`
+    WTM_S_PID=`ps -ef | grep WTM_SWITCHER | grep -v grep |awk '{print $2}'`
     if  [[ -n $WTM_A_S_PID ]]
     then
-      WTM_A_S_PID_TIME=`ps -eo pid,etimes | grep $WTM_A_S_PID | awk  '$2> 30 { print $1}'`
-      echo "WTM Auto Switch Syncing"
-      if  [[ -n "$WTM_A_S_PID_TIME" ]]
+      WTM_S_PID_TIME=`ps -eo pid,etimes | grep $WTM_S_PID | awk  '$2> 30 { print $1}'`
+      echo "WTM Switcher Syncing"
+      if  [[ -n "$WTM_S_PID_TIME" ]]
       then
-        echo "WARNING: $(date) - WTM python stucked, Killing it" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
-        ps -eo pid,etimes | grep `pgrep -f WTM_AUTO_SWITCH` | awk  '$2> 30 { print $1}'  | xargs kill -9
+        echo "WARNING: $(date) - WTM switcher can't sync, restarting it" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        ps -eo pid,etimes | grep `pgrep -f WTM_SWITCHER` | awk  '$2> 30 { print $1}'  | xargs kill -9
       fi
     fi
   fi
