@@ -312,7 +312,7 @@ fi
 
 sleep 2
 
-if [ $5_MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ]
+if [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ]
 then
   HCD='/home/m1/5_MINER_WATCHDOG'
   echo ""
@@ -338,7 +338,7 @@ then
       running=""
     fi
   fi
-elif [ $5_MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "NO" ]
+elif [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "NO" ]
 then
   echo "  "
   echo "  "
@@ -347,7 +347,7 @@ then
   echo "  "
 fi
 
-if [ $6_MINER_TEMP_CONTROL == "YES" ]
+if [ $MINER_TEMP_CONTROL == "YES" ]
 then
   reup=0
   running=$(ps -ef | awk '$NF~"6_MINER_TEMP_CONTROL" {print $2}')
@@ -413,11 +413,11 @@ then
 }
 EOF
 
-  HCD='/home/m1/8_WTM_SWITCH'
-  running=$(ps -ef | awk '$NF~"8_WTM_SWITCH" {print $2}')
+  HCD='/home/m1/8_WTM_AUTO_SWITCH'
+  running=$(ps -ef | awk '$NF~"8_WTM_AUTO_SWITCH" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r 8_WTM_SWITCH -e "bash /home/m1/8_WTM_SWITCH"
+    guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8_WTM_AUTO_SWITCH"
     running=""
   fi
 fi
@@ -439,11 +439,11 @@ then
 }
 EOF
 
-  HCD='/home/m1/8_WTM_PROFIT'
-  running=$(ps -ef | awk '$NF~"8_WTM_PROFIT" {print $2}')
+  HCD='/home/m1/8_WTM_PROFIT_CHECK'
+  running=$(ps -ef | awk '$NF~"8_WTM_PROFIT_CHECK" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r WTM_PROFIT -e "bash /home/m1/8_WTM_PROFIT"
+    guake -n $HCD -r WTM_PROFIT_CHECK -e "bash /home/m1/8_WTM_PROFIT_CHECK"
     running=""
   fi
 fi
@@ -926,7 +926,7 @@ then
       gpu=$(($gpu+1))
     done
 
-    if [[ $MANUAL_FAN == "YES" && $6_MINER_TEMP_CONTROL == "NO" ]]
+    if [[ $MANUAL_FAN == "YES" && $MINER_TEMP_CONTROL == "NO" ]]
     then
       gpu=0
       while [ $gpu -lt $GPUS ]
@@ -937,7 +937,7 @@ then
       done
     fi
 
-    if [[ $MANUAL_FAN == "NO" && $6_MINER_TEMP_CONTROL == "NO" ]]
+    if [[ $MANUAL_FAN == "NO" && $MINER_TEMP_CONTROL == "NO" ]]
     then
       gpu=0
       while [ $gpu -lt $GPUS ]
