@@ -198,7 +198,7 @@ do
       fi
       # If miner runs in screen 'miner' kill the screen to be sure it's gone
       ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*' |  ts "WARNING: $(date) - Miner command before killing it: " |  tee -a $LOG_FILE $ALERT_LOG_FILE
-      echo "WARNING: $(date) - Problem found: See diagnostics below:" | tee -a $LOG_FILE $ALERT_LOG_FILE
+      echo "DEBUG: $(date) - Problem found: See diagnostics below:" | tee -a $LOG_FILE $ALERT_LOG_FILE
       tail -15 /home/m1/nvoc_logs/screenlog.0 | ts "DEBUG: " | tee -a $LOG_FILE $ALERT_LOG_FILE
       echo "WARNING: $(date) - Utilization is too low: restart 3main..." | tee -a $LOG_FILE $ALERT_LOG_FILE
       bash '/home/m1/telegram'
