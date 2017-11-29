@@ -21,15 +21,19 @@ LOAD_AVERAGE=$(cat /proc/loadavg | awk '{print $1,$2,$3}')
 GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
 REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
 #MINER_PID=$(ps ax | grep miner | grep -v grep | cut -f1 -d" " - | awk '{print $0}')
-MINER_PID=$(pgrep -f -o  miner)
-MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
 TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/6_autotemplog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
-TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/7_temp_alertlog |  awk '{print $0,"<br>"}')
-WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/7_wdog_alertlog |  awk '{print $0,"<br>"}')
-LOST_GPU=$(tail -n 20 /home/m1/6_autotemplog  | grep Unable | tail -n $GPU_COUNT | awk '{print $0,"<br>"}' | tee -a /home/m1/7_temp_alertlog)
+TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/7_temp_alertlog |  awk '{print $0,"<br>"}' | grep WARNING)
+WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/7_wdog_alertlog |  awk '{print $0,"<br>"}' | grep WARNING)
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
 
+if [ -n  $(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}') ]
+ MINER_PID=$(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}' )
+ then
+   MINER_UP_TIME=$(ps -p $MINER_PID -o etime | grep -v ELAPSED)
+else
+   MINER_UP_TIME=("Not Running")
+fi
 if [ $Maxximus007_AUTO_TEMPERATURE_CONTROL == "YES" ]
 then
 AUTO_TEMPERATURE_CONTROL=("Enabled,")
