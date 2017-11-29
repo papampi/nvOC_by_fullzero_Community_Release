@@ -36,7 +36,7 @@ then
 fi
 
 SLEEP_TIME=$((($GPU_COUNT * 10 ) + 10 ))
-MINER_TIME=$((($GPU_COUNT * 2 ) + 10 ))
+MINER_TIME=$((($GPU_COUNT * 3 ) + 10 ))
 
 if  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
 then
