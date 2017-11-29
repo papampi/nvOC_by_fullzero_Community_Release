@@ -120,10 +120,17 @@ echo "cp /home/m1/1bash /home/m1/backups/1bash.bak"
 cp /home/m1/1bash /home/m1/backups/1bash.bak
 echo "cp /home/m1/3main /home/m1/backups/3main.bak"
 cp /home/m1/3main /home/m1/backups/3main.bak
-echo "cp /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak"
-cp /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak
-echo "cp /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak"
-cp /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak
+echo "mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak"
+mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak
+echo "mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak"
+mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak
+
+echo "mv /home/m1/PAPAMPI_WTM /home/m1/backups/PAPAMPI_WTM.bak"
+mv /home/m1/PAPAMPI_WTM /home/m1/backups/PAPAMPI_WTM.bak
+echo "mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/PAPAMPI_PROFIT_CHECK.bak"
+mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/PAPAMPI_PROFIT_CHECK.bak
+
+
 echo "Copying updates"
 sleep 1
 echo " "
@@ -144,16 +151,17 @@ echo "cp /home/m1/Downloads/nvOC-19-2/www/minerinfo /home/m1/www/cgi-bin/minerin
 cp /home/m1/Downloads/nvOC-19-2/www/minerinfo /home/m1/www/cgi-bin/minerinfo
 echo "cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram"
 cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram
-echo "cp /home/m1/Downloads/nvOC-19-2/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL"
-cp /home/m1/Downloads/nvOC-19-2/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL
-echo "cp /home/m1/Downloads/nvOC-19-2/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG"
-cp /home/m1/Downloads/nvOC-19-2/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG
-echo "cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_WTM /home/m1/PAPAMPI_WTM"
-cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_WTM /home/m1/PAPAMPI_WTM
-echo "cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_PROFIT_CHECK /home/m1/PAPAMPI_PROFIT_CHECK"
-cp /home/m1/Downloads/nvOC-19-2/PAPAMPI_PROFIT_CHECK /home/m1/PAPAMPI_PROFIT_CHECK
+echo "cp /home/m1/Downloads/nvOC-19-2/MINER_TEMP_CONTROL /home/m1/MINER_TEMP_CONTROL"
+cp /home/m1/Downloads/nvOC-19-2/MINER_TEMP_CONTROL /home/m1/MINER_TEMP_CONTROL
+echo "cp /home/m1/Downloads/nvOC-19-2/MINER_WATCHDOG /home/m1/MINER_WATCHDOG"
+cp /home/m1/Downloads/nvOC-19-2/MINER_WATCHDOG /home/m1/MINER_WATCHDOG
+echo "cp /home/m1/Downloads/nvOC-19-2/8_WTM_AUTO_SWITCH /home/m1/8_WTM_AUTO_SWITCH"
+cp /home/m1/Downloads/nvOC-19-2/8_WTM_AUTO_SWITCH /home/m1/8_WTM_AUTO_SWITCH
+echo "cp /home/m1/Downloads/nvOC-19-2/WTM_PROFIT_CHECK /home/m1/WTM_PROFIT_CHECK"
+cp /home/m1/Downloads/nvOC-19-2/WTM_PROFIT_CHECK /home/m1/WTM_PROFIT_CHECK
 echo "cat /home/m1/8_wtmautoswitchlog | grep switch > /home/m1//WTM_switch_history"
 cat /home/m1/8_wtmautoswitchlog | grep switch > /home/m1//WTM_switch_history
+
 
 sleep 1;echo "";echo ""
 echo "chmod a+x /home/m1/www/cgi-bin/minerinfo"
