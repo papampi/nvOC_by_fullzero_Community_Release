@@ -143,13 +143,13 @@ AUTO_START_MINER="NO" ###  YES  NO ### Set this to YES after you edited 1bash wi
 
 #####################################################
 #                                                   #
-# I highly recommend trying PAPAMPI_WTM_AUTO_SWITCH #
+# I highly recommend trying PAPAMPI WTM_AUTO_SWITCH #
 #                                                   #
 #####################################################
 
-PAPAMPI_WTM_AUTO_SWITCH="NO"  #( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
+WTM_AUTO_SWITCH="NO"  #( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
 
-PAPAMPI_WTM_PROFIT_INFO="YES" # whattomine.com Profit check for webinfo
+WTM_PROFIT_CHECK="YES" # whattomine.com Profit check for webinfo
 
 # note!! all selected COINS must HAVE ADDRESSES below (no need address if switch=no and profit=yes )
 # select which coins you want to mine/check profit (profit switch only using this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
@@ -173,9 +173,9 @@ WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_28
 # like this " https://whattomine.com/coins.json?utf8=✓&adapt....."
 # Above url is for 6x1060
 
-Maxximus007_AUTO_TEMPERATURE_CONTROL="YES"
+MINER_TEMP_CONTROL="YES"
 
-IAmNotAJeep_and_Maxximus007_WATCHDOG="YES"
+MINER_WATCHDOG="YES"
 #Set number of GPUs installed for mining, Leave it empty and wdog will not check installed vs detected
 NUMBER_GPUS_INSTALLED=""
 
@@ -228,7 +228,7 @@ upPASTE_TIMEOUT_IN_MINUTES=60
 
 CLEAR_LOGS_ON_BOOT="NO"        	# YES NO
 LOG_ROTATE="YES"
-LOG_ROTATE_INTERVAL=12 # Time between log rotations in hours
+LOG_ROTATE_INTERVAL=6 # Time between log rotations in hours
 
 
 # kk003's video tutorial how to create a telegram bot and get Api Key + User Id:
