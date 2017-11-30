@@ -8,7 +8,7 @@ nvOC-19-2-update : https://github.com/papampi/nvOC_by_fullzero_unofficial/blob/1
 These are unofficial edits, fixes and improvments from nvOC contributors and forum member suggestions
 
 
-nvOC is a customized Ubuntu 16.04 build with Nvidia individual card OC and individual card powerlimit support, manual fan support, auto launching on boot, and a single easy to configure Bash Script (1bash) which can be configured from a windows pc using wordpad.
+
 
 
 http://nvoc-mining-os.com/
