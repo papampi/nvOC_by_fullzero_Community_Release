@@ -2,7 +2,9 @@
 echo " nvOC by fullzero, unofficial 19.2 by papampi"
 echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB/HDD read /writes, added option to auto start miner or not in 1bash, new 1bash for unified and separated pool and ports for wdog checking if pool is online, new separated 0miner to make 3main lighter and easier start miner, fix hostname conflict, add Warning to wdog and temp logs to ,  and many more edits and bug fixes"
 echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes."
+echo " Edits by leenoox: New and improved TEMP CONTROL, and many more fixes and suggestions."
 echo " Backup your old 1bash and any important stuff"
+
 
 if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
   echo "First things first, your 1bash is old, lets put the new 1bash to Downloads folder"
@@ -17,6 +19,8 @@ if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
   wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash
   echo "New 1bash is added to /home/m1/Downloads"
   echo "You can now stop update to edit and make your new 1bash ready"
+else
+echo "Your 1bash is v0019-2, No edits needed"
 fi
 
 sleep 1;echo "";echo ""
@@ -25,7 +29,7 @@ echo "wait 30 seconds, if you have not edited your new 1bash or not backed up ye
 sleep 1;echo "";echo ""
 echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
 echo "";echo ""
-sleep 30;echo "";echo ""
+sleep 3;echo "";echo ""
 
 echo " Stopping gnome-terminal, miner, wdog, temp, ..."
 echo "pkill -f gnome-terminal"
@@ -56,10 +60,8 @@ fi
 sleep 1;echo "";echo ""
 
 echo "Updating and Upgrading system packages and installing needed packages"
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y moreutils gawk
-sudo apt autoclean -y
-sudo apt autoremove -y
+sudo -- sh -c 'apt-get update; apt-get upgrade -y; apt-get dist-upgrade -y; apt-get autoremove -y; apt-get autoclean -y; sudo apt-get install -y moreutils gawk -y'
+
 
 sleep 1;echo "";echo ""
 
@@ -99,6 +101,8 @@ cd /home/m1/Downloads
 wget https://www.dropbox.com/s/mfk12y75n45q7ff/DSTM_0.5.6.tar.gz
 echo "Extracting the zm miner"
 tar -xvzf DSTM_0.5.6.tar.gz
+echo "rm /home/m1/Downloads/DSTM_0.5.6.tar.gz"
+rm /home/m1/Downloads/DSTM_0.5.6.tar.gz
 echo "mkdir -p /home/m1/zec/zm/5_6"
 mkdir -p /home/m1/zec/zm/5_6
 echo "mv /home/m1/Downloads/5_6 /home/m1/zec/zm"
@@ -133,6 +137,8 @@ echo "wget https://www.dropbox.com/s/8ia1pv11h2a9628/Claymore-v10.2.tar.gz"
 wget https://www.dropbox.com/s/8ia1pv11h2a9628/Claymore-v10.2.tar.gz
 echo "tar -xvzf Claymore-v10.2.tar.gz"
 tar -xvzf Claymore-v10.2.tar.gz
+echo "rm /home/m1/Downloads/Claymore-v10.2.tar.gz"
+rm /home/m1/Downloads/Claymore-v10.2.tar.gz
 echo "mv Claymore-v10.2/* /home/m1/eth/claymore/10_2/"
 mv Claymore-v10.2/* /home/m1/eth/claymore/10_2/
 echo "rm -rf Claymore-v10.2"
@@ -140,7 +146,7 @@ rm -rf Claymore-v10.2
 echo "cp /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/"
 cp /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/
 echo "chmod a+x /home/m1/eth/claymore/*/ethdcrminer64"
-chmod a+x  eth/claymore/*/ethdcrminer64
+chmod a+x  /home/m1/eth/claymore/latest/ethdcrminer64
 
 sleep 1;echo "";echo ""
 
@@ -148,6 +154,8 @@ echo "Downloading V19.2 unofficial updates"
 wget https://www.dropbox.com/s/bajt2gaf87kgjrp/nvOC-19-2.tar.gz
 echo "Extracting the update files"
 tar -xvzf nvOC-19-2.tar.gz
+echo "rm /home/m1/Downloads/nvOC-19-2.tar.gz"
+rm /home/m1/Downloads/nvOC-19-2.tar.gz
 echo "Making sure update files are in correct format"
 dos2unix /home/m1/Downloads/nvOC-19-2/*
 
@@ -204,18 +212,20 @@ echo "cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main"
 cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main
 echo "cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate"
 cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate
-echo "cp /home/m1/Downloads/nvOC-19-2/www/minerinfo /home/m1/www/cgi-bin/minerinfo"
-cp /home/m1/Downloads/nvOC-19-2/www/minerinfo /home/m1/www/cgi-bin/minerinfo
+echo "cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/ext/cgi-bin/minerinfo"
+cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/ext/cgi-bin/minerinfo
 echo "cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram"
 cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram
 echo "cp /home/m1/Downloads/nvOC-19-2/6tempcontrol /home/m1/6tempcontrol"
 cp /home/m1/Downloads/nvOC-19-2/6tempcontrol /home/m1/6tempcontrol
 echo "cp /home/m1/Downloads/nvOC-19-2/5watchdog /home/m1/5watchdog"
 cp /home/m1/Downloads/nvOC-19-2/5watchdog /home/m1/5watchdog
-echo "cp /home/m1/Downloads/nvOC-19-2/8_WTM_AUTO_SWITCH /home/m1/8_WTM_AUTO_SWITCH"
-cp /home/m1/Downloads/nvOC-19-2/8_WTM_AUTO_SWITCH /home/m1/8_WTM_AUTO_SWITCH
-echo "cp /home/m1/Downloads/nvOC-19-2/WTM_PROFIT_CHECK /home/m1/WTM_PROFIT_CHECK"
-cp /home/m1/Downloads/nvOC-19-2/WTM_PROFIT_CHECK /home/m1/WTM_PROFIT_CHECK
+echo "cp /home/m1/Downloads/nvOC-19-2/8wtm_auto_switch /home/m1/8wtm_auto_switch"
+cp /home/m1/Downloads/nvOC-19-2/8wtm_auto_switch /home/m1/8wtm_auto_switch
+echo "cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_check"
+cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_check
+echo "cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER"
+cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER
 
 
 sleep 1;echo "";echo ""
