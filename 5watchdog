@@ -50,8 +50,7 @@ then
   echo "WARNING: $(date) - miner still not running, starting miner restart script" | tee -a $LOG_FILE $ALERT_LOG_FILE
 else
   echo "$(date) - miner is running, waiting $SLEEP_TIME seconds before going 'on watch'" | tee -a $LOG_FILE
-#  sleep $SLEEP_TIME
-  sleep 5
+  sleep $SLEEP_TIME
 fi
 
 if [[  $WTM_AUTO_SWITCH  ==  "NO"  ]]

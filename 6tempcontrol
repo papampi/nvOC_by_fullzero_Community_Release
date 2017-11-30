@@ -164,9 +164,9 @@ fi
 #
 # Next line to be deleted after being moved to 3main:
 # added for salfter auto switch compatibilty
-if [[  $COIN != *"SALFTER"* ]] 
+if [[  $COIN != *"SALFTER"* ]]
 then
-sudo nvidia-smi -pm 1 >/dev/null 2>&1
+  sudo nvidia-smi -pm 1 >/dev/null 2>&1
 fi
 
 
@@ -216,7 +216,7 @@ while true; do
           break
         fi
         if [ $ERR_TIMER -le 0 ]; then
-          echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System rebooted by the TEMP_CONTROL script to correct the problem!${N}" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE} ${WD_LOG_FILE}
+          echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System rebooted by the TEMP_CONTROL script to correct the problem!" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE} ${WD_LOG_FILE}
           sleep 3
           sudo reboot
         fi

@@ -1,7 +1,12 @@
 #!/bin/bash
 
-# nvOC by fullzero , v0019.2 unofficial by papampi
-# Based on the original code by fullzero 1bash ver 0019-1.4 
+#############################################################################
+#############################################################################
+###########        Dont remove or change these 2 lines     ##################
+#########    nvOC by fullzero , v0019.2 unofficial by papampi      ##########
+######    Based on the original code by fullzero 1bash ver 0019-1.4    ######
+#############################################################################
+#############################################################################
 
 # + contributors:
 
@@ -54,10 +59,6 @@
 # xleejohnx: SRR support
 # xleejohnx BTC address:  1EY5WbiW3YkWanSKEGcjCETpQfCR81wc56
 
-# Stubo 3main and watchdog edits and fixes
-
-# leenoox complete rewrite of TEMP Control
-
 # Open a terminal to launch miner; will auto launch on boot
 
 # firefox has an OP bookmark; look at the OP for more information
@@ -79,7 +80,7 @@
 ######### ETH  ETC  EXP  UBQ  MUSIC  SOIL
 
 #ALGO - Equihash
-######### ZEC  ZEN  HUSH  ZCL  KMD
+######### ZEC  ZEN  HUSH  ZCL  KMD BTG BTCZ
 
 #ALGO - NiceHash
 ######### DUAL_NICEHASH (Ethash + Decred)  NICE_EQUIHASH  NICE_ETHASH
@@ -135,10 +136,7 @@
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 
-### NEW COINS THIS VERSION:
 
-######### BTCZ
-######### SMART
 
 
 COIN="ZEC"
@@ -276,7 +274,7 @@ __SRR_SLOT="1"
 
 #######################################################################################
 
-# Maxximus007_AUTO_TEMPERATURE_CONTROL
+# MINER_TEMP_CONTROL
 
 # Set the target temperature; Recommended ranges: 55 - 75.  Don't set it too low, if the temperature can't be reached with fan adjustments it will decrease power.  If the actual temp is above the target temp this script will up the fan speed.  If actual temp is above value set above and fan speed is 100, the script will lower the power limit.
 
@@ -321,28 +319,28 @@ then
 fi
 ########################################################################################
 
-
+# set YOUR ADDRESSES, WORKERS, POOL, INTENSITY and PORT:
+BTC_ADDRESS="replace_with_your_BTC_address"
 
 # Set the miner password
 MINER_PWD="x"
 
 ZM_or_EWBF="ZM"  # choose  ZM  or  EWBF
-EWBF_VERSION="3_4" # choose 3_3  or  3_4
-
-#EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_OPTS=""
 
 #DSTM ZM  Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 ZM_OPTS=""
 
+#EWBF ZEC Miner version
+EWBF_VERSION="3_4" # choose 3_3  or  3_4
+#EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
+EWBF_OPTS=""
 # change EWBF_PERCENT to alter donation percent for EWBF Miner
 EWBF_PERCENT="0"
 
-# set YOUR ADDRESSES, WORKERS, POOL, INTENSITY and PORT:
-BTC_ADDRESS="replace_with_your_BTC_address"
 
-
-##### No Need to add stratum+tcp:// to your pool addresses ####
+################################################################
+##### No Need to add stratum+tcp:// to your pool addresses #####
+################################################################
 
 
 #ZEC
@@ -558,7 +556,7 @@ USE_ENVIRONMENTAL_VARIBLES="NO"   #YES  NO
 # NOTE DEFAULT CHANGED FROM SLASH to DOT
 DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"    # DOT  or  SLASH    # formerly ETHERMINEdotORG
 
-CLAYMORE_VERSION="10_0"    # choose 10_0  or  9_8  or  9_7  or  9_5  or  9_4  or  8_0
+CLAYMORE_VERSION="latest"    # choose latest or 10_0  or  9_8  or  9_7  or  9_5  or  9_4  or  8_0
 
 ETHMINER_or_GENOIL_or_CLAYMORE="CLAYMORE"  # choose  ETHMINER  or  GENOIL  or  CLAYMORE
 
@@ -676,7 +674,7 @@ WORKER_NAME="$WORKERNAME"
 
 PROFIT_CHECK_TIMEOUT=600
 
-# ENSURE YOU USE Maxximus007_AUTO_TEMPERATURE_CONTROL for fanspeed
+# ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed
 
 daggerhashimoto_POWERLIMIT_WATTS=120
 __daggerhashimoto_CORE_OVERCLOCK=100

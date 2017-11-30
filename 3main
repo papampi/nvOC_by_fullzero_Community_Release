@@ -9,8 +9,10 @@ source /home/m1/1bash
 #########################################################################
 
 echo ""
-echo " nvOC_v0019-2, Beta"
+echo " nvOC_v0019-2, UNOFFICIAL"
 echo ""
+echo ""
+
 
 SALFTER="NO"
 
@@ -999,26 +1001,29 @@ then
     fi
     sleep 2
     echo ""
-    echo "    Auto Start Miner is Set to YES"
+    echo "Auto Start Miner is Set to YES"
     echo "    "
-    echo "    Commencing Miner Start Command"
+    echo "LAUNCHING:  MINER"
+    echo "    "
+    echo "    "
     running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
       if [ $LOCALorREMOTE == "REMOTE" ]
       then
         bash /home/m1/0miner
+        echo "    "
         echo "    "$(ps ax | grep miner | grep -o 'SCREEN.*')
         echo "    "
-        echo "    "
         echo "process in screen miner; attach with: screen -r miner"
-        echo ""
+        echo "    "
+        echo "    "
         running=""
       elif [ $LOCALorREMOTE == "LOCAL" ]
       then
         bash /home/m1/0miner
-        echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
         echo "    "
+        echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
         echo "    "
         if [[ `screen -ls |grep miner |wc -l` -gt 0 ]]
         then
@@ -1032,8 +1037,9 @@ then
   then
     echo "    "
     echo "    "
-    echo "    Auto Start Miner is set to NO"
-    echo "    Miner is not starting"
+    echo "Auto Start Miner is set to NO"
+    echo "    "
+    echo "Miner is not starting"
     echo "    "
     echo "    "
 
