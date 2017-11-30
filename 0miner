@@ -569,7 +569,7 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
 
-    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
     UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
 
@@ -616,7 +616,7 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
 
-    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
     ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
 
@@ -658,7 +658,7 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
 
-    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
     EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
 
@@ -700,7 +700,7 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
 
-    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
     ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
 
@@ -745,7 +745,7 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
 
-    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
     MPH_ETHASH_ADDR="$MPH_ADDRESS/$MPH_WORKER"
 
@@ -787,7 +787,7 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
 
-    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
     MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
 
@@ -824,7 +824,7 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
 
-    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
     SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
 
@@ -867,7 +867,7 @@ fi
 if [ $COIN == "DUAL_NICEHASH" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETHASH_ADDR="$DUAL_BTC_ADDRESS.$DUAL_WORKER"
   DCR_ADDR="$DUAL_BTC_ADDRESS.$DUAL_WORKER"
@@ -878,7 +878,7 @@ fi
 if [ $COIN == "DUAL_ETC_DCR" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
 
@@ -895,7 +895,7 @@ fi
 if [ $COIN == "DUAL_ETC_PASC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
 
@@ -912,7 +912,7 @@ fi
 if [ $COIN == "DUAL_ETC_PASL" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
 
@@ -929,7 +929,7 @@ fi
 if [ $COIN == "DUAL_ETC_LBC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
 
@@ -946,7 +946,7 @@ fi
 if [ $COIN == "DUAL_ETC_SC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
 
@@ -963,7 +963,7 @@ fi
 if [ $COIN == "DUAL_EXP_DCR" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
   DADDR="$DCR_ADDRESS.$DCR_WORKER"
@@ -974,7 +974,7 @@ fi
 if [ $COIN == "DUAL_EXP_PASC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
   ADDR="$PASC_ADDRESS..$PASC_WORKER"
@@ -985,7 +985,7 @@ fi
 if [ $COIN == "DUAL_EXP_PASL" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
   ADDR="$PASL_ADDRESS..$PASL_WORKER"
@@ -996,7 +996,7 @@ fi
 if [ $COIN == "DUAL_EXP_LBC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
@@ -1007,7 +1007,7 @@ fi
 if [ $COIN == "DUAL_EXP_SC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
   SCADDR="$SC_ADDRESS/$SC_WORKER"
@@ -1018,7 +1018,7 @@ fi
 if [ $COIN == "DUAL_MUSIC_DCR" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   DADDR="$DCR_ADDRESS.$DCR_WORKER"
@@ -1029,7 +1029,7 @@ fi
 if [ $COIN == "DUAL_MUSIC_PASC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   ADDR="$PASC_ADDRESS..$PASC_WORKER"
@@ -1040,7 +1040,7 @@ fi
 if [ $COIN == "DUAL_MUSIC_PASL" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   ADDR="$PASL_ADDRESS..$PASL_WORKER"
@@ -1051,7 +1051,7 @@ fi
 if [ $COIN == "DUAL_MUSIC_LBC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
@@ -1062,7 +1062,7 @@ fi
 if [ $COIN == "DUAL_MUSIC_SC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   SCADDR="$SC_ADDRESS/$SC_WORKER"
@@ -1073,7 +1073,7 @@ fi
 if [ $COIN == "DUAL_ETH_DCR" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
 
@@ -1090,7 +1090,7 @@ fi
 if [ $COIN == "DUAL_ETH_PASC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
 
@@ -1107,7 +1107,7 @@ fi
 if [ $COIN == "DUAL_ETH_PASL" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
 
@@ -1124,7 +1124,7 @@ fi
 if [ $COIN == "DUAL_ETH_LBC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
 
@@ -1141,7 +1141,7 @@ fi
 if [ $COIN == "DUAL_ETH_SC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
 
@@ -1158,7 +1158,7 @@ fi
 if [ $COIN == "DUAL_SOIL_DCR" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
 
@@ -1175,7 +1175,7 @@ fi
 if [ $COIN == "DUAL_SOIL_PASC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
 
@@ -1192,7 +1192,7 @@ fi
 if [ $COIN == "DUAL_SOIL_PASL" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
 
@@ -1209,7 +1209,7 @@ fi
 if [ $COIN == "DUAL_SOIL_LBC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
 
@@ -1226,7 +1226,7 @@ fi
 if [ $COIN == "DUAL_SOIL_SC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
 
@@ -1243,7 +1243,7 @@ fi
 if [ $COIN == "DUAL_UBQ_DCR" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
 
@@ -1260,7 +1260,7 @@ fi
 if [ $COIN == "DUAL_UBQ_PASC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
 
@@ -1277,7 +1277,7 @@ fi
 if [ $COIN == "DUAL_UBQ_PASL" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
 
@@ -1294,7 +1294,7 @@ fi
 if [ $COIN == "DUAL_UBQ_LBC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
 
@@ -1311,7 +1311,7 @@ fi
 if [ $COIN == "DUAL_UBQ_SC" ]
 then
 
-  HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+  HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
 
@@ -1349,7 +1349,7 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
 
-    HCD=/home/m1/eth/$CLAYMORE_VERSION/ethdcrminer64
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
 
     NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
 
