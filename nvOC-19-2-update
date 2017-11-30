@@ -3,11 +3,24 @@ echo " nvOC by fullzero, unofficial 19.2 by papampi"
 echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB/HDD read /writes, added option to auto start miner or not in 1bash, new 1bash for unified and separated pool and ports for wdog checking if pool is online, new separated 0miner to make 3main lighter and easier start miner, fix hostname conflict, add Warning to wdog and temp logs to ,  and many more edits and bug fixes"
 echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes."
 echo " Backup your old 1bash and any important stuff"
-cd /home/m1/Downloads
-echo "First things first, lets get the new 1bash"
-wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash
-echo "New 1bash is added to /home/m1/Downloads"
-echo "You can now stop update to edit and make your new 1bash ready"
+
+if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
+  echo "First things first, your 1bash is old, lets put the new 1bash to Downloads folder"
+  while [[ -e /home/m1/Downloads/1bash  ]]
+  do
+    echo "There is a 1bash in Downloads folder, move it to some where else"
+    echo "Waiting 30 seconds to move it"
+    sleep 30
+  done
+  cd /home/m1/Downloads
+  echo "wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash"
+  wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash
+  echo "New 1bash is added to /home/m1/Downloads"
+  echo "You can now stop update to edit and make your new 1bash ready"
+fi
+
+sleep 1;echo "";echo ""
+
 echo "wait 30 seconds, if you have not edited your new 1bash or not backed up yet HIT ctrl+c NOW"
 sleep 1;echo "";echo ""
 echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
@@ -78,7 +91,7 @@ fi
 
 sleep 1;echo "";echo ""
 
-echo "Downloading and making changes for Claymore 10_2"
+echo "Downloading and making changes for DSTM ZM miner 0.5.6"
 sleep 1;echo "";echo ""
 echo "Downloading dstm zm miner 5_6"
 echo "cd /home/m1/Downloads"
@@ -113,7 +126,7 @@ cd /home/m1/eth/
 echo "cp -r 8_0 9_4 9_5 9_7 9_8 10_0 /home/m1/eth/claymore/"
 cp -r 8_0 9_4 9_5 9_7 9_8 10_0 /home/m1/eth/claymore/
 echo "rm -rf 8_0 9_4 9_5 9_7 9_8 10_0 "
-rm -rf 8_0 9_4 9_5 9_7 9_8 10_0 
+rm -rf 8_0 9_4 9_5 9_7 9_8 10_0
 echo "cd /home/m1/Downloads"
 cd /home/m1/Downloads
 echo "wget https://www.dropbox.com/s/8ia1pv11h2a9628/Claymore-v10.2.tar.gz"
@@ -180,7 +193,7 @@ sleep 1
 echo " "
 echo " "
 
-if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then 
+if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
   echo "cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash"
   cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
 fi
