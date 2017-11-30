@@ -1,17 +1,13 @@
 #!/bin/bash
 echo " nvOC by fullzero, unofficial 19.2 by papampi"
 echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB/HDD read /writes, added option to auto start miner or not in 1bash, new 1bash for unified and separated pool and ports for wdog checking if pool is online, new separated 0miner to make 3main lighter and easier start miner, fix hostname conflict, add Warning to wdog and temp logs to ,  and many more edits and bug fixes"
-echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_6 version, and many more edits and bug fixes."
-echo " Edits by leenoox: Complete re-write of temp control"
+echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes."
 echo " Backup your old 1bash and any important stuff"
-
-if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then 
 cd /home/m1/Downloads
 echo "First things first, lets get the new 1bash"
 wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash
 echo "New 1bash is added to /home/m1/Downloads"
 echo "You can now stop update to edit and make your new 1bash ready"
-fi
 echo "wait 30 seconds, if you have not edited your new 1bash or not backed up yet HIT ctrl+c NOW"
 sleep 1;echo "";echo ""
 echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
@@ -33,6 +29,7 @@ echo "pkill -e screen"
 pkill -e screen
 
 sleep 1;echo "";echo ""
+
 echo "Checking hostname conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
@@ -63,6 +60,8 @@ else
   echo "screen settings for screenlog.0 is ok"
 fi
 
+sleep 1;echo "";echo ""
+
 if [[ -z  $(cat /etc/fstab | grep nvoc_log) ]]
 then
   echo "making tmpfs nvoc_logs folder for logs"
@@ -77,7 +76,9 @@ else
   echo "tmpfs nvoc_logs already created"
 fi
 
-if [ ! -d /home/m1/zec/zm/5_6/ ]; then
+sleep 1;echo "";echo ""
+
+echo "Downloading and making changes for Claymore 10_2"
 sleep 1;echo "";echo ""
 echo "Downloading dstm zm miner 5_6"
 echo "cd /home/m1/Downloads"
@@ -97,7 +98,36 @@ echo "cp /home/m1/zec/zm/5_6/zm_miner /home/m1/zec/zm/latest/zm_miner"
 cp /home/m1/zec/zm/5_6/zm_miner /home/m1/zec/zm/latest/zm_miner
 echo "chmod a+x /home/m1/zec/zm/latest/zm_miner"
 chmod a+x /home/m1/zec/zm/latest/zm_miner
-fi
+
+sleep 1;echo "";echo ""
+
+echo "Downloading and making changes for Claymore 10_2"
+echo "mkdir -p /home/m1/eth/claymore/"
+mkdir -p /home/m1/eth/claymore/
+echo "mkdir -p /home/m1/eth/claymore/10_2"
+mkdir -p /home/m1/eth/claymore/10_2
+echo "mkdir -p /home/m1/eth/claymore/latest"
+mkdir -p /home/m1/eth/claymore/latest
+echo "cd /home/m1/eth/"
+cd /home/m1/eth/
+echo "cp -r 8_0 9_4 9_5 9_7 9_8 10_0 /home/m1/eth/claymore/"
+cp -r 8_0 9_4 9_5 9_7 9_8 10_0 /home/m1/eth/claymore/
+echo "rm -rf 8_0 9_4 9_5 9_7 9_8 10_0 "
+rm -rf 8_0 9_4 9_5 9_7 9_8 10_0 
+echo "cd /home/m1/Downloads"
+cd /home/m1/Downloads
+echo "wget https://www.dropbox.com/s/8ia1pv11h2a9628/Claymore-v10.2.tar.gz"
+wget https://www.dropbox.com/s/8ia1pv11h2a9628/Claymore-v10.2.tar.gz
+echo "tar -xvzf Claymore-v10.2.tar.gz"
+tar -xvzf Claymore-v10.2.tar.gz
+echo "mv Claymore-v10.2/* /home/m1/eth/claymore/10_2/"
+mv Claymore-v10.2/* /home/m1/eth/claymore/10_2/
+echo "rm -rf Claymore-v10.2"
+rm -rf Claymore-v10.2
+echo "cp /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/"
+cp /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/
+echo "chmod a+x /home/m1/eth/claymore/*/ethdcrminer64"
+chmod a+x  eth/claymore/*/ethdcrminer64
 
 sleep 1;echo "";echo ""
 
@@ -107,6 +137,8 @@ echo "Extracting the update files"
 tar -xvzf nvOC-19-2.tar.gz
 echo "Making sure update files are in correct format"
 dos2unix /home/m1/Downloads/nvOC-19-2/*
+
+sleep 1;echo "";echo ""
 
 echo " Checking hostname and permanently fixing it if there is conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
@@ -120,9 +152,12 @@ else
   echo "hostname had no conflicts"
 fi
 
+sleep 1;echo "";echo ""
+
 echo "Making a backup of changed files in /home/m1/backups"
 echo "mkdir -p /home/m1/backups"
 mkdir -p /home/m1/backups
+
 sleep 1;echo "";echo ""
 
 echo "cp /home/m1/1bash /home/m1/backups/1bash.bak"
@@ -138,6 +173,7 @@ mv /home/m1/PAPAMPI_WTM /home/m1/backups/PAPAMPI_WTM.bak
 echo "mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/PAPAMPI_PROFIT_CHECK.bak"
 mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/PAPAMPI_PROFIT_CHECK.bak
 
+sleep 1;echo "";echo ""
 
 echo "Copying updates"
 sleep 1
@@ -167,11 +203,10 @@ echo "cp /home/m1/Downloads/nvOC-19-2/8_WTM_AUTO_SWITCH /home/m1/8_WTM_AUTO_SWIT
 cp /home/m1/Downloads/nvOC-19-2/8_WTM_AUTO_SWITCH /home/m1/8_WTM_AUTO_SWITCH
 echo "cp /home/m1/Downloads/nvOC-19-2/WTM_PROFIT_CHECK /home/m1/WTM_PROFIT_CHECK"
 cp /home/m1/Downloads/nvOC-19-2/WTM_PROFIT_CHECK /home/m1/WTM_PROFIT_CHECK
-echo "cat /home/m1/8_wtmautoswitchlog | grep switch > /home/m1//WTM_switch_history"
-cat /home/m1/8_wtmautoswitchlog | grep switch > /home/m1//WTM_switch_history
 
 
 sleep 1;echo "";echo ""
+
 echo "chmod a+x /home/m1/www/cgi-bin/minerinfo"
 chmod a+x /home/m1/www/cgi-bin/minerinfo
 echo "chmod a+x /home/m1/www/cgi-bin/clearalerts"
@@ -194,10 +229,11 @@ echo "chmod 666 /home/m1/7_*"
 chmod 666 /home/m1/7_*
 
 sleep 1;echo "";echo ""
+
 touch /home/m1/.bash_aliases
 if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log) ]]
 then
-  echo " Adding master-log alias"
+  echo "Adding master-log alias"
   echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/5_restartlog /home/m1/nvoc_logs/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
   echo "type master-log in guake or ssh sessions, to watch all your logs live"
   echo " "
