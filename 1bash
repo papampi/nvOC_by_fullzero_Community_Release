@@ -556,7 +556,7 @@ USE_ENVIRONMENTAL_VARIBLES="NO"   #YES  NO
 # NOTE DEFAULT CHANGED FROM SLASH to DOT
 DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"    # DOT  or  SLASH    # formerly ETHERMINEdotORG
 
-CLAYMORE_VERSION="latest"    # choose latest or 10_0  or  9_8  or  9_7  or  9_5  or  9_4  or  8_0
+CLAYMORE_VERSION="latest"    # choose latest or 10_2 or 10_0  or  9_8  or  9_7  or  9_5  or  9_4  or  8_0
 
 ETHMINER_or_GENOIL_or_CLAYMORE="CLAYMORE"  # choose  ETHMINER  or  GENOIL  or  CLAYMORE
 
