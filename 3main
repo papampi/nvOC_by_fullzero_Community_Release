@@ -11,11 +11,6 @@ source /home/m1/1bash
 echo ""
 echo " nvOC_v0019-2, Beta"
 echo ""
-echo ""
-echo "rig IP: $IPW"
-echo ""
-echo ""
-echo "rig MAC: $MAC"
 
 SALFTER="NO"
 
