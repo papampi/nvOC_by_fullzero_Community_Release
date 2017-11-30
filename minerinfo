@@ -32,7 +32,7 @@ NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Ve
 if [ $MINER_TEMP_CONTROL == "YES" ]
 then
   AUTO_TEMPERATURE_CONTROL=("Enabled,")
-  if ps aux | grep -v grep | grep -q temp
+  if ps aux | grep -v grep | grep -q 6tempcontrol
   then
     TEMP_CHECK=(" Running")
   else
@@ -45,7 +45,7 @@ fi
 if [ $MINER_WATCHDOG == "YES" ]
 then
   WATCHDOG=("Enabled,")
-  if ps aux | grep -v grep | grep -q wdog
+  if ps aux | grep -v grep | grep -q 5watchdog
   then
     WDOG_CHECK=(" Running")
   else
@@ -91,7 +91,7 @@ then
   LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
 
 
-  if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
+  if ps aux | grep -v grep | grep -q 8wtm_auto_switch
   then
     WTM_SWITCH=("Running")
   else
@@ -123,7 +123,7 @@ then
   Average_Revenue=""
   LAST_10_AUTO_SWITCHES=""
 #if python script syncing
-  if ps aux | grep -v grep | grep -q WTM_AUTO_SWITCH
+  if ps aux | grep -v grep | grep -q WTM_SWITCHER
   then
     WTM_A_S="Syncing data with WTM.com"
   fi
