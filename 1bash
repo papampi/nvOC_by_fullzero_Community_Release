@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # nvOC by fullzero , v0019.2 unofficial by papampi
+# Based on the original code by fullzero 1bash ver 0019-1.4 
 
 # + contributors:
 
@@ -52,6 +53,10 @@
 
 # xleejohnx: SRR support
 # xleejohnx BTC address:  1EY5WbiW3YkWanSKEGcjCETpQfCR81wc56
+
+# Stubo 3main and watchdog edits and fixes
+
+# leenoox complete rewrite of TEMP Control
 
 # Open a terminal to launch miner; will auto launch on boot
 
