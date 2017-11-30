@@ -1,11 +1,20 @@
 #!/bin/bash
 echo " nvOC by fullzero, unofficial 19.2 by papampi"
 echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB/HDD read /writes, added option to auto start miner or not in 1bash, new 1bash for unified and separated pool and ports for wdog checking if pool is online, new separated 0miner to make 3main lighter and easier start miner, fix hostname conflict, add Warning to wdog and temp logs to ,  and many more edits and bug fixes"
-echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes."
+echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_6 version, and many more edits and bug fixes."
+echo " Edits by leenoox: Complete re-write of temp control"
 echo " Backup your old 1bash and any important stuff"
-echo " wait 30 seconds, if you have not backed up hit ctrl+c now"
+
+if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then 
+cd /home/m1/Downloads
+echo "First things first, lets get the new 1bash"
+wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash
+echo "New 1bash is added to /home/m1/Downloads"
+echo "You can now stop update to edit and make your new 1bash ready"
+fi
+echo "wait 30 seconds, if you have not edited your new 1bash or not backed up yet HIT ctrl+c NOW"
 sleep 1;echo "";echo ""
-echo " DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
+echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
 echo "";echo ""
 sleep 30;echo "";echo ""
 
@@ -111,7 +120,7 @@ else
   echo "hostname had no conflicts"
 fi
 
-echo "Making a backup of 1bash, 3main, wdog and temp in /home/m1/backups"
+echo "Making a backup of changed files in /home/m1/backups"
 echo "mkdir -p /home/m1/backups"
 mkdir -p /home/m1/backups
 sleep 1;echo "";echo ""
@@ -124,7 +133,6 @@ echo "mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus
 mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak
 echo "mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak"
 mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak
-
 echo "mv /home/m1/PAPAMPI_WTM /home/m1/backups/PAPAMPI_WTM.bak"
 mv /home/m1/PAPAMPI_WTM /home/m1/backups/PAPAMPI_WTM.bak
 echo "mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/PAPAMPI_PROFIT_CHECK.bak"
