@@ -164,7 +164,7 @@ sleep 1;echo "";echo ""
 echo " Checking hostname and permanently fixing it if there is conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
-  echo "hostanema has conflict, Permanently fixing it"
+  echo "hostaneme has conflict, Permanently fixing it"
   echo "sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts"
   sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts
   echo "sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname"
