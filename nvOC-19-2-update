@@ -20,7 +20,7 @@ if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
   echo "New 1bash is added to /home/m1/Downloads"
   echo "You can now stop update to edit and make your new 1bash ready"
 else
-echo "Your 1bash is v0019-2, No edits needed"
+echo "Your 1bash is v0019.2, No edits needed"
 fi
 
 sleep 1;echo "";echo ""
@@ -29,7 +29,7 @@ echo "wait 30 seconds, if you have not edited your new 1bash or not backed up ye
 sleep 1;echo "";echo ""
 echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
 echo "";echo ""
-sleep 3;echo "";echo ""
+sleep 30;echo "";echo ""
 
 echo " Stopping gnome-terminal, miner, wdog, temp, ..."
 echo "pkill -f gnome-terminal"
