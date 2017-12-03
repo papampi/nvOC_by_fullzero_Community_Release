@@ -1,4 +1,3 @@
-This is a work in progress ...
 
 To update to v0019-2 unofficial Download nvOC-19-2-update and run:
 ```bash nvOC-19-2-update```
