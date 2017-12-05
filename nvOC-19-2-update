@@ -226,6 +226,8 @@ echo "cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_che
 cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_check
 echo "cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER"
 cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER
+echo "cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC"
+cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC
 
 
 sleep 1;echo "";echo ""
@@ -250,6 +252,9 @@ echo "chmod 666 /home/m1/nvoc_logs/*"
 chmod 666 /home/m1/nvoc_logs/*
 echo "chmod 666 /home/m1/7_*"
 chmod 666 /home/m1/7_*
+echo "chmod a+x /home/m1/nvOC"
+chmod a+x /home/m1/nvOC
+
 
 sleep 1;echo "";echo ""
 
