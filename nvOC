@@ -1,0 +1,190 @@
+#!/bin/bash
+################################################################################
+#                                                                              #
+# nvOC                                                                         #
+#                                                                              #
+# Purpose:  Handles a variety of tasks for the nvOC mining operating system    #
+#           including stop and start mining, patching, help, etc               #
+#                                                                              #
+# Usage:  See echo_usage (below)                                               #
+#                                                                              #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Subroutines
+################################################################################
+
+############################ Display Help on Usage #############################
+echo_usage()   
+{
+   echo "Usage:  $0 clearlogs"
+   echo "           clears out OS & nvOC logs"    
+   echo "        $0 gpuinfo"
+   echo "           displays GPU ID, infomation, settings, and status"    
+   echo "        $0 patch"
+   echo "           stops nvOC and applies outstanding Ubuntu patches and "
+   echo "           Nvidia driver updates"    
+   echo "        $0 reboot"
+   echo "           reboots the host machine"    
+   echo "        $0 stop"
+   echo "           stops mining, watchdog and temperature control"    
+   echo "        $0 start"
+   echo "           starts normal nvOC mining operations"                                   
+   echo "        $0 help"
+   echo "           displays help about using and configuring nvOC for mining"                                   
+}
+
+################################# Clearlogs ######################################
+Clearlogs()
+{
+   echo "Clearing logs..."
+   
+   # Must become root to clear these logs
+   sudo su -c "> /var/log/auth.log"
+   sudo su -c "> /var/log/dpkg.log"
+   sudo su -c "> /var/log/syslog"
+   sudo su -c "> /var/log/Xorg.0.log"
+   sudo su -c "> /var/log/kern.log"
+   sudo rm /var/log/*.gz
+   sudo rm /var/log/*.old
+   sudo rm /var/log/*.1
+   sudo rm /var/log/*/*.gz
+   sudo rm /var/log/*/*.old
+   sudo rm /var/log/*/*.1
+
+   > /home/m1/nvoc_logs/5_restartlog
+   > /home/m1/nvoc_logs/6_autotemplog
+   > /home/m1/nvoc_logs/8_wtmautoswitchlog
+   > /home/m1/nvoc_logs/screenlog.0
+   > /home/m1/current-profit
+   > /home/m1/algo-log
+   > /home/m1/7_wdog_alertlog
+   > /home/m1/7_temp_alertlog
+
+   rm -r /home/m1/kk003_telegram_data > /dev/null 2>&1
+   
+   echo ""; echo "...done."
+}
+
+################################# GPU Info ######################################
+GPUinfo()
+{
+   # Get device IDs
+   DEVICE_IDS=$(nvidia-smi --query-gpu=pci.sub_device_id --format=csv,noheader,nounits)
+   i=0
+
+   echo "ID,VENDOR,MODEL,TEMP,FAN,UTILIZATION,POWER,POWERLIMIT,MAXPOWER,GPUCLOCK,MEMCLOCK"
+   echo "--------------------------------------------------------------------------------"              
+   
+   for ID in $DEVICE_IDS
+   do
+      # Get vendor id substring
+      VENDOR_ID=${ID:6:5}
+      
+      # GPU Query, 3842=EVGA, 1462=MSI, 10DE=Nvidia, 19DA=Zotac, 807D=Asus, 1458=Gigabyte
+      case $VENDOR_ID in
+         3842) VENDOR_ID="EVGA";;
+         1462) VENDOR_ID="MSI";;
+         10DE) VENDOR_ID="NVIDIA";;
+         19DA) VENDOR_ID="ZOTAC";;
+         807D) VENDOR_ID="ASUS";;
+         1458) VENDOR_ID="GIGABYTE";;
+      esac
+      
+      # Get most GPU info here
+      { IFS=', ' read CURRENT_TEMP CURRENT_FAN UTILIZATION POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $i --query-gpu=temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv,noheader,nounits)
+      
+      # Some GPU info requires special tactics
+      MODEL=$(nvidia-smi -i $i --query-gpu=name --format=csv,noheader,nounits | tail -1)
+      POWERMAX=$(nvidia-smi -i $i -q|grep "Max Power"|cut -f 2 -d ":"|cut -f 2 -d " ")
+      GPUCLOCK=$(nvidia-smi -i $i -q -d CLOCK |grep Graphics |head -1|cut -f 2 -d ":"|cut -f 2 -d " ")
+      MEMCLOCK=$(nvidia-smi -i $i -q -d CLOCK |grep Memory |head -1|cut -f 2 -d ":"|cut -f 2 -d " ")
+      
+      # Memory clock display on Nvidia X Server Settings is doubled
+      #   uncomment this line if you want it displayed that way 
+#      MEMCLOCK=$(($MEMCLOCK * 2))
+
+      echo "$i,$VENDOR_ID,$MODEL,$CURRENT_TEMP,$CURRENT_FAN,$UTILIZATION,$POWERDRAW,$PWRLIMIT,$POWERMAX,$GPUCLOCK,$MEMCLOCK"
+      
+      i=$(($i + 1))
+   done
+}
+
+############################### Display Help ####################################
+Help()
+{
+   # Stub
+   echo "Stub"
+}
+
+############################### Patch nvOC ####################################
+Patch()
+{
+   # Kill off the nv_OC processes
+   ~/nvOC stop
+  
+   echo "Applying patches/updates..."; echo ""
+   
+   # Apply patches
+   -- sh -c 'apt-get update; apt-get upgrade -y; apt-get dist-upgrade -y; apt-get autoremove -y; apt-get autoclean -y; apt-get install libutempter0 -y'
+   
+   echo ""; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
+}
+
+############################### Reboot host ####################################
+Reboot()
+{
+   # Reboots the host
+   echo "Warning: The host will reboot in 10 seconds, ctrl-c to cancel..."
+   sleep 10
+   sudo su -c "shutdown -r now"
+}
+
+############################### Start nvOC ####################################
+Start()
+{
+   #TODO: Is there some other way that just rebooting?
+   ~/nvOC restart
+}
+
+############################### Stop nvOC ####################################
+Stop()
+{
+   echo "Stopping nvOC processes..."; echo ""
+   
+   # Kill off the nv_OC processes
+   pkill -f gnome-terminal
+   pkill -f DOG
+   pkill -f GRAM
+   pkill -f TEMP
+   pkill -e screen
+   
+   echo ""; echo "...done."
+}
+
+################################################################################
+################################# Main Logic ###################################
+################################################################################
+
+# This could be annoying: 
+# Clear the screen and simulate the prompt and the command they ran
+prompt="$USER@$HOSTNAME:~$"
+clear
+echo "$prompt$0 $1"
+
+# Handle the command line parameters
+case $# in
+   0) echo_usage;;
+   1) case $1 in
+         clearlogs)    Clearlogs;;
+         gpuinfo)      GPUinfo;;
+         help)         Help;;
+         patch)        Patch;;
+         reboot)       Reboot;;
+         start)        Start;;
+         stop)         Stop;;
+         *)            echo_usage;;
+      esac;;
+   *) echo_usage;;
+esac  
