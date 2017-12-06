@@ -33,7 +33,7 @@ then
   fi
 
   BTGADDR="$BTG_ADDRESS.$BTG_WORKER"
-
+ 
   if [ $ZM_or_EWBF == "ZM" ]
   then
     HCD='/home/m1/zec/zm/latest/zm_miner'
