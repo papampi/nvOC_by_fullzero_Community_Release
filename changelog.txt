@@ -45,8 +45,9 @@ Removed repetitive if LOCAL then "screen -r miner" from each mining block and pu
   Added log rotation (papampi mod)
   changed minerinfo and papampi-telegram for new log locations (papampi mod)
   Create tmpfs partition to change logfile location to tmpfs to lower read/writes to HDD/USB (papampi mod)
-  changed minerinfo web so those who dont use wtm dont see empty or no wtm entries
-
+  Changed minerinfo web so those who dont use wtm dont see empty or no wtm entries
+  Fixed v0019.1-4 fstab problem
+  Update Claymore to 10.02
 
 
   And so many more
