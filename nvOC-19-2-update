@@ -20,7 +20,7 @@ if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
   echo "New 1bash is added to /home/m1/Downloads"
   echo "You can now stop update to edit and make your new 1bash ready"
 else
-echo "Your 1bash is v0019.2, No edits needed"
+  echo "Your 1bash is v0019-2, No edits needed"
 fi
 
 sleep 1;echo "";echo ""
@@ -57,10 +57,25 @@ else
   echo "No Problems found"
 fi
 
+echo "Fix 19.1-4 fstab problem"
+
+if [[ -z $(cat fstab-test | grep "#UUID=55184403759586FB")  ]] && [[ -n $(cat fstab-test | grep "UUID=55184403759586FB") ]]
+then
+  echo "sudo sed -i -e 's/UUID=55184403759586FB/#UUID=55184403759586FB/g' /etc/fstab"
+  sudo sed -i -e 's/UUID=55184403759586FB/#UUID=55184403759586FB/g' /etc/fstab
+elif [[ -z $(cat fstab-test | grep "#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231") ]] && [[ -n $(cat fstab-test | grep "/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231") ]]
+then
+  echo "sudo sed -i -e 's\/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\g' /etc/fstab"
+  sudo sed -i -e 's\/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\g' /etc/fstab
+else
+  echo "fstab has no problem"
+fi
+
+
 sleep 1;echo "";echo ""
 
 echo "Updating and Upgrading system packages and installing needed packages"
-sudo -- sh -c 'apt update; apt upgrade -y;  apt autoremove -y; apt autoclean -y; sudo apt install -y moreutils gawk '
+sudo -- sh -c 'apt-get update; apt-get upgrade -y; apt-get dist-upgrade -y; apt-get autoremove -y; apt-get autoclean -y; sudo apt-get install -y moreutils gawk -y'
 
 
 sleep 1;echo "";echo ""
@@ -150,6 +165,8 @@ chmod a+x  /home/m1/eth/claymore/latest/ethdcrminer64
 
 sleep 1;echo "";echo ""
 
+cd /home/m1/Downloads
+rm /home/m1/Downloads/nvOC-19-2.tar.gz
 echo "Downloading V19.2 unofficial updates"
 wget https://www.dropbox.com/s/bajt2gaf87kgjrp/nvOC-19-2.tar.gz
 echo "Extracting the update files"
@@ -164,7 +181,7 @@ sleep 1;echo "";echo ""
 echo " Checking hostname and permanently fixing it if there is conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
-  echo "hostaneme has conflict, Permanently fixing it"
+  echo "hostanema has conflict, Permanently fixing it"
   echo "sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts"
   sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts
   echo "sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname"
@@ -206,14 +223,16 @@ if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
   cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
 fi
 
+echo "cp /home/m1/Downloads/nvOC-19-2/2unix /home/m1/2unix"
+cp /home/m1/Downloads/nvOC-19-2/2unix /home/m1/2unix
 echo "cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner"
 cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner
 echo "cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main"
 cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main
 echo "cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate"
 cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate
-echo "cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/ext/cgi-bin/minerinfo"
-cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/ext/cgi-bin/minerinfo
+echo "cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/www/cgi-bin/minerinfo"
+cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/www/cgi-bin/minerinfo
 echo "cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram"
 cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram
 echo "cp /home/m1/Downloads/nvOC-19-2/6tempcontrol /home/m1/6tempcontrol"
@@ -226,8 +245,6 @@ echo "cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_che
 cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_check
 echo "cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER"
 cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER
-echo "cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC"
-cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC
 
 
 sleep 1;echo "";echo ""
@@ -252,9 +269,6 @@ echo "chmod 666 /home/m1/nvoc_logs/*"
 chmod 666 /home/m1/nvoc_logs/*
 echo "chmod 666 /home/m1/7_*"
 chmod 666 /home/m1/7_*
-echo "chmod a+x /home/m1/nvOC"
-chmod a+x /home/m1/nvOC
-
 
 sleep 1;echo "";echo ""
 
