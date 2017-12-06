@@ -1,27 +1,72 @@
 #!/bin/bash
 
-# Miner restart script for nvOC by fullzero , v0019.2 unofficial by papampi
+# Miner restart script v0019-2.0
 # By Maxximus007 && IAmNotAJeep
 # for nvOC by fullzero
-source /home/m1/1bash
+# Mods too numerous to mention by Stubo
 
 export DISPLAY=:0
-# Creating a log file to record restarts in tmpfs
-LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
-if [[ -e "$LOG_FILE" ]] ; then
-  #Limit the logfile, just keep the last 2K
-  echo "$(cat $LOG_FILE | tail -n 2k )" > $LOG_FILE
+
+# Global Variables
+THRESHOLD=90  # Minimum % Utilization for a GPU
+
+# Set higher process and disk I/O priorities because we are essential service
+sudo renice -n -15 -p $$ && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
+sleep 1
+
+# Log file handling (check existence, size limitation or creation)
+# Log file to record restarts, status, errors, utilization issues
+LOG_FILE="/home/m1/nvoc_loghs/5_restartlog"
+if [ -e "$LOG_FILE" ] ; then
+  LASTLOG=$(tail -n 2K $LOG_FILE)  # Limit the logfile, just keep the last 2K
+  echo $LASTLOG > $LOG_FILE
+  if [[ $(wc -l <$LOG_FILE) -gt 0 ]]; then
+    echo -e "${B}LOG FILE:${N} (Showing the last 10 recorded entries)${R}"
+    cat $LOG_FILE | tail -n 10
+    echo -e "${N}"
+    echo ""
+  else
+    echo -e "${B}LOG FILE${N} is empty."
+    echo ""; echo ""
+  fi
+else
+  touch $LOG_FILE  # if log file does not exist, create one
+  echo -e "New ${B}LOG FILE${N} created."
+  echo ""; echo ""
 fi
 
-# Creating alert log file to record problems
-ALERT_LOG_FILE="/home/m1/7_wdog_alertlog"
-if [[ -e "$ALERT_LOG_FILE" ]] ; then
-  #Limit the logfile, just keep the last 2K
-  echo "$(cat $ALERT_LOG_FILE |  tail -n 2k )" > $ALERT_LOG_FILE
+# Creating alert log file to keep the warnings after reboot
+ALERT_LOG_FILE="/home/m1/7_temp_alertlog"
+if [ -e "$ALERT_LOG_FILE" ]; then
+  echo "$( cat $ALERT_LOG_FILE | tail -n 2k )" > ${ALERT_LOG_FILE}
+else
+  touch $ALERT_LOG_FILE  # if log file does not exist, create one
 fi
 
-GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+# Provide feedback
+echo "$(date) - Starting miner restart script." | tee -a ${LOG_FILE}
+echo ""
+sleep 2
 
+#Dont send telegram alert for every switch
+if [[  $WTM_AUTO_SWITCH  ==  "NO"  ]]
+then
+  bash '/home/m1/telegram'
+fi
+
+
+# Initialize vars
+REBOOTRESET=0
+RESTART=0  # Track how many times we have restarted the miner/3main
+GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
+# Dynamic sleep time, dstm zm miner takes very long time to load all cards
+SLEEP_TIME=$((($GPU_COUNT * 10 ) + 10 ))
+# Dynamic wait for miner so that temp control has time to set GPUs
+MINER_TIME=$((($GPU_COUNT * 3 ) + 10 ))
+COUNT=$((6 * $GPU_COUNT))
+numtest='^[0-9]+$'
+
+# If number gpu installed is set in 1bash give a comparison
 if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
 then
   if [[ $GPU_COUNT -ne $NUMBER_GPUS_INSTALLED ]]
@@ -31,238 +76,175 @@ then
     echo ""
   else
     echo ""
-    echo "Installed GPUs: $NUMBER_GPUS_INSTALLED, Connected GPUs: $GPU_COUNT"
+    echo "Installed GPUs: $NUMBER_GPUS_INSTALLED, Connected GPUs: $GPU_COUNT" | tee -a ${LOG_FILE}
     echo ""
   fi
 fi
 
-SLEEP_TIME=$((($GPU_COUNT * 10 ) + 10 ))
-MINER_TIME=$((($GPU_COUNT * 3 ) + 10 ))
+# Give miner time to start or if not started go right to check for the problem
 
-if  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
+if   [[ -z  $(ps ax | grep -i screen | grep miner) ]]
 then
-  echo "$(date) - miner not running, waiting $MINER_TIME seconds" | tee -a $LOG_FILE
+  echo "$(date) - miner not running, waiting $MINER_TIME seconds" | tee -a ${LOG_FILE}
   sleep $MINER_TIME
 fi
 
-if  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
+if [[ -z  $(ps ax | grep -i screen | grep miner) ]]
 then
-  echo "WARNING: $(date) - miner still not running, starting miner restart script" | tee -a $LOG_FILE $ALERT_LOG_FILE
+  echo "WARNING: $(date) - miner still not running, starting watchdog to look for problem" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
 else
-  echo "$(date) - miner is running, waiting $SLEEP_TIME seconds before going 'on watch'" | tee -a $LOG_FILE
+  echo "$(date) - miner is running, waiting $SLEEP_TIME seconds before going 'on watch'" | tee -a ${LOG_FILE}
   sleep $SLEEP_TIME
 fi
 
-if [[  $WTM_AUTO_SWITCH  ==  "NO"  ]]
-then
-  bash '/home/m1/telegram'
-fi
-
-THRESHOLD=90
-RESTART=0
-COUNT=$((6 * $GPU_COUNT))
-#reinit=6
+# Main Loop [infinite]
 while true
 do
 
-  #If WTM_AUTO_SWITCH python script running time is more than 30 Sec kill it
-  if [[  $WTM_AUTO_SWITCH  ==  "YES"  ]] || [[ $WTM_PROFIT_CHECK == "YES" ]]
-  then
-    WTM_S_PID=`ps -ef | grep WTM_SWITCHER | grep -v grep |awk '{print $2}'`
-    if  [[ -n $WTM_A_S_PID ]]
-    then
-      WTM_S_PID_TIME=`ps -eo pid,etimes | grep $WTM_S_PID | awk  '$2> 30 { print $1}'`
-      echo "WTM Switcher Syncing"
-      if  [[ -n "$WTM_S_PID_TIME" ]]
-      then
-        echo "WARNING: $(date) - WTM switcher can't sync, restarting it" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
-        ps -eo pid,etimes | grep `pgrep -f WTM_SWITCHER` | awk  '$2> 30 { print $1}'  | xargs kill -9
-      fi
-    fi
-  fi
-
-
   # Delay before checking GPU status/usage
   sleep 10
-  #IAmNotAJeep MOD from V002
-  JEEP=0
-  #IAmNotAJeep MOD from V002
-  GPU=0
+
+  # Set/increment vars
+  NUM_GPU_BLW_THRSHLD=0  # Track how many GPU are below threshold
   REBOOTRESET=$(($REBOOTRESET + 1))
 
-  #IAmNotAJeep MOD from V002
-  echo ""
-  echo "      GPU_COUNT: " $GPU_COUNT  | tee -a $LOG_FILE
-  #IAmNotAJeep MOD from V002
+  # Get utilizations for all GPUs
   UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
-  echo ""
-  echo "GPU UTILIZATION: " $UTILIZATIONS  | tee -a $LOG_FILE
-  echo ""
-  numtest='^[0-9]+$'
 
+  # Loop over each GPU and check its % utilization
   for UTIL in $UTILIZATIONS
   do
     if ! [[ $UTIL =~ $numtest ]]
     then
       # Not numeric so: Help we've lost a GPU, so reboot
-      echo "WARNING: $(date) - Lost GPU so restarting system. Found GPU's:" | tee -a $LOG_FILE $ALERT_LOG_FILE
-      echo "" #| tee -a $LOG_FILE
-      #Hope PCI BUS info will help find the faulty GPU
-      nvidia-smi --query-gpu=gpu_bus_id --format=csv | ts "WARNING: $(date) - " |  tee -a $LOG_FILE $ALERT_LOG_FILE
-      echo "WARNING: $(date) - reboot in 10 seconds"  | tee -a $LOG_FILE $ALERT_LOG_FILE
+      echo "WARNING: $(date) - Lost GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      echo ""
+      # Hope PCI BUS info will help find the faulty GPU
+      nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
+      echo "WARNING: $(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
       echo ""
       bash '/home/m1/telegram'
       sleep 10
       sudo reboot
-    fi
-
-    # If utilization is lower than threshold count them:
-    if [ $UTIL -lt $THRESHOLD ]
+    elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
     then
-      echo "WARNING: $(date) - GPU under threshold found - GPU UTILIZATION: " $UTILIZATIONS  | tee -a $LOG_FILE $ALERT_LOG_FILE
+      echo "WARNING: $(date) - GPU under threshold found - GPU UTILIZATION:  " $UTILIZATIONS  | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
       echo ""
       COUNT=$(($COUNT - 1))
-      #IAmNotAJeep MOD from V002
-      JEEP=$(($JEEP + 1))
-      #IAmNotAJeep MOD from V002
+      NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
     fi
-    GPU=$(($GPU + 1))
   done
 
-  #IAmNotAJeep MOD from V002
-  if [ $JEEP -gt 0 ]
-  then
+  # Trap "unknown" error from nvidia-smi
+  unknown=$(nvidia-smi --query-gpu=temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv,noheader,nounits |grep -i "unknown" |wc -l)
 
+  # If we found at least one GPU below the utilization threshold
+  if [ $NUM_GPU_BLW_THRSHLD -gt 0 ]
+  then
+    #echo "$(date) - Debug: NUM_GPU_BLW_THRSHLD=$NUM_GPU_BLW_THRSHLD, COUNT=$COUNT, RESTART=$RESTART, REBOOTRESET=$REBOOTRESET" | tee -a ${LOG_FILE}
+
+    ################# Isnt it better to check for interent before check for miner ?
+    ################# And why wait 30 sec on loop ? lets check every 5 and get back to mining asap ....
     # Check for Internet and wait if down
-    while ! nc -vzw5 google.com 80;
+
+    while ! nc -vzw1 google.com 443;
     do
-      echo "WARNING: $(date) - Internet is down, checking again in 5 seconds..." | tee -a $LOG_FILE $ALERT_LOG_FILE
-      REBOOTRESET=0
-      RESTART=0
+      echo "WARNING: $(date) - Internet is down, checking again in 5 seconds..." | tee -a ${LOG_FILE}
       sleep 5
-      if [[ -n $(nc -vzw5 google.com 80) ]] &&  [[ -n $(ps ax | grep -i screen | grep miner) ]]
+      # When we come out of the loop, reset counters 
+      if nc -vzw1 google.com 443;
       then
-        echo "Internet is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
-        sleep $MINER_TIME
-      elif [[ -n $(nc -vzw5 google.com 80) ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
-      then
-        echo "Internet is up, but miner is not running, restarting miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
-        bash /home/m1/0miner
-        sleep $SLEEP_TIME
+        echo "WARNING :$(date) - Internet was DOWN, but its ok now" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        REBOOTRESET=0; RESTART=0; COUNT=$((6 * $GPU_COUNT))
+        # Now that internet comes up check and restart miner if needed, no need to restart 3main, problem was the internet.
+        if [[ -z $(ps ax | grep -i screen | grep miner) ]]
+        then
+          echo "$(date) - miner is not running, start miner" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+          bash /home/m1/0miner
+          #wait for miner to start hashing
+          sleep $SLEEP_TIME
+        else
+          echo "$(date) - miner is running, waiting $SLEEP_TIME seconds before going 'on watch'" | tee -a ${LOG_FILE}
+          sleep $SLEEP_TIME
+        fi
       fi
     done
-
-    # Check if pool:port is up or not
-    if [[  $COIN == *DUAL*  ]] && [[ $COIN != *NICE* ]]
-    then
-      CURRENT_COIN=$( head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//' | sed 's/DUAL_//' | cut -d _ -f 1)
-      CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
-      CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
-      POOL_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
-      POOL_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
-      echo "Dual mining, check main server $POOL_SERVER:$POOL_PORT"  | tee -a $LOG_FILE
-      while ! nc -vzw2 $POOL_SERVER $POOL_PORT ; do
-        echo "WARNING: $(date) - Cant reach main pool: $POOL_SERVER:$POOL_PORT, check again in 5 seconds..." | tee -a $LOG_FILE $ALERT_LOG_FILE
-        REBOOTRESET=0
-        RESTART=0
-        sleep 5
-        if [[ -n $(nc -vzw2 $POOL_SERVER $POOL_PORT) ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
-        then
-          echo "Internet is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
-          sleep $MINER_TIME
-        elif [[ -n $(nc -vzw2 $POOL_SERVER $POOL_PORT) ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
-        then
-          echo "Internet is up, but miner is not running, restart miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
-          bash /home/m1/0miner
-          sleep $SLEEP_TIME
-        fi
-      done
-
-    elif [[  $COIN == *SALFTER*  ]] || [[ $COIN == *NICE* ]]
-    then
-      echo ""
-
-    else
-      CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
-      CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
-      CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
-      POOL_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
-      POOL_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
-      echo "Check mining pool, $POOL_SERVER:$POOL_PORT"  | tee -a $LOG_FILE
-      while ! nc -vzw2 $POOL_SERVER $POOL_PORT ; do
-        echo "WARNING: $(date) - Cant reach mining pool: $POOL_SERVER:$POOL_PORT, check again in 5 seconds..."   | tee -a $LOG_FILE $ALERT_LOG_FILE
-        REBOOTRESET=0
-        RESTART=0
-        sleep 5
-        if [[ -n $(nc -vzw2 $POOL_SERVER $POOL_PORT) ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
-        then
-          echo "Internet is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
-          sleep $MINER_TIME
-        elif [[ -n $(nc -vzw2 $POOL_SERVER $POOL_PORT) ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
-        then
-          echo "Internet is up, but miner is not running, restart miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
-          bash /home/m1/0miner
-          sleep $SLEEP_TIME
-        fi
-      done
-
-    fi
-
-    # Look for no miner screen and get right to miner restart
+	
+  # Look for miner and get right to 3main restart if not running
     if [[ `screen -ls |grep miner |wc -l` -eq 0 ]]
     then
-      COUNT=0
-      echo "WARNING: $(date) - Found no miner, jumping to 3main restart" | tee -a $LOG_FILE $ALERT_LOG_FILE
+      count=0
+      echo "Found no miner, jumping to 3main restart"
     fi
 
-    if [ $COUNT -le 0 ]
+    # Percent of GPUs below threshold
+    PCT_GPU_BAD=$((100 * NUM_GPU_BLW_THRSHLD / GPU_COUNT ))
+
+    #  If we have had too many GPU below threshold over time OR
+    #  we have an unknow error from nvidia-smi OR
+    #  we have ALL GPUs below threshold and had at least #GPUs + 1
+    #  occurrences of below threshold (2nd run through the loop
+    #  to allow miner to fix itself)
+    if [[ $COUNT -le 0 || $unknown -gt 0 || ($PCT_GPU_BAD -eq 100 && COUNT -lt $((5 * $GPU_COUNT))) ]]
     then
 
-      if [[ $RESTART -gt 4  ]]
+      # Get some some diagnostics to the logs before restarting or rebooting
+      echo "" | tee -a ${LOG_FILE}; echo "" | tee -a ${LOG_FILE}
+      ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*' |  ts "DEBUG: $(date) - Miner command before killing it: " |  tee -a $LOG_FILE $ALERT_LOG_FILE
+      echo "$(date) - Problem found: See diagnostics below:" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      nvidia-smi --query-gpu=name,pstate,temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      tail -15 ~/screenlog.0 | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+
+      # If we have had 4 miner restarts and still have low utilization or
+      #  if we see an unknown error (same as NaN) in the nvidia-smi query, reboot the host
+      if [[ $RESTART -gt 4 ]] || [[ $unknown -gt 0 ]]
       then
-        echo "WARNING: $(date) - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a $LOG_FILE $ALERT_LOG_FILE
-        echo "" #| tee -a $LOG_FILE
+        if [ $RESTART -gt 4 ]
+        then
+          echo "WARNING: $(date) - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        elif [[ $unknown -gt 0 ]]
+        then
+          echo "WARNING: $(date) - Unknown miner error detected and a miner restart did not work so restarting system in 10 seconds" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        fi
+
+        echo ""
         bash '/home/m1/telegram'
         sleep 10
         sudo reboot
       fi
 
-
-      # If miner runs in screen 'miner' kill the screen to be sure it's gone
-      ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*' |  ts "DEBUG: $(date) - Miner command before killing it: " |  tee -a $LOG_FILE $ALERT_LOG_FILE
-      echo "DEBUG: $(date) - Problem found: See diagnostics below:" | tee -a $LOG_FILE $ALERT_LOG_FILE
-      tail -15 /home/m1/nvoc_logs/screenlog.0 | ts "DEBUG: " | tee -a $LOG_FILE $ALERT_LOG_FILE
-      echo "WARNING: $(date) - Utilization is too low: restart 3main..." | tee -a $LOG_FILE $ALERT_LOG_FILE
-      bash '/home/m1/telegram'
+      #kill the miner to be sure it's gone before restart 3main
       pkill -e miner
+      echo "WARNING: $(date) - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+      bash '/home/m1/telegram'
+
       # Best to restart 3main - settings might be adjusted already
-      target=$(ps -ef | awk '$NF~"3main" {print $2}')
-      kill $target #| tee -a $LOG_FILE
-      echo "" #| tee -a $LOG_FILE
+      #target=$(ps -ef | awk '$NF~"3main" {print $2}')
+      #kill $target #| tee -a ${LOG_FILE}
+      #########we can use pkill -f 3main instead
+	  pkill -f 3main
+
       RESTART=$(($RESTART + 1))
       REBOOTRESET=0
       COUNT=$GPU_COUNT
-      # Give oneBash time to restart to prevent reboot
+
+      # Give 3main time to restart to prevent reboot
       sleep $SLEEP_TIME
     else
-      echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are $COUNT more consecutive failures" | tee -a $LOG_FILE
+      echo "WARNING: $(date) - Low Utilization Detected: 3main will reinit if there are 6 consecutive failures" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
       echo ""
     fi
-
+    # No below threshold GPUs detected for this pass
   else
     # All is good, reset the counter
     COUNT=$((6 * $GPU_COUNT))
-    echo "$(date) - No mining issues detected."  | tee -a $LOG_FILE
-    #fi
-    # No need for a reboot after a while
+    echo "$(date) - No mining issues detected." | tee -a ${LOG_FILE}
 
+    # No need for a reboot after 5 times through the main loop with no issues
     if [ $REBOOTRESET -gt 5 ]
     then
       RESTART=0
       REBOOTRESET=0
     fi
-
   fi
-  echo "Debug: JEEP=$JEEP, COUNT=$COUNT, RESTART=$RESTART, REBOOTRESET=$REBOOTRESET"
-
 done
