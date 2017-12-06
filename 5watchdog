@@ -16,7 +16,7 @@ sleep 1
 
 # Log file handling (check existence, size limitation or creation)
 # Log file to record restarts, status, errors, utilization issues
-LOG_FILE="/home/m1/nvoc_loghs/5_restartlog"
+LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
 if [ -e "$LOG_FILE" ] ; then
   LASTLOG=$(tail -n 2K $LOG_FILE)  # Limit the logfile, just keep the last 2K
   echo $LASTLOG > $LOG_FILE
