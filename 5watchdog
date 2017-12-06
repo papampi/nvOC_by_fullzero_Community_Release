@@ -190,6 +190,7 @@ do
 
       # Get some some diagnostics to the logs before restarting or rebooting
       echo "" | tee -a ${LOG_FILE}; echo "" | tee -a ${LOG_FILE}
+      ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*' |  ts "DEBUG: $(date) - Miner command before killing it: " |  tee -a $LOG_FILE $ALERT_LOG_FILE
       echo "$(date) - Problem found: See diagnostics below:" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
       nvidia-smi --query-gpu=name,pstate,temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
       tail -15 ~/screenlog.0 | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
