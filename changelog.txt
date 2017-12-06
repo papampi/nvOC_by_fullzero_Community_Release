@@ -1,7 +1,7 @@
 
 3main edits :
-Removed the infinite loops and put one at the end to cover all mining blocks (stubo)
-Removed repetitive if LOCAL then "screen -r miner" from each mining block and put one at the end to cover all mining blocks (stubo)
+  Removed the infinite loops and put one at the end to cover all mining blocks (stubo)
+  Removed repetitive if LOCAL then "screen -r miner" from each mining block and put one at the end to cover all mining blocks (stubo)
   Added support for BTG as per forum posts
   Changed ZM lines to use the latest ZM miner 0.5.6 (s/5_3/5_4/g)
   Added telemetry/api to EWBF and ZM miner launches so that you can hit <host>:42000 to see this miner output (stubo)
@@ -19,7 +19,7 @@ Removed repetitive if LOCAL then "screen -r miner" from each mining block and pu
   Added MINER_PWD for miner passwords (Stubu mod)
   Unified and separated all pool address and pool ports so wdog can check if pool is up or no if needed (papampi mod)
 
-  wdog edits:
+  watchdog edits:
   Added check if miner is running or not when utilization dropped to restart miner faster (stubo mod)
   Added check for internet and wait if its down (stubo mod)
   Added check mining pool:port if internet is up and wait before restart miner and reboot system (papampi mod)
