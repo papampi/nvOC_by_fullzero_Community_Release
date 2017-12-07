@@ -29,7 +29,6 @@ do
 
     CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
     TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9][0-9]//' | sed 's/[0-9]//')
-    #TOP_COIN=$(cat /home/m1/top_coin)
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
 
@@ -41,12 +40,32 @@ do
       echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
       sed -i '/^$/d' /home/m1/WTM_24H_REV
       sleep 1
-
-      if  [[ $damNmad_ALGO_SPECIFIC_OC == "NO" ]]
+	  
+      if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" ]
       then
-        echo "'damNmad_ALGO_SPECIFIC_OC=NO', only restarting miner" | tee -a $LOG_FILE
+        TOP_COIN_ALGORITHM="NEOSCRYPT"
+      fi
+      if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL"  ]
+      then
+        TOP_COIN_ALGORITHM="ETHASH"
+      fi
+      if [ $TOP_COIN == "BTG" -o $TOP_COIN == "ZEC" -o $TOP_COIN == "ZEN" -o $TOP_COIN == "HUSH" -o $TOP_COIN == "ZCL" -o $TOP_COIN == "KMD"  ]
+      then
+        TOP_COIN_ALGORITHM="EQUIHASH"
+      fi
+      if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" ]
+      then
+        TOP_COIN_ALGORITHM="CRYPTONIGHT"
+      fi
+      if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" ]
+      then
+        TOP_COIN_ALGORITHM="LYRA2REV2"
+      fi
+	  
+      if  [[ $damNmad_ALGO_SPECIFIC_OC == "NO" ]] || [[ $damNmad_ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]
+      then
+        echo "Same Algo or Algo_OC=No, Restarting Miner" | tee -a $LOG_FILE
         echo "" | tee -a $LOG_FILE
-
 
         while [[ -z  $(ps ax | grep -i screen | grep miner) ]]
         do
@@ -77,23 +96,21 @@ do
           echo $( ps ax | grep miner | grep -o 'SCREEN.*' ) | tee -a $LOG_FILE
           echo "process in screen miner; attach with: screen -r miner" | tee -a $LOG_FILE
           echo "" | tee -a $LOG_FILE
-          echo "$(date) Mining switched from $CURRENT_COIN to $TOP_COIN" | tee -a $LOG_FILE $WTM_HISTORY
-          echo "Check again in $TIMEOUT seconds" | tee -a $LOG_FILE
         fi
-
-      elif  [[ $damNmad_ALGO_SPECIFIC_OC == "YES" ]]
-      then
-        echo "'damNmad_ALGO_SPECIFIC_OC=YES', restarting 3main for OC settings to take effect"  | tee -a $LOG_FILE
-        echo "If you dont like too many open guake tabs, in 1bash set LOCALorREMOTE=REMOTE"
+      else
+        echo "Coin Algo switched, restarting 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
         pkill -f 3main
       fi
+
+      echo "$(date) Mining switched from $CURRENT_COIN to $TOP_COIN" | tee -a $LOG_FILE $WTM_HISTORY
+      echo "Check again in $TIMEOUT seconds" | tee -a $LOG_FILE
       sleep $TIMEOUT
 
     else
       echo ""
-      echo "$(date) Same Coin on Top, Continue mining $CURRENT_COIN"  # | tee -a $LOG_FILE
-      echo "Check again in $TIMEOUT seconds" #| tee -a $LOG_FILE
+      echo "$(date) Same Coin on Top, Continue mining $CURRENT_COIN"   | tee -a $LOG_FILE
+      echo "Check again in $TIMEOUT seconds" | tee -a $LOG_FILE
       sleep 1
       cat /home/m1/WTM_current_revenue | grep `cat /home/m1/WTM_top_coin | awk -F: '{print $1}'` | awk -F: '{print $2}' >> /home/m1/WTM_24H_REV
       SYNC_COUNT=$((`expr 1440 / $WTM_AUTO_SWITCH_SYNC_INTERVAL`))
@@ -103,7 +120,7 @@ do
     fi
 
   else
-    echo "Auto start miner set to NO"
+    echo "Auto start miner set to NO" | tee -a $LOG_FILE
   fi
 
 done
