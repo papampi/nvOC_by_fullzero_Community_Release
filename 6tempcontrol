@@ -57,73 +57,6 @@ else
   Y=""
 fi
 
-
-# Display version info
-echo ""
-for i in {16..21} ; do
-  echo -en "\e[48;5;${i}m "
-done
-echo -en "${B}TEMP_CONTROL $TEMP_VER by leenoox${N}"
-for i in {21..16} ; do
-  echo -en "\e[48;5;${i}m \e[0m"
-done
-echo ""
-echo ""
-sleep 1
-
-
-# Determine the number of available GPU's
-GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
-
-echo -e "Detected: ${B}$GPUS${N} GPU's"
-echo ""
-count=0
-
-
-# Dynamic variables creation - assign variables for the available GPU's only
-# Set variables for Temp and Power Limit; Enable fan control; Display info
-while [ $count -lt $GPUS ]; do
-
-  if [ $INDIVIDUAL_POWERLIMIT == "YES" ]; then
-    POWER_LIMIT[$count]=$(( INDIVIDUAL_POWERLIMIT_$count ))
-  elif [ $INDIVIDUAL_POWERLIMIT == "NO" ]; then
-    POWER_LIMIT[$count]=$POWERLIMIT_WATTS
-  fi
-
-  if [ $INDIVIDUAL_TARGET_TEMPS == "YES" ]; then
-    TARGET_TEMP[$count]=$(( TARGET_TEMP_$count ))
-  elif [ $INDIVIDUAL_TARGET_TEMPS == "NO" ]; then
-    TARGET_TEMP[$count]=$TARGET_TEMP
-  fi
-
-  # Info - display assigned values per GPU
-  echo -e "${B}GPU $count:${N}  POWER LIMIT: ${B}${POWER_LIMIT[$count]}${N},  TARGET TEMP: ${B}${TARGET_TEMP[$count]}${N}"
-
-  # Enable fan control
-  ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
-  sleep 0.1
-
-  (( count++ ))
-
-done
-
-FAN_ADJUST=$__FAN_ADJUST
-
-# If user sets the fan speed too low in 1bash, override and set it to 30%
-if [ $MINIMAL_FAN_SPEED -lt 30 ]; then
-  MINIMAL_FAN_SPEED=30
-fi
-
-echo ""
-# Info - display the Global settings
-echo -e "${B}GLOBAL${N}  FAN_ADJUST (%):  ${B}$FAN_ADJUST${N}"
-echo -e "${B}GLOBAL${N}  POWER_ADJUST (W):  ${B}$POWER_ADJUST${N}"
-echo -e "${B}GLOBAL${N}  ALLOWED_TEMP_DIFF (C):  ${B}$ALLOWED_TEMP_DIFF${N}"
-echo -e "${B}GLOBAL${N}  RESTORE_POWER_LIMIT (%):  ${B}$RESTORE_POWER_LIMIT${N}"
-echo -e "${B}GLOBAL${N}  MINIMAL_FAN_SPEED (%):  ${B}$MINIMAL_FAN_SPEED${N}"
-echo ""
-
-
 # Log file handling (check existance, size limitation or creation, show 10 lines if not empty)
 LOG_FILE="/home/m1/nvoc_logs/6_autotemplog"
 if [ -e "$LOG_FILE" ]; then
@@ -155,6 +88,75 @@ if [ -e "$ALERT_LOG_FILE" ]; then
 else
   touch $ALERT_LOG_FILE     # if log file does not exist, create one
 fi
+
+
+
+# Display version info
+echo ""
+for i in {16..21} ; do
+  echo -en "\e[48;5;${i}m "
+done
+echo -en "${B}TEMP_CONTROL $TEMP_VER by leenoox${N}"  | tee -a ${LOG_FILE}
+for i in {21..16} ; do
+  echo -en "\e[48;5;${i}m \e[0m"
+done
+echo ""
+echo ""
+sleep 1
+
+
+# Determine the number of available GPU's
+GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+
+echo -e "Detected: ${B}$GPUS${N} GPU's" | tee -a ${LOG_FILE}
+echo ""
+count=0
+
+
+# Dynamic variables creation - assign variables for the available GPU's only
+# Set variables for Temp and Power Limit; Enable fan control; Display info
+while [ $count -lt $GPUS ]; do
+
+  if [ $INDIVIDUAL_POWERLIMIT == "YES" ]; then
+    POWER_LIMIT[$count]=$(( INDIVIDUAL_POWERLIMIT_$count ))
+  elif [ $INDIVIDUAL_POWERLIMIT == "NO" ]; then
+    POWER_LIMIT[$count]=$POWERLIMIT_WATTS
+  fi
+
+  if [ $INDIVIDUAL_TARGET_TEMPS == "YES" ]; then
+    TARGET_TEMP[$count]=$(( TARGET_TEMP_$count ))
+  elif [ $INDIVIDUAL_TARGET_TEMPS == "NO" ]; then
+    TARGET_TEMP[$count]=$TARGET_TEMP
+  fi
+
+  # Info - display assigned values per GPU
+  echo -e "${B}GPU $count:${N}  POWER LIMIT: ${B}${POWER_LIMIT[$count]}${N},  TARGET TEMP: ${B}${TARGET_TEMP[$count]}${N}" | tee -a ${LOG_FILE}
+
+  # Enable fan control
+  ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
+  sleep 0.1
+
+  (( count++ ))
+
+done
+
+FAN_ADJUST=$__FAN_ADJUST
+
+# If user sets the fan speed too low in 1bash, override and set it to 30%
+if [ $MINIMAL_FAN_SPEED -lt 30 ]; then
+  MINIMAL_FAN_SPEED=30
+fi
+
+echo ""
+# Info - display the Global settings
+echo -e "${B}GLOBAL${N}  FAN_ADJUST (%):  ${B}$FAN_ADJUST${N}" | tee -a ${LOG_FILE}
+echo -e "${B}GLOBAL${N}  POWER_ADJUST (W):  ${B}$POWER_ADJUST${N}" | tee -a ${LOG_FILE}
+echo -e "${B}GLOBAL${N}  ALLOWED_TEMP_DIFF (C):  ${B}$ALLOWED_TEMP_DIFF${N}" | tee -a ${LOG_FILE}
+echo -e "${B}GLOBAL${N}  RESTORE_POWER_LIMIT (%):  ${B}$RESTORE_POWER_LIMIT${N}" | tee -a ${LOG_FILE}
+echo -e "${B}GLOBAL${N}  MINIMAL_FAN_SPEED (%):  ${B}$MINIMAL_FAN_SPEED${N}" | tee -a ${LOG_FILE}
+echo ""
+
+
 
 # Setting persistance mode on, will keep settings in between sessions
 # fullzero, Papampi, Stubo..., we need to decide if we gonna use Persistane Mode.
@@ -270,7 +272,7 @@ while true; do
     fi
 
     if [ "$NEW_FAN_SPEED" -ne "$CURRENT_FAN" ]; then
-      echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}" # | tee -a ${LOG_FILE}
+      echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"  | tee -a ${LOG_FILE}
       echo ""
       ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
     fi
