@@ -27,9 +27,8 @@ do
     python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json  | tee -a $LOG_FILE
     sleep 5
 
-    CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+    CURRENT_COIN=$COIN
     TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9][0-9]//' | sed 's/[0-9]//')
-    CURRENT_COIN_ALGORITHM=$ALGORITHM
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
 
@@ -41,26 +40,30 @@ do
       echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
       sed -i '/^$/d' /home/m1/WTM_24H_REV
       sleep 1
-	  
-      if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" ]
+
+      if [[ $damNmad_ALGO_SPECIFIC_OC == "YES" ]]
       then
-        TOP_COIN_ALGORITHM="NEOSCRYPT"
-      fi
-      if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL"  ]
-      then
-        TOP_COIN_ALGORITHM="ETHASH"
-      fi
-      if [ $TOP_COIN == "BTG" -o $TOP_COIN == "ZEC" -o $TOP_COIN == "ZEN" -o $TOP_COIN == "HUSH" -o $TOP_COIN == "ZCL" -o $TOP_COIN == "KMD"  ]
-      then
-        TOP_COIN_ALGORITHM="EQUIHASH"
-      fi
-      if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" ]
-      then
-        TOP_COIN_ALGORITHM="CRYPTONIGHT"
-      fi
-      if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" ]
-      then
-        TOP_COIN_ALGORITHM="LYRA2REV2"
+        CURRENT_COIN_ALGORITHM=$ALGORITHM
+        if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" ]
+        then
+          TOP_COIN_ALGORITHM="NEOSCRYPT"
+        fi
+        if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL"  ]
+        then
+          TOP_COIN_ALGORITHM="ETHASH"
+        fi
+        if [ $TOP_COIN == "BTG" -o $TOP_COIN == "ZEC" -o $TOP_COIN == "ZEN" -o $TOP_COIN == "HUSH" -o $TOP_COIN == "ZCL" -o $TOP_COIN == "KMD"  ]
+        then
+          TOP_COIN_ALGORITHM="EQUIHASH"
+        fi
+        if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" ]
+        then
+          TOP_COIN_ALGORITHM="CRYPTONIGHT"
+        fi
+        if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" ]
+        then
+          TOP_COIN_ALGORITHM="LYRA2REV2"
+        fi
       fi
 	  
       if  [[ $damNmad_ALGO_SPECIFIC_OC == "NO" ]] || [[ $damNmad_ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]
@@ -98,6 +101,9 @@ do
           echo "process in screen miner; attach with: screen -r miner" | tee -a $LOG_FILE
           echo "" | tee -a $LOG_FILE
         fi
+
+        #elif  [[ $damNmad_ALGO_SPECIFIC_OC == "YES" ]]
+        #then
       else
         echo "Coin Algo switched, restarting 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
@@ -106,6 +112,7 @@ do
 
       echo "$(date) Mining switched from $CURRENT_COIN to $TOP_COIN" | tee -a $LOG_FILE $WTM_HISTORY
       echo "Check again in $TIMEOUT seconds" | tee -a $LOG_FILE
+
       sleep $TIMEOUT
 
     else
