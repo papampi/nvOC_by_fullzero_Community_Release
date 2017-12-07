@@ -2,7 +2,6 @@
 
 #############################################################################
 #############################################################################
-###########        Dont remove or change these 2 lines     ##################
 #########    nvOC by fullzero , v0019.2 unofficial by papampi      ##########
 ######    Based on the original code by fullzero 1bash ver 0019-1.4    ######
 #############################################################################
@@ -215,7 +214,7 @@ GLOBAL_WORKERNAME="YES"         # YES NO
 AUTO_WORKERNAME="HOST"         # HOST  or  MAC  or  CUSTOM
 
 # if AUTO_WORKERNAME="CUSTOM"
-CUSTOM_WORKERNAME="19_1_4"
+CUSTOM_WORKERNAME="19_2"
 
 # BETA will pull the newest unverified updates
 # STABLE will only pull verified updates
@@ -231,7 +230,7 @@ upPASTE_TIMEOUT_IN_MINUTES=60
 
 CLEAR_LOGS_ON_BOOT="NO"        	# YES NO
 LOG_ROTATE="YES"
-LOG_ROTATE_INTERVAL=6 # Time between log rotations in hours
+LOG_ROTATE_INTERVAL=3 # Time between log rotations in hours
 
 
 # kk003's video tutorial how to create a telegram bot and get Api Key + User Id:
@@ -322,7 +321,7 @@ fi
 # set YOUR ADDRESSES, WORKERS, POOL, INTENSITY and PORT:
 BTC_ADDRESS="replace_with_your_BTC_address"
 
-# Set the miner password
+# Set the miner password, for zpool use MINER_PWD="$WORKERNAME,c=btc"
 MINER_PWD="x"
 
 ZM_or_EWBF="ZM"  # choose  ZM  or  EWBF
@@ -428,16 +427,9 @@ PXC_PORT="10554"
 PXC_INTENSITY="23"
 
 # ZPOOL_SKUNK HERE # No Need to add add stratum+tcp:// to server address
-# if YES ensure you update BTC_ADDRESS
-ZPOOL_SKUNK_AUTOCONVERT_TO_BTC="YES"        #YES  NO
-ZPOOL_SKUNK_WORKER="$WORKERNAME"
-ZPOOL_SKUNK_ADDRESS="$BTC_ADDRESS"
 ZPOOL_SKUNK_POOL="skunk.mine.zpool.ca"
 ZPOOL_SKUNK_PORT="8433"
 ZPOOL_SKUNK_INTENSITY="22"
-
-# Used to add worker name on ZPOOL
-ZPOOLPASS="$WORKERNAME,c=btc"
 
 # ZPOOL uses your BTC_ADDRESS # No Need to add add stratum+tcp:// to server address
 ZPOOL_LYRA2V2_POOL="lyra2v2.mine.zpool.ca"
@@ -502,8 +494,7 @@ MONA_POOL="mona.suprnova.cc"
 MONA_PORT="2995"
 MONA_INTENSITY="21"
 
-# if YES ensure you update BTC_ADDRESS # ## No Need to add add stratum+tcp:// to server address
-VTC_AUTOCONVERT_TO_BTC="NO"        #YES  NO
+#VTC # ## No Need to add add stratum+tcp:// to server address
 VTC_WORKER="$WORKERNAME"
 VTC_ADDRESS="Your Miningpoolhub Account Name"
 VTC_POOL="hub.miningpoolhub.com"
@@ -516,8 +507,7 @@ NICE_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
 GENOIL_NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com:3353"
 NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
 
-# if YES ensure you update BTC_ADDRESS  #### No Need to add add stratum+tcp:// to server address
-DGB_AUTOCONVERT_TO_BTC="NO"        #YES  NO
+#DGB  #### No Need to add add stratum+tcp:// to server address
 DGB_INTENSITY="24"
 DGB_WORKER="$WORKERNAME"
 DGB_ADDRESS="Your Miningpoolhub Account Name"
@@ -556,7 +546,7 @@ USE_ENVIRONMENTAL_VARIBLES="NO"   #YES  NO
 # NOTE DEFAULT CHANGED FROM SLASH to DOT
 DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"    # DOT  or  SLASH    # formerly ETHERMINEdotORG
 
-CLAYMORE_VERSION="latest"    # choose latest or 10_2 or 10_0  or  9_8  or  9_7  or  9_5  or  9_4  or  8_0
+CLAYMORE_VERSION="latest"    # choose latest or 10_0  or  9_8  or  9_7  or  9_5  or  9_4  or  8_0
 
 ETHMINER_or_GENOIL_or_CLAYMORE="CLAYMORE"  # choose  ETHMINER  or  GENOIL  or  CLAYMORE
 
