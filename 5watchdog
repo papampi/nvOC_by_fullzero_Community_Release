@@ -1,7 +1,8 @@
 #!/bin/bash
+# Dev Version 001
 
-# Miner restart script for nvOC by fullzero , v0019.2 unofficial by papampi
-# By Maxximus007 && IAmNotAJeep
+# Miner restart script for nvOC by fullzero , v0019-2.0 unofficial by Papampi, Stubo, Leenoox
+# Original code by Maxximus007 && IAmNotAJeep
 # for nvOC by fullzero
 source /home/m1/1bash
 
@@ -168,11 +169,11 @@ do
         sleep 5
         if [[ -n $(nc -vzw2 $POOL_SERVER $POOL_PORT) ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "Internet is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
+          echo "Pool is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
           sleep $MINER_TIME
         elif [[ -n $(nc -vzw2 $POOL_SERVER $POOL_PORT) ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "Internet is up, but miner is not running, restart miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
+          echo "Pool is up, but miner is not running, restart miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
           bash /home/m1/0miner
           sleep $SLEEP_TIME
         fi
@@ -183,9 +184,8 @@ do
       echo ""
 
     else
-      CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
-      CURRENT_COIN_POOL=$(echo {$CURRENT_COIN}_POOL |sed 's/{//' | sed 's/}//' )
-      CURRENT_COIN_PORT=$(echo {$CURRENT_COIN}_PORT | sed 's/{//' | sed 's/}//')
+      eval CURRENT_COIN_POOL='$'${COIN}_POOL
+      eval CURRENT_COIN_PORT='$'${COIN}_PORT
       POOL_SERVER=$( cat /home/m1/1bash | grep $CURRENT_COIN_POOL | grep -o '".*"' | sed 's/"//'| sed 's/"//')
       POOL_PORT=$(cat /home/m1/1bash | grep $CURRENT_COIN_PORT | grep -o '".*"' | sed 's/"//' |sed 's/"//')
       echo "Check mining pool, $POOL_SERVER:$POOL_PORT"  | tee -a $LOG_FILE
@@ -196,11 +196,11 @@ do
         sleep 5
         if [[ -n $(nc -vzw2 $POOL_SERVER $POOL_PORT) ]] &&  [[ -n  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "Internet is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
+          echo "Pool is up, and miner is running, giving wdog $MINER_TIME seconds before going on watch" | tee -a $LOG_FILE
           sleep $MINER_TIME
         elif [[ -n $(nc -vzw2 $POOL_SERVER $POOL_PORT) ]] &&  [[ -z  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "Internet is up, but miner is not running, restart miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
+          echo "Pool is up, but miner is not running, restart miner, giving wdog $SLEEP_TIME seconds before going on watch" | tee -a $LOG_FILE
           bash /home/m1/0miner
           sleep $SLEEP_TIME
         fi
