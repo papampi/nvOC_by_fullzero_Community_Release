@@ -41,7 +41,7 @@ do
       sed -i '/^$/d' /home/m1/WTM_24H_REV
       sleep 1
 
-      if [[ $damNmad_ALGO_SPECIFIC_OC == "YES" ]]
+      if [[ $ALGO_SPECIFIC_OC == "YES" ]]
       then
         CURRENT_COIN_ALGORITHM=$ALGORITHM
         if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" ]
@@ -65,8 +65,8 @@ do
           TOP_COIN_ALGORITHM="LYRA2REV2"
         fi
       fi
-	  
-      if  [[ $damNmad_ALGO_SPECIFIC_OC == "NO" ]] || [[ $damNmad_ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]
+
+      if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]
       then
         echo "Same Algo or Algo_OC=No, Restarting Miner" | tee -a $LOG_FILE
         echo "" | tee -a $LOG_FILE
@@ -102,8 +102,6 @@ do
           echo "" | tee -a $LOG_FILE
         fi
 
-        #elif  [[ $damNmad_ALGO_SPECIFIC_OC == "YES" ]]
-        #then
       else
         echo "Coin Algo switched, restarting 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
