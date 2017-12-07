@@ -182,9 +182,9 @@ MINER_WATCHDOG="YES"
 NUMBER_GPUS_INSTALLED=""
 
 # SET OC and POWERLIMIT by ALGO (see end of 1bash for ALGO OC settings)
-# for OPT use of PAPAMPI_WTM_AUTO_SWITCH use damNmad_ALGO_SPECIFIC_OC !!
+# for OPT use of PAPAMPI_WTM_AUTO_SWITCH use ALGO_SPECIFIC_OC !!
 # Default values are for 1060, remember to set yours.
-damNmad_ALGO_SPECIFIC_OC="NO"
+ALGO_SPECIFIC_OC="NO"
 
 # LOCAL will attach the mining process to the gnome or guake terminal
 # REMOTE will leave it unattached / ready for SSH
@@ -322,7 +322,7 @@ fi
 # set YOUR ADDRESSES, WORKERS, POOL, INTENSITY and PORT:
 BTC_ADDRESS="replace_with_your_BTC_address"
 
-# Set the miner password 
+# Set the miner password
 # For zpool use MINER_PWD="$WORKERNAME,c=btc"
 MINER_PWD="x"
 
@@ -850,11 +850,10 @@ MEMORY_OVERCLOCK_18=100
 
 # OC settings you can use based on COIN or ALGO (how ever you want to categorize them)
 
-if [ $damNmad_ALGO_SPECIFIC_OC == "YES" ]
+if [ $ALGO_SPECIFIC_OC == "YES" ]
 then
 
   # Neoscrypt
-
   if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" ]
   then
     ALGORITHM="NEOSCRYPT"
@@ -864,7 +863,6 @@ then
   fi
 
   # Ethash
-
   if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH" ]
   then
     ALGORITHM="ETHASH"
@@ -874,7 +872,6 @@ then
   fi
 
   # Equihash
-
   if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE_EQUIHASH" -o $COIN == "VOTE" ]
   then
     ALGORITHM="EQUIHASH"
@@ -884,7 +881,6 @@ then
   fi
 
   # Skunk
-
   if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" ]
   then
     ALGORITHM="SKUNK"
@@ -894,7 +890,6 @@ then
   fi
 
   # Cryptonight
-
   if [ $COIN == "XMR" -o $COIN == "KRB" ]
   then
     ALGORITHM="CRYPTONIGHT"
@@ -904,7 +899,6 @@ then
   fi
 
   # lyra2vRev2
-
   if [ $COIN == "MONA" -o $COIN == "VTC" ]
   then
     ALGORITHM="LYRA2REV2"
@@ -914,7 +908,6 @@ then
   fi
 
   # ZCOIN lyra2v2
-
   if [ $COIN == "ZCOIN" ]
   then
     ALGORITHM="LYRA2V2"
