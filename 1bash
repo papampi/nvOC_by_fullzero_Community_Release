@@ -861,63 +861,63 @@ if [ $damNmad_ALGO_SPECIFIC_OC == "YES" ]
 then
 
   # Neoscrypt
-
   if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" ]
   then
+    ALGORITHM="NEOSCRYPT"
     POWERLIMIT_WATTS=80
     __CORE_OVERCLOCK=150
     MEMORY_OVERCLOCK=800
   fi
 
   # Ethash
-
   if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH" ]
   then
+    ALGORITHM="ETHASH"
     POWERLIMIT_WATTS=76
     __CORE_OVERCLOCK=100
     MEMORY_OVERCLOCK=1600
   fi
 
   # Equihash
-
   if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE_EQUIHASH" -o $COIN == "VOTE" ]
   then
+    ALGORITHM="EQUIHASH"
     POWERLIMIT_WATTS=76
     __CORE_OVERCLOCK=150
     MEMORY_OVERCLOCK=800
   fi
 
   # Skunk
-
   if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" ]
   then
+    ALGORITHM="SKUNK"
     POWERLIMIT_WATTS=78
     __CORE_OVERCLOCK=150
     MEMORY_OVERCLOCK=1000
   fi
 
   # Cryptonight
-
   if [ $COIN == "XMR" -o $COIN == "KRB" ]
   then
+    ALGORITHM="CRYPTONIGHT"
     POWERLIMIT_WATTS=62
     __CORE_OVERCLOCK=155
     MEMORY_OVERCLOCK=-300
   fi
 
-  # lyra2v2
-
+  # lyra2vRev2
   if [ $COIN == "MONA" -o $COIN == "VTC" ]
   then
+    ALGORITHM="LYRA2REV2"
     POWERLIMIT_WATTS=65
     __CORE_OVERCLOCK=135
     MEMORY_OVERCLOCK=-1200
   fi
 
   # ZCOIN lyra2v2
-
   if [ $COIN == "ZCOIN" ]
   then
+    ALGORITHM="LYRA2V2"
     POWERLIMIT_WATTS=65
     __CORE_OVERCLOCK=160
     MEMORY_OVERCLOCK=-1000
