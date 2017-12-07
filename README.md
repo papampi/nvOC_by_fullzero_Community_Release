@@ -14,7 +14,7 @@ nvOC-19-2-update : https://github.com/papampi/nvOC_by_fullzero_unofficial/blob/1
 These are unofficial edits, fixes and improvments from nvOC contributors and forum member suggestions
 
 
-
+Thanks to Stubo and Leenoox for all their helps, edits and fixes.
 
 
 http://nvoc-mining-os.com/
