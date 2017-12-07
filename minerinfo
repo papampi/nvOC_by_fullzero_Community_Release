@@ -173,7 +173,7 @@ then
   MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 else
-  MINER_LOG=$(tail -n $TAIL_GPU_COUNT /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT *2 )) /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 fi
 
 
