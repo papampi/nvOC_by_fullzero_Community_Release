@@ -70,10 +70,10 @@
 ######### SIB
 
 #ALGO - CryptoNight
-######### XMR  KRB
+######### XMR  KRB ETN
 
 #ALGO - Skunk
-######### SIGT  ZPOOL_SKUNK
+######### SIGT  ZPOOL_SKUNK ALTCOM
 
 #ALGO - Ethash
 ######### ETH  ETC  EXP  UBQ  MUSIC  SOIL
@@ -88,7 +88,7 @@
 ######### ONION
 
 #ALGO - Neoscrypt
-######### PXC  FTC  ORB
+######### PXC  FTC  ORB  TZC VIVO
 
 #ALGO - Myriad-Groestl
 ######### XMY
@@ -135,7 +135,7 @@
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 
-
+### New Coins: Electroneum(ETN), Trezarcoin(TZC), Vivo(VIVO), Pirl(PIRL), Altcommunity(ALTCOM)
 
 
 COIN="ZEC"
@@ -407,12 +407,28 @@ KRB_ADDRESS="replace_with_your_KRB_address"
 KRB_POOL="krb.sberex.com"
 KRB_PORT="5555"
 
+#Electroneum(ETN)
+## No Need to add add stratum+tcp:// to server address
+ETN_ADDRESS="replace_with_your_KRB_address"
+ETN_POOL="ETN POOL"
+ETN_PORT="ETN PORT"
+
 #SIGT ## No Need to add add stratum+tcp:// to server address
 SIGT_WORKER="$WORKERNAME"
 SIGT_ADDRESS="replace_with_your_SIGT_address"
 SIGT_POOL="us.hashbag.cc"
 SIGT_PORT="8644"
 SIGT_INTENSITY="25"
+
+
+#Altcommunity(ALTCOM) ## No Need to add add stratum+tcp:// to server address
+ALTCOM_WORKER="$WORKERNAME"
+ALTCOM_ADDRESS="replace_with_your_ALTCOM_address"
+ALTCOM_POOL="ALTCOM POOL"
+ALTCOM_PORT="ALTCOM PORT"
+ALTCOM_INTENSITY="25"
+
+
 
 #SIB # No Need to add add stratum+tcp:// to server address
 SIB_WORKER="$WORKERNAME"
@@ -503,6 +519,14 @@ VTC_POOL="hub.miningpoolhub.com"
 VTC_PORT="20507"
 VTC_INTENSITY="21"
 
+#Trezarcoin(TZC)
+# ## No Need to add add stratum+tcp:// to server address
+TZC_WORKER="$WORKERNAME"
+TZC_ADDRESS="TZC ADDRESS"
+TZC_POOL="TZC POOL"
+TZC_PORT="TZC PORT"
+TZC_INTENSITY="21"
+
 # NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
 NICE_ETHASH_WORKER="$WORKERNAME"
 NICE_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
@@ -536,6 +560,14 @@ ORB_ADDRESS="Your DNB Account Name"
 ORB_POOL="strat.dnb.io"
 ORB_PORT="3031"
 ORB_INTENSITY="23"
+
+#Vivo(VIVO)
+# ## No Need to add add stratum+tcp:// to server address
+VIVO_WORKER="$WORKERNAME"
+VIVO_ADDRESS="VIVO ADDRESS"
+VIVO_POOL="VIVO POOL"
+VIVO_PORT="VIVO PORT"
+VIVO_INTENSITY="21"
 
 #ONION ### ## No Need to add add stratum+tcp:// to server address
 ONION_ADDRESS="replace_with_your_ONION_address"
@@ -580,6 +612,13 @@ UBQ_ADDRESS="replace_with_your_UBIQ_address"
 UBQ_POOL="us.ubiqpool.io"
 UBQ_PORT="8008"
 UBQ_EXTENSION_ARGUMENTS=""
+
+#Pirl(PIRL)
+PIRL_WORKER="$WORKERNAME"
+PIRL_ADDRESS="replace_with_your_PIRL_address"
+PIRL_POOL="PIRL POOL"
+PIRL_PORT="PIRL PORT"
+PIRL_EXTENSION_ARGUMENTS=""
 
 #MUSIC
 MUSIC_WORKER="$WORKERNAME"
@@ -854,7 +893,7 @@ if [ $ALGO_SPECIFIC_OC == "YES" ]
 then
 
   # Neoscrypt
-  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" ]
+  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC" ]
   then
     ALGORITHM="NEOSCRYPT"
     POWERLIMIT_WATTS=80
@@ -863,7 +902,7 @@ then
   fi
 
   # Ethash
-  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH" ]
+  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH"  -o $COIN == "PIRL"  ]
   then
     ALGORITHM="ETHASH"
     POWERLIMIT_WATTS=76
@@ -881,7 +920,7 @@ then
   fi
 
   # Skunk
-  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" ]
+  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN="ALTCOM" ]
   then
     ALGORITHM="SKUNK"
     POWERLIMIT_WATTS=78
@@ -890,7 +929,7 @@ then
   fi
 
   # Cryptonight
-  if [ $COIN == "XMR" -o $COIN == "KRB" ]
+  if [ $COIN == "XMR" -o $COIN == "KRB" -o $COIN == "ETN" ]
   then
     ALGORITHM="CRYPTONIGHT"
     POWERLIMIT_WATTS=62
