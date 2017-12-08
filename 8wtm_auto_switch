@@ -1,7 +1,6 @@
 #!/bin/bash
 # whttomine.com auto switch for nvOC by fullzero , v0019.2 unofficial by papampi
-
-#Feel free to use, change, edit and do what you want with it.
+# Feel free to use, change, edit and do what you want with it.
 
 source /home/m1/1bash
 
@@ -9,13 +8,13 @@ source /home/m1/1bash
 LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
 if [[ -e "$LOG_FILE" ]] ; then
   #Limit the logfile, just keep the last 5K
-  echo "$(cat $LOG_FILE | grep switched | tail -n 5k)" > $LOG_FILE
+  echo "$(cat $LOG_FILE | tail -n 5k)" > $LOG_FILE
 fi
 
 WTM_HISTORY="/home/m1/WTM_switch_history"
 if [[ -e "$WTM_HISTORY" ]] ; then
-  #Limit the logfile, just keep the last 2K
-  echo "$(cat $WTM_HISTORY | grep switched | tail -n 2k)" > $WTM_HISTORY
+  #Limit the logfile, just keep the last 100 lines
+  echo "$(cat $WTM_HISTORY | tail -n 100)" > $WTM_HISTORY
 fi
 
 while true
@@ -32,35 +31,6 @@ do
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
 
-    if [[ $ALGO_SPECIFIC_OC == "YES" ]]
-    then
-      CURRENT_COIN_ALGORITHM=$ALGORITHM
-      if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC" ]
-      then
-        TOP_COIN_ALGORITHM="NEOSCRYPT"
-      fi
-      if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL"  -o $COIN == "PIRL" ]
-      then
-        TOP_COIN_ALGORITHM="ETHASH"
-      fi
-      if [ $TOP_COIN == "BTG" -o $TOP_COIN == "ZEC" -o $TOP_COIN == "ZEN" -o $TOP_COIN == "HUSH" -o $TOP_COIN == "ZCL" -o $TOP_COIN == "KMD"  ]
-      then
-        TOP_COIN_ALGORITHM="EQUIHASH"
-      fi
-      if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" -o $COIN == "ETN" ]
-      then
-        TOP_COIN_ALGORITHM="CRYPTONIGHT"
-      fi
-      if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" ]
-      then
-        TOP_COIN_ALGORITHM="LYRA2REV2"
-      fi
-      if [ $COIN == "SIGT" -o $COIN="ALTCOM" ]
-      then
-        TOP_COIN_ALGORITHM="SKUNK"
-      fi
-    fi
-
     if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]
     then
       sed -i 's/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
@@ -70,9 +40,9 @@ do
       sed -i '/^$/d' /home/m1/WTM_24H_REV
       sleep 1
 
-      if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]
+      if  [[ $ALGO_SPECIFIC_OC == "NO" ]]
       then
-        echo "Switching Coin with Same Algo or Algo_OC=No, Restarting miner" | tee -a $LOG_FILE
+        echo "Switching Coin with Algo_OC=No, Restarting miner" | tee -a $LOG_FILE
         echo "" | tee -a $LOG_FILE
 
         while [[ -z  $(ps ax | grep -i screen | grep miner) ]]
@@ -106,19 +76,16 @@ do
           echo "" | tee -a $LOG_FILE
         fi
 
-
-      elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM ]]
+      elif [[ $ALGO_SPECIFIC_OC == "YES"  ]]
       then
-        echo "Switching Coin with Different Algo, Restart 3main"  | tee -a $LOG_FILE
+        echo "Switching Coin with ALGO_OC=YES, Restart 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
         pkill -f 3main
       fi
 
       echo "$(date) Mining switched from $CURRENT_COIN to $TOP_COIN" | tee -a $LOG_FILE $WTM_HISTORY
       echo "Check again in $TIMEOUT seconds" | tee -a $LOG_FILE
-
       sleep $TIMEOUT
-
     else
       echo ""
       echo "$(date) Same Coin on Top, Continue mining $CURRENT_COIN"   | tee -a $LOG_FILE
@@ -130,9 +97,7 @@ do
       sed -i '/^$/d' /home/m1/WTM_24H_REV
       sleep $TIMEOUT
     fi
-
   else
     echo "Auto start miner set to NO" | tee -a $LOG_FILE
   fi
-
 done
