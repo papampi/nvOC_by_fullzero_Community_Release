@@ -44,11 +44,11 @@ do
       if [[ $ALGO_SPECIFIC_OC == "YES" ]]
       then
         CURRENT_COIN_ALGORITHM=$ALGORITHM
-        if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" ]
+        if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC" ]
         then
           TOP_COIN_ALGORITHM="NEOSCRYPT"
         fi
-        if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL"  ]
+        if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL"  -o $COIN == "PIRL" ]
         then
           TOP_COIN_ALGORITHM="ETHASH"
         fi
@@ -56,13 +56,17 @@ do
         then
           TOP_COIN_ALGORITHM="EQUIHASH"
         fi
-        if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" ]
+        if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" -o $COIN == "ETN" ]
         then
           TOP_COIN_ALGORITHM="CRYPTONIGHT"
         fi
         if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" ]
         then
           TOP_COIN_ALGORITHM="LYRA2REV2"
+        fi
+        if [ $COIN == "SIGT" -o $COIN="ALTCOM" ]
+        then
+          ALGORITHM="SKUNK"
         fi
       fi
 
