@@ -27,10 +27,39 @@ do
     python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json  | tee -a $LOG_FILE
     sleep 5
 
-    CURRENT_COIN=$COIN
+    CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
     TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9][0-9]//' | sed 's/[0-9]//')
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
+
+    if [[ $ALGO_SPECIFIC_OC == "YES" ]]
+    then
+      CURRENT_COIN_ALGORITHM=$ALGORITHM
+      if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC" ]
+      then
+        TOP_COIN_ALGORITHM="NEOSCRYPT"
+      fi
+      if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL"  -o $COIN == "PIRL" ]
+      then
+        TOP_COIN_ALGORITHM="ETHASH"
+      fi
+      if [ $TOP_COIN == "BTG" -o $TOP_COIN == "ZEC" -o $TOP_COIN == "ZEN" -o $TOP_COIN == "HUSH" -o $TOP_COIN == "ZCL" -o $TOP_COIN == "KMD"  ]
+      then
+        TOP_COIN_ALGORITHM="EQUIHASH"
+      fi
+      if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" -o $COIN == "ETN" ]
+      then
+        TOP_COIN_ALGORITHM="CRYPTONIGHT"
+      fi
+      if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" ]
+      then
+        TOP_COIN_ALGORITHM="LYRA2REV2"
+      fi
+      if [ $COIN == "SIGT" -o $COIN="ALTCOM" ]
+      then
+        TOP_COIN_ALGORITHM="SKUNK"
+      fi
+    fi
 
     if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]
     then
@@ -41,50 +70,21 @@ do
       sed -i '/^$/d' /home/m1/WTM_24H_REV
       sleep 1
 
-      if [[ $ALGO_SPECIFIC_OC == "YES" ]]
-      then
-        CURRENT_COIN_ALGORITHM=$ALGORITHM
-        if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC" ]
-        then
-          TOP_COIN_ALGORITHM="NEOSCRYPT"
-        fi
-        if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL"  -o $COIN == "PIRL" ]
-        then
-          TOP_COIN_ALGORITHM="ETHASH"
-        fi
-        if [ $TOP_COIN == "BTG" -o $TOP_COIN == "ZEC" -o $TOP_COIN == "ZEN" -o $TOP_COIN == "HUSH" -o $TOP_COIN == "ZCL" -o $TOP_COIN == "KMD"  ]
-        then
-          TOP_COIN_ALGORITHM="EQUIHASH"
-        fi
-        if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" -o $COIN == "ETN" ]
-        then
-          TOP_COIN_ALGORITHM="CRYPTONIGHT"
-        fi
-        if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" ]
-        then
-          TOP_COIN_ALGORITHM="LYRA2REV2"
-        fi
-        if [ $COIN == "SIGT" -o $COIN="ALTCOM" ]
-        then
-          ALGORITHM="SKUNK"
-        fi
-      fi
-
       if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]
       then
-        echo "Same Algo or Algo_OC=No, Restarting Miner" | tee -a $LOG_FILE
+        echo "Switching Coin with Same Algo or Algo_OC=No, Restarting miner" | tee -a $LOG_FILE
         echo "" | tee -a $LOG_FILE
 
         while [[ -z  $(ps ax | grep -i screen | grep miner) ]]
         do
-          echo "miner not started yet" | tee -a $LOG_FILE $ALERT_LOG_FILE
+          echo "Miner not started yet" | tee -a $LOG_FILE
           echo "" | tee -a $LOG_FILE
           sleep 5
         done
 
         if [[ -n  $(ps ax | grep -i screen | grep miner) ]]
         then
-          echo "miner is running, lets make the switch" | tee -a $LOG_FILE
+          echo "Miner is running, lets make the switch" | tee -a $LOG_FILE
           #kill miner
           pkill -e miner
           if [[ $MINER_WATCHDOG == "YES" ]]
@@ -106,8 +106,10 @@ do
           echo "" | tee -a $LOG_FILE
         fi
 
-      else
-        echo "Coin Algo switched, restarting 3main"  | tee -a $LOG_FILE
+
+      elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM ]]
+      then
+        echo "Switching Coin with Different Algo, Restart 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
         pkill -f 3main
       fi
