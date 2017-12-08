@@ -309,41 +309,6 @@ fi
 
 sleep 2
 
-if [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ]
-then
-  HCD='/home/m1/5watchdog'
-  echo ""
-  echo "LAUNCHING:  MINER WATCHDOG"
-  sleep 2
-  running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
-  if [ "$running" == "" ]
-  then
-    if [ $LOCALorREMOTE == "LOCAL" ]
-    then
-      guake -n $HCD -r MINER_WATCHDOG -e "bash $HCD"
-      echo ""
-      echo "process in guake terminal Tab (f12)"
-      echo ""
-      running=""
-    fi
-    if [ $LOCALorREMOTE == "REMOTE" ]
-    then
-      screen -dmS wdog bash /home/m1/5watchdog
-      echo ""
-      echo "process in screen wdog; attach with: screen -r wdog"
-      echo ""
-      running=""
-    fi
-  fi
-elif [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "NO" ]
-then
-  echo "  "
-  echo "  "
-  echo "Auto start miner is set to NO, Watchdog is not starting"
-  echo "  "
-  echo "  "
-fi
-
 if [ $MINER_TEMP_CONTROL == "YES" ]
 then
   reup=0
@@ -385,6 +350,41 @@ then
   fi
 fi
 
+if [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ] && [ $SALFTER == "YES" ]
+then
+  HCD='/home/m1/5watchdog'
+  echo ""
+  echo "LAUNCHING:  MINER WATCHDOG"
+  sleep 2
+  running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
+  if [ "$running" == "" ]
+  then
+    if [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      guake -n $HCD -r MINER_WATCHDOG -e "bash $HCD"
+      echo ""
+      echo "process in guake terminal Tab (f12)"
+      echo ""
+      running=""
+    fi
+    if [ $LOCALorREMOTE == "REMOTE" ]
+    then
+      screen -dmS wdog bash /home/m1/5watchdog
+      echo ""
+      echo "process in screen wdog; attach with: screen -r wdog"
+      echo ""
+      running=""
+    fi
+  fi
+elif [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "NO" ] && [ $SALFTER == "YES" ]
+then
+  echo "  "
+  echo "  "
+  echo "Auto start miner is set to NO, Watchdog is not starting"
+  echo "  "
+  echo "  "
+fi
+
 if [ "$FAN_SPEED" -lt "40" ]
 then
   FAN_SPEED=40
@@ -393,32 +393,6 @@ fi
 GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
 
 NVD=nvidia-settings
-
-if [ $WTM_AUTO_SWITCH == "YES" ]
-then
-
-  echo ""
-  echo "LAUNCHING:  WTM AUTO SWITCH "
-  echo ""
-
-  cat <<EOF >/home/m1/WTM.json
-{
- "WTM_URL": "$WTM_AUTO_SWITCH_URL",
- "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
- "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
- "currency":"$WTM_CURRENCY"
-}
-EOF
-
-  HCD='/home/m1/8wtm_auto_switch'
-  running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
-  if [ "$running" == "" ]
-  then
-    guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
-    running=""
-  fi
-fi
-
 
 if [[ $WTM_PROFIT_CHECK == "YES" ]] && [[ $WTM_AUTO_SWITCH == "NO" ]]
 then
@@ -446,7 +420,7 @@ EOF
 fi
 
 
-if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
+if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "YES" ]
 then
   HOSTEDIT="YES"
   if grep -q "api.nicehash.com" /etc/hosts;
@@ -583,10 +557,20 @@ EOF
       python2.7 '/home/m1/switch' /home/m1/conf.json
     fi
   done
+
+elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "NO" ]
+then
+  echo "    "
+  echo "    "
+  echo "Auto Start Miner is set to NO"
+  echo "    "
+  echo "Miner is not starting"
+  echo "    "
+  echo "    "
 fi
 
 
-if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
+if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ] && [ $AUTO_START_MINER == "YES" ]
 then
 
   cd /home/m1
@@ -800,6 +784,15 @@ EOF
       python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
     fi
   done
+elif [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "NO" ]
+then
+  echo "    "
+  echo "    "
+  echo "Auto Start Miner is set to NO"
+  echo "    "
+  echo "Miner is not starting"
+  echo "    "
+  echo "    "
 fi
 
 
@@ -990,6 +983,34 @@ then
 
   if [ $AUTO_START_MINER == "YES" ]
   then
+    echo "Auto Start Miner Set to YES"
+    if [ $MINER_WATCHDOG == "YES" ]
+    then
+      HCD='/home/m1/5watchdog'
+      echo ""
+
+      sleep 2
+      running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
+      if [ "$running" == "" ]
+      then
+        if [ $LOCALorREMOTE == "LOCAL" ]
+        then
+          guake -n $HCD -r MINER_WATCHDOG -e "bash $HCD"
+          echo "LAUNCHING:  MINER WATCHDOG"
+          echo ""
+          echo "process in guake terminal Tab (f12)"
+          echo ""
+          running=""
+        elif [ $LOCALorREMOTE == "REMOTE" ]
+        then
+          screen -dmS wdog bash /home/m1/5watchdog
+          echo "LAUNCHING:  MINER WATCHDOG"
+          echo ""
+          echo "process in screen wdog; attach with: screen -r wdog"
+          running=""
+        fi
+      fi
+    fi
     reup=0
     running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
 
@@ -1001,10 +1022,7 @@ then
     fi
     sleep 2
     echo ""
-    echo "Auto Start Miner is Set to YES"
-    echo "    "
     echo "LAUNCHING:  MINER"
-    echo "    "
     echo "    "
     running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
@@ -1031,9 +1049,31 @@ then
         fi
       fi
     fi
-  elif
 
-  [ $AUTO_START_MINER == "NO" ]
+
+    if [ $WTM_AUTO_SWITCH == "YES" ]
+    then
+      echo ""
+      echo "LAUNCHING:  WTM AUTO SWITCH "
+      echo ""
+      cat <<EOF >/home/m1/WTM.json
+{
+ "WTM_URL": "$WTM_AUTO_SWITCH_URL",
+ "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+ "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
+ "currency":"$WTM_CURRENCY"
+}
+EOF
+      HCD='/home/m1/8wtm_auto_switch'
+      running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
+      if [ "$running" == "" ]
+      then
+        guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
+        running=""
+      fi
+    fi
+
+  elif [ $AUTO_START_MINER == "NO" ]
   then
     echo "    "
     echo "    "
@@ -1042,9 +1082,7 @@ then
     echo "Miner is not starting"
     echo "    "
     echo "    "
-
   fi
-
 fi
 
 
