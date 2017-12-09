@@ -3,6 +3,7 @@ echo " nvOC by fullzero, Unofficial V0019-2.0 - community release"
 echo " Backup your old 1bash and any important stuff"
 sleep 5
 
+
 if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
   echo "First things first, your 1bash is old, lets put the new 1bash to Downloads folder"
   while [[ -e /home/m1/Downloads/1bash  ]]
@@ -166,6 +167,28 @@ chmod a+x  /home/m1/eth/claymore/latest/ethdcrminer64
 
 sleep 1;echo "";echo ""
 
+echo "Downloading and making changes new miners"
+sleep 1;echo "";echo ""
+echo "cd /home/m1/Downloads"
+cd /home/m1/Downloads
+echo "wget -c http://www.cstone.net/~stu/nvOC/miners/19-2_miners.tar.gz"
+wget -c http://www.cstone.net/~stu/nvOC/miners/19-2_miners.tar.gz
+echo "Extracting miners"
+tar -xvzf 19-2_miners.tar.gz
+echo "rm /home/m1/Downloads/19-2_miners.tar.gz"
+rm /home/m1/Downloads/19-2_miners.tar.gz
+echo "mv /home/m1/Downloads/19-2_miners/KTccminer/ /home/m1/KTccminer/"
+mv /home/m1/Downloads/19-2_miners/KTccminer/ /home/m1/KTccminer/
+echo "mv /home/m1/Downloads/19-2_miners/KXccminer-xevan/ /home/m1/KXccminer-xevan/"
+mv /home/m1/Downloads/19-2_miners/KXccminer-xevan/ /home/m1/KXccminer-xevan/
+echo "mv /home/m1/Downloads/19-2_miners/TPccminer/ /home/m1/TPccminer/"
+mv /home/m1/Downloads/19-2_miners/TPccminer/ /home/m1/TPccminer/
+
+echo "Moving KXccminer to KXccminer-skunk"
+echo "mv  /home/m1/KXccminer /home/m1/KXccminer-skunk"
+mv  /home/m1/KXccminer /home/m1/KXccminer-skunk
+
+
 cd /home/m1/Downloads
 rm /home/m1/Downloads/nvOC-19-2.tar.gz
 echo "Downloading V19.2 unofficial updates"
@@ -281,17 +304,19 @@ touch /home/m1/.bash_aliases
 if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log) ]]
 then
   echo "Adding master-log alias"
-  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/5_restartlog /home/m1/nvoc_logs/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
+  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/5_watchdoglog /home/m1/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
   echo "type master-log in guake or ssh sessions, to watch all your logs live"
   echo " "
+  sleep 5
 fi
 
 if [[ -z  $(cat /home/m1/.bash_aliases | grep miner-restart) ]]
 then
   echo "Adding miner-restart alias"
-  echo "alias miner-restart='pkill -f WATCHDOG & pkill -f 3main'" | tee -a /home/m1/.bash_aliases
+  echo "alias miner-restart='pkill -f 5watchdog && pkill -f 3main'" | tee -a /home/m1/.bash_aliases
   echo "type miner-restart in guake or ssh sessions, to restart 3main"
   echo " "
+  sleep 5
 fi
 
 sleep 1;echo "";echo ""
