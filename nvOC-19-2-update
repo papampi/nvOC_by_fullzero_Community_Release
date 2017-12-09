@@ -85,7 +85,7 @@ sleep 1;echo "";echo ""
 if [[ -z  $(cat /etc/screenrc | grep nvoc_log) ]]
 then
   echo "Moving miner screenlog.o to tmpf to lower disk read/writes"
-  echo "sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc"
+  echo "sudo echo logfile  /home/m1/nvoc_logs/screenlog.0 | sudo tee -a  /etc/screenrc"
   sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc
   sleep 1;echo "";echo ""
 else
@@ -100,7 +100,7 @@ then
   sleep 1;echo "";echo ""
   echo "mkdir -p /home/m1/nvoc_logs"
   mkdir -p /home/m1/nvoc_logs
-  echo "sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab"
+  echo "sudo echo tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0 | sudo tee -a   /etc/fstab"
   sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab
   echo "sudo mount -a"
   sudo mount -a
