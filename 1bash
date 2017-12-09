@@ -2,12 +2,13 @@
 
 #############################################################################
 #############################################################################
-#########    nvOC by fullzero , v0019.2 unofficial by papampi      ##########
+##################    nvOC v0019-2.0 community release    ###################
 ######    Based on the original code by fullzero 1bash ver 0019-1.4    ######
 #############################################################################
 #############################################################################
 
-# + contributors:
+# fullzero: nvOC creator
+# + contributors (in alphabetical order):
 
 # BaliMiner: BaliMiner_TELEGRAM_ALERTS
 # BaliMiner BTC address:  1HbzxQ6AVeWYvFm322KtxZcJJLAqfJHpN8
@@ -22,9 +23,14 @@
 #              Methods for improved system stability
 # IAmNotAJeep BTC address:  13PnEKpfVzNseWkrm6LoueKcCMPj74zPv7
 
-# kk003: Alternative telegram alert ( very extensive )
-#        Telegram Setup Video
+# kk003:   Alternative telegram alert ( very extensive )
+#          Telegram Setup Video
 # kk003 BTC address:  196pMZnByg5UaPvJPK67ErAHgDPeSyu8QV
+
+# leenoox: The new 0019-2.0 TEMP_CONTROL
+#          Methods for color output throughout nvOC scripts
+#          ver 0019-2.0 (community release) main developer
+#          multiple bug fixes and enhacements for ver 0019-2.0
 
 # lost_post: upPASTE (timeout based _Parallax_ Mode auto-updating)
 #            Methods for separating settings and implementation
@@ -33,17 +39,19 @@
 
 # Maxximus007: Maxximus007_AUTO_TEMPERATURE_CONTROL
 #              Expectless 1bash
-#	       IAmNotAJeep_and_Maxximus007_WATCHDOG
+#	             IAmNotAJeep_and_Maxximus007_WATCHDOG
 # Maxximus007 BTC address:  1JAFefdPVAs3WQiTqnYWbsjifJAEjQcjQ8
 
-# meligo: FAQ website nvoc-mining-os.com
+# meligo:  FAQ website nvoc-mining-os.com
 # meligo BTC address:  1AwUJMztX2ARZp8ULqR5UsK3b27om8j3vq
 
 # papampi: PAPAMPI_WTM_AUTO_SWITCH
-#	   PAPAMPI_WTM_PROFIT_CHECK
-#	   added multiple COIN selections
-#      Alternative telegram alert and guide
-#      Web info http://rig_ip/index.html
+#	         PAPAMPI_WTM_PROFIT_CHECK
+#	         added multiple COIN selections
+#          Alternative telegram alert and guide
+#          Web info http://rig_ip/index.html
+#          ver 0019-2.0 (community release) main developer
+#          multiple bug fixes and enhacements for ver 0019-2.0
 # papampi BTC address:  1NsnsnqkkVuopTGvUSGrkMhhug8kg6zgP9
 
 # _Parallax_:  _Parallax_ Mode ( wget + pastebin oneBash updating )
@@ -55,8 +63,12 @@
 #          SALFTER_MPH_PROFIT_SWITCHING
 # salfter BTC address:  1TipsGocnz2N5qgAm9f7JLrsMqkb3oXe2
 
+# Stubo:   ver 0019-2.0 (community release) main developer
+#          multiple bug fixes and enhacements for ver 0019-2.0
+
 # xleejohnx: SRR support
 # xleejohnx BTC address:  1EY5WbiW3YkWanSKEGcjCETpQfCR81wc56
+
 
 # Open a terminal to launch miner; will auto launch on boot
 
