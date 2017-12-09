@@ -4,24 +4,24 @@ firstBOOT="NO"
 
 if grep -q "convert" /home/m1/firstBOOT;
 then
-firstBOOT="YES"
+  firstBOOT="YES"
 fi
 
 if [ $firstBOOT == "YES" ]
 then
-rm /home/m1/firstBOOT
-sleep 2
-touch /home/m1/firstBOOT
-sudo cp '/media/m1/12D3-A869/1bash' '/home/m1/1bash'
-echo "wait 15 seconds to minimize errors"
-sudo dos2unix /home/m1/1bash
-rm /media/m1/12D3-A869/1bash
-sleep 15
+  rm /home/m1/firstBOOT
+  sleep 2
+  touch /home/m1/firstBOOT
+  sudo cp '/media/m1/12D3-A869/1bash' '/home/m1/1bash'
+  echo "wait 15 seconds to minimize errors"
+  sudo dos2unix /home/m1/1bash
+  rm /media/m1/12D3-A869/1bash
+  sleep 15
 fi
 
 pkill -f 3main
 
-sleep 2
+sleep 3
 
 update="YES"
 
