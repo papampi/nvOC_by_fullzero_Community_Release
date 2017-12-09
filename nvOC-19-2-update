@@ -25,7 +25,7 @@ sleep 1;echo "";echo ""
 
 echo "wait 30 seconds, if you have not edited your new 1bash or not backed up yet HIT ctrl+c NOW"
 sleep 1;echo "";echo ""
-echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
+echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FINISHED AND EDITED YOUR NEW 1BASH"
 echo "";echo ""
 sleep 30;echo "";echo ""
 
