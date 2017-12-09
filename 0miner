@@ -427,14 +427,14 @@ if [ $COIN == "PXC" ]
 then
   HCD='/home/m1/TPccminer/ccminer'
   ADDR="$PXC_ADDRESS/$PXC_WORKER"
-  screen -dmSLL miner $HCD -a neoscrypt -o stratum+tcp://$PXC_POOL:$PXC_PORT  -u $ADDR -p $MINER_PWD -i $PXC_INTENSITY
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$PXC_POOL:$PXC_PORT  -u $ADDR -p $MINER_PWD -i $PXC_INTENSITY
 fi
 
 if [ $COIN == "SIB" ]
 then
   HCD='/home/m1/TPccminer/ccminer'
   ADDR="$SIB_ADDRESS.$SIB_WORKER"
-  screen -dmSLL miner $HCD -a sib -o stratum+tcp://$SIB_POOL:$SIB_PORT -u $ADDR -p $MINER_PWD -i $SIB_INTENSITY
+  screen -dmSL miner $HCD -a sib -o stratum+tcp://$SIB_POOL:$SIB_PORT -u $ADDR -p $MINER_PWD -i $SIB_INTENSITY
 fi
 
 if [ $COIN == "SIGT" ]
