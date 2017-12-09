@@ -1,14 +1,11 @@
 #!/bin/bash
 
-# >>>>> Miner restart script v0019-2.0 <<<<< PLEASE STOP USING THIS NAME. This is Watchdog
-
 # Watchdog v0019-2.0
 # by papampi, Stubo and leenoox
 # based on the original code - Miner restart script by Maxximus007 && IAmNotAJeep
 # for nvOC by fullzero
 #
 # DEV_VERSION=0007
-#
 #
 # Mod Log:
 #
@@ -18,9 +15,9 @@
 # v=0003 : Stubo: Bug Fix - changed numtest='^[0-9]+$' to numtest='^[0-9.]+$'
 # v=0004 : Stubo: Enhancement - reduced sleep time in GPU utilization test loop from 0.5 to 0.2
 # v=0005 : Papampi: Add wtm python check, add if internet is down to prevent too many logs, add $COUNT
-#          to (Low Utilization Detected: 3main will reinit if there are $COUNT ...)
+#          to (Low Utilization Detected: 3main will reinit if there are $COUNT ...) 
 #          added source 1bash to read installed GPUs
-# v=0006 : leenoox:
+# v=0006 : leenoox: 
 #          THRESHOLD=80 - I think we should keep this at 80, at normal operation sometimes drops to 82 or so then goes back to 100
 #          renice -19 - this is highest priority possible, watchdog should be highest
 #          renice > /dev/null - no need for output on screen
@@ -43,7 +40,7 @@ export DISPLAY=:0
 source /home/m1/1bash
 
 # Global Variables
-THRESHOLD=80                          # Minimum allowed % utilization before taking action
+THRESHOLD=80         # Minimum allowed % utilization before taking action
 
 # Set higher process and disk I/O priorities because we are essential service
 sudo renice -n -19 -p $$ >/dev/null 2>&1 && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
@@ -82,7 +79,7 @@ fi
 
 # Initialize vars
 REBOOTRESET=0
-GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits) 
 COUNT=$((6 * $GPU_COUNT))
 # Track how many times we have restarted the miner/3main
 RESTART=0
@@ -253,7 +250,7 @@ while true; do
       COUNT=$GPU_COUNT
 
       # Give 3main time to restart to prevent reboot
-      sleep 60
+      sleep $SLEEP_TIME
       echo "$(date) - Back 'on watch' after miner restart"  
     else
       echo "$(date) - Low Utilization Detected: 3main will reinit if there are $COUNT consecutive failures"  
@@ -264,7 +261,6 @@ while true; do
     # All is good, reset the counter
     COUNT=$((6 * $GPU_COUNT))
     echo "$(date) - No mining issues detected."
-	echo ""
 
     # No need for a reboot after 5 times through the main loop with no issues
     if [ $REBOOTRESET -gt 5 ]
