@@ -916,7 +916,7 @@ then
   fi
 
   # Ethash
-  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH"  -o $COIN == "PIRL"  ]
+  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH" -o $COIN == "PIRL" ]
   then
     ALGORITHM="ETHASH"
     POWERLIMIT_WATTS=76
@@ -934,7 +934,7 @@ then
   fi
 
   # Skunk
-  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN="ALTCOM" ]
+  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN == "ALTCOM" ]
   then
     ALGORITHM="SKUNK"
     POWERLIMIT_WATTS=78
