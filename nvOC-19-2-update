@@ -275,6 +275,10 @@ echo "cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_che
 cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_check
 echo "cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER"
 cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER
+echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tempcontrol"
+cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tempcontrol
+echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog"
+cp /home/m1/Downloads/nvOC-19-2/ext/screenrc-watchdog /home/m1/screenrc-watchdog
 
 
 sleep 1;echo "";echo ""
