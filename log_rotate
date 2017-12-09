@@ -10,34 +10,20 @@ do
   TIMEOUT=$(($TIMEIN * 3600))
 
   # Rotating wdog logs
-  WDOG_LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
+  WDOG_LOG_FILE="/home/m1/5_watchdoglog"
   if [ -e "$WDOG_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
-    echo "$( cat $WDOG_LOG_FILE | grep WARNING | tail -n 2k)" > $WDOG_LOG_FILE
-  fi
-
-  # Rotating wdog alerts log
-  WDOG_ALERT_LOG_FILE="/home/m1/7_wdog_alertlog"
-  if [ -e "$WDOG_ALERT_LOG_FILE" ] ; then
-    #Limit the logfile, just keep the last 2k
-    echo "$( cat $WDOG_ALERT_LOG_FILE | grep WARNING | tail -n 2k)" > $WDOG_ALERT_LOG_FILE
+    echo "$( cat $WDOG_LOG_FILE | tail -n 2k)" > $WDOG_LOG_FILE
   fi
 
   # Rotating temp logs
-  TEMP_LOG_FILE="/home/m1/nvoc_logs/6_autotemplog"
+  TEMP_LOG_FILE="/home/m1/6_autotemplog"
   if [ -e "$TEMP_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
-    echo "$( cat $TEMP_LOG_FILE | grep WARNING | tail -n 2k)" > $TEMP_LOG_FILE
+    echo "$( cat $TEMP_LOG_FILE | tail -n 2k)" > $TEMP_LOG_FILE
   fi
 
-  # Rotating temp alerts
-  TEMP_ALERT_LOG_FILE="/home/m1/7_temp_alertlog"
-  if [ -e "$TEMP_ALERT_LOG_FILE" ] ; then
-    #Limit the logfile, just keep the last 2k
-    echo "$( cat $TEMP_ALERT_LOG_FILE | grep WARNING | tail -n 2k)" > $TEMP_ALERT_LOG_FILE
-  fi
-
-  # Rotating miner screenlog
+  # Rotating screenlog
   MINER_LOG_FILE="/home/m1/nvoc_logs/screenlog.0"
   if [ -e "$MINER_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k

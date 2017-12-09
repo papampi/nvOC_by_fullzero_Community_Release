@@ -79,16 +79,7 @@ else
   echo ""
 fi
 
-WD_LOG_FILE="/home/m1/nvoc_logs/5_restartlog"
-
-# Creating a log file to keep the warnings after reboot
-ALERT_LOG_FILE="/home/m1/7_temp_alertlog"
-if [ -e "$ALERT_LOG_FILE" ]; then
-  echo "$( cat $ALERT_LOG_FILE | tail -n 2k )" > $ALERT_LOG_FILE
-else
-  touch $ALERT_LOG_FILE     # if log file does not exist, create one
-fi
-
+WD_LOG_FILE="/home/m1/nvoc_logs/5_watchdoglog"
 
 
 # Display version info
@@ -96,7 +87,7 @@ echo ""
 for i in {16..21} ; do
   echo -en "\e[48;5;${i}m "
 done
-echo -en "${B}TEMP_CONTROL $TEMP_VER by leenoox${N}"  | tee -a ${LOG_FILE}
+echo -en "${B}TEMP_CONTROL $TEMP_VER by leenoox${N}"  
 for i in {21..16} ; do
   echo -en "\e[48;5;${i}m \e[0m"
 done
@@ -108,7 +99,7 @@ sleep 1
 # Determine the number of available GPU's
 GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
 
-echo -e "Detected: ${B}$GPUS${N} GPU's" | tee -a ${LOG_FILE}
+echo -e "Detected: ${B}$GPUS${N} GPU's"  
 echo ""
 count=0
 
@@ -130,7 +121,7 @@ while [ $count -lt $GPUS ]; do
   fi
 
   # Info - display assigned values per GPU
-  echo -e "${B}GPU $count:${N}  POWER LIMIT: ${B}${POWER_LIMIT[$count]}${N},  TARGET TEMP: ${B}${TARGET_TEMP[$count]}${N}" | tee -a ${LOG_FILE}
+  echo -e "${B}GPU $count:${N}  POWER LIMIT: ${B}${POWER_LIMIT[$count]}${N},  TARGET TEMP: ${B}${TARGET_TEMP[$count]}${N}" 
 
   # Enable fan control
   ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
@@ -149,11 +140,11 @@ fi
 
 echo ""
 # Info - display the Global settings
-echo -e "${B}GLOBAL${N}  FAN_ADJUST (%):  ${B}$FAN_ADJUST${N}" | tee -a ${LOG_FILE}
-echo -e "${B}GLOBAL${N}  POWER_ADJUST (W):  ${B}$POWER_ADJUST${N}" | tee -a ${LOG_FILE}
-echo -e "${B}GLOBAL${N}  ALLOWED_TEMP_DIFF (C):  ${B}$ALLOWED_TEMP_DIFF${N}" | tee -a ${LOG_FILE}
-echo -e "${B}GLOBAL${N}  RESTORE_POWER_LIMIT (%):  ${B}$RESTORE_POWER_LIMIT${N}" | tee -a ${LOG_FILE}
-echo -e "${B}GLOBAL${N}  MINIMAL_FAN_SPEED (%):  ${B}$MINIMAL_FAN_SPEED${N}" | tee -a ${LOG_FILE}
+echo -e "${B}GLOBAL${N}  FAN_ADJUST (%):  ${B}$FAN_ADJUST${N}"  
+echo -e "${B}GLOBAL${N}  POWER_ADJUST (W):  ${B}$POWER_ADJUST${N}"  
+echo -e "${B}GLOBAL${N}  ALLOWED_TEMP_DIFF (C):  ${B}$ALLOWED_TEMP_DIFF${N}"  
+echo -e "${B}GLOBAL${N}  RESTORE_POWER_LIMIT (%):  ${B}$RESTORE_POWER_LIMIT${N}"  
+echo -e "${B}GLOBAL${N}  MINIMAL_FAN_SPEED (%):  ${B}$MINIMAL_FAN_SPEED${N}"  
 echo ""
 
 
@@ -208,7 +199,7 @@ while true; do
     if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
       # Not numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
       while [ $ERR_TIMER -gt 0 ]; do
-        echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}"  | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
         sleep 15
         { IFS=', ' read CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
         if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
@@ -218,7 +209,7 @@ while true; do
           break
         fi
         if [ $ERR_TIMER -le 0 ]; then
-          echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System rebooted by the TEMP_CONTROL script to correct the problem!" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE} ${WD_LOG_FILE}
+          echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System rebooted by the TEMP_CONTROL to correct the problem!" | tee -a ${LOG_FILE} ${WD_LOG_FILE}
           sleep 3
           sudo reboot
         fi
@@ -230,7 +221,7 @@ while true; do
     TEMP_DIFF=$((${TARGET_TEMP[${GPU}]} - $CURRENT_TEMP))
     NEW_FAN_SPEED=$CURRENT_FAN
 
-    echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"  | tee -a ${LOG_FILE} # Does any script rely on this to be logged? Do we realy need to log this every 20 seconds for every GPU?
+    echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}" 
     echo ""
 
     if [ "$CURRENT_TEMP" -gt "${TARGET_TEMP[${GPU}]}" ]; then
@@ -244,9 +235,9 @@ while true; do
       if [ $NEW_FAN_SPEED -gt 100 ]; then
         NEW_FAN_SPEED=100
         # Fan speed was already (very close to) 100, we have to drop the power limit a bit
-        echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Fan speed was already close to max, dropping Power Limit in order to maintain the desired temp${N}" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Fan speed was already close to max, dropping Power Limit in order to maintain the desired temp${N}" | tee -a ${LOG_FILE} 
         NEW_POWER_LIMIT=$(($POWERLIMIT - $POWER_ADJUST))
-        echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a ${LOG_FILE} ${ALERT_LOG_FILE}
+        echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a ${LOG_FILE}
         echo ""
         ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
       fi
@@ -263,7 +254,7 @@ while true; do
         if [ ${POWER_LIMIT[${GPU}]} -ne $POWERLIMIT ]; then
           if [ $NEW_FAN_SPEED -lt $RESTORE_POWER_LIMIT ]; then
             NEW_POWER_LIMIT=${POWER_LIMIT[${GPU}]}
-            echo -e "${B}GPU$GPU${N}${C}$(date) - Restoring Power Limit for ${N}${B}GPU$GPU${N}. ${C}Old limit: ${N}${B}$POWERLIMIT${N}${C} New limit: ${N}${B}$NEW_POWER_LIMIT${N}${C} Fan speed: ${N}${B}$NEW_FAN_SPEED${N}" | tee -a ${LOG_FILE}  ${ALERT_LOG_FILE}
+            echo -e "${B}GPU$GPU${N}${C}$(date) - Restoring Power Limit for ${N}${B}GPU$GPU${N}. ${C}Old limit: ${N}${B}$POWERLIMIT${N}${C} New limit: ${N}${B}$NEW_POWER_LIMIT${N}${C} Fan speed: ${N}${B}$NEW_FAN_SPEED${N}"   
             echo ""
             ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
           fi
@@ -272,7 +263,7 @@ while true; do
     fi
 
     if [ "$NEW_FAN_SPEED" -ne "$CURRENT_FAN" ]; then
-      echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"  | tee -a ${LOG_FILE}
+      echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"   
       echo ""
       ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
     fi

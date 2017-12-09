@@ -1,7 +1,7 @@
 #!/bin/bash
 echo " nvOC by fullzero, unofficial 19.2 by papampi"
 echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB/HDD read /writes, added option to auto start miner or not in 1bash, new 1bash for unified and separated pool and ports for wdog checking if pool is online, new separated 0miner to make 3main lighter and easier start miner, fix hostname conflict, add Warning to wdog and temp logs to ,  and many more edits and bug fixes"
-echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_5 version, and many more edits and bug fixes."
+echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_6 version, Claymore version 10.02 and many more edits and bug fixes."
 echo " Edits by leenoox: New and improved TEMP CONTROL, and many more fixes and suggestions."
 echo " Backup your old 1bash and any important stuff"
 
@@ -57,13 +57,15 @@ else
   echo "No Problems found"
 fi
 
+sleep 1;echo "";echo ""
+
 echo "Fix 19.1-4 fstab problem"
 
-if [[ -z $(cat fstab-test | grep "#UUID=55184403759586FB")  ]] && [[ -n $(cat fstab-test | grep "UUID=55184403759586FB") ]]
+if [[ -z $(cat /etc/fstab | grep "#UUID=55184403759586FB")  ]] && [[ -n $(cat /etc/fstab | grep "UUID=55184403759586FB") ]]
 then
   echo "sudo sed -i -e 's/UUID=55184403759586FB/#UUID=55184403759586FB/g' /etc/fstab"
   sudo sed -i -e 's/UUID=55184403759586FB/#UUID=55184403759586FB/g' /etc/fstab
-elif [[ -z $(cat fstab-test | grep "#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231") ]] && [[ -n $(cat fstab-test | grep "/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231") ]]
+elif [[ -z $(cat /etc/fstab | grep "#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231") ]] && [[ -n $(cat /etc/fstab | grep "/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231") ]]
 then
   echo "sudo sed -i -e 's\/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\g' /etc/fstab"
   sudo sed -i -e 's\/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\g' /etc/fstab
@@ -74,8 +76,10 @@ fi
 
 sleep 1;echo "";echo ""
 
+echo "sudo dpkg --configure -a"
+sudo dpkg --configure -a
 echo "Updating and Upgrading system packages and installing needed packages"
-sudo -- sh -c 'apt-get update; apt-get upgrade -y; apt-get dist-upgrade -y; apt-get autoremove -y; apt-get autoclean -y; sudo apt-get install -y moreutils gawk -y'
+sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y; sudo apt install -y moreutils gawk -y'
 
 
 sleep 1;echo "";echo ""
@@ -195,21 +199,27 @@ sleep 1;echo "";echo ""
 echo "Making a backup of changed files in /home/m1/backups"
 echo "mkdir -p /home/m1/backups"
 mkdir -p /home/m1/backups
+echo "mkdir -p /home/m1/backups/old_to_19.2"
+mkdir -p /home/m1/backups/old_to_19.2
 
 sleep 1;echo "";echo ""
 
-echo "cp /home/m1/1bash /home/m1/backups/1bash.bak"
-cp /home/m1/1bash /home/m1/backups/1bash.bak
-echo "cp /home/m1/3main /home/m1/backups/3main.bak"
-cp /home/m1/3main /home/m1/backups/3main.bak
-echo "mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak"
-mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak
-echo "mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak"
-mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak
-echo "mv /home/m1/PAPAMPI_WTM /home/m1/backups/PAPAMPI_WTM.bak"
-mv /home/m1/PAPAMPI_WTM /home/m1/backups/PAPAMPI_WTM.bak
-echo "mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/PAPAMPI_PROFIT_CHECK.bak"
-mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/PAPAMPI_PROFIT_CHECK.bak
+echo "cp /home/m1/1bash /home/m1/backups/old_to_19.2/1bash.bak"
+cp /home/m1/1bash /home/m1/backups/old_to_19.2/1bash.bak
+echo "cp /home/m1/3main /home/m1/backups/old_to_19.2/3main.bak"
+cp /home/m1/3main /home/m1/backups/old_to_19.2/3main.bak
+echo "mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/old_to_19.2/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak"
+mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/old_to_19.2/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak
+echo "mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/old_to_19.2/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak"
+mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/old_to_19.2/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak
+echo "mv /home/m1/PAPAMPI_WTM /home/m1/backups/old_to_19.2/PAPAMPI_WTM.bak"
+mv /home/m1/PAPAMPI_WTM /home/m1/backups/old_to_19.2/PAPAMPI_WTM.bak
+echo "mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/old_to_19.2/PAPAMPI_PROFIT_CHECK.bak"
+mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/old_to_19.2/PAPAMPI_PROFIT_CHECK.bak
+echo "mv /home/m1/WTM_AUTO_SWITCH /home/m1/backups/old_to_19.2/WTM_AUTO_SWITCH.bak"
+mv /home/m1/WTM_AUTO_SWITCH /home/m1/backups/old_to_19.2/WTM_AUTO_SWITCH.bak
+echo "cp /home/m1/2unix /home/m1/backups/old_to_19.2/2unix.bak"
+cp /home/m1/2unix /home/m1/backups/old_to_19.2/2unix.bak
 
 sleep 1;echo "";echo ""
 
@@ -253,22 +263,20 @@ echo "chmod a+x /home/m1/www/cgi-bin/minerinfo"
 chmod a+x /home/m1/www/cgi-bin/minerinfo
 echo "chmod a+x /home/m1/www/cgi-bin/clearalerts"
 chmod a+x /home/m1/www/cgi-bin/clearalerts
-echo "touch /home/m1/nvoc_logs/5_restartlog"
-touch /home/m1/nvoc_logs/5_restartlog
-echo "touch /home/m1/nvoc_logs/6_autotemplog"
-touch /home/m1/nvoc_logs/6_autotemplog
+echo "touch /home/m1/5_watchdoglog"
+touch /home/m1/5_watchdoglog
+echo "touch /home/m1/6_autotemplog"
+touch /home/m1/6_autotemplog
 echo "touch /home/m1/WTM_switch_histrory"
 touch /home/m1/WTM_switch_histrory
 echo "touch /home/m1/nvoc_logs/screenlog.0"
 touch /home/m1/nvoc_logs/screenlog.0
-echo "touch /home/m1/7_wdog_alertlog"
-touch /home/m1/7_wdog_alertlog
-echo "touch /home/m1/7_temp_alertlog"
-touch /home/m1/7_temp_alertlog
 echo "chmod 666 /home/m1/nvoc_logs/*"
 chmod 666 /home/m1/nvoc_logs/*
-echo "chmod 666 /home/m1/7_*"
-chmod 666 /home/m1/7_*
+echo "chmod 666 /home/m1/6_autotemplog"
+chmod 666 /home/m1/6_autotemplog
+echo "chmod 666 /home/m1/5_watchdoglog"
+chmod 666 /home/m1/5_watchdoglog
 
 sleep 1;echo "";echo ""
 
@@ -292,6 +300,6 @@ fi
 sleep 1;echo "";echo ""
 
 echo "All Done"
-echo "Old 1bash, 3main, wdog and temp are copied to /home/m1/backups/*.bak"
+echo "Old 1bash, 3main, wdog and temp are copied to /home/m1/backups/old_to_19.2/*.bak"
 echo "Edit your 1bash then reboot your rig"
 echo "Keep Calm and Carry on Mining"

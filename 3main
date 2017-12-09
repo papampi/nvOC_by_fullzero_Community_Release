@@ -649,7 +649,7 @@ then
     Scrypt_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
     Sia_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
     Skein_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto5
   else
     pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
     pwr_lim_equihash=$equihash_POWERLIMIT_WATTS

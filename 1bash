@@ -19,6 +19,7 @@
 #          Alternative telegram alert
 # damNmad BTC address:  1Mtf6K7c3ZhBDcPz91c4wcQ95DxLn88zC
 
+
 # IAmNotAJeep: IAmNotAJeep_and_Maxximus007_WATCHDOG
 #              Methods for improved system stability
 # IAmNotAJeep BTC address:  13PnEKpfVzNseWkrm6LoueKcCMPj74zPv7
@@ -243,7 +244,7 @@ upPASTE_TIMEOUT_IN_MINUTES=60
 
 CLEAR_LOGS_ON_BOOT="NO"        	# YES NO
 LOG_ROTATE="YES"
-LOG_ROTATE_INTERVAL=3 # Time between log rotations in hours
+LOG_ROTATE_INTERVAL="3" # Time between log rotations in hours
 
 
 # kk003's video tutorial how to create a telegram bot and get Api Key + User Id:
@@ -254,7 +255,7 @@ BaliMiner_TELEGRAM_ALERTS="NO"
 
 TELEGRAM_TYPE="papampi" # kk003 or papampi or damNmad or BaliMiner
 
-TELEGRAM_TIMEOUT_IN_MINUTES=30
+TELEGRAM_TIMEOUT_IN_MINUTES="60"
 
 TELEGRAM_CHATID="CHATID"
 
@@ -900,6 +901,7 @@ MEMORY_OVERCLOCK_18=100
 
 
 # OC settings you can use based on COIN or ALGO (how ever you want to categorize them)
+## Deafault values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
 
 if [ $ALGO_SPECIFIC_OC == "YES" ]
 then

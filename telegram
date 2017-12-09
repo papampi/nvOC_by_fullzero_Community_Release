@@ -67,8 +67,8 @@ then
   REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "Yes!!!" || echo "No")
   GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | tr '\n' '   ')
   TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/6_autotemplog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g')
-  WDOG_WARNINGS=$(tail -10 /home/m1/7_wdog_alertlog |grep WARNING)
-  TEMP_WARNINGS=$(tail -10 /home/m1/7_temp_alertlog |grep WARNING)
+  WDOG_WARNINGS=$(tail -10 /home/m1/5_watchdoglog )
+  TEMP_WARNINGS=$(tail -10 /home/m1/6_autotemplog )
 
   if [[ -n  $(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}') ]]
   then
