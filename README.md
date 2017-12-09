@@ -26,7 +26,11 @@ Thanks to all contributors, testers and nvOC community.
 
 Special thanks to fullzero for creating the best mining OS.
 
+
 nvOC resources:
+
 http://nvoc-mining-os.com/
+
 https://bitcointalk.org/index.php?topic=1854250.0
+
 https://discord.gg/8YDFEvY
