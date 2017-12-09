@@ -221,7 +221,7 @@ while true; do
       echo "" | tee -a ${LOG_FILE}; echo "" | tee -a ${LOG_FILE}
       echo "WARNING: $(date) - Problem found: See diagnostics below:" | tee -a ${LOG_FILE}
       nvidia-smi --query-gpu=name,pstate,temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv | tee -a ${LOG_FILE}
-      tail -15 ~/screenlog.0 | tee -a ${LOG_FILE}
+      tail -15 /home/m1/nvoc_logs/screenlog.0 | tee -a ${LOG_FILE}
 
       # If we have had 4 miner restarts and still have low utilization
       if [[ $RESTART -gt 4 ]]
