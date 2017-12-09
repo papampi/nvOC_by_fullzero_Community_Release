@@ -1,5 +1,5 @@
 #!/bin/bash
-echo " nvOC by fullzero, Unofficial V0019-2.0 - community release"
+echo " nvOC by fullzero, V0019-2.0 - Community Release"
 echo " Backup your old 1bash and any important stuff"
 sleep 5
 
