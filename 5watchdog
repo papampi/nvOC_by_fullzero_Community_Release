@@ -124,7 +124,7 @@ while true; do
   if [[  $WTM_AUTO_SWITCH  ==  "YES"  ]] || [[ $WTM_PROFIT_CHECK == "YES" ]]
   then
     WTM_S_PID=$(ps -ef | grep WTM_SWITCHER | grep -v grep |awk '{print $2}')
-    if  [[ -n $WTM_A_S_PID ]]
+    if  [[ -n $WTM_S_PID ]]
     then
       WTM_S_PID_TIME=$(ps -eo pid,etimes | grep $WTM_S_PID | awk  '$2> 30 { print $1}')
       echo "WTM Switcher Syncing"
