@@ -308,8 +308,8 @@ touch /home/m1/.bash_aliases
 if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log) ]]
 then
   echo "Adding master-log alias"
-  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/5_watchdoglog /home/m1/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
-  echo "type master-log in guake or ssh sessions, to watch all your logs live"
+  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/tempcontrol-screenlog.0 /home/m1/nvoc_logs/watchdog-screenlog.0 /home/m1/5_watchdoglog /home/m1/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
+  echo "If local_or_remote=remote, run master-log in guake or ssh sessions, to watch all your logs live"
   echo " "
   sleep 5
 fi
@@ -318,7 +318,7 @@ if [[ -z  $(cat /home/m1/.bash_aliases | grep miner-restart) ]]
 then
   echo "Adding miner-restart alias"
   echo "alias miner-restart='pkill -f 5watchdog && pkill -f 3main'" | tee -a /home/m1/.bash_aliases
-  echo "type miner-restart in guake or ssh sessions, to restart 3main"
+  echo "run miner-restart in guake or ssh sessions, to restart 3main"
   echo " "
   sleep 5
 fi
