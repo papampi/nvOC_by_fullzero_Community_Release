@@ -352,7 +352,7 @@ then
   then
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -dmS temp bash /home/m1/6tempcontrol
+      screen -dmSL temp bash /home/m1/6tempcontrol
       echo ""
       echo "process in screen temp; attach with: screen -r temp"
       echo ""
@@ -380,7 +380,7 @@ then
     fi
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -dmS wdog bash /home/m1/5watchdog
+      screen -dmSL wdog bash /home/m1/5watchdog
       echo ""
       echo "process in screen wdog; attach with: screen -r wdog"
       echo ""
@@ -1014,7 +1014,7 @@ then
           running=""
         elif [ $LOCALorREMOTE == "REMOTE" ]
         then
-          screen -dmS wdog bash /home/m1/5watchdog
+          screen -dmSL wdog bash /home/m1/5watchdog
           echo "LAUNCHING:  MINER WATCHDOG"
           echo ""
           echo "process in screen wdog; attach with: screen -r wdog"
