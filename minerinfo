@@ -25,8 +25,8 @@ MINER_PID=$(pgrep -f -o  miner)
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
 TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/6_autotemplog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
-TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/7_temp_alertlog | grep WARNING | awk '{print $0,"<br>"}')
-WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/7_wdog_alertlog | grep WARNING | awk '{print $0,"<br>"}')
+TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/6_autotemplog | awk '{print $0,"<br>"}')
+WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/5_watchdoglog | awk '{print $0,"<br>"}')
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
 
 if [ $MINER_TEMP_CONTROL == "YES" ]
