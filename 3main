@@ -1039,6 +1039,29 @@ then
         fi
       fi
     fi
+
+    if [ $WTM_AUTO_SWITCH == "YES" ]
+    then
+      echo ""
+      echo "LAUNCHING:  WTM AUTO SWITCH "
+      echo ""
+      cat <<EOF >/home/m1/WTM.json
+{
+ "WTM_URL": "$WTM_AUTO_SWITCH_URL",
+ "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+ "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
+ "currency":"$WTM_CURRENCY"
+}
+EOF
+      HCD='/home/m1/8wtm_auto_switch'
+      running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
+      if [ "$running" == "" ]
+      then
+        guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
+        running=""
+      fi
+    fi
+
     reup=0
     running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
 
@@ -1078,29 +1101,6 @@ then
       fi
     fi
 
-
-    if [ $WTM_AUTO_SWITCH == "YES" ]
-    then
-      echo ""
-      echo "LAUNCHING:  WTM AUTO SWITCH "
-      echo ""
-      cat <<EOF >/home/m1/WTM.json
-{
- "WTM_URL": "$WTM_AUTO_SWITCH_URL",
- "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
- "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
- "currency":"$WTM_CURRENCY"
-}
-EOF
-      HCD='/home/m1/8wtm_auto_switch'
-      running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
-      if [ "$running" == "" ]
-      then
-        guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
-        running=""
-      fi
-    fi
-
   elif [ $AUTO_START_MINER == "NO" ]
   then
     echo "    "
@@ -1119,3 +1119,4 @@ while true
 do
   sleep 60
 done
+
