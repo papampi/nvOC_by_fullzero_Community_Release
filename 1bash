@@ -247,6 +247,12 @@ threadCOUNT="1"             # Number of CPU threads to use for plusCPU mining. P
 
 
 
+CONTROL_GPU_LED="YES"       # YES or NO # Control GPU LED light. NOTE: It only works on some models
+
+LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OFF, 100 = full brightness
+
+
+
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
 
