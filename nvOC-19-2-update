@@ -366,7 +366,8 @@ echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tem
 cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tempcontrol
 echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog"
 cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog
-
+echo "cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC"
+cp /home/m1/Downloads/nvOC-19-2/ext/nvOC /home/m1/nvOC
 
 sleep 1;echo "";echo ""
 
@@ -388,8 +389,10 @@ echo "chmod 666 /home/m1/6_autotemplog"
 chmod 666 /home/m1/6_autotemplog
 echo "chmod 666 /home/m1/5_watchdoglog"
 chmod 666 /home/m1/5_watchdoglog
-
+echo "chmod a+x /home/m1/nvOC"
+chmod a+x /home/m1/nvOC
 sleep 1;echo "";echo ""
+
 
 touch /home/m1/.bash_aliases
 if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log) ]]
