@@ -359,8 +359,8 @@ echo "touch /home/m1/5_watchdoglog"
 touch /home/m1/5_watchdoglog
 echo "touch /home/m1/6_autotemplog"
 touch /home/m1/6_autotemplog
-echo "touch /home/m1/WTM_switch_histrory"
-touch /home/m1/WTM_switch_histrory
+echo "touch /home/m1/WTM_switch_history"
+touch /home/m1/WTM_switch_history
 echo "touch /home/m1/nvoc_logs/screenlog.0"
 touch /home/m1/nvoc_logs/screenlog.0
 echo "chmod 666 /home/m1/nvoc_logs/*"
