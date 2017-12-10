@@ -78,7 +78,7 @@ GPUinfo()
          1462) VENDOR_ID="MSI";;
          10DE) VENDOR_ID="NVIDIA";;
          19DA) VENDOR_ID="ZOTAC";;
-         807D) VENDOR_ID="ASUS";;
+         807D|1043) VENDOR_ID="ASUS";;
          1458) VENDOR_ID="GIGABYTE";;
       esac
       
