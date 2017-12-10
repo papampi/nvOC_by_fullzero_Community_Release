@@ -61,8 +61,7 @@ Clearlogs()
    > /home/m1/nvoc_logs/screenlog.0
    > /home/m1/current-profit
    > /home/m1/algo-log
-   > /home/m1/7_wdog_alertlog
-   > /home/m1/7_temp_alertlog
+
 
    rm -r /home/m1/kk003_telegram_data > /dev/null 2>&1
    
