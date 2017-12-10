@@ -321,11 +321,6 @@ echo "Copying updates"
 
 sleep 1;echo "";echo ""
 
-if [[ -z $(head /home/m1/1bash | grep '19.2\|19-2' ) ]]; then
-  echo "cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash"
-  cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
-fi
-
 echo "cp /home/m1/Downloads/nvOC-19-2/2unix /home/m1/2unix"
 cp /home/m1/Downloads/nvOC-19-2/2unix /home/m1/2unix
 echo "cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner"
@@ -395,6 +390,22 @@ then
   echo " "
   sleep 5
 fi
+
+
+if [[ -z $(head /home/m1/1bash | grep '19.2\|19-2' ) ]]; then
+  echo "1bash is not V0019-2"
+  echo "cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash"
+  cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
+elif [[ -z $(head /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
+  echo "";echo ""
+  echo "Your 1bash is not latest version"
+  echo "New 1bash v0019-2.0.001 available in /home/m1/Downloads/nvOC-19-2/1bash"
+  echo "Dont forget to update your 1bash for all the latest updates take effect"
+  sleep 2;echo "";echo ""
+else
+  echo " 1bash latest version"
+fi
+
 
 sleep 1;echo "";echo ""
 
