@@ -46,22 +46,11 @@ Clearlogs()
    sudo su -c "> /var/log/syslog"
    sudo su -c "> /var/log/Xorg.0.log"
    sudo su -c "> /var/log/kern.log"
-   sudo rm /var/log/*.gz
-   sudo rm /var/log/*.old
-   sudo rm /var/log/*.1
-   sudo rm /var/log/*/*.gz
-   sudo rm /var/log/*/*.old
-   sudo rm /var/log/*/*.1
 
    > /home/m1/5_watchdoglog
    > /home/m1/6_autotemplog
-   > /home/m1/nvoc_logs/8_wtmautoswitchlog
-   > /home/m1/nvoc_logs/watchdog-screenlog.0
-   > /home/m1/nvoc_logs/tempcontrol-screenlog.0
-   > /home/m1/nvoc_logs/screenlog.0
    > /home/m1/current-profit
    > /home/m1/algo-log
-
 
    rm -r /home/m1/kk003_telegram_data > /dev/null 2>&1
    
@@ -75,7 +64,7 @@ GPUinfo()
    DEVICE_IDS=$(nvidia-smi --query-gpu=pci.sub_device_id --format=csv,noheader,nounits)
    i=0
 
-   echo "ID,VENDOR,MODEL,TEMP,FAN,UTILIZATION,POWER,POWERLIMIT,MAXPOWER,GPUCLOCK,MEMCLOCK"
+   echo "ID,VENDOR,MODEL,PSTATE,TEMP,FAN,UTILIZATION,POWER,POWERLIMIT,MAXPOWER,GPUCLOCK,MEMCLOCK"
    echo "--------------------------------------------------------------------------------"              
    
    for ID in $DEVICE_IDS
@@ -94,7 +83,7 @@ GPUinfo()
       esac
       
       # Get most GPU info here
-      { IFS=', ' read CURRENT_TEMP CURRENT_FAN UTILIZATION POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $i --query-gpu=temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv,noheader,nounits)
+      { IFS=', ' read PSTATE CURRENT_TEMP CURRENT_FAN UTILIZATION POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $i --query-gpu=pstate,temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv,noheader,nounits)
       
       # Some GPU info requires special tactics
       MODEL=$(nvidia-smi -i $i --query-gpu=name --format=csv,noheader,nounits | tail -1)
@@ -106,7 +95,7 @@ GPUinfo()
       #   uncomment this line if you want it displayed that way 
 #      MEMCLOCK=$(($MEMCLOCK * 2))
 
-      echo "$i,$VENDOR_ID,$MODEL,$CURRENT_TEMP,$CURRENT_FAN,$UTILIZATION,$POWERDRAW,$PWRLIMIT,$POWERMAX,$GPUCLOCK,$MEMCLOCK"
+      echo "$i,$VENDOR_ID,$MODEL,$PSTATE,$CURRENT_TEMP,$CURRENT_FAN,$UTILIZATION,$POWERDRAW,$PWRLIMIT,$POWERMAX,$GPUCLOCK,$MEMCLOCK"
       
       i=$(($i + 1))
    done
@@ -128,7 +117,7 @@ Patch()
    echo "Applying patches/updates..."; echo ""
    
    # Apply patches
-   -- sh -c 'apt-get update; apt-get upgrade -y; apt-get dist-upgrade -y; apt-get autoremove -y; apt-get autoclean -y; apt-get install libutempter0 -y'
+   sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
    
    echo ""; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
 }
@@ -145,8 +134,11 @@ Reboot()
 ############################### Start nvOC ####################################
 Start()
 {
-   #TODO: Is there some other way that just rebooting?
-   ~/nvOC restart
+    if [ $LOCALorREMOTE == "LOCAL" ];then
+       gnome-terminal
+    else   
+       ~/nvOC reboot
+    fi   
 }
 
 ############################### Stop nvOC ####################################
@@ -156,10 +148,11 @@ Stop()
    
    # Kill off the nv_OC processes
    pkill -f gnome-terminal
-   pkill -f DOG
-   pkill -f GRAM
-   pkill -f TEMP
+   pkill -f 5watchdog > /dev/null 2>&1
+   pkill -f BaliMiner_TELEGRAM_ALERTS
+   pkill -f 6tempcontrol
    pkill -e screen
+   pkill -f 8wtm
    
    echo ""; echo "...done."
 }
@@ -189,3 +182,5 @@ case $# in
       esac;;
    *) echo_usage;;
 esac  
+
+
