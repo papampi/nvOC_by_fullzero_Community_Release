@@ -1,13 +1,20 @@
 #!/bin/bash
 
-# Watchdog v0019-2.0
-# by papampi, Stubo and leenoox
-# based on the original code - Miner restart script by Maxximus007 && IAmNotAJeep
-# for nvOC by fullzero
-#
-# DEV_VERSION=0007
-#
-# Mod Log:
+##########################################################################
+##########################################################################
+#################   nvOC v0019-2.0 - Community Release   #################
+##############        by papampi, Stubo and leenoox         ##############
+##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
+##########################################################################
+##########################################################################
+
+
+nvOC_wdog_ver="v0019-2.0.009"   # Do not edit this
+
+# Watchdog for nvOC v0019-2.0
+
+
+# DEV Mod Log:
 #
 # v=0001 : Stubo: Initial Revision
 # v=0002 : Papampi: Add dynamic wait times, Not send telegram for every switch,
@@ -30,10 +37,10 @@
 # v=0007 : Stubo: Added echo of utilization and gpu counts as user feedback
 # v=0008 : Papampi: Removed MINER_TIME to comply with changes in 3main (Moving watchdog before miner starts)
 #          Added check and restart miner after internet comes back online
-
-
-# Good read ;)    Why is $(...) preferred over `...` (backticks)?
-# http://mywiki.wooledge.org/BashFAQ/082
+# v=0009 : leenoox: Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
+#
+#
+# DEV_VERSION=0009
 
 
 export DISPLAY=:0
@@ -145,24 +152,48 @@ while true; do
     { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
 
     # Numeric check: if any are not numeric, we have a mining problem
-    if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
-      # Not numeric so: Help we've lost a GPU, so reboot
-      echo "$(date) - Lost GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
-      echo ""
-      # Hope PCI BUS info will help find the faulty GPU
-      nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
-      echo "$(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
-      echo ""
-      if [[ $BaliMiner_TELEGRAM_ALERTS == "YES" ]]; then
-        bash '/home/m1/telegram'
+
+    # Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
+    if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]; then
+      if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
+        # Not numeric so: Help we've lost a GPU, so reboot
+        echo "$(date) - Lost GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
+        echo ""
+        # Hope PCI BUS info will help find the faulty GPU
+        nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
+        echo "$(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
+        echo ""
+        if [[ $BaliMiner_TELEGRAM_ALERTS == "YES" ]]; then
+          bash '/home/m1/telegram'
+        fi
+        sleep 10
+        sudo reboot
+      elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
+      then
+        echo "$(date) - GPU $GPU under threshold found - GPU UTILIZATION:  " $UTIL
+        COUNT=$(($COUNT - 1))
+        NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
       fi
-      sleep 10
-      sudo reboot
-    elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
-    then
-      echo "$(date) - GPU $GPU under threshold found - GPU UTILIZATION:  " $UTIL
-      COUNT=$(($COUNT - 1))
-      NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
+    else
+      if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
+        # Not numeric so: Help we've lost a GPU, so reboot
+        echo "$(date) - Lost GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
+        echo ""
+        # Hope PCI BUS info will help find the faulty GPU
+        nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
+        echo "$(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
+        echo ""
+        if [[ $BaliMiner_TELEGRAM_ALERTS == "YES" ]]; then
+          bash '/home/m1/telegram'
+        fi
+        sleep 10
+        sudo reboot
+      elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
+      then
+        echo "$(date) - GPU $GPU under threshold found - GPU UTILIZATION:  " $UTIL
+        COUNT=$(($COUNT - 1))
+        NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
+      fi
     fi
 
     sleep 0.2    # 0.2 seconds delay until querying the next GPU
