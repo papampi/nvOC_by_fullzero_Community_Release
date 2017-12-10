@@ -1,9 +1,16 @@
 #!/bin/bash
 
-# 3main for nvOC v0019-2.0 - community release
-# by papampi, Stubo and leenoox
-# based on the original code from nvOC v0019-1.4 by fullzero
-#
+##########################################################################
+##########################################################################
+#################   nvOC v0019-2.0 - Community Release   #################
+##############        by papampi, Stubo and leenoox         ##############
+##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
+##########################################################################
+##########################################################################
+
+
+# 3main for v0019-2.0
+
 #
 # Dev Mod Log:
 #
@@ -15,13 +22,18 @@
 #          bug fix - INDIVIDUAL settings were applied to GPU's 0-13 only. Fixed to work with 0-18
 #          code optimization
 #
+# v=0003 : leenoox
+#          added GPU LED Logo brightness control
 #
-# DEV_VERSION=0002
+#
+# DEV_VERSION=0003
 
 
 source /home/m1/1bash
 
-nvOC_ver="nvOC v0019-2.0 - community release"
+nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
+nvOC_3main_ver="v0019-2.0.003"                  # Do not edit this
+
 
 
 #########################################################################
@@ -35,6 +47,10 @@ echo ""
 echo ""
 
 sudo ldconfig /usr/local/cuda/lib64
+
+GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+
+NVD=nvidia-settings
 
 SALFTER="NO"
 
@@ -182,6 +198,11 @@ then
   export GPU_MAX_ALLOC_PERCENT="100"
   echo ""
   echo ENVIRONMENTAL VARIBLES SET
+fi
+
+if [ $CONTROL_GPU_LED == "YES" ]
+then
+  ${NVD} -a GPULogoBrightness=$LED_BRIGHTNESS
 fi
 
 if [ $POWERLIMIT == "YES" ]
@@ -400,10 +421,6 @@ if [ "$FAN_SPEED" -lt "40" ]
 then
   FAN_SPEED=40
 fi
-
-GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
-
-NVD=nvidia-settings
 
 if [[ $WTM_PROFIT_CHECK == "YES" ]] && [[ $WTM_AUTO_SWITCH == "NO" ]]
 then
