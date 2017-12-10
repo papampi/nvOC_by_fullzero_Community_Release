@@ -3,7 +3,7 @@ Miner Updates/Additions:
   tpruvot/ccminer v. 0.2.3
   krnlx/ccminer-xevan latest
   KlausT/ccminer v. 0.8.15
-  Claymore 10.02
+  Claymore 10.2
    
 3main edits :
   Removed the infinite loops and put one at the end to cover all mining blocks (stubo)
@@ -21,12 +21,14 @@ Miner Updates/Additions:
   Bug fix - $pwr_lim_daggerhashimoto5 corrected to $pwr_lim_daggerhashimoto (leenoox)
   Bug fix - INDIVIDUAL settings were applied to GPU's 0-13 only. Fixed to work with 0-18 (leenoox)
   Partial code cleanup (leenoox)
+  Added GPU LED Logo brightness control (leenoox)
 
 1bash edits:
   Added EWBF_OPTS and ZM_OPTS for telemetry/api to EWBF and ZM miner (stubo)
   Added MINER_PWD for miner passwords (stubo)
   Unified and separated all pool address and pool ports so wdog can check if pool is up or no if needed (papampi)
   Updated contributors list and release name (leenoox)
+  Reformat and clean-up (leenoox)
 
 wdog edits:
   Added check if miner is running or not when utilization dropped to restart miner faster (stubo)
@@ -39,6 +41,7 @@ wdog edits:
   Changed sleep time before wdog goin on watch to be based on gpu counts (papampi)
   Set higher process and disk I/O priorities - watchdog is essential service
   Code optimization (leenoox)
+  Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi (leenoox)
 
 temp control (by leenoox):
   Set higher process and disk I/O priorities - Temp control is essential service
@@ -50,6 +53,7 @@ temp control (by leenoox):
   New (improved) display output including colors and bold text
   Fixed the log file handling (Bug fix: Previous implemantation was not limiting the file size)
   Removed repetitive GPUFanControlState setting, it only needs to be set once, not every cycle (prevent API overload)
+  Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
 
 nvOC utility (by stubo):
   New function based utility that has many features including gpuinfo, stop, start, clearlogs, restart, etc.
