@@ -1,9 +1,16 @@
 #!/bin/bash
 
-# Auto temperature control for nvOC v0019-2 unofficial release by papampi
+##########################################################################
+##########################################################################
+#################   nvOC v0019-2.0 - Community Release   #################
+##############        by papampi, Stubo and leenoox         ##############
+##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
+##########################################################################
+##########################################################################
 
-# TEMP_CONTROL mod by leenoox
-# for nvOC by fullzero
+nvOC_temp_ver="v0019-2.0.005"   # Do not edit this
+
+# TEMP_CONTROL for nvOC v0019-2.0 by leenoox
 #
 # Based on the original code by Maxximus007
 #
@@ -17,13 +24,12 @@
 # New (improved) display output including colors and bold text
 # Fixed the log file handling (Bug fix: Previous implemantation was not limiting the file size)
 # Removed repetitive GPUFanControlState setting, it only needs to be set once, not every cycle (prevent API overload)
+# Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
 #
 # TODO:
 # Telegram implementation
 # Further code optimization
 
-
-TEMP_VER="0.4"
 
 export DISPLAY=:0
 
@@ -87,7 +93,7 @@ echo ""
 for i in {16..21} ; do
   echo -en "\e[48;5;${i}m "
 done
-echo -en "${B}TEMP_CONTROL $TEMP_VER by leenoox${N}"  
+echo -en "${B}TEMP_CONTROL $nvOC_temp_ver by leenoox${N}"  
 for i in {21..16} ; do
   echo -en "\e[48;5;${i}m \e[0m"
 done
@@ -196,26 +202,49 @@ while true; do
     { IFS=', ' read CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
-    if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
-      # Not numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
-      while [ $ERR_TIMER -gt 0 ]; do
-        echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
-        sleep 15
-        { IFS=', ' read CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
-        if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
-          ERR_TIMER=$(($ERR_TIMER - 15))
-        else
-          ERR_TIMER=$ERR_TIMER_BRK
-          break
-        fi
-        if [ $ERR_TIMER -le 0 ]; then
-          echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System rebooted by the TEMP_CONTROL to correct the problem!" | tee -a ${LOG_FILE} ${WD_LOG_FILE}
-          sleep 3
-          sudo reboot
-        fi
-      done
-    fi
 
+    # Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
+    if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]; then
+      if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
+        # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
+        while [ $ERR_TIMER -gt 0 ]; do
+          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
+          sleep 15
+          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit --format=csv,noheader,nounits)
+          if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
+            ERR_TIMER=$(($ERR_TIMER - 15))
+          else
+            ERR_TIMER=$ERR_TIMER_BRK
+            break
+          fi
+          if [ $ERR_TIMER -le 0 ]; then
+            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System rebooted by the TEMP_CONTROL to correct the problem!" | tee -a ${LOG_FILE} ${WD_LOG_FILE}
+            sleep 3
+            sudo reboot
+          fi
+        done
+      fi
+    else
+      if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
+        # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
+        while [ $ERR_TIMER -gt 0 ]; do
+          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
+          sleep 15
+          { IFS=', ' read CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
+          if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
+            ERR_TIMER=$(($ERR_TIMER - 15))
+          else
+            ERR_TIMER=$ERR_TIMER_BRK
+            break
+          fi
+          if [ $ERR_TIMER -le 0 ]; then
+            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System rebooted by the TEMP_CONTROL to correct the problem!" | tee -a ${LOG_FILE} ${WD_LOG_FILE}
+            sleep 3
+            sudo reboot
+          fi
+        done
+      fi
+    fi
 
     POWERLIMIT=${PWRLIMIT%%.*}
     TEMP_DIFF=$((${TARGET_TEMP[${GPU}]} - $CURRENT_TEMP))
