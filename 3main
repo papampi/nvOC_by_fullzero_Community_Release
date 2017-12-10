@@ -9,11 +9,11 @@
 #
 # v=0001 : papampi and Stubo:
 #          bug fixes, code clean-up, optimizations and split into 2 files: 3main and 0miner
-#                     
+#
 # v=0002 : leenoox
 #          bug fix - $pwr_lim_daggerhashimoto5 > $pwr_lim_daggerhashimoto
 #          bug fix - INDIVIDUAL settings were applied to GPU's 0-13 only. Fixed to work with 0-18
-#          code optimization 
+#          code optimization
 #
 #
 # DEV_VERSION=0002
@@ -108,7 +108,7 @@ then
 fi
 
 # dev note by leenoox:
-# I don't see the relevance of this code, if the previous check for 28800 fails, but this one passes, it 
+# I don't see the relevance of this code, if the previous check for 28800 fails, but this one passes, it
 # will mistakenly set XORG="OK" even though the check for 28800 failed. This needs to be revisited
 if [ $P106_100 == "YES" ]
 then
@@ -352,7 +352,7 @@ then
   then
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -dmS temp bash /home/m1/6tempcontrol
+      screen -c /home/m1/screenrc-tempcontrol -dmSL temp bash /home/m1/6tempcontrol
       echo ""
       echo "process in screen temp; attach with: screen -r temp"
       echo ""
@@ -380,7 +380,7 @@ then
     fi
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -dmS wdog bash /home/m1/5watchdog
+      screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
       echo ""
       echo "process in screen wdog; attach with: screen -r wdog"
       echo ""
@@ -1014,7 +1014,7 @@ then
           running=""
         elif [ $LOCALorREMOTE == "REMOTE" ]
         then
-          screen -dmS wdog bash /home/m1/5watchdog
+          screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
           echo "LAUNCHING:  MINER WATCHDOG"
           echo ""
           echo "process in screen wdog; attach with: screen -r wdog"

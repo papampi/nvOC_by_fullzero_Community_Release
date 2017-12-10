@@ -1,9 +1,7 @@
 #!/bin/bash
-echo " nvOC by fullzero, unofficial 19.2 by papampi"
-echo " Edits by papampi : Making tmpfs partition for log files to reduce SSD/USB/HDD read /writes, added option to auto start miner or not in 1bash, new 1bash for unified and separated pool and ports for wdog checking if pool is online, new separated 0miner to make 3main lighter and easier start miner, fix hostname conflict, add Warning to wdog and temp logs to ,  and many more edits and bug fixes"
-echo " Edits by Stubo: simplified 3main, some wdog fixes, add dstm zm 5_6 version, Claymore version 10.02 and many more edits and bug fixes."
-echo " Edits by leenoox: New and improved TEMP CONTROL, and many more fixes and suggestions."
+echo " nvOC by fullzero, V0019-2.0 - Community Release"
 echo " Backup your old 1bash and any important stuff"
+sleep 5
 
 
 if [[ -z $(head /home/m1/1bash | grep v0019.2) ]]; then
@@ -27,7 +25,7 @@ sleep 1;echo "";echo ""
 
 echo "wait 30 seconds, if you have not edited your new 1bash or not backed up yet HIT ctrl+c NOW"
 sleep 1;echo "";echo ""
-echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FININSHD AND EDITED YOUR NEW 1BASH"
+echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FINISHED AND EDITED YOUR NEW 1BASH"
 echo "";echo ""
 sleep 30;echo "";echo ""
 
@@ -87,7 +85,7 @@ sleep 1;echo "";echo ""
 if [[ -z  $(cat /etc/screenrc | grep nvoc_log) ]]
 then
   echo "Moving miner screenlog.o to tmpf to lower disk read/writes"
-  echo "sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc"
+  echo "sudo echo logfile  /home/m1/nvoc_logs/screenlog.0 | sudo tee -a  /etc/screenrc"
   sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc
   sleep 1;echo "";echo ""
 else
@@ -102,7 +100,7 @@ then
   sleep 1;echo "";echo ""
   echo "mkdir -p /home/m1/nvoc_logs"
   mkdir -p /home/m1/nvoc_logs
-  echo "sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab"
+  echo "sudo echo tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0 | sudo tee -a   /etc/fstab"
   sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab
   echo "sudo mount -a"
   sudo mount -a
@@ -168,6 +166,28 @@ echo "chmod a+x /home/m1/eth/claymore/*/ethdcrminer64"
 chmod a+x  /home/m1/eth/claymore/latest/ethdcrminer64
 
 sleep 1;echo "";echo ""
+
+echo "Downloading and making changes new miners"
+sleep 1;echo "";echo ""
+echo "cd /home/m1/Downloads"
+cd /home/m1/Downloads
+echo "wget -c http://www.cstone.net/~stu/nvOC/miners/19-2_miners.tar.gz"
+wget -c http://www.cstone.net/~stu/nvOC/miners/19-2_miners.tar.gz
+echo "Extracting miners"
+tar -xvzf 19-2_miners.tar.gz
+echo "rm /home/m1/Downloads/19-2_miners.tar.gz"
+rm /home/m1/Downloads/19-2_miners.tar.gz
+echo "mv /home/m1/Downloads/19-2_miners/KTccminer/ /home/m1/KTccminer/"
+mv /home/m1/Downloads/19-2_miners/KTccminer/ /home/m1/KTccminer/
+echo "mv /home/m1/Downloads/19-2_miners/KXccminer-xevan/ /home/m1/KXccminer-xevan/"
+mv /home/m1/Downloads/19-2_miners/KXccminer-xevan/ /home/m1/KXccminer-xevan/
+echo "mv /home/m1/Downloads/19-2_miners/TPccminer/ /home/m1/TPccminer/"
+mv /home/m1/Downloads/19-2_miners/TPccminer/ /home/m1/TPccminer/
+
+echo "Moving KXccminer to KXccminer-skunk"
+echo "mv  /home/m1/KXccminer /home/m1/KXccminer-skunk"
+mv  /home/m1/KXccminer /home/m1/KXccminer-skunk
+
 
 cd /home/m1/Downloads
 rm /home/m1/Downloads/nvOC-19-2.tar.gz
@@ -255,6 +275,10 @@ echo "cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_che
 cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_check
 echo "cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER"
 cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER
+echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tempcontrol"
+cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tempcontrol
+echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog"
+cp /home/m1/Downloads/nvOC-19-2/ext/screenrc-watchdog /home/m1/screenrc-watchdog
 
 
 sleep 1;echo "";echo ""
@@ -284,17 +308,19 @@ touch /home/m1/.bash_aliases
 if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log) ]]
 then
   echo "Adding master-log alias"
-  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/5_restartlog /home/m1/nvoc_logs/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
-  echo "type master-log in guake or ssh sessions, to watch all your logs live"
+  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/tempcontrol-screenlog.0 /home/m1/nvoc_logs/watchdog-screenlog.0 /home/m1/5_watchdoglog /home/m1/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
+  echo "If local_or_remote=remote, run master-log in guake or ssh sessions, to watch all your logs live"
   echo " "
+  sleep 5
 fi
 
 if [[ -z  $(cat /home/m1/.bash_aliases | grep miner-restart) ]]
 then
   echo "Adding miner-restart alias"
-  echo "alias miner-restart='pkill -f WATCHDOG & pkill -f 3main'" | tee -a /home/m1/.bash_aliases
-  echo "type miner-restart in guake or ssh sessions, to restart 3main"
+  echo "alias miner-restart='pkill -f 5watchdog && pkill -f 3main'" | tee -a /home/m1/.bash_aliases
+  echo "run miner-restart in guake or ssh sessions, to restart 3main"
   echo " "
+  sleep 5
 fi
 
 sleep 1;echo "";echo ""
