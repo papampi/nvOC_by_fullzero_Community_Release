@@ -1,5 +1,6 @@
 #!/bin/bash
-# whttomine.com auto switch for nvOC by fullzero , v0019.2 unofficial by papampi
+# whattomine.com auto switch by papampi
+# for nvOC v0019-2.0 - Community Release
 # Feel free to use, change, edit and do what you want with it.
 
 source /home/m1/1bash
@@ -26,7 +27,11 @@ do
     python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json  | tee -a $LOG_FILE
     sleep 5
 
-    CURRENT_COIN=$(cat /home/m1/1bash | grep COIN= | grep -v "#COIN=" | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+    # leenoox mod:
+    # CURRENT_COIN=$(cat /home/m1/1bash | grep COIN= | grep -v "#COIN=" | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+    source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
+    CURRENT_COIN=$COIN
+
     TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
@@ -42,7 +47,7 @@ do
 
       if  [[ $ALGO_SPECIFIC_OC == "NO" ]]
       then
-        echo "Switching Coin with Algo_OC=No, Restarting miner" | tee -a $LOG_FILE
+        echo "Switching Coin with ALGO_SPECIFIC_OC=NO, Restarting miner" | tee -a $LOG_FILE
         echo "" | tee -a $LOG_FILE
 
         while [[ -z  $(ps ax | grep -i screen | grep miner) ]]
@@ -78,7 +83,7 @@ do
 
       elif [[ $ALGO_SPECIFIC_OC == "YES"  ]]
       then
-        echo "Switching Coin with ALGO_OC=YES, Restart 3main"  | tee -a $LOG_FILE
+        echo "Switching Coin with ALGO_SPECIFIC_OC=YES, Restart 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
         pkill -f 3main
       fi
