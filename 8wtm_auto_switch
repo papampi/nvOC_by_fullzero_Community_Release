@@ -5,7 +5,6 @@
 
 wtm_auto_switch_ver="v0019-2.0.005"   # Do not edit this
 
-
 source /home/m1/1bash
 
 # Creating a log file to record coin switch
@@ -38,7 +37,6 @@ do
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
 
-
     if [ $ALGO_SPECIFIC_OC == "YES" ]; then
       # Neoscrypt
       if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" -o $TOP_COIN == "VIVO" -o $TOP_COIN == "TZC" ]; then
@@ -69,7 +67,6 @@ do
         TOP_COIN_ALGORITHM="LYRA2V2"
       fi
     fi
-
 
     if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]; then
       sed -i 's/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
