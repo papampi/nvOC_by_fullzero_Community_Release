@@ -1,5 +1,6 @@
 #!/bin/bash
-# whttomine.com profit check for nvOC by fullzero , v0019.2 unofficial by papampi
+# whattomine.com profit check by papampi
+# for nvOC v0019-2.0 - Community Release
 
 source /home/m1/1bash
 
@@ -16,7 +17,10 @@ do
 
   python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json | tee -a $LOG_FILE
   sleep 5
-  CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+  # leenoox mod:
+  # CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+  source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
+  CURRENT_COIN=$COIN
   TOP_COIN=$(cat WTM_top_coin | grep : | sed 's/:[0-9][0-9]//' | sed 's/[0-9]//')
   TIMEIN=$WTM_PROFIT_CHECK_INTERVAL
   TIMEOUT=$(($TIMEIN * 60))
