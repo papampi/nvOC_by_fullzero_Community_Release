@@ -4,14 +4,13 @@ echo " Backup your old 1bash and any important stuff"
 sleep 5
 
 
-if [[ -z $(head /home/m1/1bash | grep '19.2\|19-2') ]]; then
+if [[ -z $(head  -n 50  /home/m1/1bash | grep '19.2\|19-2') ]]; then
   echo "First things first, your 1bash is old, lets put the new 1bash to Downloads folder"
-  while [[ -e /home/m1/Downloads/1bash  ]]
-  do
-    echo "There is a 1bash in Downloads folder, move it to some where else"
-    echo "Waiting 30 seconds to move it"
-    sleep 30
-  done
+  if [[ -e /home/m1/Downloads/1bash  ]]
+  then
+    echo "There is a 1bash in Downloads folder, moving it to 1bash.old"
+    mv /home/m1/Downloads/1bash mv /home/m1/Downloads/1bash.old 
+  fi
   cd /home/m1/Downloads
   echo "wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash"
   wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash
@@ -23,11 +22,9 @@ fi
 
 sleep 1;echo "";echo ""
 
-echo "wait 30 seconds, if you have not edited your new 1bash or not backed up yet HIT ctrl+c NOW"
 sleep 1;echo "";echo ""
 echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FINISHED AND EDITED YOUR NEW 1BASH"
 echo "";echo ""
-sleep 30;echo "";echo ""
 
 echo " Stopping gnome-terminal, miner, wdog, temp, ..."
 echo "pkill -f gnome-terminal"
@@ -111,7 +108,7 @@ fi
 sleep 1;echo "";echo ""
 
 echo "Checking DSTM zm miner 0.5.6"
-if [ ! /home/m1/Downloads/miners/DSTM_0.5.6.tar.gz ]
+if [ ! -d /home/m1/zec/zm/5_6 ]
 then
   echo "Downloading and making changes for DSTM ZM miner 0.5.6"
   echo "Downloading dstm zm miner 5_6"
@@ -121,6 +118,7 @@ then
   wget https://www.dropbox.com/s/6wxsvia4bvnwf3k/DSTM_0.5.6.tar.gz
   echo "Extracting the zm miner"
   tar -xvzf DSTM_0.5.6.tar.gz
+  rm DSTM_0.5.6.tar.gz
   echo "mkdir -p /home/m1/zec/zm/5_6"
   mkdir -p /home/m1/zec/zm/5_6
   echo "mv /home/m1/Downloads/miners/5_6 /home/m1/zec/zm"
@@ -162,7 +160,7 @@ fi
 sleep 1;echo "";echo ""
 
 echo "Checking Claymore 10.02"
-if [ ! /home/m1/Downloads/miners/Claymore-v10.2.tar.gz ]
+if [ ! -d /home/m1/eth/claymore/10_2 ]
 then
   echo "Downloading and making changes for Claymore 10_2"
   mkdir -p /home/m1/Downloads/miners
@@ -171,6 +169,7 @@ then
   wget https://www.dropbox.com/s/dbwl2bs4olazyh6/Claymore-v10.2.tar.gz
   echo "tar -xvzf Claymore-v10.2.tar.gz"
   tar -xvzf Claymore-v10.2.tar.gz
+  rm Claymore-v10.2.tar.gz
   mv /home/m1/Downloads/miners/Claymore-v10.2/ /home/m1/eth/claymore/10_2/
   echo "cp /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/"
   cp /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/
@@ -187,13 +186,14 @@ echo "cd /home/m1/Downloads/miners"
 cd /home/m1/Downloads/miners
 
 echo "Checking Tpruvot ccminer-2.2.3"
-if [ ! /home/m1/Downloads/miners/ccminer-2.2.3-tpruvot.tar.gz ]
+if [ ! $(cat /home/m1/TPccminer/version | grep 2.2.3) ]
 then
   echo "Downloading Tpruvot 2.2.3"
   echo "wget -c https://www.dropbox.com/s/ys9pgw0cvmfwd0y/ccminer-2.2.3-tpruvot.tar.gz"
   wget -c https://www.dropbox.com/s/ys9pgw0cvmfwd0y/ccminer-2.2.3-tpruvot.tar.gz
   echo "Extracting Tpruvot 2.2.3"
   tar -xvzf ccminer-2.2.3-tpruvot.tar.gz
+  rm ccminer-2.2.3-tpruvot.tar.gz
   echo "rm -rf /home/m1/TPccminer"
   rm -rf /home/m1/TPccminer
   echo "mv /home/m1/Downloads/miners/TPccminer/ /home/m1/TPccminer/"
@@ -204,7 +204,7 @@ fi
 
 sleep 1;echo "";echo ""
 echo "Checking KlausT ccminer 8.15"
-if [[ ! /home/m1/Downloads/miners/KTccminer-8.15.tar.gz ]]
+if [ ! $( cat /home/m1/KTccminer/version | grep 8.15) ]
 then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
@@ -214,17 +214,18 @@ then
   wget -c https://www.dropbox.com/s/zqa9mqt5zzx8owr/KTccminer-8.15.tar.gz
   echo "Extracting KTccminer-8.15.tar.gz"
   tar -xvzf KTccminer-8.15.tar.gz
+  rm KTccminer-8.15.tar.gz
   echo "rm -rf /home/m1/KTccminer"
   rm -rf /home/m1/KTccminer
-  echo "mv /home/m1/Downloads/miners/TPccminer/ /home/m1/TPccminer/"
-  mv /home/m1/Downloads/miners/TPccminer/ /home/m1/TPccminer/
+  echo "mv /home/m1/Downloads/miners/KTccminer/ /home/m1/KTccminer/"
+  mv /home/m1/Downloads/miners/KTccminer/ /home/m1/KTccminer/
 else
   echo "KTccminer-8.15 already downloaded"
 fi
 
 sleep 1;echo "";echo ""
 echo "Checking vertminer-1.8.3r4"
-if [ ! /home/m1/Downloads/miners/vertminer-1.8.3r4.tar.gz ]
+if [ ! $( cat /home/m1/vertminer/version | grep 1.8.3r4 ) ]
 then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
@@ -234,6 +235,7 @@ then
   wget -c https://www.dropbox.com/s/0mhxbcu0v1c7pfj/vertminer-1.8.3r4.tar.gz
   echo "Extracting vertminer-1.8.3r4.tar.gz"
   tar -xvzf vertminer-1.8.3r4.tar.gz
+  rm vertminer-1.8.3r4.tar.gz
   echo "mv /home/m1/Downloads/miners/vertminer/ /home/m1/vertminer/"
   mv /home/m1/Downloads/miners/vertminer/ /home/m1/vertminer/
 else
@@ -242,7 +244,7 @@ fi
 
 sleep 1;echo "";echo ""
 echo "Checking nanashi-ccminer-2.2"
-if [ ! /home/m1/Downloads/miners/nanashi-ccminer-2.2.tar.gz ]
+if [ ! $(cat /home/m1/NAccminer/version | grep 2.2 ) ]
 then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
@@ -251,15 +253,16 @@ then
   wget -c https://www.dropbox.com/s/fw4aqkr0ke3hbvt/nanashi-ccminer-2.2.tar.gz
   echo "Extracting nanashi-ccminer-2.2.tar.gz"
   tar -xvzf nanashi-ccminer-2.2.tar.gz
-  echo "mv /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/nanashi-ccminer/"
-  mv /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/nanashi-ccminer/
+  rm nanashi-ccminer-2.2.tar.gz
+  echo "mv /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/NAccminer/"
+  mv /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/NAccminer/
 else
   echo "nanashi-ccminer-2.2 already downloaded"
 fi
 
 sleep 1;echo "";echo ""
 echo "Checking KXccminer-skunk-2.2"
-if [ ! /home/m1/Downloads/miners/KXccminer-skunk-2.2.tar.gz ]
+if [ ! $( cat /home/m1/KXccminer-skunk/version | grep 2.2) ]
 then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
@@ -350,6 +353,9 @@ echo "cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate"
 cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate
 echo "cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/www/cgi-bin/minerinfo"
 cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/www/cgi-bin/minerinfo
+echo "cp /home/m1/Downloads/nvOC-19-2/ext/clearalerts /home/m1/www/cgi-bin/clearalerts"
+cp /home/m1/Downloads/nvOC-19-2/ext/clearalerts /home/m1/www/cgi-bin/clearalerts
+
 echo "cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram"
 cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram
 echo "cp /home/m1/Downloads/nvOC-19-2/6tempcontrol /home/m1/6tempcontrol"
@@ -367,7 +373,7 @@ cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tempcontr
 echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog"
 cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog
 echo "cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC"
-cp /home/m1/Downloads/nvOC-19-2/ext/nvOC /home/m1/nvOC
+cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC
 
 sleep 1;echo "";echo ""
 
@@ -392,7 +398,9 @@ chmod 666 /home/m1/5_watchdoglog
 echo "chmod a+x /home/m1/nvOC"
 chmod a+x /home/m1/nvOC
 sleep 1;echo "";echo ""
-
+echo "cleaning old temp and watchdog logs"
+> /home//m1/5_watchdoglog
+  > /home/m1/6_autotemplog
 
 touch /home/m1/.bash_aliases
 if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log) ]]
@@ -414,31 +422,43 @@ then
 fi
 
 
-if [[ -z $(head /home/m1/1bash | grep '19.2\|19-2' ) ]]; then
-  echo "1bash is not V0019-2"
-  echo "cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash"
+if [[ -z $(head -n 50 /home/m1/1bash | grep '19.2\|19-2' ) ]]; then
   cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
-elif [[ -z $(head /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
+  echo ""
   echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "                                1bash is not V0019-2 adding new one"
+  echo "                              New 1bash v0019-2.0.001 in /home/m1/1bash"   
+  echo "                             Dont forget to edit the 1bash before reboot"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo ""
+elif [[ -z $(head  -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
+echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "                                Your 1bash is not latest version"
   echo "           New 1bash v0019-2.0.001 available in /home/m1/Downloads/nvOC-19-2/1bash"   
-  echo "           Dont forget to update your 1bash for all the latest updates take effect"
-  echo "**************************************************************************************************************************"
+  echo "          Dont forget to update your 1bash for all the latest updates to take effect"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   sleep 2
-else
-  echo " 1bash latest version"
+elif [[ -n $(head  -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
+  echo "**************************************************************************************************************************"
+  echo "                                       1bash latest version"
+  echo "**************************************************************************************************************************"
 fi
 
 
 sleep 1;echo "";echo ""
 
-echo "All Done"
+echo "                                  All Done"
 echo "Old 1bash, 3main, wdog and temp are copied to /home/m1/backups/old_to_19.2/*.bak"
 echo "Edit your 1bash, Set auto start miner then reboot your rig"
 echo "Keep Calm and Carry on Mining"
