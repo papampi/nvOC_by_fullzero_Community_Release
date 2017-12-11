@@ -16,7 +16,7 @@ Hopefully will be announced in less than a week.
 To update to v0019-2.0 download "nvOC-19-2-update" and run: 
 bash nvOC-19-2-update
 
-Download nvOC-19-2-update: https://github.com/papampi/nvOC_by_fullzero_unofficial/blob/19.2/nvOC-19-2-update
+Download nvOC-19-2-update: https://github.com/papampi/nvOC_by_fullzero_Community_Release/blob/19.2/nvOC-19-2-update
 
 Dropbox link :https://www.dropbox.com/s/s3rkv2o3bynqnpm/nvOC-19-2-update
 
