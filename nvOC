@@ -4,13 +4,27 @@
 # nvOC                                                                         #
 #                                                                              #
 # Purpose:  Handles a variety of tasks for the nvOC mining operating system    #
-#           including stop and start mining, patching, help, etc               #
+#           including stop and start mining, patching, etc                     #
 #                                                                              #
 # Usage:  See echo_usage (below)                                               #
 #                                                                              #
 #                                                                              #
 ################################################################################
-
+#
+# Dev Mod Log:
+#
+# v=0001 : Stubo:
+#          Initial Revision
+#
+# v=0002 : papampi
+#          changes to clearlogs and stop
+#
+# v=0003 : Stubo
+#          removed help
+#          removed > /dev/null 2>&1 from 5watchdog line in stop
+#
+#
+# DEV_VERSION=0003
 ################################################################################
 # Subroutines
 ################################################################################
@@ -31,8 +45,6 @@ echo_usage()
    echo "           stops mining, watchdog and temperature control"    
    echo "        $0 start"
    echo "           starts normal nvOC mining operations"                                   
-   echo "        $0 help"
-   echo "           displays help about using and configuring nvOC for mining"                                   
 }
 
 ################################# Clearlogs ######################################
@@ -101,13 +113,6 @@ GPUinfo()
    done
 }
 
-############################### Display Help ####################################
-Help()
-{
-   # Stub
-   echo "Stub"
-}
-
 ############################### Patch nvOC ####################################
 Patch()
 {
@@ -148,7 +153,7 @@ Stop()
    
    # Kill off the nv_OC processes
    pkill -f gnome-terminal
-   pkill -f 5watchdog > /dev/null 2>&1
+   pkill -f 5watchdog 
    pkill -f BaliMiner_TELEGRAM_ALERTS
    pkill -f 6tempcontrol
    pkill -e screen
@@ -173,7 +178,6 @@ case $# in
    1) case $1 in
          clearlogs)    Clearlogs;;
          gpuinfo)      GPUinfo;;
-         help)         Help;;
          patch)        Patch;;
          reboot)       Reboot;;
          start)        Start;;
