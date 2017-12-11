@@ -69,7 +69,7 @@ do
     fi
 
     if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]; then
-      sed -i 's/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
+      sed -i '/^#/!s/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
       cat /home/m1/WTM_current_revenue | grep `cat /home/m1/WTM_top_coin | awk -F: '{print $1}'` | awk -F: '{print $2}' >> /home/m1/WTM_24H_REV
       SYNC_COUNT=$((`expr 1440 / $WTM_AUTO_SWITCH_SYNC_INTERVAL`))
       echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
