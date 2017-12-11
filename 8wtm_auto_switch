@@ -31,9 +31,9 @@ do
     #start leenoox mod:		
     source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
     CURRENT_COIN=$COIN
-    #end leenoox mod:		
     CURRENT_COIN_ALGORITHM=$ALGORITHM
-    #    CURRENT_COIN=$(cat /home/m1/1bash | grep COIN= | grep -v "#COIN=" | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+    #CURRENT_COIN=$(cat /home/m1/1bash | grep COIN= | grep -v "#COIN=" | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+    #end leenoox mod:		
     TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
