@@ -64,7 +64,7 @@ else
 fi
 
 # Log file handling (check existance, size limitation or creation, show 10 lines if not empty)
-LOG_FILE="/home/m1/nvoc_logs/6_autotemplog"
+LOG_FILE="/home/m1/6_autotemplog"
 if [ -e "$LOG_FILE" ]; then
   LASTLOG=$(tail -n 100 $LOG_FILE)     # Limit the log file, just keep the last 100 entries
   echo "$LASTLOG" > $LOG_FILE
@@ -85,7 +85,7 @@ else
   echo ""
 fi
 
-WD_LOG_FILE="/home/m1/nvoc_logs/5_watchdoglog"
+WD_LOG_FILE="/home/m1/5_watchdoglog"
 
 
 # Display version info
