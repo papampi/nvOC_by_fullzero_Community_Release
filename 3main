@@ -43,7 +43,7 @@ nvOC_3main_ver="v0019-2.0.003"                  # Do not edit this
 
 echo ""
 echo " $nvOC_ver "
-echo ""
+echo "3main Version: $nvOC_3main_ver"
 echo ""
 
 sudo ldconfig /usr/local/cuda/lib64
