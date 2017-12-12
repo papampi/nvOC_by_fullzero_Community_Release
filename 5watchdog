@@ -42,7 +42,7 @@ nvOC_wdog_ver="v0019-2.0.009"   # Do not edit this
 #
 # DEV_VERSION=0009
 
-
+echo " Watchdog Version: $nvOC_wdog_ver"
 export DISPLAY=:0
 source /home/m1/1bash
 
