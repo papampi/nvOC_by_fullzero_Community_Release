@@ -1063,11 +1063,14 @@ EOF
     fi
 
     reup=0
-    running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
+    #running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
+    running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
+
 
     if [ "$running" != "" ]
     then
-      target=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
+      #target=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
+      target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
       kill $target
       reup=1
     fi
@@ -1075,7 +1078,8 @@ EOF
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
-    running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
+    #running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
+    running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
       if [ $LOCALorREMOTE == "REMOTE" ]
