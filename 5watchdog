@@ -170,7 +170,7 @@ while true; do
         sudo reboot
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
-        echo "$(date) - GPU $GPU under threshold found - GPU UTILIZATION:  " $UTIL
+        echo "$(date) - GPU $GPU under threshold found - GPU UTILIZATION:  " $UTIL  | tee -a ${LOG_FILE}
         COUNT=$(($COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
       fi
