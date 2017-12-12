@@ -1,9 +1,13 @@
 #!/bin/bash
 # log rotation by papampi for nvOC by fullzero, v0019-2.0 Community Release
-log_rotate_ver="v0019-2.0.002"
-echo ""
 
+nvOC_Ver=nvOC v0019-2.0 - Community Release
+log_rotate_ver="v0019-2.0.002"
 source /home/m1/1bash
+
+echo "Log Rotate for $nvOC_Ver"
+echo "Version: : $log_rotate_ver" 
+echo ""
 
 while true
 do
@@ -11,7 +15,6 @@ do
   TIMEIN=$LOG_ROTATE_INTERVAL
   TIMEOUT=$(($TIMEIN * 3600))
 
-echo "Log Rotate Version: $log_rotate_ver"
 
 # Rotating wdog logs
 WDOG_LOG_FILE="/home/m1/5_watchdoglog"
