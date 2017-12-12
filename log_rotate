@@ -22,6 +22,20 @@ do
     #Limit the logfile, just keep the last 2k
     echo "$( cat $TEMP_LOG_FILE | tail -n 2k)" > $TEMP_LOG_FILE
   fi
+  
+  # Rotating watchdog screenlog
+  WDOG_SCREEN_LOG_FILE="/home/m1/nvoc_logs/watchdog-screenlog.0"
+  if [ -e "$WDOG_SCREEN_LOG_FILE" ] ; then
+    #Limit the logfile, just keep the last 2k
+    echo "$( cat $WDOG_SCREEN_LOG_FILE | tail -n 2k)" > $WDOG_SCREEN_LOG_FILE
+  fi
+  
+    # Rotating temp control screenlog
+  TEMP_SCREEN_LOG_FILE="/home/m1/nvoc_logs/tempcontrol-screenlog.0"
+  if [ -e "$TEMP_SCREEN_LOG_FILE" ] ; then
+    #Limit the logfile, just keep the last 2k
+    echo "$( cat $TEMP_SCREEN_LOG_FILE | tail -n 2k)" > $TEMP_SCREEN_LOG_FILE
+  fi
 
   # Rotating screenlog
   MINER_LOG_FILE="/home/m1/nvoc_logs/screenlog.0"
