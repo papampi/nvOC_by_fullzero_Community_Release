@@ -11,9 +11,6 @@
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
 nvOC_wdog_ver="v0019-2.0.009"   # Do not edit this
 
-# Watchdog for nvOC v0019-2.0
-
-
 # DEV Mod Log:
 #
 # v=0001 : Stubo: Initial Revision
