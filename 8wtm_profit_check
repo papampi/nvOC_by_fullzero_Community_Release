@@ -2,6 +2,13 @@
 # whattomine.com profit check by papampi
 # for nvOC v0019-2.0 - Community Release
 
+nvOC_Ver="nvOC v0019-2.0 - Community Release"
+wtm_profit_check_ver="v0019-2.0.001"   # Do not edit this
+
+echo "Whattomine.com Profit Check for $nvOC_Ver"
+echo "Version: : $wtm_profit_check_ver" 
+echo ""
+
 source /home/m1/1bash
 
 # Creating a log file to record coin switch
@@ -17,11 +24,9 @@ do
 
   python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json | tee -a $LOG_FILE
   sleep 5
-  # leenoox mod:
-  # CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
   source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
   CURRENT_COIN=$COIN
-  TOP_COIN=$(cat WTM_top_coin | grep : | sed 's/:[0-9][0-9]//' | sed 's/[0-9]//')
+  TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
   TIMEIN=$WTM_PROFIT_CHECK_INTERVAL
   TIMEOUT=$(($TIMEIN * 60))
   echo ""
