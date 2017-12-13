@@ -67,7 +67,7 @@ then
   GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
   REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "Yes!!!" || echo "No")
   GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | tr '\n' '   ')
-  TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/6_autotemplog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g')
+  TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g')
   WDOG_WARNINGS=$(tail -10 /home/m1/5_watchdoglog )
   TEMP_WARNINGS=$(tail -10 /home/m1/6_autotemplog )
 
@@ -98,13 +98,13 @@ then
   elif [ $WTM_AUTO_SWITCH == "YES" ]
   then
 
-    CURRENT_COIN=$COIN
-    MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 5 |  awk '{print $0}')
-    WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
-    WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
-    WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
-    BTC_PRICE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
-    if ps aux | grep -v grep | grep -q 8_WTM_AUTO_SWITCH
+    CURRENT_COIN="Mining Coin: $COIN"
+    MINING_HISTORY="Mining History: $LF$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 5 |  awk '{print $0}')"
+    WTM_PROFIT="WTM Current Profit: $(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')"
+    WTM_REV="WTM Current Revenue ($WTM_CURRENCY): $(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')"
+    WTM_AVERAGE_REV="24H Average Revenue:  $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)"
+    BTC_PRICE="BTC Price: $(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
+    if ps aux | grep -v grep | grep -q 8wtm_auto_switch
     then
       WTM_SWITCH=("Running")
     else
@@ -114,29 +114,29 @@ then
 
   elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
   then
-    CURRENT_COIN=$COIN
-    MINING_HISTORY=("No Auto Switch History")
-    WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+    CURRENT_COIN="Mining Coin: $COIN"
+    MINING_HISTORY=""
+    WTM_PROFIT="WTM Current Profit: $(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')"
     WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
     WTM_SWITCH=("WTM Profit Check Running. ")
-    BTC_PRICE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
-    WTM_AVERAGE_REV=("WTM Auto Switch Not Running.")
-    AUTO_SWITCH=("$WTM_SWITCH $WTM_A_S" )
+    BTC_PRICE="BTC Price: $(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
+    WTM_AVERAGE_REV=""
+    AUTO_SWITCH=""
 
 
   else
-    CURRENT_COIN=$COIN
-    AUTO_SWITCH=("No Auto Switch")
-    MINING_HISTORY=("No Auto Switch History")
-    BTC_PRICE=("WTM Not Running")
-    WTM_PROFIT=("WTM Not Running")
-    WTM_REV=("WTM Not Running")
-    WTM_AVERAGE_REV=("WTM Not Running")
+    CURRENT_COIN="Mining Coin: $COIN"
+    AUTO_SWITCH="No Auto Switch"
+    MINING_HISTORY=""
+    BTC_PRICE=""
+    WTM_PROFIT=""
+    WTM_REV=""
+    WTM_AVERAGE_REV=""
   fi
 
 
   LF=$'\n'
-  MSG=" Worker: $WORKERNAME $LF Boot Time: $SYSTEM_BOOT_TIME $LF System Up Time: $SYSTEM_UP_TIME $LF Miner Uptime: $MINER_UP_TIME $LF Currently Mining: $CURRENT_COIN $LF BTC Price: $BTC_PRICE $LF Reboot Required: $REBOOT_REQUIRED $LF GPU Count: $GPU_COUNT $LF GPU Utilization: $LF $GPU_UTILIZATIONS $LF Temp, Fan, Power: $LF $TEMP_FAN_POWER $LF $LF Auto Switch: $LF$AUTO_SWITCH $LF $LF Mining History: $LF$MINING_HISTORY $LF $LF WTM Current Profit: $LF$WTM_PROFIT $LF $LF WTM Current Revenue: $WTM_CURRENCY $LF$WTM_REV $LF $LF WTM Average 24H Rev: $LF$WTM_AVERAGE_REV $WTM_CURRENCY $LF $WDOG_WARNINGS $LF $TEMP_WARNINGS"
+  MSG=" Worker: $WORKERNAME $LF Boot Time: $SYSTEM_BOOT_TIME $LF System Up Time: $SYSTEM_UP_TIME $LF Miner Uptime: $MINER_UP_TIME $LF $CURRENT_COIN $LF $BTC_PRICE $LF Reboot Required: $REBOOT_REQUIRED $LF GPU Count: $GPU_COUNT $LF GPU Utilization: $LF $GPU_UTILIZATIONS $LF Temp, Fan, Power: $LF $TEMP_FAN_POWER $LF $LF Auto Switch: $LF$AUTO_SWITCH $LF $LF $MINING_HISTORY $LF $LF$WTM_PROFIT $LF $LF $WTM_REV $LF $LF $WTM_AVERAGE_REV $WTM_CURRENCY $LF $WDOG_WARNINGS $LF $TEMP_WARNINGS"
 
 
 
