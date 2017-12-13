@@ -3,7 +3,13 @@
 # for nvOC v0019-2.0 - Community Release
 # Feel free to use, change, edit and do what you want with it.
 
+nvOC_Ver="nvOC v0019-2.0 - Community Release"
 wtm_auto_switch_ver="v0019-2.0.005"   # Do not edit this
+
+echo "Whattomine.com Auto Switch for $nvOC_Ver"
+echo "Version: : $wtm_auto_switch_ver" 
+echo ""
+
 
 source /home/m1/1bash
 
