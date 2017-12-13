@@ -16,8 +16,8 @@ source /home/m1/1bash
 # Creating a log file to record coin switch
 LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
 if [[ -e "$LOG_FILE" ]] ; then
-  #Limit the logfile, just keep the last 5K
-  echo "$(cat $LOG_FILE | tail -n 5k)" > $LOG_FILE
+  #Limit the logfile, just keep the last 1K
+  echo "$(cat $LOG_FILE | tail -n 1k)" > $LOG_FILE
 fi
 
 WTM_HISTORY="/home/m1/WTM_switch_history"
@@ -33,12 +33,10 @@ do
 
     python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json  | tee -a $LOG_FILE
     sleep 5
-    #start leenoox mod:		
     source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
     CURRENT_COIN=$COIN
     CURRENT_COIN_ALGORITHM=$ALGORITHM
-    #CURRENT_COIN=$(cat /home/m1/1bash | grep COIN= | grep -v "#COIN=" | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
-    #end leenoox mod:		
+
     TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
