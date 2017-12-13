@@ -115,6 +115,11 @@ then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
+  if [ -e /home/m1/Downloads/miners/DSTM_0.5.6.tar.gz ]
+  then
+    echo "Remove Old DSTM"
+    rm /home/m1/Downloads/miners/DSTM_0.5.6.tar.gz
+  fi
   wget https://www.dropbox.com/s/6wxsvia4bvnwf3k/DSTM_0.5.6.tar.gz
   echo "Extracting the zm miner"
   tar -xvzf DSTM_0.5.6.tar.gz
@@ -166,6 +171,11 @@ then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
+  if [ -e /home/m1/Downloads/miners/Claymore-v10.2.tar.gz ]
+  then
+    echo "Remove Old Claymore"
+    rm /home/m1/Downloads/miners/Claymore-v10.2.tar.gz
+  fi
   wget https://www.dropbox.com/s/dbwl2bs4olazyh6/Claymore-v10.2.tar.gz
   echo "tar -xvzf Claymore-v10.2.tar.gz"
   tar -xvzf Claymore-v10.2.tar.gz
@@ -189,6 +199,11 @@ echo "Checking Tpruvot ccminer-2.2.3"
 if [ ! $(cat /home/m1/TPccminer/version | grep 2.2.3) ]
 then
   echo "Downloading Tpruvot 2.2.3"
+  if [ -e /home/m1/Downloads/miners/ccminer-2.2.3-tpruvot.tar.gz ]
+  then
+    echo "Remove Old Tpruvot ccminer"
+    rm /home/m1/Downloads/miners/ccminer-2.2.3-tpruvot.tar.gz
+  fi
   echo "wget -c https://www.dropbox.com/s/ys9pgw0cvmfwd0y/ccminer-2.2.3-tpruvot.tar.gz"
   wget -c https://www.dropbox.com/s/ys9pgw0cvmfwd0y/ccminer-2.2.3-tpruvot.tar.gz
   echo "Extracting Tpruvot 2.2.3"
@@ -209,7 +224,12 @@ then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
-  echo "Downloading Klaust ccminer 8.15"
+  if [ -e /home/m1/Downloads/miners/KTccminer-8.15.tar.gz ]
+  then
+    echo "Remove Old KTccminer-8.15"
+    rm /home/m1/Downloads/miners/KTccminer-8.15.tar.gz
+  fi
+  echo "Downloading Klaust ccminer"
   echo "wget -c https://www.dropbox.com/s/zqa9mqt5zzx8owr/KTccminer-8.15.tar.gz"
   wget -c https://www.dropbox.com/s/zqa9mqt5zzx8owr/KTccminer-8.15.tar.gz
   echo "Extracting KTccminer-8.15.tar.gz"
@@ -230,6 +250,11 @@ then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
+  if [ -e /home/m1/Downloads/miners/vertminer-1.8.3r4.tar.gz ]
+  then
+    echo "Remove Old vertminer"
+    rm /home/m1/Downloads/miners/vertminer-1.8.3r4.tar.gz
+  fi
   echo "Downloading vertminer-1.8.3r4"
   echo "https://www.dropbox.com/s/0mhxbcu0v1c7pfj/vertminer-1.8.3r4.tar.gz"
   wget -c https://www.dropbox.com/s/0mhxbcu0v1c7pfj/vertminer-1.8.3r4.tar.gz
@@ -249,6 +274,11 @@ then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
+  if [ -e /home/m1/Downloads/miners/nanashi-ccminer-2.2.tar.gz ]
+  then
+    echo "Remove Old nanashi ccminer"
+    rm /home/m1/Downloads/miners/nanashi-ccminer-2.2.tar.gz
+  fi
   echo "Downloading nanashi ccminer 2.2"
   wget -c https://www.dropbox.com/s/fw4aqkr0ke3hbvt/nanashi-ccminer-2.2.tar.gz
   echo "Extracting nanashi-ccminer-2.2.tar.gz"
@@ -267,10 +297,16 @@ then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
+  if [ -e /home/m1/Downloads/miners/KXccminer-skunk-2.2.tar.gz ]
+  then
+    echo "Remove Old krnlx ccminer"
+    rm /home/m1/Downloads/miners/KXccminer-skunk-2.2.tar.gz
+  fi
   echo "Downloading krnlx ccminer 2.2"
   wget -c https://www.dropbox.com/s/c3ogj353mmaumua/KXccminer-skunk-2.2.tar.gz
   echo "Extracting KXccminer-skunk-2.2.tar.gz"
   tar -xvzf KXccminer-skunk-2.2.tar.gz
+  rm KXccminer-skunk-2.2.tar.gz
   echo "mv /home/m1/Downloads/miners/KXccminer-skunk/ /home/m1/KXccminer-skunk/"
   mv /home/m1/Downloads/miners/KXccminer-skunk/ /home/m1/KXccminer-skunk/
 else
@@ -282,7 +318,7 @@ echo "Downloading new miners finished"
 sleep 1;echo "";echo ""
 
 cd /home/m1/Downloads
-echo "Downloading V19.2 unofficial updates"
+echo "Downloading V0019-2.0 - Community Release"
 if [ -e /home/m1/Downloads/nvOC-19-2.tar.gz ]
 then
   rm /home/m1/Downloads/nvOC-19-2.tar.gz
@@ -399,8 +435,8 @@ echo "chmod a+x /home/m1/nvOC"
 chmod a+x /home/m1/nvOC
 sleep 1;echo "";echo ""
 echo "cleaning old temp and watchdog logs"
-> /home//m1/5_watchdoglog
-> /home/m1/6_autotemplog
+echo " " > /home/m1/5_watchdoglog
+echo " " > /home/m1/6_autotemplog
 
 touch /home/m1/.bash_aliases
 if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log | grep tempcontrol) ]]
