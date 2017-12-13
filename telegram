@@ -60,7 +60,8 @@ if [ $TELEGRAM_TYPE == "papampi" ]
 then
   CHATID=$TELEGRAM_CHATID
   APIKEY=$TELEGRAM_APIKEY
-
+  
+  source /home/m1/1bash
   SYSTEM_BOOT_TIME=$(uptime -s)
   SYSTEM_UP_TIME=$(uptime -p)
   GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
@@ -97,7 +98,7 @@ then
   elif [ $WTM_AUTO_SWITCH == "YES" ]
   then
 
-    CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+    CURRENT_COIN=$COIN
     MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 5 |  awk '{print $0}')
     WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
     WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
@@ -113,7 +114,7 @@ then
 
   elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
   then
-    CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+    CURRENT_COIN=$COIN
     MINING_HISTORY=("No Auto Switch History")
     WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
     WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
@@ -124,7 +125,7 @@ then
 
 
   else
-    CURRENT_COIN=$(head -n 130 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+    CURRENT_COIN=$COIN
     AUTO_SWITCH=("No Auto Switch")
     MINING_HISTORY=("No Auto Switch History")
     BTC_PRICE=("WTM Not Running")
