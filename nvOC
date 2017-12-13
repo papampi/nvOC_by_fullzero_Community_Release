@@ -59,10 +59,10 @@ Clearlogs()
    sudo su -c "> /var/log/Xorg.0.log"
    sudo su -c "> /var/log/kern.log"
 
-   > /home/m1/5_watchdoglog
-   > /home/m1/6_autotemplog
-   > /home/m1/current-profit
-   > /home/m1/algo-log
+   echo "" > /home/m1/5_watchdoglog
+   echo "" > /home/m1/6_autotemplog
+   echo "" > /home/m1/current-profit
+   echo "" > /home/m1/algo-log
 
    rm -r /home/m1/kk003_telegram_data > /dev/null 2>&1
    
