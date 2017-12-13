@@ -14,20 +14,27 @@ source /home/m1/1bash
 echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
 echo '</style>'
 
+nvOC_Ver="nvOC v0019-2.0 - Community Release"
+LSB_RELEASE=$(lsb_release -s -d)
+UNAME=$(uname -r)
 TAIL_GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1 |awk '{ SUM += $1+3}  ; { print SUM }')
 SYSTEM_BOOT_TIME=$(uptime -s)
 SYSTEM_UP_TIME=$(uptime -p)
 LOAD_AVERAGE=$(cat /proc/loadavg | awk '{print $1,$2,$3}')
 GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
 REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
-#MINER_PID=$(ps ax | grep miner | grep -v grep | cut -f1 -d" " - | awk '{print $0}')
 MINER_PID=$(pgrep -f -o  miner)
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
-TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/6_autotemplog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
-TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/6_autotemplog | awk '{print $0,"<br>"}')
-WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/5_watchdoglog | awk '{print $0,"<br>"}')
+TEMP_FAN_POWER=$(tail  -50 /home/m1/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
+TEMP_ALERT_LOG=$(tail  -50 /home/m1/6_autotemplog | awk '{print $0,"<br>"}')
+WDOG_ALERT_LOG=$(tail  -50 /home/m1/5_watchdoglog | awk '{print $0,"<br>"}')
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
+DISK=$(df -h / | awk '{ a = $2 } END { print a }')
+DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
+MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
+FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
+CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
 
 if [ $MINER_TEMP_CONTROL == "YES" ]
 then
@@ -74,7 +81,7 @@ then
 
 elif [ $WTM_AUTO_SWITCH == "YES" ]
 then
-  CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  CURRENT_COIN=$COIN
   MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
   P_MINING_HISTORY="$MINING_HISTORY <br>"
   WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
@@ -108,7 +115,7 @@ then
 
 elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
 then
-  CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  CURRENT_COIN=$COIN
   MINING_HISTORY=""
   WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
   P_WTM_PROFIT="$WTM_PROFIT <br>"
@@ -131,7 +138,7 @@ then
 
 
 else
-  CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  CURRENT_COIN=$COIN
   AUTO_SWITCH="No Auto Switch"
   MINING_HISTORY=""
   BTC_PRICE=""
@@ -173,7 +180,7 @@ then
   MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 else
-  MINER_LOG=$(tail -n $TAIL_GPU_COUNT /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 fi
 
 
@@ -191,7 +198,8 @@ echo "</button>"
 echo '<title>Worker: '$WORKERNAME'</title>'
 echo '</head>'
 echo '<body>'
-echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "<br>""</tt>"  '</h4>'
+echo '<h3>'  "$nvOC_Ver"
+echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "</tt>"  '</h4>'
 
 echo "Boot Time: " "<tt style=\"text-align:left; color:white; \">" "$SYSTEM_BOOT_TIME <br> </tt>"
 
@@ -199,12 +207,19 @@ echo "System Up Time: " "<tt style=\"text-align:left; color:white\">" "$SYSTEM_U
 
 echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_TIME<br> </tt>"
 
+echo "Distro: " "<tt style=\"text-align:left; color:white; \">" "$LSB_RELEASE $UNAME <br> </tt>"
+
+echo "CPU: " "<tt style=\"text-align:left; color:white\">" "$CPU<br> </tt>"
+
+echo "Disk / Free Space: " "<tt style=\"text-align:left; color:white\">" "$DISK / $DISK_FREE<br> </tt>"
+
+echo "Memory / Free Memory: " "<tt style=\"text-align:left; color:white\">" "$MEMORY / $FREE_MEMORY<br> </tt>"
+
 echo "Load Average: " "<tt style=\"text-align:left; color:white\">" "$LOAD_AVERAGE<br> </tt>"
 
+echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$NIVIDIA_VERSION <br> </tt>"
 
 echo "Reboot Required: "  "<tt style=\"text-align:left; color:white\">" "$REBOOT_REQUIRED <br> </tt>"
-
-echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$NIVIDIA_VERSION <br> </tt>"
 
 echo "Auto Temp Control: "  "<tt style=\"text-align:left; color:white\">" "$AUTO_TEMPERATURE_CONTROL$TEMP_CHECK <br> </tt>"
 
