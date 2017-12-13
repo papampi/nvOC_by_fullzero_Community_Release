@@ -8,9 +8,6 @@
 ##########################################################################
 ##########################################################################
 
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-nvOC_wdog_ver="v0019-2.0.009"   # Do not edit this
-
 # DEV Mod Log:
 #
 # v=0001 : Stubo: Initial Revision
@@ -39,12 +36,34 @@ nvOC_wdog_ver="v0019-2.0.009"   # Do not edit this
 #
 # DEV_VERSION=0009
 
+nvOC_Ver="nvOC v0019-2.0 - Community Release"
+nvOC_wdog_ver="v0019-2.0.009"   # Do not edit this
+
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
 echo ""
 
 export DISPLAY=:0
 source /home/m1/1bash
+
+# Text output beautifier, use bold text and colors
+USE_COLOR="YES"    # YES/NO
+
+if [ $USE_COLOR == "YES" ]; then
+  N='\e[0m'     # Normal
+  B='\e[1m'     # Bold
+  R='\e[31m'    # Red
+  G='\e[32m'    # Green
+  C='\e[36m'    # Cyan
+  Y='\e[33m'    # Yellow
+else
+  N=""
+  B=""
+  R=""
+  G=""
+  C=""
+  Y=""
+fi
 
 # Global Variables
 THRESHOLD=80         # Minimum allowed % utilization before taking action
@@ -59,9 +78,9 @@ LOG_FILE="/home/m1/5_watchdoglog"
 if [ -e "$LOG_FILE" ] ; then
   # Limit the logfile, just keep the last 500 lines
   echo "$(tail -500 $LOG_FILE)" > $LOG_FILE
-  if [[ $(wc -l <$LOG_FILE) -gt 0 ]]; then
+  if [[ $(wc -l <$LOG_FILE) -gt 1 ]]; then
     echo -e "${B}LOG FILE:${N} (Showing the last 10 recorded entries)${R}"
-    cat $LOG_FILE | tail -n 10
+    echo "$(tail -10 $LOG_FILE)"
     echo -e "${N}"
     echo ""
   else
