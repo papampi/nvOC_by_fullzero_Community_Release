@@ -9,7 +9,7 @@ if [[ -z $(head  -n 50  /home/m1/1bash | grep '19.2\|19-2') ]]; then
   if [[ -e /home/m1/Downloads/1bash  ]]
   then
     echo "There is a 1bash in Downloads folder, moving it to 1bash.old"
-    mv /home/m1/Downloads/1bash mv /home/m1/Downloads/1bash.old 
+    mv /home/m1/Downloads/1bash mv /home/m1/Downloads/1bash.old
   fi
   cd /home/m1/Downloads
   echo "wget https://www.dropbox.com/s/p5dvgyaoy73s8sc/1bash"
@@ -400,13 +400,14 @@ chmod a+x /home/m1/nvOC
 sleep 1;echo "";echo ""
 echo "cleaning old temp and watchdog logs"
 > /home//m1/5_watchdoglog
-  > /home/m1/6_autotemplog
+> /home/m1/6_autotemplog
 
 touch /home/m1/.bash_aliases
-if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log) ]]
+if [[ -z  $(cat /home/m1/.bash_aliases | grep master-log | grep tempcontrol) ]]
 then
   echo "Adding master-log alias"
-  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/tempcontrol-screenlog.0 /home/m1/nvoc_logs/watchdog-screenlog.0 /home/m1/5_watchdoglog /home/m1/6_autotemplog /home/m1/nvoc_logs/8_wtmautoswitchlog' " | tee -a /home/m1/.bash_aliases
+  sed -i '/^alias master-log/d' /home/m1/.bash_aliases
+  echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/tempcontrol-screenlog.0 /home/m1/nvoc_logs/watchdog-screenlog.0 /home/m1/nvoc_logs/8_wtmautoswitchlog'" | tee -a /home/m1/.bash_aliases
   echo "If local_or_remote=remote, run master-log in guake or ssh sessions, to watch all your logs live"
   echo " "
   sleep 5
@@ -430,7 +431,7 @@ if [[ -z $(head -n 50 /home/m1/1bash | grep '19.2\|19-2' ) ]]; then
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "                                1bash is not V0019-2 adding new one"
-  echo "                              New 1bash v0019-2.0.001 in /home/m1/1bash"   
+  echo "                              New 1bash v0019-2.0.001 in /home/m1/1bash"
   echo "                             Dont forget to edit the 1bash before reboot"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
@@ -438,12 +439,12 @@ if [[ -z $(head -n 50 /home/m1/1bash | grep '19.2\|19-2' ) ]]; then
   echo "**************************************************************************************************************************"
   echo ""
 elif [[ -z $(head  -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
-echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "                                Your 1bash is not latest version"
-  echo "           New 1bash v0019-2.0.001 available in /home/m1/Downloads/nvOC-19-2/1bash"   
+  echo "           New 1bash v0019-2.0.001 available in /home/m1/Downloads/nvOC-19-2/1bash"
   echo "          Dont forget to update your 1bash for all the latest updates to take effect"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
