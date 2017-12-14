@@ -184,6 +184,7 @@ then
   echo "tar -xvzf Claymore-v10.2.tar.gz"
   tar -xvzf Claymore-v10.2.tar.gz
   rm Claymore-v10.2.tar.gz
+  mkdir -p /home/m1/eth/claymore/10_2/
   cp -R /home/m1/Downloads/miners/Claymore-v10.2/* /home/m1/eth/claymore/10_2/
   mkdir -p /home/m1/eth/claymore/latest/
   echo "cp -R /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/"
