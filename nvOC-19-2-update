@@ -107,8 +107,12 @@ fi
 
 sleep 1;echo "";echo ""
 
+mkdir -p /home/m1/Downloads/miners
+echo "cd /home/m1/Downloads/miners"
+cd /home/m1/Downloads/miners
+
 echo "Checking DSTM zm miner 0.5.6"
-if [ ! -d /home/m1/zec/zm/5_6 ]
+if [ ! $(cat /home/m1/zec/zm/latest/version | grep 0.5.6) ]
 then
   echo "Downloading and making changes for DSTM ZM miner 0.5.6"
   echo "Downloading dstm zm miner 5_6"
@@ -126,14 +130,13 @@ then
   rm DSTM_0.5.6.tar.gz
   echo "mkdir -p /home/m1/zec/zm/5_6"
   mkdir -p /home/m1/zec/zm/5_6
-  echo "mv /home/m1/Downloads/miners/5_6 /home/m1/zec/zm"
-  mv /home/m1/Downloads/miners/5_6 /home/m1/zec/zm/
-  echo "chmod a+x /home/m1/zec/zm/5_6/zm"
+  echo "cp -R /home/m1/Downloads/miners/5_6 /home/m1/zec/zm/5_6"
+  cp -R /home/m1/Downloads/miners/5_6 /home/m1/zec/zm/
+  echo "chmod a+x /home/m1/zec/zm/5_6/zm_miner"
   chmod a+x /home/m1/zec/zm/5_6/zm_miner
-  echo "mkdir -p /home/m1/zec/zm/latest"
   mkdir -p /home/m1/zec/zm/latest
-  echo "cp /home/m1/zec/zm/5_6/zm_miner /home/m1/zec/zm/latest/zm_miner"
-  cp /home/m1/zec/zm/5_6/zm_miner /home/m1/zec/zm/latest/zm_miner
+  echo "cp -R /home/m1/zec/zm/5_6/ /home/m1/zec/zm/latest/"
+  cp -R /home/m1/zec/zm/5_6/* /home/m1/zec/zm/latest/
   echo "chmod a+x /home/m1/zec/zm/latest/zm_miner"
   chmod a+x /home/m1/zec/zm/latest/zm_miner
 else
@@ -165,7 +168,8 @@ fi
 sleep 1;echo "";echo ""
 
 echo "Checking Claymore 10.02"
-if [ ! -d /home/m1/eth/claymore/10_2 ]
+
+if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.02) ]
 then
   echo "Downloading and making changes for Claymore 10_2"
   mkdir -p /home/m1/Downloads/miners
@@ -180,9 +184,10 @@ then
   echo "tar -xvzf Claymore-v10.2.tar.gz"
   tar -xvzf Claymore-v10.2.tar.gz
   rm Claymore-v10.2.tar.gz
-  mv /home/m1/Downloads/miners/Claymore-v10.2/ /home/m1/eth/claymore/10_2/
-  echo "cp /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/"
-  cp /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/
+  cp -R /home/m1/Downloads/miners/Claymore-v10.2/* /home/m1/eth/claymore/10_2/
+  mkdir -p /home/m1/eth/claymore/latest/
+  echo "cp -R /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/"
+  cp -R /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/
   echo "chmod a+x /home/m1/eth/claymore/*/ethdcrminer64"
   chmod a+x  /home/m1/eth/claymore/latest/ethdcrminer64
 else
@@ -191,13 +196,12 @@ fi
 
 sleep 1;echo "";echo ""
 
-mkdir -p /home/m1/Downloads/miners
-echo "cd /home/m1/Downloads/miners"
-cd /home/m1/Downloads/miners
-
 echo "Checking Tpruvot ccminer-2.2.3"
 if [ ! $(cat /home/m1/TPccminer/version | grep 2.2.3) ]
 then
+  mkdir -p /home/m1/Downloads/miners
+  echo "cd /home/m1/Downloads/miners"
+  cd /home/m1/Downloads/miners
   echo "Downloading Tpruvot 2.2.3"
   if [ -e /home/m1/Downloads/miners/ccminer-2.2.3-tpruvot.tar.gz ]
   then
@@ -209,10 +213,9 @@ then
   echo "Extracting Tpruvot 2.2.3"
   tar -xvzf ccminer-2.2.3-tpruvot.tar.gz
   rm ccminer-2.2.3-tpruvot.tar.gz
-  echo "rm -rf /home/m1/TPccminer"
-  rm -rf /home/m1/TPccminer
-  echo "mv /home/m1/Downloads/miners/TPccminer/ /home/m1/TPccminer/"
-  mv /home/m1/Downloads/miners/TPccminer/ /home/m1/TPccminer/
+  mkdir -p /home/m1/TPccminer/
+  echo "cp -R /home/m1/Downloads/miners/TPccminer/ /home/m1/TPccminer/"
+  cp -R /home/m1/Downloads/miners/TPccminer/* /home/m1/TPccminer/
 else
   echo "Tpccminer-2.2.3 already downloaded"
 fi
@@ -235,10 +238,9 @@ then
   echo "Extracting KTccminer-8.15.tar.gz"
   tar -xvzf KTccminer-8.15.tar.gz
   rm KTccminer-8.15.tar.gz
-  echo "rm -rf /home/m1/KTccminer"
-  rm -rf /home/m1/KTccminer
-  echo "mv /home/m1/Downloads/miners/KTccminer/ /home/m1/KTccminer/"
-  mv /home/m1/Downloads/miners/KTccminer/ /home/m1/KTccminer/
+  echo "cp -R /home/m1/Downloads/miners/KTccminer/* /home/m1/KTccminer/"
+  mkdir -p /home/m1/KTccminer/
+  cp -R /home/m1/Downloads/miners/KTccminer/* /home/m1/KTccminer/
 else
   echo "KTccminer-8.15 already downloaded"
 fi
@@ -261,8 +263,9 @@ then
   echo "Extracting vertminer-1.8.3r4.tar.gz"
   tar -xvzf vertminer-1.8.3r4.tar.gz
   rm vertminer-1.8.3r4.tar.gz
-  echo "mv /home/m1/Downloads/miners/vertminer/ /home/m1/vertminer/"
-  mv /home/m1/Downloads/miners/vertminer/ /home/m1/vertminer/
+  mkdir -p /home/m1/vertminer/
+  echo "cp -R /home/m1/Downloads/miners/vertminer/* /home/m1/vertminer/"
+  cp -R /home/m1/Downloads/miners/vertminer/* /home/m1/vertminer/
 else
   echo "vertminer-1.8.3r4 already downloaded"
 fi
@@ -284,8 +287,9 @@ then
   echo "Extracting nanashi-ccminer-2.2.tar.gz"
   tar -xvzf nanashi-ccminer-2.2.tar.gz
   rm nanashi-ccminer-2.2.tar.gz
-  echo "mv /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/NAccminer/"
-  mv /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/NAccminer/
+  mkdir -p /home/m1/NAccminer/
+  echo "cp -R /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/NAccminer/"
+  cp -R /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/NAccminer/
 else
   echo "nanashi-ccminer-2.2 already downloaded"
 fi
@@ -307,8 +311,9 @@ then
   echo "Extracting KXccminer-skunk-2.2.tar.gz"
   tar -xvzf KXccminer-skunk-2.2.tar.gz
   rm KXccminer-skunk-2.2.tar.gz
-  echo "mv /home/m1/Downloads/miners/KXccminer-skunk/ /home/m1/KXccminer-skunk/"
-  mv /home/m1/Downloads/miners/KXccminer-skunk/ /home/m1/KXccminer-skunk/
+  mkdir -p /home/m1/KXccminer-skunk/
+  echo "cp -R /home/m1/Downloads/miners/KXccminer-skunk/ /home/m1/KXccminer-skunk/"
+  cp -R /home/m1/Downloads/miners/KXccminer-skunk/ /home/m1/KXccminer-skunk/
 else
   echo "KXccminer-skunk-2.2 already downloaded"
 fi
