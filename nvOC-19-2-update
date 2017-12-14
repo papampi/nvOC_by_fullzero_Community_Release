@@ -111,36 +111,36 @@ mkdir -p /home/m1/Downloads/miners
 echo "cd /home/m1/Downloads/miners"
 cd /home/m1/Downloads/miners
 
-echo "Checking DSTM zm miner 0.5.6"
-if [ ! $(cat /home/m1/zec/zm/latest/version | grep 0.5.6) ]
+echo "Checking DSTM zm miner 0.5.7"
+if [ ! $(cat /home/m1/zec/zm/latest/version | grep 0.5.7) ]
 then
-  echo "Downloading and making changes for DSTM ZM miner 0.5.6"
-  echo "Downloading dstm zm miner 5_6"
+  echo "Downloading and making changes for DSTM ZM miner 0.5.7"
+  echo "Downloading dstm zm miner 5_7"
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/DSTM_0.5.6.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/DSTM_0.5.7.tar.gz ]
   then
     echo "Remove Old DSTM"
-    rm /home/m1/Downloads/miners/DSTM_0.5.6.tar.gz
+    rm /home/m1/Downloads/miners/DSTM_0.5.7.tar.gz
   fi
-  wget https://www.dropbox.com/s/6wxsvia4bvnwf3k/DSTM_0.5.6.tar.gz
+  wget https://www.dropbox.com/s/vpbdwv87j8a7wdl/DSTM_0.5.7.tar.gz
   echo "Extracting the zm miner"
-  tar -xvzf DSTM_0.5.6.tar.gz
-  rm DSTM_0.5.6.tar.gz
-  echo "mkdir -p /home/m1/zec/zm/5_6"
-  mkdir -p /home/m1/zec/zm/5_6
-  echo "cp -R /home/m1/Downloads/miners/5_6 /home/m1/zec/zm/5_6"
-  cp -R /home/m1/Downloads/miners/5_6 /home/m1/zec/zm/
-  echo "chmod a+x /home/m1/zec/zm/5_6/zm_miner"
-  chmod a+x /home/m1/zec/zm/5_6/zm_miner
+  tar -xvzf DSTM_0.5.7.tar.gz
+  rm DSTM_0.5.7.tar.gz
+  echo "mkdir -p /home/m1/zec/zm/5_7"
+  mkdir -p /home/m1/zec/zm/5_7
+  echo "cp -R /home/m1/Downloads/miners/5_7 /home/m1/zec/zm/5_7"
+  cp -R /home/m1/Downloads/miners/5_7 /home/m1/zec/zm/
+  echo "chmod a+x /home/m1/zec/zm/5_7/zm_miner"
+  chmod a+x /home/m1/zec/zm/5_7/zm_miner
   mkdir -p /home/m1/zec/zm/latest
-  echo "cp -R /home/m1/zec/zm/5_6/ /home/m1/zec/zm/latest/"
-  cp -R /home/m1/zec/zm/5_6/* /home/m1/zec/zm/latest/
+  echo "cp -R /home/m1/zec/zm/5_7/ /home/m1/zec/zm/latest/"
+  cp -R /home/m1/zec/zm/5_7/* /home/m1/zec/zm/latest/
   echo "chmod a+x /home/m1/zec/zm/latest/zm_miner"
   chmod a+x /home/m1/zec/zm/latest/zm_miner
 else
-  echo "DSTM zm miner 0.5.6 already downloaded"
+  echo "DSTM zm miner 0.5.7 already downloaded"
 fi
 
 sleep 1;echo "";echo ""
@@ -289,7 +289,7 @@ then
   tar -xvzf nanashi-ccminer-2.2.tar.gz
   rm nanashi-ccminer-2.2.tar.gz
   mkdir -p /home/m1/NAccminer/
-  echo "cp -R /home/m1/Downloads/miners/nanashi-ccminer/ /home/m1/NAccminer/"
+  echo "cp -R /home/m1/Downloads/miners/nanashi-ccminer/* /home/m1/NAccminer/"
   cp -R /home/m1/Downloads/miners/nanashi-ccminer/* /home/m1/NAccminer/
 else
   echo "nanashi-ccminer-2.2 already downloaded"
@@ -313,7 +313,7 @@ then
   tar -xvzf KXccminer-skunk-2.2.tar.gz
   rm KXccminer-skunk-2.2.tar.gz
   mkdir -p /home/m1/KXccminer-skunk/
-  echo "cp -R /home/m1/Downloads/miners/KXccminer-skunk/ /home/m1/KXccminer-skunk/"
+  echo "cp -R /home/m1/Downloads/miners/KXccminer-skunk/* /home/m1/KXccminer-skunk/"
   cp -R /home/m1/Downloads/miners/KXccminer-skunk/* /home/m1/KXccminer-skunk/
 else
   echo "KXccminer-skunk-2.2 already downloaded"
