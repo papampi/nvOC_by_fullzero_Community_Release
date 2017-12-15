@@ -18,7 +18,7 @@ bash nvOC-19-2-update
 
 Download nvOC-19-2-update: https://github.com/papampi/nvOC_by_fullzero_Community_Release/blob/19.2/nvOC-19-2-update
 
-Dropbox link :https://www.dropbox.com/s/i9icx01k9joo7ir/nvOC-19-2-update
+Dropbox link :https://www.dropbox.com/s/bajt2gaf87kgjrp/nvOC-19-2.tar.gz
 
 These are unofficial edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
 
