@@ -32,9 +32,11 @@
 # v=0008 : Papampi: Removed MINER_TIME to comply with changes in 3main (Moving watchdog before miner starts)
 #          Added check and restart miner after internet comes back online
 # v=0009 : leenoox: Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
+# v=0010 : Stubo: Added secondary fix for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is 
+#          queried from nvidia-smi (a.k.a. bleed issue of power.draw)
 #
 #
-# DEV_VERSION=0009
+# DEV_VERSION=0010
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
 nvOC_wdog_ver="v0019-2.0.009"   # Do not edit this
@@ -98,7 +100,7 @@ echo "$(date) - Watchdog is starting" # | tee -a ${LOG_FILE}
 echo ""
 sleep 2
 
-# Dont send telegram alert after every WTM switch, if WTM is YES then don't send telegram at all watchdog starts
+# Don't send telegram alert after every WTM switch, if WTM is YES then don't send telegram at all watchdog starts
 if [[ $BaliMiner_TELEGRAM_ALERTS == "YES" && $WTM_AUTO_SWITCH == "NO" ]]; then
   bash '/home/m1/telegram'
 fi
@@ -168,11 +170,11 @@ while true; do
 
   # Loop over each GPU and check utilization
   for ((GPU=0;GPU < $GPU_COUNT;GPU++)); do
-    { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
+    { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
 
     # Numeric check: if any are not numeric, we have a mining problem
 
-    # Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
+    # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
     if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]; then
       if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
         # Not numeric so: Help we've lost a GPU, so reboot
