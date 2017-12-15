@@ -34,4 +34,3 @@ http://nvoc-mining-os.com/
 
 https://bitcointalk.org/index.php?topic=1854250.0
 
-https://discord.gg/8YDFEvY
