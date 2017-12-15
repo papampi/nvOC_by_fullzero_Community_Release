@@ -15,20 +15,25 @@ nvOC_temp_ver="v0019-2.0.005"   # Do not edit this
 # Based on the original code by Maxximus007
 #
 # Changelog:
-# Set higher process and disk I/O priorities - Temp control is essential service
-# Auto detection of number of GPU's
-# Only set, adjust and display available GPU's, dynamic variables creation
-# Numeric check of the return values from nvidia-smi (looking for numbers only, anything else = error)
-# Reboot if GPU error detected and watchdog didn't react for 60 seconds (act as a backup watchdog)
-# Added query delay to nvidia API (no burst spamming, added 0.5 sec delay, prevent overload), helps reduce stale shares
-# New (improved) display output including colors and bold text
-# Fixed the log file handling (Bug fix: Previous implemantation was not limiting the file size)
-# Removed repetitive GPUFanControlState setting, it only needs to be set once, not every cycle (prevent API overload)
-# Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
-#
+# v=0001 : leenoox
+#          Set higher process and disk I/O priorities - Temp control is essential service
+#          Auto detection of number of GPU's
+#          Only set, adjust and display available GPU's, dynamic variables creation
+#          Numeric check of the return values from nvidia-smi (looking for numbers only, anything else = error)
+#          Reboot if GPU error detected and watchdog didn't react for 60 seconds (act as a backup watchdog)
+#          Added query delay to nvidia API (no burst spamming, added 0.5 sec delay, prevent overload), helps reduce stale shares
+#          New (improved) display output including colors and bold text
+#          Fixed the log file handling (Bug fix: Previous implemantation was not limiting the file size)
+#          Removed repetitive GPUFanControlState setting, it only needs to be set once, not every cycle (prevent API overload)
+#          Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
+# v=0002 : Stubo: Added secondary fix for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is 
+#          queried from nvidia-smi (a.k.a. bleed issue of power.draw)
+#          
 # TODO:
 # Telegram implementation
 # Further code optimization
+#
+# DEV_VERSION=0002
 
 
 export DISPLAY=:0
@@ -199,11 +204,11 @@ ERR_TIMER_BRK=$ERR_TIMER
 while true; do
   GPU=0
   while [ $GPU -lt $GPUS ]; do
-    { IFS=', ' read CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
+    { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
 
-    # Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
+    # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
     if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]; then
       if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
         # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
@@ -230,7 +235,7 @@ while true; do
         while [ $ERR_TIMER -gt 0 ]; do
           echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
           sleep 15
-          { IFS=', ' read CURRENT_TEMP CURRENT_FAN POWERDRAW PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.draw,power.limit --format=csv,noheader,nounits)
+          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
           if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
             ERR_TIMER=$(($ERR_TIMER - 15))
           else
