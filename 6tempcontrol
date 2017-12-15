@@ -77,7 +77,7 @@ LOG_FILE="/home/m1/6_autotemplog"
 if [ -e "$LOG_FILE" ]; then
   LASTLOG=$(tail -n 100 $LOG_FILE)     # Limit the log file, just keep the last 100 entries
   echo "$LASTLOG" > $LOG_FILE
-  if [[ $(wc -l <$LOG_FILE) -gt 0 ]]; then
+  if [[ $(wc -l <$LOG_FILE) -gt 1 ]]; then
     echo -e "${B}LOG FILE:${N} (Showing the last 10 recorded entries)${R}"
     cat $LOG_FILE | tail -n 10
     echo -e "${N}"
