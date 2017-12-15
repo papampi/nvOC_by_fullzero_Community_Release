@@ -1,13 +1,18 @@
+
 #!/bin/bash
 # whattomine.com profit check by papampi
 # for nvOC v0019-2.0 - Community Release
 
+
+
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_profit_check_ver="v0019-2.0.001"   # Do not edit this
+wtm_profit_check_ver="v0019-2.0.002"   # Do not edit this
 
 echo "Whattomine.com Profit Check for $nvOC_Ver"
 echo "Version: : $wtm_profit_check_ver" 
 echo ""
+
+
 
 source /home/m1/1bash
 
@@ -19,6 +24,16 @@ if [ -e "$LOG_FILE" ] ; then
   echo "$(cat $LOG_FILE | tail -n 2k)" > $LOG_FILE
 fi
 
+# Check last top coin and change if not in coin list any more
+
+FIRST_COIN="$(echo $WTM_AUTO_SWITCH_COINS |  awk -F'[_;]' '{print $1}')"
+TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
+if [ -z $(echo $WTM_AUTO_SWITCH_COINS | grep $TOP_COIN)  ]
+then
+  echo "Last top coin not in current coin list any more, Switch to 1st coin"
+  sed -i "s/${TOP_COIN}/${FIRST_COIN}/g" /home/m1/WTM_top_coin
+fi
+
 while true
 do
 
@@ -26,7 +41,7 @@ do
   sleep 5
   source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
   CURRENT_COIN=$COIN
-  TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
+  TOP_COIN=$(cat WTM_top_coin | grep : | sed 's/:[0-9][0-9]//' | sed 's/[0-9]//')
   TIMEIN=$WTM_PROFIT_CHECK_INTERVAL
   TIMEOUT=$(($TIMEIN * 60))
   echo ""
@@ -34,5 +49,3 @@ do
   sleep $TIMEOUT
 
 done
-
-
