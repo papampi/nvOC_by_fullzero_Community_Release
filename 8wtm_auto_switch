@@ -31,7 +31,7 @@ FIRST_COIN="$(echo $WTM_AUTO_SWITCH_COINS |  awk -F'[_;]' '{print $1}')"
 TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
 if [ -z $(echo $WTM_AUTO_SWITCH_COINS | grep $TOP_COIN)  ]
 then
-  echo "Last top coin not in current coin list any more, Switch to 1st coin"
+  echo "Last top coin not in current coin list any more, Switch to 1st coin"  | tee -a $LOG_FILE
   sed -i "s/${TOP_COIN}/${FIRST_COIN}/g" /home/m1/WTM_top_coin
 fi
 
