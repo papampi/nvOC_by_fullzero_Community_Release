@@ -8,7 +8,7 @@
 ##########################################################################
 ##########################################################################
 
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
+
 nvOC_1bash_ver="v0019-2.0.001"   # Do not edit this
 
 
@@ -56,9 +56,9 @@ nvOC_1bash_ver="v0019-2.0.001"   # Do not edit this
 #               ( BTC address: 1AwUJMztX2ARZp8ULqR5UsK3b27om8j3vq )
 
 # papampi:      nvOC ver 0019-2.0 (community release) main developer
-#               PAPAMPI_WTM_AUTO_SWITCH
-#	        PAPAMPI_WTM_PROFIT_CHECK
-#	        added multiple COIN selections
+#               WTM_AUTO_SWITCH
+#	            WTM_PROFIT_CHECK
+#	            Added multiple COIN selections
 #               Alternative telegram alert and guide
 #               Web info http://rig_ip/index.html
 #               multiple bug fixes and enhacements for ver 0019-2.0
@@ -195,7 +195,7 @@ SSH="YES"                   # YES or NO # If you use SSH to remotely connect to 
 
 
 
-AUTO_REBOOT="NO"            # YES or NO # If you want this rig to periodicly reboot set this to YES
+AUTO_REBOOT="NO"            # YES or NO # If you want this rig to periodically reboot set this to YES
 
 REBOOT_TIMEOUT_IN_MINUTES=2880  # If AUTO_REBOOT is set to YES, use this to set how often to reboot, 1440 = 24 hours, 2880 = 48 hours
 
@@ -480,25 +480,25 @@ ZCOIN_POOL="xzc.suprnova.cc"
 ZCOIN_PORT="1569"
 
 # KRB ## No Need to add stratum+tcp:// to server address
-KRB_ADDRESS="replace_with_your_KRB_address"
+KRB_ADDRESS="replace_with_your_address"
 KRB_POOL="krb.sberex.com"
 KRB_PORT="5555"
 
 # Electroneum(ETN) ## No Need to add stratum+tcp:// to server address
-ETN_ADDRESS="replace_with_your_KRB_address"
+ETN_ADDRESS="replace_with_your_address"
 ETN_POOL="ETN POOL"
 ETN_PORT="ETN PORT"
 
 # SIGT ## No Need to add stratum+tcp:// to server address
 SIGT_WORKER="$WORKERNAME"
-SIGT_ADDRESS="replace_with_your_SIGT_address"
+SIGT_ADDRESS="replace_with_your_address"
 SIGT_POOL="us.hashbag.cc"
 SIGT_PORT="8644"
 SIGT_INTENSITY="25"
 
 # Altcommunity(ALTCOM) ## No Need to add stratum+tcp:// to server address
 ALTCOM_WORKER="$WORKERNAME"
-ALTCOM_ADDRESS="replace_with_your_ALTCOM_address"
+ALTCOM_ADDRESS="replace_with_your_address"
 ALTCOM_POOL="ALTCOM POOL"
 ALTCOM_PORT="ALTCOM PORT"
 ALTCOM_INTENSITY="25"
@@ -512,7 +512,7 @@ SIB_INTENSITY="21"
 
 # PXC ## No Need to add stratum+tcp:// to server address
 PXC_WORKER="$WORKERNAME"
-PXC_ADDRESS="replace_with_your_GRS_address"
+PXC_ADDRESS="replace_with_your_address"
 PXC_POOL="atlas.phoenixcoin.org:"
 PXC_PORT="10554"
 PXC_INTENSITY="23"
@@ -553,40 +553,40 @@ ZPOOL_SKEIN_INTENSITY="22"
 
 # MPH_EQUIHASH
 MPH_WORKER="$WORKERNAME"
-MPH_ADDRESS="Your Miningpoolhub account name"
+MPH_ADDRESS="replace_with_your_MPH_username"
 MPH_EQUIHASH_POOL="us-east.equihash-hub.miningpoolhub.com"
 MPH_EQUIHASH_PORT="17023"
 
 # MPH_ETHASH
 MPH_WORKER="$WORKERNAME"
-MPH_ADDRESS="Your Miningpoolhub account name"
+MPH_ADDRESS="replace_with_your_MPH_username"
 MPH_ETHASH_POOL="us-east.ethash-hub.miningpoolhub.com"
 MPH_ETHASH_PORT="17020"
 
 # GRS ## No Need to add stratum+tcp:// to server address
 GRS_WORKER="$WORKERNAME"
-GRS_ADDRESS="replace_with_your_GRS_address"
+GRS_ADDRESS="replace_with_your_address"
 GRS_POOL="moria.dwarfpool.com"
 GRS_PORT="3345"
 GRS_INTENSITY="23"
 
 # XMY ## No Need to add stratum+tcp:// to server address
 XMY_WORKER="$WORKERNAME"
-XMY_ADDRESS="Your Miningpoolhub Account Name"
+XMY_ADDRESS="replace_with_your_address"
 XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
 XMY_PORT="20479"
 XMY_INTENSITY="23"
 
 # MONA ## No Need to add stratum+tcp:// to server address
 MONA_WORKER="$WORKERNAME"
-MONA_ADDRESS="Your Suprnova Account name"
+MONA_ADDRESS="replace_with_your_address"
 MONA_POOL="mona.suprnova.cc"
 MONA_PORT="2995"
 MONA_INTENSITY="21"
 
 # VTC ## No Need to add stratum+tcp:// to server address
 VTC_WORKER="$WORKERNAME"
-VTC_ADDRESS="Your Miningpoolhub Account Name"
+VTC_ADDRESS="replace_with_your_address"
 VTC_POOL="hub.miningpoolhub.com"
 VTC_PORT="20507"
 VTC_INTENSITY="21"
@@ -607,20 +607,20 @@ NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments des
 # DGB ## No Need to add stratum+tcp:// to server address
 DGB_INTENSITY="24"
 DGB_WORKER="$WORKERNAME"
-DGB_ADDRESS="Your Miningpoolhub Account Name"
+DGB_ADDRESS="replace_with_your_address"
 DGB_POOL="hub.miningpoolhub.com"
 DGB_PORT="20527"
 
 # LBC ## No Need to add stratum+tcp:// to server address
 LBC_WORKER="$WORKERNAME"
-LBC_ADDRESS="Your Suprnova Account name"
+LBC_ADDRESS="replace_with_your_address"
 LBC_POOL="lbry.suprnova.cc"
 LBC_PORT="6256"
 LBC_INTENSITY="23"
 
 # FTC ## No Need to add stratum+tcp:// to server address
 FTC_WORKER="$WORKERNAME"
-FTC_ADDRESS="Your Miningpoolhub Account Name"
+FTC_ADDRESS="replace_with_your_address"
 FTC_POOL="hub.miningpoolhub.com"
 FTC_PORT="20510"
 FTC_INTENSITY="23"
@@ -737,7 +737,8 @@ PASL_ADDRESS="replace_with_your_PASL_ACCOUNT"
 PASL_POOL="mine.pasl.fairpool.xyz"
 PASL_PORT="4009"
 
-# XMR : if plusCPU is "YES" replace with your XMR info  ##
+# XMR : if plusCPU is "YES" replace with your XMR info  
+## No Need to add stratum+tcp:// to server address
 XMR_WORKER="$WORKERNAME"
 XMR_ADDRESS="replace_with_your_XMR_address"
 XMR_POOL="xmr-us-east1.nanopool.org"
@@ -1038,3 +1039,4 @@ then
     MEMORY_OVERCLOCK=-1000
   fi
 fi
+
