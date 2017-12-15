@@ -8,9 +8,6 @@
 ##########################################################################
 ##########################################################################
 
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-nvOC_temp_ver="v0019-2.0.005"   # Do not edit this
-
 # TEMP_CONTROL for nvOC v0019-2.0 by leenoox
 #
 # Based on the original code by Maxximus007
@@ -35,6 +32,9 @@ nvOC_temp_ver="v0019-2.0.005"   # Do not edit this
 # Further code optimization
 #
 # DEV_VERSION=0002
+
+nvOC_Ver="nvOC v0019-2.0 - Community Release"
+nvOC_temp_ver="v0019-2.0.002"   # Do not edit this
 
 
 export DISPLAY=:0
