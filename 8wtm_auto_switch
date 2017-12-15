@@ -4,26 +4,35 @@
 # Feel free to use, change, edit and do what you want with it.
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.005"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.0.006"   # Do not edit this
 
 echo "Whattomine.com Auto Switch for $nvOC_Ver"
 echo "Version: : $wtm_auto_switch_ver" 
 echo ""
-
 
 source /home/m1/1bash
 
 # Creating a log file to record coin switch
 LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
 if [[ -e "$LOG_FILE" ]] ; then
-  #Limit the logfile, just keep the last 1K
-  echo "$(cat $LOG_FILE | tail -n 1k)" > $LOG_FILE
+  #Limit the logfile, just keep the last 5K
+  echo "$(cat $LOG_FILE | tail -n 5k)" > $LOG_FILE
 fi
 
 WTM_HISTORY="/home/m1/WTM_switch_history"
 if [[ -e "$WTM_HISTORY" ]] ; then
   #Limit the logfile, just keep the last 100 lines
   echo "$(cat $WTM_HISTORY | tail -n 100)" > $WTM_HISTORY
+fi
+
+# Check last top coin and change if not in coin list any more
+
+FIRST_COIN="$(echo $WTM_AUTO_SWITCH_COINS |  awk -F'[_;]' '{print $1}')"
+TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
+if [ -z $(echo $WTM_AUTO_SWITCH_COINS | grep $TOP_COIN)  ]
+then
+  echo "Last top coin not in current coin list any more, Switch to 1st coin"
+  sed -i "s/${TOP_COIN}/${FIRST_COIN}/g" /home/m1/WTM_top_coin
 fi
 
 while true
@@ -33,10 +42,12 @@ do
 
     python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json  | tee -a $LOG_FILE
     sleep 5
+    #start leenoox mod:		
     source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
     CURRENT_COIN=$COIN
     CURRENT_COIN_ALGORITHM=$ALGORITHM
-
+    #CURRENT_COIN=$(cat /home/m1/1bash | grep COIN= | grep -v "#COIN=" | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+    #end leenoox mod:		
     TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
@@ -100,7 +111,7 @@ do
             #restart wdog
             pkill -f 5watchdog
             sleep 1
-            screen -dmS wdog bash /home/m1/5watchdog
+            screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
             echo "" | tee -a $LOG_FILE
             echo "watchdog restarted in screen wdog; attach with: screen -r wdog" | tee -a $LOG_FILE
             echo "" | tee -a $LOG_FILE
@@ -139,3 +150,4 @@ do
     echo "Auto start miner set to NO" | tee -a $LOG_FILE
   fi
 done
+
