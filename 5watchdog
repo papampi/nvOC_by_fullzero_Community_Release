@@ -39,7 +39,7 @@
 # DEV_VERSION=0010
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-nvOC_wdog_ver="v0019-2.0.009"   # Do not edit this
+nvOC_wdog_ver="v0019-2.0.010"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
