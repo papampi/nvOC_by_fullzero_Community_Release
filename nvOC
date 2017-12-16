@@ -508,6 +508,7 @@ nvOC_ver_from_3main=$(head -n 100 /home/m1/3main | grep nvOC_ver= | sed 's/nvOC_
 nvOC_3main_ver=$(head -n 100 /home/m1/3main | grep nvOC_3main_ver= | sed 's/nvOC_3main_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
 nvOC_wdog_ver=$(head -n 100 /home/m1/5watchdog | grep nvOC_wdog_ver= | sed 's/nvOC_wdog_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
 nvOC_temp_ver=$(head -n 100 /home/m1/6tempcontrol | grep nvOC_temp_ver= | sed 's/nvOC_temp_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+nvOC_wtm_ver=$( head -n 100 /home/m1/8wtm_auto_switch | grep wtm_auto_switch_ver= | sed 's/wtm_auto_switch_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
 kernel=$(cat /proc/version | cut -d' ' -f 3);
 # os_release=$(cat /usr/lib/os-release | grep PRETTY_NAME | sed 's/PRETTY_NAME=\"//' | sed 's/\"//');
 # os_release=$(cat /etc/lsb-release | grep DISTRIB_DESCRIPTION | sed 's/DISTRIB_DESCRIPTION=\"//' | sed 's/\"//');
@@ -556,6 +557,7 @@ nvOC (3main)  :  $nvOC_ver_from_3main
 3main ver     :  $nvOC_3main_ver 
 5watchdog ver :  $nvOC_wdog_ver 
 6tempcontrol v:  $nvOC_temp_ver 
+wtm switch ver:  $nvOC_wtm_ver
 Kernel        :  $kernel 
 OS            :  $os_release 
 System        :  $system 
