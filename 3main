@@ -313,16 +313,6 @@ then
   fi
 fi
 
-if [ $TELEGRAM_MESSAGE == "YES" ]
-then
-  HCD='/home/m1/telegram'
-  running=$(ps -ef | awk '$NF~"TELEGRAM_MESSAGE" {print $2}')
-  if [ "$running" == "" ]
-  then
-    guake -n $HCD -r AUTO_GRAM -e "bash /home/m1/7telegram"
-    running=""
-  fi
-fi
 
 if [ $_Parallax_MODE == "YES" ]
 then
@@ -418,6 +408,18 @@ then
   echo "  "
   echo "  "
 fi
+
+if [ $TELEGRAM_MESSAGE == "YES" ]
+then
+  HCD='/home/m1/telegram'
+  running=$(ps -ef | awk '$NF~"TELEGRAM_MESSAGE" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r AUTO_GRAM -e "bash /home/m1/7telegram"
+    running=""
+  fi
+fi
+
 
 if [ "$FAN_SPEED" -lt "40" ]
 then
