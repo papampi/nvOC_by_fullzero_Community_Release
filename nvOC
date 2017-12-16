@@ -33,11 +33,14 @@
 # v=0005 : papampi
 #          added miner-log, wdog-log, temp-log, wtm-log, master-log
 #
-# DEV_VERSION=0005
+# v=0006 : Stubo
+#          changed calls of other external functions to internal subroutine calls
+#
+# DEV_VERSION=0006
 
 
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.0.005"                   # Do not edit this
+nvOC_nvOC_ver="v0019-2.0.006"                   # Do not edit this
 
 
 export DISPLAY=:0
@@ -174,7 +177,7 @@ GPUinfo()
 Patch()
 {
    # Kill off the nv_OC processes
-   ~/nvOC stop
+   Stop
   
    echo -e "${B}Applying patches/updates...${N}"; echo ""
    
@@ -200,7 +203,7 @@ Start()
     if [ $LOCALorREMOTE == "LOCAL" ];then
        gnome-terminal
     else   
-       ~/nvOC reboot
+       Reboot
     fi   
 }
 
@@ -301,7 +304,7 @@ if [[ $response =~ ^[Yy]$ ]]; then
   echo -e "${Y}Stopping nvOC processes...${N}"
    
   # Kill off the nv_OC processes
-  ~/nvOC stop
+  Stop
   
   echo ""
   echo "... done!"
@@ -381,7 +384,7 @@ if [[ $response =~ ^[Yy]$ ]]; then
       else
         echo "REMOTE setting in 1bash detected."
         echo "To resume mining we have to reboot the rig"
-        ~/nvOC reboot
+        Reboot
       fi
     else
       echo "Neither y or n were pressed!"
@@ -404,7 +407,7 @@ if [[ $response =~ ^[Yy]$ ]]; then
         else
           echo "REMOTE setting in 1bash detected."
           echo "To resume mining we have to reboot the rig"
-          ~/nvOC reboot
+          Reboot
         fi
       fi
     fi
@@ -429,7 +432,7 @@ if [[ $response =~ ^[Yy]$ ]]; then
   else
     echo "REMOTE setting in 1bash detected."
     echo "To resume mining we have to reboot the rig"
-    ~/nvOC reboot
+    Reboot
   fi
 fi
 }
@@ -781,14 +784,12 @@ case $# in
          reboot)       Reboot;;
          start)        Start;;
          stop)         Stop;;
-         miner-log)     miner-log;;
-         wdog-log)      wdog-log;;
-         temp-log)      temp-log;;
-         wtm-log)       wtm-log;;
-         master-log)    master-log;;  
+         miner-log)    miner-log;;
+         wdog-log)     wdog-log;;
+         temp-log)     temp-log;;
+         wtm-log)      wtm-log;;
+         master-log)   master-log;;  
          *)            echo_usage;;
       esac;;
    *) echo_usage;;
 esac  
-
-
