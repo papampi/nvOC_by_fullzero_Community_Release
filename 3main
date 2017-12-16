@@ -25,14 +25,16 @@
 # v=0003 : leenoox
 #          added GPU LED Logo brightness control
 #
-#
-# DEV_VERSION=0003
+# v=0004 : papampi
+#          Telegram Changes       
+
+# DEV_VERSION=0004
 
 
 source /home/m1/1bash
 
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.003"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.004"                  # Do not edit this
 
 
 
@@ -43,7 +45,7 @@ nvOC_3main_ver="v0019-2.0.003"                  # Do not edit this
 
 echo ""
 echo " $nvOC_ver "
-echo "3main Version: $nvOC_3main_ver"
+echo ""
 echo ""
 
 sudo ldconfig /usr/local/cuda/lib64
@@ -289,9 +291,9 @@ then
   then
     if [ $LOCALorREMOTE == "LOCAL" ]
     then
-      guake -n $HCD -r plusCPU -e "$HCD -a cryptonight -o stratum+tcp://$XMR_POOL -u $XMRADDR -p x -t $threadCOUNT"
+      guake -n $HCD -r plusCPU -e "$HCD -a cryptonight -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT"
     else
-      screen -dmS plusCPU $HCD -a cryptonight -o stratum+tcp://$XMR_POOL -u $XMRADDR -p x -t $threadCOUNT
+      screen -dmS plusCPU $HCD -a cryptonight -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT
     fi
     echo ""
     echo "plusCPU process in guake terminal Tab (f12)"
@@ -311,13 +313,13 @@ then
   fi
 fi
 
-if [ $BaliMiner_TELEGRAM_ALERTS == "YES" ]
+if [ $TELEGRAM_MESSAGE == "YES" ]
 then
   HCD='/home/m1/telegram'
-  running=$(ps -ef | awk '$NF~"BaliMiner_TELEGRAM_ALERTS" {print $2}')
+  running=$(ps -ef | awk '$NF~"TELEGRAM_MESSAGE" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r AUTO_GRAM -e "bash /home/m1/BaliMiner_TELEGRAM_ALERTS"
+    guake -n $HCD -r AUTO_GRAM -e "bash /home/m1/7telegram"
     running=""
   fi
 fi
@@ -1066,7 +1068,6 @@ EOF
     #running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
 
-
     if [ "$running" != "" ]
     then
       #target=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
@@ -1123,4 +1124,3 @@ while true
 do
   sleep 60
 done
-
