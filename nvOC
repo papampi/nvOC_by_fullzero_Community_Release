@@ -30,12 +30,14 @@
 #          applied "bleed" fix
 #          added version, export DISPLAY, source 1bash, added PNY and PALIT PCI ID's
 #
+# v=0005 : papampi
+#          added miner-log, wdog-log, temp-log, wtm-log, master-log
 #
-# DEV_VERSION=0004
+# DEV_VERSION=0005
 
 
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.0.004"                   # Do not edit this
+nvOC_nvOC_ver="v0019-2.0.005"                   # Do not edit this
 
 
 export DISPLAY=:0
@@ -86,6 +88,17 @@ echo_usage()
    echo "           stops mining, watchdog and temperature control"
    echo -e "        ${C}$0 start${N}"
    echo "           starts normal nvOC mining operations"
+   echo -e "        ${C}$0 miner-log${N}"
+   echo "           display live miner output"
+   echo -e "        ${C}$0 wdog-log${N}"
+   echo "           display live watchdog output (Only for REMOTE)"
+   echo -e "        ${C}$0 temp-log${N}"
+   echo "           display live temp control output (Only for REMOTE)"
+   echo -e "        ${C}$0 wtm-log${N}"
+   echo "           display live wtm auto switch output"
+   echo -e "        ${C}$0 master-log${N}"
+   echo "           display live miner, watchdog, temp control and wtm auto switch output"
+
 }
 
 ################################# Clearlogs ######################################
@@ -704,6 +717,46 @@ echo
 }
 
 
+################################# miner-log ######################################
+miner-log()
+{
+tail -f /home/m1/nvoc_logs/screenlog.0
+}
+
+################################# wdog-log ######################################
+wdog-log()
+{
+if [ $LOCALorREMOTE == "REMOTE" ];then
+tail -f /home/m1/nvoc_logs/watchdog-screenlog.0
+else
+echo "Only for REMOTE"
+fi
+}
+
+################################# temp-log ######################################
+temp-log()
+{
+if [ $LOCALorREMOTE == "REMOTE" ];then
+tail -f /home/m1/nvoc_logs/tempcontrol-screenlog.0
+else
+echo "Only for REMOTE"
+fi
+}
+
+
+################################# wtm-log ######################################
+wtm-log()
+{
+tail -f /home/m1/nvoc_logs/8_wtmautoswitchlog
+}
+
+################################# master-log ######################################
+master-log()
+{
+tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/tempcontrol-screenlog.0 /home/m1/nvoc_logs/watchdog-screenlog.0 /home/m1/nvoc_logs/8_wtmautoswitchlog
+}
+
+
 ###############################################################################
 ################################# Main Logic ##################################
 ###############################################################################
@@ -726,6 +779,11 @@ case $# in
          reboot)       Reboot;;
          start)        Start;;
          stop)         Stop;;
+         miner-log)     miner-log;;
+         wdog-log)      wdog-log;;
+         temp-log)      temp-log;;
+         wtm-log)       wtm-log;;
+         master-log)    master-log;;  
          *)            echo_usage;;
       esac;;
    *) echo_usage;;
