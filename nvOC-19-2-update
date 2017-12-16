@@ -150,7 +150,7 @@ fi
 
 sleep 1;echo "";echo ""
 
-echo "Checking Claymore 10.02"
+echo "Checking Claymore 10.2"
 
 if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.02) ]
 then
@@ -301,6 +301,57 @@ then
 else
   echo "KXccminer-skunk-2.2 already downloaded"
 fi
+
+sleep 1;echo "";echo ""
+
+echo "Checking Etminer directory"
+if [[ ! -d /home/m1/eth/ethminer/ ]]
+then
+  echo "Moving ethminer old miners"
+  echo "mkdir -p /home/m1/eth/ethminer/"
+  mkdir -p /home/m1/eth/ethminer/
+  echo "mkdir -p /home/m1/eth/ethminer/latest"
+  mkdir -p /home/m1/eth/ethminer/latest
+  echo "cd /home/m1/eth/"
+  cd /home/m1/eth/
+  echo "cp -r ethminer_11 ethminer_12dev2 /home/m1/eth/ethminer/"
+  cp -r ethminer_11 ethminer_12dev2 /home/m1/eth/ethminer/
+  echo "rm -rf ethminer_11 ethminer_12dev2 "
+  rm -rf ethminer_11 ethminer_12dev2
+else
+  echo "ethminer directory structre already fixed"
+fi
+
+sleep 1;echo "";echo ""
+
+echo "Checking ethminer 0.12.0"
+
+if [ ! $(cat /home/m1/eth/ethminer/latest/version | grep 0.12.0) ]
+then
+  echo "Downloading and making changes for ethminer 0.12.0"
+  mkdir -p /home/m1/Downloads/miners
+  echo "cd /home/m1/Downloads/miners"
+  cd /home/m1/Downloads/miners
+  if [ -e /home/m1/Downloads/miners/ethminer-0.12.0.tar.gz ]
+  then
+    echo "Remove Old ethminer"
+    rm /home/m1/Downloads/miners/ethminer-0.12.0.tar.gz
+  fi
+  wget https://www.dropbox.com/s/dhvq2zhlpih01y8/ethminer-0.12.0.tar.gz
+  echo "tar -xvzf ethminer-0.12.0.tar.gz"
+  tar -xvzf ethminer-0.12.0.tar.gz
+  rm ethminer-0.12.0.tar.gz
+  mkdir -p /home/m1/eth/ethminer/0.12.0/
+  cp -R /home/m1/Downloads/miners/ethminer/* /home/m1/eth/ethminer/0.12.0/
+  mkdir -p /home/m1/eth/ethminer/latest/
+  echo "cp -R /home/m1/eth/ethminer/0.12.0/* /home/m1/eth/ethminer/latest/"
+  cp -R /home/m1/eth/ethminer/0.12.0/* /home/m1/eth/ethminer/latest/
+  echo "chmod a+x /home/m1/eth/ethminer/latest/ethmier"
+  chmod a+x  /home/m1/eth/ethminer/latest/ethmier
+else
+  echo "ethminer-0.12.0 already downloaded"
+fi
+sleep 1;echo "";echo ""
 
 echo "Downloading new miners finished"
 
