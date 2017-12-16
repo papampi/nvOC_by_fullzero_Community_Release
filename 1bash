@@ -7,9 +7,11 @@
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
+# v=0001 : 
+# v=0002 : Papampi : Telegram changes
 
 
-nvOC_1bash_ver="v0019-2.0.001"   # Do not edit this
+nvOC_1bash_ver="v0019-2.0.002"   # Do not edit this
 
 
 # 1bash for v0019-2.0 (1bash subversion 001)
@@ -19,7 +21,7 @@ nvOC_1bash_ver="v0019-2.0.001"   # Do not edit this
 
 # + contributors (in alphabetical order):
 
-# BaliMiner:    BaliMiner_TELEGRAM_ALERTS
+# BaliMiner:    TELEGRAM_MESSAGES
 #               ( BTC address:  1HbzxQ6AVeWYvFm322KtxZcJJLAqfJHpN8 )
 
 # damNmad:      damNmad_ALGO_SPECIFIC_OC
@@ -296,7 +298,9 @@ RESTORE_POWER_LIMIT=90      # Restore original Power Limit if fan speed is lower
 # https://youtu.be/HS7Q1zH00bs
 # If You set telegram to "NO" but add CHATID and API, you will only get notifications from system.
 
-BaliMiner_TELEGRAM_ALERTS="NO"       # YES or NO # Set to YES if you want to use Telegram service
+TELEGRAM_MESSAGES="NO"       # YES or NO # Set to YES if you want to receive Telegram Periodic Messages
+
+TELEGRAM_ALERTS="YES"       # YES or NO # Set to No if you Dont want to get Telegram Alerts
 
 TELEGRAM_TYPE="papampi"              # kk003 or papampi or damNmad or BaliMiner # There are 4 versions. Please choose one
 
@@ -1039,4 +1043,3 @@ then
     MEMORY_OVERCLOCK=-1000
   fi
 fi
-
