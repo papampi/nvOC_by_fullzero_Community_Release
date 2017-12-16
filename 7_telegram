@@ -1,0 +1,19 @@
+#!/bin/bash
+
+source ~/1bash
+
+while true
+do
+
+TIMEIN=$TELEGRAM_TIMEOUT_IN_MINUTES
+
+TIMEOUT=$(($TIMEIN * 60))
+
+bash '/home/m1/telegram'
+sleep 2
+echo ""
+echo "New Telegram in $TIMEOUT seconds"
+sleep $TIMEOUT
+echo ""
+done
+fi
