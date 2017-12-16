@@ -340,7 +340,7 @@ sleep 1;echo "";echo ""
 echo " Checking hostname and permanently fixing it if there is conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
-  echo "hostanema has conflict, Permanently fixing it"
+  echo "hostname has conflict, Permanently fixing it"
   echo "sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts"
   sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts
   echo "sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname"
@@ -377,6 +377,10 @@ then
   cp /home/m1/2unix /home/m1/backups/old_to_19.2/2unix.bak
 else
   echo "No new backups, already have backups in /home/m1/backups/old_to_19.2"
+fi
+if [ -e /home/m1/BaliMiner_TELEGRAM_ALERTS ];then
+  echo "mv /home/m1/BaliMiner_TELEGRAM_ALERTS /home/m1/backups/old_to_19.2/BaliMiner_TELEGRAM_ALERTS.bak"
+  mv /home/m1/BaliMiner_TELEGRAM_ALERTS /home/m1/backups/old_to_19.2/BaliMiner_TELEGRAM_ALERTS.bak
 fi
 
 sleep 1;echo "";echo ""
@@ -416,6 +420,8 @@ echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchd
 cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog
 echo "cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC"
 cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC
+echo "cp /home/m1/Downloads/nvOC-19-2/7telegram /home/m1/7telegram"
+cp /home/m1/Downloads/nvOC-19-2/7telegram /home/m1/7telegram
 
 sleep 1;echo "";echo ""
 
@@ -464,44 +470,50 @@ then
   sleep 5
 fi
 
-
-if [[ -z $(head -n 50 /home/m1/1bash | grep '19.2\|19-2' ) ]]; then
+if [[ -z $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.00' ) ]]; then
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "                                             1bash was not v0019-2.0.00*"
+  echo "                                     Old 1bash copied to /home/m1/backups/1bash.old"
+  echo "                               New 1bash v0019-2.0.002 replaced and added to /home/m1/1bash"
+  echo "                                       Dont forget to edit the new 1bash before reboot"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  cp /home/m1/1bash /home/m1/backups/1bash.old
   cp /home/m1/Downloads/nvOC-19-2/1bash /home/m1/1bash
-  echo ""
+fi
+if [[ -n $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
-  echo "                                1bash is not V0019-2 adding new one"
-  echo "                              New 1bash v0019-2.0.001 in /home/m1/1bash"
-  echo "                             Dont forget to edit the 1bash before reboot"
+  echo "                            Your 1bash is v0019-2.0-001, latest version is v0019-2.0-002"
+  echo "                                      Changes will be applied to your 1bash"
+  echo "                              Telegram section changed in 1bash, review and edit it"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
+  sed -i 's/v0019-2.0.001/v0019-2.0.002/g' /home/m1/test
+  sed -i 's/BaliMiner_TELEGRAM_ALERTS/TELEGRAM_MESSAGES/g' /home/m1/test
+  sed -i '/TELEGRAM_MESSAGES/a TELEGRAM_ALERTS="YES" # YES or NO # Set to No if you Dont want to get Telegram Alerts'  /home/m1/test
+  sleep 5
+elif [[ -n $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.002' ) ]]; then
   echo "**************************************************************************************************************************"
-  echo ""
-elif [[ -z $(head  -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  echo "                                Your 1bash is not latest version"
-  echo "           New 1bash v0019-2.0.001 available in /home/m1/Downloads/nvOC-19-2/1bash"
-  echo "          Dont forget to update your 1bash for all the latest updates to take effect"
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  sleep 2
-elif [[ -n $(head  -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
-  echo "**************************************************************************************************************************"
-  echo "                                       1bash latest version"
+  echo " 1bash is latest version v0019-2.0.002"
   echo "**************************************************************************************************************************"
 fi
 
-
 sleep 1;echo "";echo ""
 
-echo "                                  All Done"
-echo "Old 1bash, 3main, wdog and temp are copied to /home/m1/backups/old_to_19.2/*.bak"
-echo "Edit your 1bash, Set auto start miner then reboot your rig"
-echo "Keep Calm and Carry on Mining"
+echo "**************************************************************************************************************************"
+echo "**************************************************************************************************************************"
+echo "                                                             All Done"
+echo "                    Old 1bash, 3main, wdog and temp are copied to /home/m1/backups/old_to_19.2/*.bak"
+echo "                                Edit your 1bash, Set auto start miner then reboot your rig"
+echo "                                                  Keep Calm and Carry on Mining"
+echo "**************************************************************************************************************************"
+echo "**************************************************************************************************************************"
