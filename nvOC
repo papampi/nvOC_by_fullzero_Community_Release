@@ -179,6 +179,7 @@ Patch()
    echo -e "${B}Applying patches/updates...${N}"; echo ""
    
    # Apply patches
+   sudo dpkg --configure -a
    sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
    
    echo ""; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
