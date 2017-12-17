@@ -711,7 +711,7 @@ echo $COIN"_AUTOCONVERT_TO_BTC ....:" $COIN_AUTOCONVERT_TO_BTC_TMP
 fi
 
 echo
-echo "[\code]"
+echo "[/code]"
 echo
 echo
 echo "WORK IN PROGRESS! Report script (beta release)"
