@@ -26,15 +26,19 @@
 #          added GPU LED Logo brightness control
 #
 # v=0004 : papampi
-#          Telegram Changes       
+#          Telegram Changes
+#
+# v=0005 : papampi
+#          Minor change on miner launch and output
 
-# DEV_VERSION=0004
+
+# DEV_VERSION=0005
 
 
 source /home/m1/1bash
 
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.004"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.005"                  # Do not edit this
 
 
 
@@ -1085,26 +1089,20 @@ EOF
     running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
+      bash /home/m1/0miner
+      echo "    "
+      echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
+      echo "    "
       if [ $LOCALorREMOTE == "REMOTE" ]
       then
-        bash /home/m1/0miner
-        echo "    "
-        echo "    "$(ps ax | grep miner | grep -o 'SCREEN.*')
-        echo "    "
-        echo "process in screen miner; attach with: screen -r miner"
+        echo "Miner output: ~/nvOC miner-log"
         echo "    "
         echo "    "
         running=""
       elif [ $LOCALorREMOTE == "LOCAL" ]
       then
-        bash /home/m1/0miner
-        echo "    "
-        echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
-        echo "    "
-        if [[ `screen -ls |grep miner |wc -l` -gt 0 ]]
-        then
-          screen -r miner
-        fi
+        touch /home/m1/nvoc_logs/screenlog.0
+        tail -f /home/m1/nvoc_logs/screenlog.0
       fi
     fi
 
