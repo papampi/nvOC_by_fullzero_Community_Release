@@ -530,7 +530,7 @@ then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     PIRLADDR="$PIRL_ADDRESS/$PIRL_WORKER"
 
@@ -577,7 +577,7 @@ then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
 
@@ -624,7 +624,7 @@ then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
 
@@ -666,7 +666,7 @@ then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
 
@@ -708,7 +708,7 @@ then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
 
@@ -754,7 +754,7 @@ then
   fi
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     MPH_ETHASH_ADDR="$MPH_ADDRESS/$MPH_WORKER"
 
@@ -795,7 +795,7 @@ then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
 
@@ -832,7 +832,7 @@ then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
 
@@ -1362,7 +1362,7 @@ then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
-    HCD='/home/m1/eth/ethminer_12dev2/ethminer'
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
 
     NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
 
