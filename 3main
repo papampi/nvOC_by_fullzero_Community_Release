@@ -413,10 +413,10 @@ then
   echo "  "
 fi
 
-if [ $TELEGRAM_MESSAGE == "YES" ]
+if [ $TELEGRAM_MESSAGES == "YES" ]
 then
   HCD='/home/m1/telegram'
-  running=$(ps -ef | awk '$NF~"TELEGRAM_MESSAGE" {print $2}')
+  running=$(ps -ef | awk '$NF~"TELEGRAM_MESSAGES" {print $2}')
   if [ "$running" == "" ]
   then
     guake -n $HCD -r AUTO_GRAM -e "bash /home/m1/7telegram"
