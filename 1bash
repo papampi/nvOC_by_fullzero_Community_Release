@@ -484,11 +484,13 @@ ZCOIN_POOL="xzc.suprnova.cc"
 ZCOIN_PORT="1569"
 
 # KRB ## No Need to add stratum+tcp:// to server address
+KRB_WORKER="$WORKERNAME"
 KRB_ADDRESS="replace_with_your_address"
 KRB_POOL="krb.sberex.com"
 KRB_PORT="5555"
 
 # Electroneum(ETN) ## No Need to add stratum+tcp:// to server address
+ETN_WORKER="$WORKERNAME"
 ETN_ADDRESS="replace_with_your_address"
 ETN_POOL="ETN POOL"
 ETN_PORT="ETN PORT"
