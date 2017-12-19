@@ -9,6 +9,7 @@ sleep 1;echo "";echo ""
 echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FINISHED AND EDITED YOUR NEW 1BASH"
 echo "";echo ""
 
+
 echo " Stopping gnome-terminal, miner, wdog, temp, ..."
 echo "pkill -f gnome-terminal"
 pkill -f gnome-terminal
@@ -351,7 +352,34 @@ then
 else
   echo "ethminer-0.12.0 already downloaded"
 fi
+
 sleep 1;echo "";echo ""
+
+echo "Checking KTccminer-cryptonight"
+if [ ! $( cat /home/m1/KTccminer-cryptonight/version | grep 2.06) ]
+then
+  mkdir -p /home/m1/Downloads/miners
+  echo "cd /home/m1/Downloads/miners"
+  cd /home/m1/Downloads/miners
+  if [ -e /home/m1/Downloads/miners/KTccminer-cryptonight.tar.gz ]
+  then
+    echo "Remove Old KTccminer-cryptonight"
+    rm /home/m1/Downloads/miners/KTccminer-cryptonight.tar.gz
+  fi
+  echo "Downloading KTccminer-cryptonight 2.06"
+  wget -c https://www.dropbox.com/s/higix1x99eyu5z1/KTccminer-cryptonight.tar.gz
+  echo "Extracting KTccminer-cryptonight.tar.gz"
+  tar -xvzf KTccminer-cryptonight.tar.gz
+  rm KTccminer-cryptonight.tar.gz
+  mkdir -p /home/m1/KTccminer-cryptonight/
+  echo "cp -R /home/m1/Downloads/miners/KTccminer-cryptonight/* /home/m1/KTccminer-cryptonight/"
+  cp -R /home/m1/Downloads/miners/KTccminer-cryptonight/* /home/m1/KTccminer-cryptonight/
+else
+  echo "KTccminer-cryptonight 2.06 already downloaded"
+fi
+
+sleep 1;echo "";echo ""
+
 
 echo "Downloading new miners finished"
 
