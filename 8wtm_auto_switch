@@ -32,7 +32,7 @@
 
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.008"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.0.007"   # Do not edit this
 
 echo ""
 echo "WhatToMine.com Auto Switch $wtm_auto_switch_ver by papampi"
