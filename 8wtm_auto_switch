@@ -1,13 +1,41 @@
 #!/bin/bash
-# whattomine.com auto switch by papampi
+
+##########################################################################
+##########################################################################
+#################   nvOC v0019-2.0 - Community Release   #################
+##############        by papampi, Stubo and leenoox         ##############
+##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
+##########################################################################
+##########################################################################
+
+
+# WhatToMine.com Auto Switch by papampi
 # for nvOC v0019-2.0 - Community Release
 # Feel free to use, change, edit and do what you want with it.
+#
+# DEV Mod Log:
+#
+# v=0001 : papampi: Initial Revision
+#
+# v=0002 : Papampi: Added 24 hour average revenue 
+#
+# v=0003 : Papampi: Wait for miner start to prevent double miner running
+#
+# v=0004 : leenoox: Read curent coin from 1bash 
+#
+# v=0005 : Papampi: Add Algo check to restart only miner or 3main
+#
+# v=0006 : Papampi: Check for last top coin whether its in coin list or not
+#
+# v=0007 : Papampi: Changes for plusCPU
+
+
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.006"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.0.008"   # Do not edit this
 
-echo "Whattomine.com Auto Switch for $nvOC_Ver"
-echo "Version: : $wtm_auto_switch_ver" 
+echo ""
+echo "WhatToMine.com Auto Switch $wtm_auto_switch_ver by papampi"
 echo ""
 
 source /home/m1/1bash
@@ -29,9 +57,9 @@ fi
 
 FIRST_COIN="$(echo $WTM_AUTO_SWITCH_COINS |  awk -F'[_;]' '{print $1}')"
 TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
-if [ -z $(echo $WTM_AUTO_SWITCH_COINS | grep $TOP_COIN)  ]
+if [ -z $(echo $WTM_AUTO_SWITCH_COINS | grep $TOP_COIN) ]
 then
-  echo "Last top coin not in current coin list any more, Switch to 1st coin"  | tee -a $LOG_FILE
+  echo "Last top coin not in current coin list any more, Switch to 1st coin"
   sed -i "s/${TOP_COIN}/${FIRST_COIN}/g" /home/m1/WTM_top_coin
 fi
 
@@ -42,12 +70,9 @@ do
 
     python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json  | tee -a $LOG_FILE
     sleep 5
-    #start leenoox mod:		
     source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
     CURRENT_COIN=$COIN
     CURRENT_COIN_ALGORITHM=$ALGORITHM
-    #CURRENT_COIN=$(cat /home/m1/1bash | grep COIN= | grep -v "#COIN=" | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
-    #end leenoox mod:		
     TOP_COIN=$(cat /home/m1/WTM_top_coin | grep : | sed 's/:[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//' | sed 's/[0-9]//')
     TIMEIN=$WTM_AUTO_SWITCH_SYNC_INTERVAL
     TIMEOUT=$(($TIMEIN * 60))
@@ -95,7 +120,12 @@ do
       echo "Top Coin Algo: $TOP_COIN_ALGORITHM" | tee -a $LOG_FILE
       echo "Top Coin: $TOP_COIN" | tee -a $LOG_FILE
 
-      if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
+      if [[ $plusCPU == "YES" ]]; then
+        echo "Switching Coin with plusCPU=YES, Restarting 3main"  | tee -a $LOG_FILE
+        pkill -f 5watchdog
+        pkill -f 3main
+      
+      elif  [[ $ALGO_SPECIFIC_OC == "NO" && $plusCPU == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM && $plusCPU == "NO" ]]; then
         echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner" | tee -a $LOG_FILE
         echo "" | tee -a $LOG_FILE
 
@@ -126,7 +156,7 @@ do
           echo "" | tee -a $LOG_FILE
         fi
 
-      elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM  ]]; then
+      elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM && $plusCPU == "NO" ]]; then
         echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
         pkill -f 3main
@@ -150,4 +180,3 @@ do
     echo "Auto start miner set to NO" | tee -a $LOG_FILE
   fi
 done
-
