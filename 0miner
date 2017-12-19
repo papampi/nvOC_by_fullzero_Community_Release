@@ -1,5 +1,20 @@
-#!/bin/bash/
-###0miner for for nvOC by fullzero , v0019.2 unofficial by papampi
+#!/bin/bash
+
+##########################################################################
+##########################################################################
+#################   nvOC v0019-2.0 - Community Release   #################
+##############        by papampi, Stubo and leenoox         ##############
+##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
+##########################################################################
+##########################################################################
+
+# 0miner for nvOC v0019-2.0 by papampi
+
+# DEV Mod Log:
+# v=0001 : papampi: Initial Release
+
+nvOC_Ver="nvOC v0019-2.0 - Community Release"
+nvOC_0miner_ver="v0019-2.0.0001"   # Do not edit this
 
 source /home/m1/1bash
 
