@@ -120,12 +120,9 @@ do
       echo "Top Coin Algo: $TOP_COIN_ALGORITHM" | tee -a $LOG_FILE
       echo "Top Coin: $TOP_COIN" | tee -a $LOG_FILE
 
-      if [[ $plusCPU == "YES" ]]; then
-        echo "Switching Coin with plusCPU=YES, Restarting 3main"  | tee -a $LOG_FILE
-        pkill -f 5watchdog
-        pkill -f 3main
+
       
-      elif  [[ $ALGO_SPECIFIC_OC == "NO" && $plusCPU == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM && $plusCPU == "NO" ]]; then
+      if  [[ $ALGO_SPECIFIC_OC == "NO" && $plusCPU == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM && $plusCPU == "NO" ]]; then
         echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner" | tee -a $LOG_FILE
         echo "" | tee -a $LOG_FILE
 
@@ -138,7 +135,6 @@ do
         if [[ -n  $(ps ax | grep -i screen | grep miner) ]]; then
           echo "Miner is running, lets make the switch" | tee -a $LOG_FILE
           if [[ $MINER_WATCHDOG == "YES" ]]; then
-            #restart wdog
             pkill -f 5watchdog
             sleep 1
             screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
@@ -146,9 +142,9 @@ do
             echo "watchdog restarted in screen wdog; attach with: screen -r wdog" | tee -a $LOG_FILE
             echo "" | tee -a $LOG_FILE
           fi
-          #kill miner
-          pkill -e miner
-          #start new miner
+          target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
+          kill $target
+          sleep 1  
           echo "Commencing Miner Start Command..." | tee -a $LOG_FILE
           bash /home/m1/0miner
           echo $( ps ax | grep miner | grep -o 'SCREEN.*' ) | tee -a $LOG_FILE
@@ -159,6 +155,7 @@ do
       elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM && $plusCPU == "NO" ]]; then
         echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
+        sleep 1
         pkill -f 3main
       fi
 
