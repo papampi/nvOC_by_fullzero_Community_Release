@@ -420,14 +420,14 @@ fi
 if [ $COIN == "KRB" ]
 then
   HCD='/home/m1/KTccminer-cryptonight/ccminer'
-  ADDR="$KRB_ADDRESS"
+  ADDR="$KRB_ADDRESS.$KRB_WORKER"
   screen -dmSL miner $HCD -o stratum+tcp://$KRB_POOL:$KRB_PORT -u $ADDR -p $MINER_PWD
 fi
 
 if [ $COIN == "ETN" ]
 then
   HCD='/home/m1/KTccminer-cryptonight/ccminer'
-  ADDR="$ETN_ADDRESS"
+  ADDR="$ETN_ADDRESS.$ETN_WORKER"
   screen -dmSL miner $HCD -o stratum+tcp://$ETN_POOL:$ETN_PORT -u $ADDR -p $MINER_PWD
 fi
 
