@@ -415,11 +415,11 @@ fi
 
 if [ $TELEGRAM_MESSAGES == "YES" ]
 then
-  HCD='/home/m1/telegram'
-  running=$(ps -ef | awk '$NF~"TELEGRAM_MESSAGES" {print $2}')
+  HCD='/home/m1/7telegram'
+  running=$(ps -ef | awk '$NF~"7telegram" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r AUTO_GRAM -e "bash /home/m1/7telegram"
+    guake -n $HCD -r TELEGRAM_MESSAGES -e "bash /home/m1/7telegram"
     running=""
   fi
 fi
@@ -1124,3 +1124,4 @@ while true
 do
   sleep 60
 done
+
