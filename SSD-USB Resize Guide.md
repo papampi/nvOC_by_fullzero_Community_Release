@@ -1,4 +1,4 @@
-SSD-USB resize guide for nvOC.
+#SSD-USB resize guide for nvOC.
 
 Open Gparted, it will ask for root password (miner1), Locate your drive, there are 2 partitions here a 9Mb fat, a 16Gb ext4 and a free unused space at the end. 
 
