@@ -16,9 +16,9 @@ You will see a line which refers to a swap partition during installation ...
 
 Some thing similar to this :
 
-swap was on /dev/sda5 during installation
+```swap was on /dev/sda5 during installation
 
-UUID=cdba7b01-5ae6-4104-9a6e-f723b8bd87ac none            swap    sw              0       0
+UUID=cdba7b01-5ae6-4104-9a6e-f723b8bd87ac none            swap    sw              0       0```
 
 Change the UUID with the one you copied from newly made swap partition.
 
