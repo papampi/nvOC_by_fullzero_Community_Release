@@ -1,6 +1,6 @@
 #SSD-USB resize guide for nvOC.
 
-Open Gparted, it will ask for root password (miner1), Locate your drive, there are 2 partitions here a 9Mb fat, a 16Gb ext4 and a free unused space at the end. 
+Open Gparted, it will ask for root password (miner1), Locate your drive, there are 2 partitions, a 9Mb fat, a 16Gb ext4 and a free unused space at the end. 
 
 Right click on the unused space, create new partition, "Partition Type : Swap" make the size you want (1Gb up to Ram size) grab and move it to the end of drive. Apply.
 
