@@ -27,7 +27,7 @@ Change the UUID with the one you copied from newly made swap partition.
 
 Save and close gedit.
 
-In your terminal type to activate swap:
+Activate swap with:
 
 ```sudo swapon --all```
 
