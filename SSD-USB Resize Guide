@@ -32,7 +32,8 @@ It will read your fstab and enable the swap partition.
 
 Check it with free command in  terminal
 
-#free
+free
+
              total        used        free      shared  buff/cache   available
              
 Mem:        8171388     3020388     2637404      142044     2513596     4647472
