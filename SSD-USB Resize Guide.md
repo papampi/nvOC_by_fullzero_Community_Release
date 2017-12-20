@@ -10,7 +10,7 @@ Right click on the swap partition and get the info, copy the UUID.
 
 open /etc/fstab with this command
 
-gksudo gedit /etc/fstab
+```gksudo gedit /etc/fstab```
 
 You will see a line which refers to a swap partition during installation ... 
 
