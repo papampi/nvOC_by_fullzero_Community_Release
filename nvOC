@@ -35,8 +35,13 @@
 #
 # v=0006 : Stubo
 #          changed calls of other external functions to internal subroutine calls
+#          papampi
+#          added wtm_auto_switch version  
 #
-# DEV_VERSION=0006
+# v=0007 : papampi
+#          Changed ~/1bash to /home/m1/1bash for known reasons ... 
+
+# DEV_VERSION=0007
 
 
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
@@ -45,7 +50,7 @@ nvOC_nvOC_ver="v0019-2.0.006"                   # Do not edit this
 
 export DISPLAY=:0
 
-source ~/1bash
+source /home/m1/1bash
 
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
@@ -503,7 +508,7 @@ echo ""
 #######################################
 
 nvidia_driver_ver=$(nvidia-smi -i 0 -q|grep "Driver Version"|cut -f 2 -d ":"|cut -f 2 -d " ")
-nvOC_ver_from_1bash=$(cat ~/1bash | grep "nvOC v" | cut -d' ' -f 2- | head -n 1 | sed 's/   #################//');
+nvOC_ver_from_1bash=$(cat /home/m1/1bash | grep "nvOC v" | cut -d' ' -f 2- | head -n 1 | sed 's/   #################//');
 nvOC_ver_from_3main=$(head -n 100 /home/m1/3main | grep nvOC_ver= | sed 's/nvOC_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
 nvOC_3main_ver=$(head -n 100 /home/m1/3main | grep nvOC_3main_ver= | sed 's/nvOC_3main_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
 nvOC_wdog_ver=$(head -n 100 /home/m1/5watchdog | grep nvOC_wdog_ver= | sed 's/nvOC_wdog_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
@@ -596,7 +601,7 @@ echo
 #######################################
 echo -e "${B}1bash settings:${N}"
 # 1bash general
-echo "1bash version .............: $nvOC_1bash_ver"   # for pre 19.2 versions use $(cat ~/1bash | grep "nvOC v" | cut -d' ' -f 2-)
+echo "1bash version .............: $nvOC_1bash_ver"   # for pre 19.2 versions use $(cat /home/m1/1bash | grep "nvOC v" | cut -d' ' -f 2-)
 echo "LOCAL or REMOTE ...........: $LOCALorREMOTE"
 echo "TEAMVIEWER started ........: $TEAMVIEWER"
 echo "SSH daemon started ........: $SSH"
@@ -717,7 +722,7 @@ echo
 echo "WORK IN PROGRESS! Report script (beta release)"
 echo
 echo "*** If posting the Report on bitcointalk.org forum please copy everything"
-echo "    between the [code] and [\code] including the [code] and [\code] tags."
+echo "    between the [code] and [/code] including the [code] and [\code] tags."
 echo "    This will ensure proper alignment when posting the Report."
 echo
 echo
