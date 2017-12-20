@@ -49,7 +49,7 @@ echo ""
 sudo renice -n -15 -p $$ && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
 sleep 1
 
-source ~/1bash
+source /home/m1/1bash
 sleep 1
 
 NVD=nvidia-settings

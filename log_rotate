@@ -8,7 +8,6 @@ source /home/m1/1bash
 echo "Log Rotate for $nvOC_Ver"
 echo "Version: : $log_rotate_ver" 
 echo ""
-
 while true
 do
 
@@ -63,7 +62,7 @@ fi
   fi
 
 
-  echo "Rotate again in $TIMEIN Hours"
+  echo "$(date) - Rotate again in $TIMEIN Hours"
 
   sleep $TIMEOUT
 done

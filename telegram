@@ -3,9 +3,9 @@
 # By BaliMiner et al...
 # for nvOC by fullzero
 # ref: http://bernaerts.dyndns.org/linux/75-debian/351-debian-send-telegram-notification
-# v0019-2.0
+# v0019-2
 
-source ~/1bash
+source /home/m1/1bash
 
 if [ $TELEGRAM_TYPE == "BaliMiner" ]
 then
@@ -2060,17 +2060,21 @@ then
     # If kk003_TELEGRAM_ALERTS exits I should be on Nvoc 19 stable
     # If BaliMiner_TELEGRAM_ALERTS exists but kk003_TELEGRAM_ALERTS does not I should be on Nvoc 19+ or highest
 
-    MAIN_TELEGRAM_TIME_COUNTER_1=~/kk003_TELEGRAM_ALERTS
-    MAIN_TELEGRAM_TIME_COUNTER_2=~/7telegram
+MAIN_TELEGRAM_TIME_COUNTER_1=~/kk003_TELEGRAM_ALERTS
+MAIN_TELEGRAM_TIME_COUNTER_2=~/BaliMiner_TELEGRAM_ALERTS
+MAIN_TELEGRAM_TIME_COUNTER_3=~/7telegram
 
-    if [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_1" ]]; then					# In this case running Nvoc 19 stable
-      MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_1
-      elif [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_2" ]]; then					# In this case running Nvoc 19+ or highest
-      MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_2
-    else
-      MAIN_TELEGRAM_TIME_COUNTER_MISSING=1
-      salida # exit
-    fi
+if [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_1" ]]; then					# In this case running Nvoc 19 stable
+    MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_1
+elif [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_2" ]]; then					# In this case running Nvoc 19+ or highest
+    MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_2
+elif [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_3" ]]; then                                     # In this case running Nvoc 19.2 or highest
+    MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_3
+else
+    MAIN_TELEGRAM_TIME_COUNTER_MISSING=1
+    salida # exit
+fi
+
 
     if [[ $SYNC_TELEGRAM_SYSTEM -eq 1 ]]; then						# SYNC_TELEGRAM_SYSTEM=1 then Sync telegram system
 

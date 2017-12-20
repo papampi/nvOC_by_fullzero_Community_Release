@@ -211,7 +211,7 @@ echo "Distro: " "<tt style=\"text-align:left; color:white; \">" "$LSB_RELEASE $U
 
 echo "CPU: " "<tt style=\"text-align:left; color:white\">" "$CPU<br> </tt>"
 
-echo "Disk / Free Space: " "<tt style=\"text-align:left; color:white\">" "$DISK / $DISK_FREE<br> </tt>"
+echo "Disk / Free Disk: " "<tt style=\"text-align:left; color:white\">" "$DISK / $DISK_FREE<br> </tt>"
 
 echo "Memory / Free Memory: " "<tt style=\"text-align:left; color:white\">" "$MEMORY / $FREE_MEMORY<br> </tt>"
 

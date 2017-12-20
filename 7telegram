@@ -1,6 +1,21 @@
 #!/bin/bash
 
+##########################################################################
+##########################################################################
+#################   nvOC v0019-2.0 - Community Release   #################
+##############        by papampi, Stubo and leenoox         ##############
+##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
+##########################################################################
+##########################################################################
+
+nvOC_Ver="nvOC v0019-2.0 - Community Release"
+nvOC_telegram_ver="v0019-2.0.001"   # Do not edit this
+
 source ~/1bash
+
+echo "Telegram Messages for $nvOC_Ver"
+echo "Version: :$nvOC_telegram_ver"
+echo ""
 
 while true
 do
@@ -17,3 +32,4 @@ sleep $TIMEOUT
 echo ""
 done
 fi
+

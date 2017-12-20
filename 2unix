@@ -10,6 +10,8 @@ fi
 if [ $firstBOOT == "YES" ]
 then
   echo "First Boot"
+  echo "Read '/home/m1/SSD-USB Resize Guide' to resize your drive and add swap partition"
+  sleep 5
   rm /home/m1/firstBOOT
   sleep 1
   touch /home/m1/firstBOOT

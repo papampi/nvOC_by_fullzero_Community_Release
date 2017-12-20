@@ -1,0 +1,2054 @@
+#!/bin/bash
+
+# Telegram Info/Alerts Script
+# for nvOC by fullzero
+# mod by kk003 ;-)
+# Script name: kk003_telegram
+# Version: 1.3
+
+# You must create a bot and get your new user/chat Id + Api key.
+# Tutorials:
+# Tutorial how to create a telegram bot: http://bernaerts.dyndns.org/linux/75-debian/351-debian-send-telegram-notification
+# Video tutorial how to create a telegram bot by kk003: https://youtu.be/HS7Q1zH00bs
+# Enlace hilo foro para OP+video+instalar en nvoc 19 estable
+
+#####
+# if you fancy the script you can make a donation. Will be greatly appreciated
+# BTC:   0x196pMZnByg5UaPvJPK67ErAHgDPeSyu8QV
+# ETH:   0x628dD8d1264543292C68F4C587012BaCe805891A
+# ETC:   0x60d3349263a313e86DFCFA090FB12169A786D0E9
+# EXP: 	 0xF590cE35961D0B22aFEd57cc35FDE96E8802d0bC
+# MUSIC: 0x40b44982642acf21b7bde576a9f555cad94f6b9b
+# ZEC:   0xt1UuA5MKU18kJKMEyuQaVpdNtm552kHkDo3
+#####
+
+#
+## Keep this block of code at the begining of script or it will complain about name of the log file
+#
+
+NVOC_VERSION=$(cat ~/1bash | grep "nvOC_1bash_ver=" | cut -d"=" -f2 | cut -d" " -f1  | sed 's/"//g')
+
+if [[ "$NVOC_VERSION" != "v0019-2.0.002" ]]; then
+    KK003_WORKBENCH=~/kk003_telegram_data
+else
+    KK003_WORKBENCH=~/nvoc_logs/kk003_telegram_data
+fi
+
+# Log file location
+KK003_LOG_FILE=$KK003_WORKBENCH/kk003_telegram.log
+
+# I need to have some data over restarts like ips. I'll use a file to do so
+DATA_FILE=$KK003_WORKBENCH/data
+
+# Create the working dirs so I keep things tidy
+if [[ ! -d $KK003_WORKBENCH ]]; then
+    mkdir $KK003_WORKBENCH
+fi
+
+if [[ ! -d $KK003_WORKBENCH/files ]]; then
+    mkdir $KK003_WORKBENCH/files
+fi
+
+# Create the log file
+if [[ ! -f "$KK003_LOG_FILE" ]]; then
+    touch $KK003_LOG_FILE
+fi
+
+# Create the file to hold some data I'll need over restarts.
+if [[ ! -f $DATA_FILE ]]; then
+    touch $DATA_FILE
+fi
+
+START_TIME=`date "+%Y-%m-%d %H:%M:%S"`
+
+#
+## End of block of code at the begining of script
+#####
+
+( ##### DON'T REMOVE THIS OPEN PARENTHESIS OR WE'LL MISS THE LOG FILE, NOR CALL FUNCTIONS FROM ABOVE IT OR YOU GET A ERROR
+
+### Some vars related to telegram and sending alerts you may want to customize
+#
+TELEGRAM_CURRENT_CHARS_LIMT=4096 	# Telegram gives a "400 BAD_REQUEST MESSAGE_TOO_LONG" if length >= 4096 UTF8 characters
+					# so I will check the length before send msg
+
+USE_NVOC_DEFAULT_TIMES_TELEGRAM=0	# 0, send a telegram when this script thinks is right (warnings) or when its time to do so as var "USER_CUSTOM_TIMES_TO_SEND_TELEGRAM" says
+					# 1, send a telegram's NVOC style, that is at the interval var "TELEGRAM_TIMEOUT_IN_MINUTES" in 1bash says, no matter a problem is detected or not
+
+ON_WARNING_NUMBER_TELEGRAMS_TO_SEND=3	# Max number of telegrams to send per warning (NO all warning listen to this var!!)
+					# Warnings auto-clear when resolved or when system/Xorg is restarted but not all warning are counted here
+					# You may get more telegrams than the value used here if there's more 
+					# than one warning active at the same time as warnings are independent from each other
+
+SYNC_TELEGRAM_SYSTEM=1			# 0, DON'T sync telegram system when value in var TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is changed by user
+					# 1, SYNC telegram system when value in var TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is changed by user
+
+USE_USER_CUSTOM_TIMES_TELEGRAM=1	# 0, ignore user custom times to send telegram (in var "USER_CUSTOM_TIMES_TO_SEND_TELEGRAM")
+					# 1, use user custom times to send telegram (allows you to send telegrams at the times of day you want , or almost ;-))
+
+# Send msg at certain hours of the day (I have been warned not to use cron so I do this job in the script)
+# For this array to work you MUST use the following format:
+# 1. 00-23 for hours (notice two digits)
+# 2. 00-59 for minutes (notice two digits)
+# 3. ":" between hours and minutes 
+# 4. Values between quotation marks
+# 5. Values must be space separated
+# Example: USER_CUSTOM_TIMES_TO_SEND_TELEGRAM=("11:00" "16:00" "20:00" )
+#
+# You'll get a telegram if you use a wrong format!!!
+# REMENBER: 00:00 won't work. You won't get a telegram at this time (may be i'll fix it later some time)
+# REMENBER: first time of day is 00:01 and last is 23:59
+# REMENBER: You'll never get a telegram at 00:00, set it up to 00:01 (yes, again)
+# REMENBER: If times you ask here for a telegram are in intervals smaller than value of var "TELEGRAM_TIMEOUT_IN_MINUTES" in /home/m1/1bash
+# you'll only get one of them (usually the one closest to time 00:01 of that day)
+# When this script is running it checks if time left to send a telegram is less than time left for next check. If so "sleeps" until it's time to send the msg
+# So, you better set up var "TELEGRAM_TIMEOUT_IN_MINUTES" in /home/m1/1bash at 10, 15, 20, or 30 minutes max. That way you'll get a rich log file full of info 
+# 
+#
+USER_CUSTOM_TIMES_TO_SEND_TELEGRAM=("11:00" "16:00" "21:32")
+
+# The script supports multi-telegrams. That is it can send the telegram message to several recipients
+# In /home/m1/1bash, as allways you still have to add your USER ID to variable "TELEGRAM_CHATID" and your API KEY to varible "TELEGRAM_APIKEY" 
+# Then add the additional chats that you want to send a telegram to this variable
+# Data must be added this way:
+# 1. 2 values for chat
+# 2. First value is the API KEY
+# 3. Second value is the User ID / Channel ID - The first if you send the telegram to a user, the second if you send tehe telegram to a channel
+# but the field is the same one for any of them and it has to be only one here 
+# Example for two additional:
+# TELEGRAM_ADDITIONAL_RECIPIENTS=(
+#				    "455957604:AAHBEMidb2894YUBZq5dXRSL9lFbgHvE808"
+#				    "12345678"
+#				    "456545604:4rttyMidb283456yhg5dXRSL9lFbgHv6yhj"
+#				    "12309898"
+#				)  
+
+
+TELEGRAM_ADDITIONAL_RECIPIENTS=(
+                                
+                                )
+
+# The warnings file holds how many times a warning has occurred for a registered element
+#
+WARNINGS_FILE=$KK003_WORKBENCH/kk003_warnings	# The warnings file
+
+#### Some values you may want to customize for "function my_custom_mods_for_nvidia_smi"
+#
+CENTIGRADO="ºC"	# Symbol you want after the gpu temp value
+
+# Aliases:
+MODELS=("GeForce GTX 1060 3GB" "GF1060_3G" "GeForce GTX 1060 6GB" "GF1060_6G" "GeForce GTX 970" "GF970_4G") # Cos telegram cut off the lines I want to make
+													    # them as short as possible.
+													    # Just add the gpu name such as is showen by nvidia-smi
+													    # follow by the alias you want
+													    # Fields must be space separated and in quotation marks
+													    # I recommend not to use spaces in aliases
+
+USE_GPU_ALIAS="YES"											    # "YES or "NO" If yes replaces the gpu's name with the alias. See variable "MODELS"
+
+# Query arguments for "function my_custom_mods_for_nvidia_smi"
+# You can get a complete list of the query arguments by issuing: nvidia-smi --help-query-gpu
+# Add/remove what you want here. Args must be coma separated
+NVIDIA_SMI_QUERY_ARGUMENTS="index,gpu_name,gpu_bus_id,pstate,utilization.gpu,power.draw,temperature.gpu,fan.speed,clocks.mem,clocks.gr,memory.used"
+
+USE_function_my_custom_mods_for_nvidia_smi="YES"	# YES or NO, say "YES" here to use my custom data arrange provided for this function
+							#   	     say "NO" to get the standar data output from nvidia-smi
+
+MODE_NVIDIA_SMI_REPORT=2				# 0 or 1 or 2  0 Don't use minimal output data but query arguments in var "NVIDIA_SMI_QUERY_ARGUMENTS"
+								     # 1 Only minimal output is used and shown as a BLOCK. Overrides query arguments in var  
+								     #   "NVIDIA_SMI_QUERY_ARGUMENTS" and "USE_function_my_custom_mods_for_nvidia_smi" too (see var above).
+								     # 2 Only minimal output is used and shown as MODULES PER ARGUMENT. Overrides query arguments in var
+                                                                     #   "NVIDIA_SMI_QUERY_ARGUMENTS" and "USE_function_my_custom_mods_for_nvidia_smi" too (see var above).
+
+# Legend for headers on MODE_NVIDIA_SMI_REPORT=1 (function nvidia_smi_minimal_report)
+# GID = gpu index
+# GPN = gpu name
+# GUT = utilization gpu
+# GPL = power limit
+# GPD = power draw
+# GTP = temperature gpu
+# GFS = fan speed
+
+
+#### Some values you may want to customize for "function system_info" (I think most names are self explanatory)
+#
+# Some warning you can choose to get via telegram or not 
+SEND_WARNING_SYSTEM_RESTARTED="YES"	# YES or NO
+SEND_WARNING_XORG_RESTARTED="YES"	# YES or NO
+SEND_WARNING_LOAD_AVERAGE="YES"		# YES or NO
+SEND_WARNING_CHECK_DISPLAY="YES"	# YES or NO
+#
+# some information you can choose to receive or not on your telegram msg
+SEND_REBOOT_REQUIRED="YES"		# YES or NO
+SEND_WORKERNAME="YES" 			# YES or NO
+SEND_MINING_COIN="YES"			# YES or NO
+SEND_MINING_ADDRESS="YES"		# YES or NO
+MASK_MINING_ADDRESS="YES"		# YES or NO
+SEND_MINER_EXEC_NAME="YES"		# YES or NO
+SEND_MINER_EXEC_PATH="YES"		# YES or NO
+SEND_MINER_UP_TIME="YES"		# YES or NO
+SEND_PRIVATE_IP="YES" 			# YES or NO
+SEND_PUBLIC_IP="YES" 			# YES or NO
+MASK_PUBLIC_IP="NO" 			# YES or NO
+SEND_SSHD_PORT="YES"			# YES or NO
+SEND_UP_SINCE="YES"			# YES or NO
+SEND_UP_TIME="YES"			# YES or NO
+SEND_RAM="YES"				# YES or NO
+SEND_CPU_MODEL="YES"			# YES or NO
+SEND_LOGGED_USERS="YES"			# YES or NO
+
+CUSTOMIZE_SYSTEM_NAME=""		# "PRIVATE_IP" or "PUBLIC_IP" or "AnY CusTom nAme you want here", if empty it uses the system's hostname 
+					# This is the main header you'll get in your telegram message
+					# PRIVATE_IP will use your private ip/s (remenber you may have more than one)
+					# PUBLIC_IP will use your public ip
+ 
+# This is a very important var you MUST customize!!!!
+NUMBER_GPUS_FOR_SURE=5			# Number of gpus you know for sure your system must have
+					# Change this value to the number of gpus your system have or you will get a false warning
+
+#### Some values you may want to customize for function claymore_statics"
+#
+USE_CLAYMORE_STATICS="YES" 				# YES or NO, if claymore is running use the provided data?
+KEY_CLAYMORE="ethdcrminer64"				# String I search for to check if CLAYMORE is running
+							# Different vesions may have different name.
+							# You must check if this entry is right for your
+							# system to get the script runnin correctly (OK for versions 8 to 10 at 2017/09/23 )
+
+USE_GENOIL_STATICS="YES" 				# YES or NO, if Genoil is running use the provided data?
+KEY_GENOIL=~/eth/Genoil-U/ethminer			# String I search for to check if GENOIL is running
+							# Different vesions may have different name.
+
+USE_ETHMINER_STATICS="YES"				# YES or NO, if Ethminer is running use the provided data?
+KEY_ETHMINER_1=~/eth/ethminer_11/ethminer		# Strings I search for to check if ETHMINER is running
+KEY_ETHMINER_2=~/eth/ethminer_12dev2/ethminer		# Different vesions may have different name.
+
+# Error exit codes (or RETURN VALUE as nvidia call them) for nvidia-smi
+# I'll treat them as an array so in couples; firt value is the code number and second value is the text that explains it
+NVIDIA_SMI_RETURN_VALUE=(
+			    "0" "Success"
+			    "2" "A supplied argument or flag is invalid"
+			    "3" "The requested operation is not available on target device"
+			    "4" "The current user does not have permission to access this device or perform this operation"
+			    "6"	"A query to find an object was unsuccessful"
+			    "8" "A device is external power cables are not properly attached"
+			    "9" "NVIDIA driver is not loaded"
+			    "10" "NVIDIA Kernel detected an interrupt issue with a GPU"
+			    "12" "NVML Shared Library couldn't be found or loaded"
+			    "13" "Local version of NVML doesn't implement this function"
+			    "14" "infoROM is corrupted"
+			    "15" "The GPU has fallen off the bus or has otherwise become inaccessible"
+			    "255" "Other error or internal driver error occurred"
+		 )
+
+LF=$'\n' # New line
+
+##
+#
+# Below here don't change value of vars/code unless you know what you are doing
+#
+##
+
+# Functions
+#
+
+function nvidia_smi_minimal_report ()
+{
+
+# Empty the files
+> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+> $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+if [[ $MODE_NVIDIA_SMI_REPORT -eq 1 ]]; then
+    # Query the values I want
+    nvidia-smi --query-gpu=index,gpu_name,utilization.gpu,power.limit,power.draw,temperature.gpu,fan.speed --format=csv,noheader > $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    # Mount the header for mode 1
+    HEADER_MINIMAL_NVIDIA_SMI="GID GPN GUT GPL GPD GTP GFS"
+
+    # Lines in file should be same as gpus
+    LINES_TO_MODIFY=$GPU_COUNT
+
+    # Arrange the output for the "temperature.gpu" nvidia-smi argument
+    # I want to add "ºC"
+    #
+    # Column number for temperature.gpu in file
+    COLUMN_NUMBER_TEMPERATURE_GPU=6
+
+    for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
+    do
+	OLD_VALUE=`sed -n -e "${L}p" $KK003_WORKBENCH/files/nvidia_smi_values.csv | cut -d, -f$COLUMN_NUMBER_TEMPERATURE_GPU`      # Extraigo el dato original
+
+	NEW_VALUE=$OLD_VALUE$CENTIGRADO
+        sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($COLUMN_NUMBER_TEMPERATURE_GPU -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    done
+
+    # Copy the telegram file to the log file
+    cp $KK003_WORKBENCH/files/nvidia_smi_values.csv $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+    # Call function to change gpu's name for alias (modify files for telegram and log file)
+    gpu_names_to_alias
+
+    # Try to align columns for log file (stupid for telegram but not for the log file)
+    cat $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv | column -s, -t > $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv.temp
+
+    # Set log file in place
+    cp $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv.temp $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+    # Insert header in log file
+    sed -i "1s/^/$HEADER_MINIMAL_NVIDIA_SMI\n/" $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+    # Change "," for " " in telegram file
+    sed -i 's/,/ /g' $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    # Insert header in telegram file
+    sed -i "1s/^/$HEADER_MINIMAL_NVIDIA_SMI\n/" $KK003_WORKBENCH/files/nvidia_smi_values.csv
+fi
+
+if [[ $MODE_NVIDIA_SMI_REPORT -eq 2 ]]; then
+    
+# nvidia-smi --query-gpu=index,gpu_name,utilization.gpu,power.limit,power.draw,temperature.gpu,fan.speed --format=csv,noheader | sed 's/ //g' | sed 's/ /\n/g' > $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    # utilization.gpu
+    echo "Gpu_Utilization:" >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    nvidia-smi --query-gpu=index,gpu_name,utilization.gpu --format=csv,noheader  >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    echo  >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    # power limt
+    echo "Gpu_power_limit:" >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    nvidia-smi --query-gpu=index,gpu_name,power.limit --format=csv,noheader >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    echo  >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    # power draw
+    echo "Gpu_power_draw:" >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    nvidia-smi --query-gpu=index,gpu_name,power.draw --format=csv,noheader >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    echo  >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    # gpu temperature
+    echo "Gpu_temperature_($CENTIGRADO):" >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    nvidia-smi --query-gpu=index,gpu_name,temperature.gpu --format=csv,noheader >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    echo  >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    # gpu fan speed
+    echo "Gpu_fan_speed:" >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    nvidia-smi --query-gpu=index,gpu_name,fan.speed --format=csv,noheader >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    echo  >> $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    # Set log file in place
+    cp $KK003_WORKBENCH/files/nvidia_smi_values.csv $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+    # Call function to change gpu's name for alias (modify files for telegram and log file)
+    gpu_names_to_alias
+
+    # Replace " " for nothing and "," for spaces
+    sed -i 's/ //g; s/,/ /g;' $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    sed -i 's/ //g; s/,/ /g;' $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+    # Try to align columns for log file (stupid for telegram but not for the log file)
+    cat $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv | column -t  > $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv.temp
+
+    # Set log file in place
+    cp $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv.temp $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+fi
+}
+
+function gpu_names_to_alias ()
+{
+##### Changing the gpu's name for the alias (if I have it)
+#
+if [[ "$USE_GPU_ALIAS" == "YES" ]]; then
+
+    # First must check that elements in the array are a even number and is not empty
+    MODELS_LENGTH=${#MODELS[@]} # Get number of elements
+
+    if [[ $MODELS_LENGTH -ne 0 ]]; then # Is not empty
+
+	if [[ $((MODELS_LENGTH%2)) -eq 0 ]]; then                                           # Number of elements is even?. If so I assume names and alias are well matched in array
+
+    	    for ((INDEX_EVEN=0; INDEX_EVEN < $MODELS_LENGTH ; INDEX_EVEN=INDEX_EVEN+2))     # First element of array have index 0
+    	    do                                                                              # Even elements are the gpu names, odd elements are alias
+
+        	NAME_GPU_IN_ARRAY=${MODELS[$INDEX_EVEN]}                                    # Get the name of the gpu in array
+        	INDEX_ODD=$(($INDEX_EVEN + 1))                                              # +1 to get the alias index
+        	ALIAS_GPU_IN_ARRAY=${MODELS[$INDEX_ODD]}                                    # Get the alias of the gpu in array
+
+        	# Find and replace gpu name if exists
+        	sed -i "s/${NAME_GPU_IN_ARRAY}/${ALIAS_GPU_IN_ARRAY}/g" $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+        	sed -i "s/${NAME_GPU_IN_ARRAY}/${ALIAS_GPU_IN_ARRAY}/g" $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+    	    done
+
+	# I get this way out if number of elements in array are odd and I don't replace names for alias
+	else
+    	    echo "Number of elements in variable MODELS are odd and I don't replace gpu names for alias."
+    	    echo "Check variable MODELS if you want to replace names for alias"
+	fi
+
+    # I get this way out if array in variable MODELS is empty
+    else
+	echo "Variable MODELS is empty and I don't replace gpu names for alias."
+	echo "Check variable MODELS if you want to replace names for alias"
+    fi
+
+fi
+
+##### END of Changing gpu's name by the alias (if I have it)
+
+}
+
+function my_custom_mods_for_nvidia_smi ()
+{
+
+# I organize some things my way
+# comment out the call to this function and you will get the standar output from nvidia-smi
+###
+# Beginning of block
+###
+
+# Save header and remove it from the csv file
+CSV_HEADER=$(cat $KK003_WORKBENCH/files/nvidia_smi_values.csv | head -n 1 | sed 's/ //g' | sed 's/,/ /g')	# Save the header of csv file
+sed -i -e "1d" $KK003_WORKBENCH/files/nvidia_smi_values.csv						# Remove the header of telegram file (first line)
+
+sed -i -e "1d" $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv					# Remove the header of log file (first line)
+
+# Call function to change gpu's name for alias
+gpu_names_to_alias
+
+# I don't want any spaces but to align thing
+sed -i 's/ //g' $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+sed -i 's/ //g' $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+# Get number of elements on NVIDIA_SMI_QUERY_ARGUMENTS variable
+NVIDIA_SMI_QUERY_ARGUMENTS_LENGTH=$(echo $NVIDIA_SMI_QUERY_ARGUMENTS | sed 's/[^,]//g' | wc -c)
+
+# Review all elements in variable NVIDIA_SMI_QUERY_ARGUMENTS and do some mods about the output for some fields
+for ((INDEX=1; INDEX <= $NVIDIA_SMI_QUERY_ARGUMENTS_LENGTH ; INDEX=INDEX+1)) # Gives me the column number
+do
+
+    NVIDIA_SMI_ARGUMENT=$(echo $NVIDIA_SMI_QUERY_ARGUMENTS | cut -d, -f $INDEX)    # Gives me the name of nvidia-smi argument on array
+
+    #### Arrange the output for the "index" nvidia-smi argument
+    #### I want to aling numbers <= 9 if I have more than 9 gpus so I add a space in front
+
+    if [[ "$NVIDIA_SMI_ARGUMENT" == "index" && $GPU_COUNT -gt 10 ]]; then
+	LINES_TO_MODIFY=10
+
+	for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
+	do
+
+	    OLD_VALUE=`sed -n -e "${L}p" $KK003_WORKBENCH/files/nvidia_smi_values.csv | cut -d, -f$INDEX`      # Extraigo el dato original
+	    NEW_VALUE=" "$OLD_VALUE
+	    sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+	    sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+	done
+    fi
+
+    #### END of Arrange the output for the "index" nvidia-smi argument
+
+    #### Arrange the output for the "pci.bus_id" nvidia-smi argument
+    #### I don't want the "00000000:" at the beginning
+
+    if [[ "$NVIDIA_SMI_ARGUMENT" == "gpu_bus_id" ]]; then
+        LINES_TO_MODIFY=$GPU_COUNT
+
+        for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
+        do
+
+            OLD_VALUE=`sed -n -e "${L}p" $KK003_WORKBENCH/files/nvidia_smi_values.csv | cut -d, -f$INDEX`      # Extraigo el dato original
+            NEW_VALUE=$(echo "$OLD_VALUE" | sed "s/00000000://")
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+	    sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+        done
+    fi
+
+    #### END of Arrange the output for the "index" nvidia-smi argument
+
+
+    #### Arrange the output for the "utilization.gpu" nvidia-smi argument
+    #### I want to aling values to the right and keep the "%"
+
+    if [[ "$NVIDIA_SMI_ARGUMENT" == "utilization.gpu" ]]; then
+	LINES_TO_MODIFY=$GPU_COUNT
+
+	for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
+	do
+
+	    OLD_VALUE=`sed -n -e "${L}p" $KK003_WORKBENCH/files/nvidia_smi_values.csv | cut -d, -f$INDEX`      # Extraigo el dato original
+	    LEN=${#OLD_VALUE}
+
+	    case $LEN in
+
+	    2)	NEW_VALUE="  "$OLD_VALUE
+		;;
+	    3)	NEW_VALUE=" "$OLD_VALUE
+		;;
+	    *)	NEW_VALUE=$OLD_VALUE
+		;;
+	    esac
+
+	    sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+	    sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+	done
+    fi
+
+    #### END of Arrange the output for the "utilization.gpu" nvidia-smi argument
+
+
+    #### Arrange the output for the "temperature.gpu" nvidia-smi argument
+    #### I want to aling values to the right and add the "ºC"
+
+    if [[ "$NVIDIA_SMI_ARGUMENT" == "temperature.gpu" ]]; then
+        LINES_TO_MODIFY=$GPU_COUNT
+
+        for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
+        do
+            OLD_VALUE=`sed -n -e "${L}p" $KK003_WORKBENCH/files/nvidia_smi_values.csv | cut -d, -f$INDEX`      # Extraigo el dato original
+            LEN=${#OLD_VALUE}
+
+    	    case $LEN in
+
+	    1)  NEW_VALUE="  "$OLD_VALUE$CENTIGRADO
+		;;
+    	    2)  NEW_VALUE=" "$OLD_VALUE$CENTIGRADO
+    		;;
+    	    *)  NEW_VALUE=$OLD_VALUE$CENTIGRADO
+    		;;
+    	    esac
+
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+	    sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+        done
+    fi
+
+    #### END of Arrange the output for the "temperature.gpu" nvidia-smi argument
+
+done
+
+# Insert the whole header line as the first one
+sed -i "1s/^/$CSV_HEADER\n/" $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+sed -i "1s/^/$CSV_HEADER\n/" $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+###
+# End of block with custom my mods
+###
+
+}
+
+function genoil_statics ()
+{
+#### Arrange the output for Genoil statics
+
+if [[ "$ETHMINER_or_GENOIL_or_CLAYMORE" == "GENOIL" ]]; then
+        
+    # Check if Genoil is really running. Note that I have to search the full path as there is a few miners with the same exec's name
+    ps aux | grep -v grep | grep miner | grep -q "$KEY_GENOIL"
+    if  [[ $? -eq 0 ]]; then
+	GENOIL_IS_RUNNING="YES"
+	SLEEP_TIME_MODIFICATION_FILE=12			# Hope 12 segs is enough for screen to write enough new data and save the file
+	KNOWN_MINER_RUNNING=1 				# 1= I know this miner
+	GENOIL_NUMBER_OF_HASHRATES_TO_SHOW=3		# Default 3, and I want to keep this value independent for each miner
+	echo ""
+	echo "It seems that GENOIL is running!!"
+
+	# Clear the files
+	> $KK003_WORKBENCH/files/miner_statics.txt
+	> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+	# Insert Genoil's header
+	echo "" >> $KK003_WORKBENCH/files/miner_statics.txt
+        echo "-- Genoil mining  Information :" >> $KK003_WORKBENCH/files/miner_statics.txt
+
+	echo "" >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+        echo "-- Genoil mining  Information :" >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+	# Start log file for a few seconds and collect miner's statics
+	if [[ -f $KK003_WORKBENCH/kk003_screenlog.log ]]; then
+	    > $KK003_WORKBENCH/kk003_screenlog.log									# Clear my log file
+	fi
+
+	screen -dr miner -X logfile $KK003_WORKBENCH/kk003_screenlog.log						# Don't want to overwrite the user's screen log file (screenlog.0 usually)
+	screen -dr miner -X log												# Start login miner
+	echo "Collecting statics from $ETHMINER_or_GENOIL_or_CLAYMORE for $SLEEP_TIME_MODIFICATION_FILE seconds..."
+	sleep $SLEEP_TIME_MODIFICATION_FILE										# Sleep while colleting data fron miner	
+	screen -dr miner -X log												# Stop login miner
+
+	# I don't see any valuable information than the total hashrate (at least I show a few)
+        # Surprise!!!, sed 's/ /\n/g' does not replace spaces for line breaks, but it does when executed from command line
+        TOTAL_HASHRATE=$(tail -60 $KK003_WORKBENCH/kk003_screenlog.log | grep "Mining on PoWhash" | cut -d":" -f4 |  cut -d" " -f2 | sed 's/ /\n/g' | tail -$GENOIL_NUMBER_OF_HASHRATES_TO_SHOW)
+
+        if [[ -z $TOTAL_HASHRATE ]]; then
+            TOTAL_HASHRATE="No data available"
+        fi
+
+        # Mount the little thing Genoil gives us
+        #
+        echo "Latest total hashrates : " >> $KK003_WORKBENCH/files/miner_statics.txt
+        echo $TOTAL_HASHRATE >> $KK003_WORKBENCH/files/miner_statics.txt
+
+        echo "Latest total hashrates : " >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+        echo $TOTAL_HASHRATE >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+    else
+	echo "Genoil does not seem to be running!!. Skiping this bit."
+	GENOIL_IS_RUNNING="NO"
+    fi
+fi
+}
+
+function ethminer_statics ()
+{
+#### Arrange the output for ethminer statics
+
+if [[ "$ETHMINER_or_GENOIL_or_CLAYMORE" == "ETHMINER" ]]; then
+
+    # Check if ethminer is really running. Note that I have to search the full path as there is a few miners with the same exec's name
+    # Here I have to miner for ethminer
+    ps aux | grep -v grep | grep miner | grep -q "$KEY_ETHMINER_1"
+    RESP_CODE_1=$?
+    ps aux | grep -v grep | grep miner | grep -q "$KEY_ETHMINER_2"
+    RESP_CODE_2=$?
+
+    if  [[ $RESP_CODE_1 -eq 0 || $RESP_CODE_2 -eq 0 ]]; then
+        ETHMINER_IS_RUNNING="YES"
+        KNOWN_MINER_RUNNING=1 				# 1= I known this miner
+        ETHMINER_NUMBER_OF_HASHRATES_TO_SHOW=3  	# Default 3, and I want to keep this value independent for each miner
+        echo ""
+        echo "It seems that ETHMINER is running!!"
+
+        # Clear the files
+        > $KK003_WORKBENCH/files/miner_statics.txt
+        > $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+        # Insert ethminer's header
+        echo "" >> $KK003_WORKBENCH/files/miner_statics.txt
+        echo "-- Ethminer mining  Information :" >> $KK003_WORKBENCH/files/miner_statics.txt
+
+        echo "" >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+        echo "-- Ethminer mining  Information :" >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+	# Start log file for a few seconds and collect miner's statics
+        if [[ -f ~/kk003_screenlog.log ]]; then
+            > ~/kk003_screenlog.log                             # Clear my log file
+        fi
+
+        screen -dr miner -X logfile ~/kk003_screenlog.log                                                               # Don't want to overwrite the user's screen log file (screenlog.0 usually)
+        screen -dr miner -X log                                                                                         # Start login miner
+        echo "Collecting statics from $ETHMINER_or_GENOIL_or_CLAYMORE for $SLEEP_TIME_MODIFICATION_FILE seconds..."
+        sleep $SLEEP_TIME_MODIFICATION_FILE                                                                             # Sleep while colleting data fron miner
+        screen -dr miner -X log                                                                                         # Stop login miner
+
+        # I don't see any valuable information than the total hashrate (at least I show a few)
+        # Surprise!!!, sed 's/ /\n/g' does not replace spaces for line breaks, but it does when executed from command line
+        TOTAL_HASHRATE=$(tail -60 ~/kk003_screenlog.log | grep "Mining on PoWhash" | cut -d":" -f4 |  cut -d" " -f2 | sed 's/ /\n/g' | tail -$GENOIL_NUMBER_OF_HASHRATES_TO_SHOW)
+
+
+        if [[ -z $TOTAL_HASHRATE ]]; then
+            TOTAL_HASHRATE="No data available"
+        fi
+
+        # Mount the little thing ethminer gives us
+        #
+        echo "Latest total hashrates : " >> $KK003_WORKBENCH/files/miner_statics.txt
+        echo $TOTAL_HASHRATE >> $KK003_WORKBENCH/files/miner_statics.txt
+
+        echo "Latest total hashrates : " >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+        echo $TOTAL_HASHRATE >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+    else
+        echo "Ethminer does not seem to be running!!. Skiping this bit."
+        ETHMINER_IS_RUNNING="NO"
+    fi
+fi
+
+}
+
+function claymore_statics ()
+{
+#### Arrange the output for claymore statics
+
+if [[ "$ETHMINER_or_GENOIL_or_CLAYMORE" == "CLAYMORE" ]]; then
+
+    # Check if claymore is running
+    if  pgrep -x "$KEY_CLAYMORE" > /dev/null
+    then
+	CLAYMORE_IS_RUNNING="YES"
+	KNOWN_MINER_RUNNING=1 				# 1= I known this miner
+	CLAYMORE_NUMBER_OF_HASHRATES_TO_SHOW=3          # Default 3, and I want to keep this value independent for each miner
+	echo
+	echo "It seems that Claymore is running!!"
+
+	#
+	# Don't know why http://localhost:3333 access forces claymore's output to show up a line like:
+	# "GPU #XX: GeForce GTX 1060 3GB, 3013 MB available, 9 compute units, capability: 6.1", one line x gpu in the system
+	# Get the latest total hashrates
+	LATEST_TOTAL_HASHRATES=`curl -s http://localhost:3333 | sed '/Total/!d; /Speed/!d;' | cut -d":" -f 2 | sed 's/ //g' | cut -d"," -f1 | tail -n 3`
+	echo "$LATEST_TOTAL_HASHRATES" > $KK003_WORKBENCH/files/latest_total_hashrates.txt
+
+	echo "$LATEST_TOTAL_HASHRATES" > $KK003_WORKBENCH/files/latest_total_hashrates_log_file.txt
+
+	# I want total hasrates on one line ("sed" cannot do this job so I use "tr" instead)
+	tr '\n' ' ' < $KK003_WORKBENCH/files/latest_total_hashrates.txt > $KK003_WORKBENCH/files/latest_total_hashrates.txt.tmp
+	# Remove last character (wich is a ",")
+#	sed -i 's/.$//' $KK003_WORKBENCH/files/latest_total_hashrates.txt.tmp
+	echo >> $KK003_WORKBENCH/files/latest_total_hashrates.txt.tmp
+	mv $KK003_WORKBENCH/files/latest_total_hashrates.txt.tmp $KK003_WORKBENCH/files/latest_total_hashrates.txt
+
+	cp $KK003_WORKBENCH/files/latest_total_hashrates.txt $KK003_WORKBENCH/files/latest_total_hashrates_log_file.txt
+
+	# Insert header on top of file
+	sed -i "1s/^/Latest Total Hashrates :\n/" $KK003_WORKBENCH/files/latest_total_hashrates.txt
+
+	sed -i "1s/^/Latest Total Hashrates :\n/" $KK003_WORKBENCH/files/latest_total_hashrates_log_file.txt
+
+	# Get the indivual gpus hashrates and remove some charaters and spaces I don't want
+	GPUS_HASHRATES=`curl -s http://localhost:3333 | sed '/ETH: GPU/!d' | awk 'NR == 3' | sed 's/[^GPU]*\(GPU.*\)/\1/' | sed 's/ M/M/g' | sed 's/ G/G/g'`
+	# Make the string with individual hashrates vertical replacing "," for new line "\n" and removing the "GPUX" part
+	echo $GPUS_HASHRATES | sed "s/,/\n/g" | sed 's/^[^ ]* //' > $KK003_WORKBENCH/files/gpus_hashrate.txt
+
+	echo $GPUS_HASHRATES | sed "s/,/\n/g" | sed 's/^[^ ]* //' > $KK003_WORKBENCH/files/gpus_hashrate_log_file.txt
+
+	# Get total individual and rejected shares and for how long claymore is runing in one single string
+	# For 13 gpus should look something like this:
+	# Speed: 318.710 Mh/s, Total Shares: 15835(1233+1212+1226+1256+1216+1243+1228+1303+1220+1177+1237+1209+1222), Rejected: 0, Time: 55:32
+	#
+	SOME_GPUS_DATA_FROM_CLAYMORE=`curl -s http://localhost:3333 | sed '/ETH - Total/!d; /Speed/!d; /(/!d; /+/!d; s/[^Speed]*\(Speed.*\)/\1/;' | awk 'NR == 3'`
+
+	# Get the total shares
+	TOTAL_SHARES=$(echo $SOME_GPUS_DATA_FROM_CLAYMORE | cut -d"(" -f 1 | cut -d" " -f 6)
+
+	# Get the individual shares (I capture the values between the two parentheses)
+	# and replace the "+" signs for new line so I set the data vertical
+	echo $SOME_GPUS_DATA_FROM_CLAYMORE | sed 's/^.*(//; s/).*$//; s/+/\n/g' > $KK003_WORKBENCH/files/individual_shares.txt
+
+	echo $SOME_GPUS_DATA_FROM_CLAYMORE | sed 's/^.*(//; s/).*$//; s/+/\n/g' > $KK003_WORKBENCH/files/individual_shares_log_file.txt
+
+	# Get the rejected shares and remove de ","
+	REJECTED_SHARES=$(echo $SOME_GPUS_DATA_FROM_CLAYMORE | cut -d" " -f 8 | sed 's/,//')
+
+	# How long claymore has been running?
+	TIME_CLAYMORE_IS_RUNNING=$(echo $SOME_GPUS_DATA_FROM_CLAYMORE | cut -d" " -f 10)
+
+	# Creating a vertical gpux list
+	# If the file exists and is not empty clear it
+	if [[ -s $KK003_WORKBENCH/files/v_gpus.txt ]]; then
+    	    > $KK003_WORKBENCH/files/v_gpus.txt
+	fi
+
+	if [[ -s $KK003_WORKBENCH/files/v_gpus_log_file.txt ]]; then
+	    > $KK003_WORKBENCH/files/v_gpus_log_file.txt
+	fi
+
+
+	LINES_TO_ADD=$(($GPU_COUNT - 1))
+
+        for ((L=0; L <= $LINES_TO_ADD ; L=L+1))
+        do
+
+	    case "$L" in
+
+	    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 )
+	    echo "GPU $L" >>$KK003_WORKBENCH/files/v_gpus.txt
+
+	    echo "GPU $L" >>$KK003_WORKBENCH/files/v_gpus_log_file.txt
+		;;
+	    *)
+	    echo "GPU$L" >> $KK003_WORKBENCH/files/v_gpus.txt
+
+	    echo "GPU$L" >> $KK003_WORKBENCH/files/v_gpus_log_file.txt
+		;;
+	    esac
+        done
+
+	# Paste the whole vertical thing together
+	paste -d, $KK003_WORKBENCH/files/v_gpus.txt $KK003_WORKBENCH/files/individual_shares.txt $KK003_WORKBENCH/files/gpus_hashrate.txt > $KK003_WORKBENCH/files/miner_statics.tmp
+
+	paste -d, $KK003_WORKBENCH/files/v_gpus_log_file.txt $KK003_WORKBENCH/files/individual_shares_log_file.txt $KK003_WORKBENCH/files/gpus_hashrate_log_file.txt > $KK003_WORKBENCH/files/miner_statics_log_file.tmp
+
+	# Mount the header field for claymore statics
+	CLAYMOR_STATICS_HEADER="Index, Shares, Hashrate"
+
+	# Insert the whole header line as the first one
+	sed -i "1s/^/$CLAYMOR_STATICS_HEADER\n/" $KK003_WORKBENCH/files/miner_statics.tmp
+
+	sed -i "1s/^/$CLAYMOR_STATICS_HEADER\n/" $KK003_WORKBENCH/files/miner_statics_log_file.tmp
+
+	# Insert a new line on top
+	sed -i "1s/^/\n/" $KK003_WORKBENCH/files/miner_statics.tmp
+
+	sed -i "1s/^/\n/" $KK003_WORKBENCH/files/miner_statics_log_file.tmp
+
+	# Add the list of latest total hashrates and put it all togather
+	cat $KK003_WORKBENCH/files/latest_total_hashrates.txt $KK003_WORKBENCH/files/miner_statics.tmp > $KK003_WORKBENCH/files/miner_statics.txt
+
+	cat $KK003_WORKBENCH/files/latest_total_hashrates_log_file.txt $KK003_WORKBENCH/files/miner_statics_log_file.tmp > $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+	# Insert the Title for claymore mining information
+	sed -i "1s/^/-- Claymore mining  Information :\n/" $KK003_WORKBENCH/files/miner_statics.txt
+	sed -i "1s/^/\n/" $KK003_WORKBENCH/files/miner_statics.txt
+
+	sed -i "1s/^/-- Claymore mining  Information :\n/" $KK003_WORKBENCH/files/miner_statics_log_file.txt
+	sed -i "1s/^/\n/" $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+	# At the end of file add
+	echo " " >> $KK003_WORKBENCH/files/miner_statics.txt
+	echo "Total shares     :" $TOTAL_SHARES >> $KK003_WORKBENCH/files/miner_statics.txt
+	echo "Rejected shares  :" $REJECTED_SHARES >> $KK003_WORKBENCH/files/miner_statics.txt
+	echo "Claymore up time :" $TIME_CLAYMORE_IS_RUNNING >> $KK003_WORKBENCH/files/miner_statics.txt
+
+	echo " " >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+	echo "Total shares     :" $TOTAL_SHARES >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+	echo "Rejected shares  :" $REJECTED_SHARES >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+	echo "Claymore up time :" $TIME_CLAYMORE_IS_RUNNING >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
+
+
+    else
+	echo "Claymore does not seem to be running!!. Skiping this bit."
+	CLAYMORE_IS_RUNNING="NO"
+    fi
+
+fi
+
+#### END of Arrange the output for claymore statics
+
+}
+
+function system_info ()
+{
+
+# Clear the file's content if exists and is not empty
+if [[ -s $KK003_WORKBENCH/files/system_data.txt ]]; then
+    > $KK003_WORKBENCH/files/system_data.txt
+fi
+
+if [[ -s $KK003_WORKBENCH/files/system_data_log_file.txt ]]; then
+    > $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Get the current public ip
+PUBLIC_IP=$(curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//')
+
+if [[ -z "$PUBLIC_IP" ]]; then
+    echo "checkip.dyndns.org failure to return public ip. Trying on another service"
+
+    PUBLIC_IP=`GET http://www.vermiip.es/  | grep "Tu IP p&uacute;blica es" | cut -d ':' -f2 | cut -d '<' -f1 | sed 's/ //'`
+fi
+
+if [[ -z "$PUBLIC_IP" ]]; then
+    echo "checkip.dyndns.org and www.vermiip.es failure to return public ip. Trying on another service"
+
+    PUBLIC_IP=`curl ifconfig.co`
+fi
+
+if [[ -z "$PUBLIC_IP" ]]; then
+    echo "checkip.dyndns.org, www.vermiip.es and ifconfig.co failure to return public ip. There's no more servers available"
+    echo "Telegram won't send public ip."
+
+else
+    # if var PUBLIC_IP is not empty check that I really have an ip address
+    valida_ip $PUBLIC_IP
+
+    if [[ $ESTADO_TEST_IP -ne 0 ]]; then 		# A non 0 value means bad ip syntax (usually server is sending text explaining an error)
+	PUBLIC_IP="No data available"
+	echo "Public ip's syntax is wrong:" $PUBLIC_IP
+    fi
+fi
+
+# Get the current private ip/s
+PRIVATE_IP=$(hostname -I)
+
+# Get the user custom name for the telegram reporting system
+if [[ -z "$CUSTOMIZE_SYSTEM_NAME" ]]; then
+    REPORTING="** $HOSTNAME Report **"
+elif [[ "$CUSTOMIZE_SYSTEM_NAME" == "PUBLIC_IP" && $ESTADO_TEST_IP -eq 0 ]]; then
+    REPORTING="** $PUBLIC_IP Report **"
+elif [[ "$CUSTOMIZE_SYSTEM_NAME" == "PRIVATE_IP" ]]; then
+    REPORTING="** $PRIVATE_IP Report **"
+else
+    REPORTING=$CUSTOMIZE_SYSTEM_NAME
+fi
+
+echo "$REPORTING" >> $KK003_WORKBENCH/files/system_data.txt
+echo >> $KK003_WORKBENCH/files/system_data.txt
+
+echo "$REPORTING" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+echo >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+# Title for system information
+TITLE_SYSTEM_INFORMATION="-- System information :"
+echo "$TITLE_SYSTEM_INFORMATION" >> $KK003_WORKBENCH/files/system_data.txt
+
+echo "$TITLE_SYSTEM_INFORMATION" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+# Warning if system restarted
+if [[ "$SEND_WARNING_SYSTEM_RESTARTED" == "YES" ]]; then
+
+    ELEMENT="W_SYSTEM_RESTARTED="
+
+    if [[ $SYSTEM_RESTARTED -eq 1 ]]; then
+	sed -i "2s/^/WARNING: System just rebooted\n/" $KK003_WORKBENCH/files/system_data.txt
+
+	sed -i "2s/^/WARNING: System just rebooted\n/" $KK003_WORKBENCH/files/system_data_log_file.txt
+
+
+	W_SYSTEM_RESTARTED=1
+
+	# Write the warning count (+1) to corresponding variable
+	modify_warnings_file
+
+    else 	# if there is not warning then reset the value to "0"
+
+	TOTAL_WARNINGS=0
+	sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
+
+    fi
+fi
+
+# Warning if Xorg restarted
+if [[ "$SEND_WARNING_XORG_RESTARTED" == "YES" ]]; then
+
+    ELEMENT="W_XORG_RESTARTED="
+
+    if [[ $XORG_RESTARTED -eq 1 ]]; then
+	sed -i "2s/^/WARNING: XORG just restarted\n/" $KK003_WORKBENCH/files/system_data.txt
+
+	sed -i "2s/^/WARNING: XORG just restarted\n/" $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	W_XORG_RESTARTED=1
+
+	# Write the warning count (+1) to corresponding variable
+	modify_warnings_file
+
+    else 	# if there is not warning then reset the value to "0"
+
+	TOTAL_WARNINGS=0
+	sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
+
+    fi
+fi
+
+# Reboot required
+if [[ "$SEND_REBOOT_REQUIRED" == "YES" ]]; then
+    REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "Yes!!!" || echo "No")
+    if [[ ! -z "$REBOOT_REQUIRED" ]]; then
+	echo "Reboot needed : $REBOOT_REQUIRED" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "Reboot needed : $REBOOT_REQUIRED" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+    fi
+fi
+
+# Worker name
+if [[ "$SEND_WORKERNAME" == "YES" ]]; then
+    echo -n "Worker : " >> $KK003_WORKBENCH/files/system_data.txt
+    echo "$WORKERNAME" >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Worker        : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    echo "$WORKERNAME" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Mining coin and auto-switch running check
+if [[ "$COIN" == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]]; then
+    AUTO_SWITCH_ON="YES"
+    AUTO_SWITCH_NAME="Salfter Nicehash Auto Switch"
+    CURRENT_COIN=$(head -n 1 ~/current-profit)
+    MINING_HISTORY=$(tail -n 5 ~/algo_log | awk '{print $0}')
+fi
+
+if  [[ "$COIN" == "SALFTER_MPH_PROFIT_SWITCHING" ]]; then
+    AUTO_SWITCH_ON="YES"
+    AUTO_SWITCH_NAME="Salfter MPH Auto Switch"    
+    CURRENT_COIN=$(head -n 1 ~/current-profit)
+    MINING_HISTORY=$(tail -n 5 ~/algo_log | awk '{print $0}')
+fi
+
+if [[ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]]; then 				# If user has selected "YES" here does not means WTM is running, so lets check 
+    # Check if WTM is running
+    ps aux | grep -v grep | grep -q PAPAMPI_WTM
+    if [[ $? -eq 0 ]]; then							# WTM is running and I take the opportunity to collect some data
+	AUTO_SWITCH_ON="YES"
+	AUTO_SWITCH_NAME="Papampi WTM Auto Switch"
+	CURRENT_COIN=$COIN
+	MINING_HISTORY=$(cat ~/8_wtmautoswitchlog | grep 'Mining switched' | tail -n 10 | awk '{print $0}')
+	WTM_PROFIT=$(cat ~/WTM_current_profit | awk '{print $0,"%"}')
+	WTM_REV=$(cat ~/WTM_current_revenue | awk '{print $0}')
+    fi
+fi
+
+if [[ $AUTO_SWITCH_ON != "YES" ]]; then
+    CURRENT_COIN=$COIN
+fi
+    
+if [[ "$SEND_MINING_COIN" == "YES" ]]; then
+    echo -n "Coin : " >> $KK003_WORKBENCH/files/system_data.txt
+    echo "$CURRENT_COIN" >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Coin          : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    echo "$CURRENT_COIN" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Mining address
+# There is not a unique varible in nvoc that defines de mining address so source from 1bash do not work
+# Here I take my chances and I'll try to get the mining address directly from the process list.
+# The address field should be the larger string so that is what I will go for.
+# What I do is replace spaces for new lines (\n) so I split the hole thing in lines.
+# Then remove the line that contains "/home/m1" because is/may be a large one and I know for sure this is not the mining address.
+# I get the larger line with the help of "awk"
+# If there is a dot "." or lash "/" I remove all chars from it to the end of line because as long as I know address don't have a dot and usually not a slash (remove the worker name)
+# Other approach would be a search for "0x" but I'm not sure if that is a universal solution
+if [[ "$SEND_MINING_ADDRESS" == "YES" ]]; then
+    MINING_ADDRESS=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | sed '/\home\/m1/d' | awk ' { if ( length > x ) { x = length; y = $0 } }END{ print y }' | sed 's/\..*//' | sed 's/\/.*//')
+    echo -n "Address : " >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Address       : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+    if [[ "$MASK_MINING_ADDRESS" == "YES" ]]; then
+	ADDRESS_HEAD=$(echo "$MINING_ADDRESS" | cut -c1-5) 	# Get the first 5 chars
+	ADDRESS_TAIL=$(echo -n "$MINING_ADDRESS" | tail -c 5)	# Get the last 5 chars
+	MASKED_ADDRESS=$ADDRESS_HEAD"*****"$ADDRESS_TAIL	# Paste the hole thing
+	echo "$MASKED_ADDRESS" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "$MASKED_ADDRESS" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+    else
+	echo "$MINING_ADDRESS" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "$MINING_ADDRESS" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    fi
+fi
+
+# Miner exec name
+# There is not a unique varible in nvoc that defines path or miner so source from 1bash do not work
+MINER_EXEC_PATH=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "/home/m1/")
+MINER_NAME=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "/home/m1/" | grep -oE "[^/]+$")
+if [[ "$SEND_MINER_EXEC_NAME" == "YES" && "$SEND_MINER_EXEC_PATH" == "YES" ]]; then
+    echo -n "Exec : " >> $KK003_WORKBENCH/files/system_data.txt
+    echo "$MINER_EXEC_PATH" >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Exec          : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    echo "$MINER_EXEC_PATH" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+elif [[ "$SEND_MINER_EXEC_NAME" == "YES" ]]; then
+    echo -n "Exec : " >> $KK003_WORKBENCH/files/system_data.txt
+    echo "$MINER_NAME" >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Exec          : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    echo "$MINER_NAME" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Miner up time
+if [[ "$SEND_MINER_UP_TIME" == "YES" ]]; then
+    ps aux | grep -v grep | grep -q " miner "						# Check if procces exists
+    if [[ $? -eq 0 ]]; then
+	MINER_UP_TIME=$(ps -o etime= -p $(pgrep -f miner) | tail -n 1 | sed 's/ //g')
+    else
+	MINER_UP_TIME="No data available"
+    fi
+
+    echo "Miner uptime : $MINER_UP_TIME" >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo "Miner uptime  : $MINER_UP_TIME" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Ips
+# Private ip
+if [[ "$SEND_PRIVATE_IP" == "YES" ]]; then
+    echo -n "Private Ip : " >> $KK003_WORKBENCH/files/system_data.txt
+    echo $PRIVATE_IP >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Private Ip    : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    echo $PRIVATE_IP >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+## Public ip
+#
+# Check if public ip has been changed
+ELEMENT="W_PUBLIC_IP_CHANGED="
+LAST_PUBLIC_IP=$(cat $DATA_FILE | grep "PUBLIC_IP=" | cut -d"=" -f2)			# Find the line for public ip and get the last known ip 
+
+if [[ ! -z "$PUBLIC_IP" && $ESTADO_TEST_IP -eq 0 ]]; then				# If I have public ip with right syntax then
+
+    if [[ "$LAST_PUBLIC_IP" == "" ]]; then						# If it's empty
+	echo "PUBLIC_IP=$PUBLIC_IP" >> $DATA_FILE					# I write the public ip
+    fi
+
+    if [[ "$LAST_PUBLIC_IP" != "" && "$LAST_PUBLIC_IP" != "$PUBLIC_IP" ]]; then		# In this case ip has changed
+	sed -i "/PUBLIC_IP=/ cPUBLIC_IP=${PUBLIC_IP}" $DATA_FILE 			# Update public ip to file
+
+	sed -i "2s/^/WARNING: Public ip has changed from $LAST_PUBLIC_IP to $PUBLIC_IP\n/" $KK003_WORKBENCH/files/system_data.txt
+
+	sed -i "2s/^/WARNING: Public ip has changed from $LAST_PUBLIC_IP to $PUBLIC_IP\n/" $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	W_PUBLIC_IP_CHANGED=1
+
+	# Write the warning count (+1) to warning variable
+	    modify_warnings_file
+
+    else # if there is not warning then reset the value to "0"
+
+	TOTAL_WARNINGS=0
+	sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
+    fi
+
+else	# Probably network and/or internet connection is down
+
+    echo "WARNING: It seems that, internet connection is down." >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo "WARNING: It seems that, internet connection is down." >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+fi
+
+# Send public ip
+if [[ "$SEND_PUBLIC_IP" == "YES" ]]; then
+    echo -n "Public Ip : " >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Public Ip     : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+    if [[ "$MASK_PUBLIC_IP" == "YES" ]]; then
+	IP_ADDRESS_HEAD=$(echo "$PUBLIC_IP" | cut -c1-3) 		# Get the first 3 chars
+	IP_ADDRESS_TAIL=$(echo -n "$PUBLIC_IP" | tail -c 3)		# Get the last 3 chars
+	IP_MASKED_ADDRESS=$IP_ADDRESS_HEAD"*****"$IP_ADDRESS_TAIL	# Paste the hole thing
+	echo $IP_MASKED_ADDRESS >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo $IP_MASKED_ADDRESS >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    else
+	echo $PUBLIC_IP >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo $PUBLIC_IP >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    fi
+fi
+
+
+# Send sshd port 
+if [[ "$SEND_SSHD_PORT" == "YES" ]]; then
+    # lsoft needs sudo. nmap IS NOT installed for default in nvoc system
+    SSHD_PORT=$(sudo lsof -iTCP -sTCP:LISTEN | grep IPv4 | grep sshd | cut -d":" -f2 | sed "s/ .*$//")
+
+    echo "Sshd port : $SSHD_PORT" >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo "Sshd port     : $SSHD_PORT" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Up since
+if [[ "$SEND_UP_SINCE" == "YES" ]]; then
+    echo -n "Up since : " >> $KK003_WORKBENCH/files/system_data.txt
+    uptime -s >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Up since      : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    uptime -s >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Up time
+if [[ "$SEND_UP_TIME" == "YES" ]]; then
+    echo -n "Time up : " >> $KK003_WORKBENCH/files/system_data.txt
+    uptime -p | sed 's/up //' >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Time up       : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    uptime -p | sed 's/up //' >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Ram
+if [[ "$SEND_RAM" == "YES" ]]; then
+    RAM=$(grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=2; {}/1024^2" | bc )
+
+    echo -n "Ram : " >> $KK003_WORKBENCH/files/system_data.txt
+    echo "$RAM Gb"  >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Ram           : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    echo "$RAM Gb"  >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Cpu model
+CPU_MODEL=$(cat /proc/cpuinfo | grep 'model name' | uniq | cut -d":" -f2)
+# Number of cores
+NUMBER_OF_CORES=$(nproc)
+
+if [[ "$SEND_CPU_MODEL" == "YES" ]]; then
+    CPU_SPECS="$CPU_MODEL (cores = $NUMBER_OF_CORES)"
+
+    echo -n "Cpu : " >> $KK003_WORKBENCH/files/system_data.txt
+    echo $CPU_SPECS >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo -n "Cpu           : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    echo $CPU_SPECS >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Load average
+if [[ "$SEND_WARNING_LOAD_AVERAGE" == "YES" ]]; then
+
+    ELEMENT="W_HIGH_CPU_LOAD_AVERAGE="
+
+    echo "Load average : " >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo "Load average  : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+    # Get cpu load average for 1, 5 and 15 minutes in a single string and remove spaces
+    AVERAGES=$(uptime | sed 's/.*: //g; s/ //g')
+ 
+    AVERAGE_1=$(echo $AVERAGES | cut -d"," -f1)
+    AVERAGE_5=$(echo $AVERAGES | cut -d"," -f2)
+    AVERAGE_15=$(echo $AVERAGES | cut -d"," -f3)
+
+    # Returns "1" when the load average is equal or greater than number of cpu cores
+    # else returns "0"
+    AVERAGE_1_HIGH=$(echo "$AVERAGE_1 >= $NUMBER_OF_CORES" | bc -l )
+    AVERAGE_5_HIGH=$(echo "$AVERAGE_5 >= $NUMBER_OF_CORES" | bc -l )
+    AVERAGE_15_HIGH=$(echo "$AVERAGE_15 >= $NUMBER_OF_CORES" | bc -l )
+
+    # Check if load average is to high
+    if [[ $AVERAGE_1_HIGH -eq 1 ]]; then
+	echo "$AVERAGE_1 (last minute) WARNING: cpu load average too high" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "$AVERAGE_1 (last minute) WARNING: cpu load average too high" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	W_HIGH_CPU_LOAD_AVERAGE=1
+    else 
+	echo "$AVERAGE_1 (last minute)" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "$AVERAGE_1 (last minute)" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    fi
+
+    if [[ $AVERAGE_5_HIGH -eq 1 ]]; then
+	echo "$AVERAGE_5 (last 5 minutes) WARNING: cpu load average too high" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "$AVERAGE_5 (last 5 minutes) WARNING: cpu load average too high" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	W_HIGH_CPU_LOAD_AVERAGE=1
+    else
+	echo "$AVERAGE_5 (last 5 minutes)" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "$AVERAGE_5 (last 5 minutes)" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    fi
+
+    if [[ $AVERAGE_15_HIGH -eq 1 ]]; then
+	echo "$AVERAGE_15 (last 15 minutes) WARNING: cpu load average too high" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "$AVERAGE_15 (last 15 minutes) WARNING: cpu load average too high" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	W_HIGH_CPU_LOAD_AVERAGE=1
+    else
+	echo "$AVERAGE_15 (last 15 minutes)" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo "$AVERAGE_15 (last 15 minutes)" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    fi
+
+    if [[ $AVERAGE_1_HIGH -eq 1 || $AVERAGE_5_HIGH -eq 1 || $AVERAGE_15_HIGH -eq 1 ]]; then
+	sed -i "2s/^/WARNING: Cpu load average too high!!!\n/" $KK003_WORKBENCH/files/system_data.txt
+
+        sed -i "2s/^/WARNING: Cpu load average too high!!!\n/" $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	# Write the warning count (+1) to warning variable
+	modify_warnings_file
+
+
+    else	# if there is not warning then reset the value to "0"
+
+	TOTAL_WARNINGS=0
+        sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
+
+    fi
+fi
+
+# who is logged in the system
+if [[ "$SEND_LOGGED_USERS" == "YES" ]]; then
+    echo "Logged in users : " >> $KK003_WORKBENCH/files/system_data.txt
+    who >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo "Logged in users : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    who >> $KK003_WORKBENCH/files/system_data_log_file.txt
+fi
+
+# Check if var DISPLAY has a value
+if [[ "$SEND_WARNING_CHECK_DISPLAY" == "YES" ]]; then
+
+    ELEMENT="W_WARNING_DISPLAY="
+
+    DISPLAY=$(who | grep "(:") # Here I check if there is an open sesion on any display (like display 0). If not may be the x server is down
+
+    if [[ -z "$DISPLAY" ]]; then
+
+	sed -i "2s/^/WARNING: Not a user logged in any Display. May be X server is NOT running\n/" $KK003_WORKBENCH/files/system_data.txt
+
+	sed -i "2s/^/WARNING: Not a user logged in any Display. May be X server is NOT running\n/" $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	W_WARNING_DISPLAY=1
+
+	# Write the warning count (+1) to warning variable
+	modify_warnings_file
+
+
+    else        # if there is not warning then reset the value to "0"
+
+        TOTAL_WARNINGS=0
+        sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
+
+    fi
+fi
+echo "" >> $KK003_WORKBENCH/files/system_data.txt
+
+echo "" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+
+# Ensure system has all gpus
+echo "System   is  reporting : $GPU_COUNT Gpus" >> $KK003_WORKBENCH/files/system_data.txt
+echo "System should have  : $NUMBER_GPUS_FOR_SURE Gpus" >> $KK003_WORKBENCH/files/system_data.txt
+
+echo "System is reporting : $GPU_COUNT Gpus" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+echo "System should have  : $NUMBER_GPUS_FOR_SURE Gpus" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+ELEMENT="W_GPU_COUNT="
+
+if [[ $GPU_COUNT -ne $NUMBER_GPUS_FOR_SURE ]]; then
+    sed -i "2s/^/WARNING: THERE MAY BE A PROBLEM; we should have $NUMBER_GPUS_FOR_SURE GPUs but nvidia-smi reports $GPU_COUNT\n/" $KK003_WORKBENCH/files/system_data.txt
+
+    sed -i "2s/^/WARNING: THERE MAY BE A PROBLEM; we should have $NUMBER_GPUS_FOR_SURE GPUs but nvidia-smi reports $GPU_COUNT\n/" $KK003_WORKBENCH/files/system_data_log_file.txt
+
+    W_GPU_COUNT=1
+
+    # Write the warning count (+1) to warning variable
+    modify_warnings_file
+
+else        # if there is not warning then reset the value to "0"
+
+    TOTAL_WARNINGS=0
+    sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
+fi
+
+# If any auto-switch running show the info
+if [[ "$AUTO_SWITCH_ON" == "YES" ]]; then
+    TITLE_AUTO_SWITCH="-- "$AUTO_SWITCH_NAME" :"
+    echo "$TITLE_AUTO_SWITCH" >> $KK003_WORKBENCH/files/system_data.txt
+    echo "" >> $KK003_WORKBENCH/files/system_data.txt
+
+    echo "$TITLE_AUTO_SWITCH" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    echo "" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+    if [[ "$AUTO_SWITCH_NAME" == "Salfter Nicehash Auto Switch" || "$AUTO_SWITCH_NAME" == "Salfter MPH Auto Switch" ]]; then
+	echo -n "Coin : " >> $KK003_WORKBENCH/files/system_data.txt
+	echo "$CURRENT_COIN" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo -n "Coin          : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+	echo "$CURRENT_COIN" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	echo "M. History : " >> $KK003_WORKBENCH/files/system_data.txt
+        echo "$MINING_HISTORY" >> $KK003_WORKBENCH/files/system_data.txt
+
+        echo -n "M. History    : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+        echo "$MINING_HISTORY" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    fi
+
+    if [[ "$AUTO_SWITCH_NAME" == "Papampi WTM Auto Switch" ]]; then
+	echo -n "Coin : " >> $KK003_WORKBENCH/files/system_data.txt
+        echo "$CURRENT_COIN" >> $KK003_WORKBENCH/files/system_data.txt
+
+        echo -n "Coin          : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+        echo "$CURRENT_COIN" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+        echo "M. History : " >> $KK003_WORKBENCH/files/system_data.txt
+        echo "$MINING_HISTORY" >> $KK003_WORKBENCH/files/system_data.txt
+
+        echo -n "M. History    : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+        echo "$MINING_HISTORY" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	echo -n "Profit : " >> $KK003_WORKBENCH/files/system_data.txt
+	echo "$WTM_PROFIT" >> $KK003_WORKBENCH/files/system_data.txt
+
+	echo -n "Profit        : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+	echo "$WTM_PROFIT" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	echo -n "Revenue : " >> $KK003_WORKBENCH/files/system_data.txt
+        echo "$WTM_REV" >> $KK003_WORKBENCH/files/system_data.txt
+
+        echo -n "Revenue       : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+        echo "$WTM_REV" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
+	echo "Revenue Average (24h): " >> $KK003_WORKBENCH/files/system_data.txt
+        echo "$WTM_AVERAGE_REV" >> $KK003_WORKBENCH/files/system_data.txt
+
+        echo -n "Revenue Average (24h): " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+        echo "$WTM_AVERAGE_REV" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	BTC_PRICE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
+	echo "BTC Price: " >> $KK003_WORKBENCH/files/system_data.txt
+        echo "$BTC_PRICE" >> $KK003_WORKBENCH/files/system_data.txt
+
+        echo -n "BTC Price     : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
+        echo "$BTC_PRICE" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+    fi
+fi
+
+
+echo "" >> $KK003_WORKBENCH/files/system_data.txt
+
+echo "" >> $KK003_WORKBENCH/files/system_data_log_file.txt
+
+}
+
+function regenerate_warnings_file ()
+{
+# Regenerates the warnings file
+# I must find out:
+# 1. First time the script has been executed but system not just restarted?
+# 2. System has just been restarted?
+# So i avoid the need to restart the system for this script to work properly if ran for first time
+if [[ ! -f "$WARNINGS_FILE" ]]; then
+    touch $WARNINGS_FILE
+    insert_vars_warnings_file
+fi
+
+if [[ -f "$WARNINGS_FILE" && $SYSTEM_RESTARTED -eq 1 || -f "$WARNINGS_FILE" && $XORG_RESTARTED -eq 1 ]]; then # 1=system/Xorg just restarted
+    > $WARNINGS_FILE
+    insert_vars_warnings_file
+fi
+
+}
+
+function modify_warnings_file ()
+{
+# Get the value in warnings file and check if above define user limit to send a telegram (var "ON_WARNING_NUMBER_TELEGRAMS_TO_SEND", default is 3)
+VALUE=$(cat $WARNINGS_FILE | grep "$ELEMENT" | cut -d"=" -f2)
+TOTAL_WARNINGS=$(($VALUE + 1))
+sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE 		# I write the new value to file
+
+if [[ $TOTAL_WARNINGS -le $ON_WARNING_NUMBER_TELEGRAMS_TO_SEND ]]; then # if true I send a telegram
+    SEND_WARNING=1
+fi
+}
+
+function insert_vars_warnings_file ()
+{
+# Insert the warning vars to the warnings file
+echo "W_SYSTEM_RESTARTED=0" >> $WARNINGS_FILE
+echo "W_XORG_RESTARTED=0" >> $WARNINGS_FILE
+echo "W_HIGH_CPU_LOAD_AVERAGE=0" >> $WARNINGS_FILE
+echo "W_WARNING_DISPLAY=0" >> $WARNINGS_FILE
+echo "W_GPU_COUNT=0" >> $WARNINGS_FILE
+echo "W_BAD_USER_SEND_TIME_FORMAT=0" >> $WARNINGS_FILE
+echo "W_PUBLIC_IP_CHANGED=0" >> $WARNINGS_FILE
+#echo "W_PRIVATE_IP_CHANGED=0" >> $WARNINGS_FILE
+echo "W_INTERVAL_SEND_TELEGRAM_CHANGED=0" >> $WARNINGS_FILE
+}
+
+function time_of_day_to_send ()
+{
+# Check if is time to send telegram according to user customization
+#
+# This var allows you to log the time calculation related to user custom times to send a telegram
+SHOW_TIME_CALCULATIONS_IN_LOG_FILE=0	#1 or 0, 1=log time calculations, 0=No
+
+TIME_NOW_IN_SECONDS=$(date +%s)
+TIME_NOW_IN_DATE_FORMAT=$(date --date @$TIME_NOW_IN_SECONDS)
+USER_CUSTOM_TIME_IN_SECONDS=$(date -d $SEND_TIME +%s)
+USER_CUSTOM_TIME_IN_DATE_FORMAT=$(date --date @$USER_CUSTOM_TIME_IN_SECONDS)
+MY_INTERVAL_IN_SECONDS=$(($TIME_NOW_IN_SECONDS + $ONE_BASH_TELEGRAM_INTERVAL_IN_SECONDS))
+MY_INTERVAL_IN_DATE_FORMAT=$(date --date @$MY_INTERVAL_IN_SECONDS)
+SECONDS_TO_SEND_USER_CUSTOM_TELEGRAM=$(($USER_CUSTOM_TIME_IN_SECONDS - $TIME_NOW_IN_SECONDS))
+TIME_TO_SEND_USER_CUSTOM_TELEGRAM_IN_DATE_FORMAT=$(date --date @$SECONDS_TO_SEND_USER_CUSTOM_TELEGRAM)
+
+if [[ $SHOW_TIME_CALCULATIONS_IN_LOG_FILE -eq 1 ]]; then	# The script does not send a custom time telegram at 00:00
+								# I'll use this info some time if a decide to pacth this issue
+    echo "ONE_BASH_TELEGRAM_INTERVAL_IN_SECONDS: " $ONE_BASH_TELEGRAM_INTERVAL_IN_SECONDS
+    echo "TIME_NOW_IN_SECONDS / Time now in date format : $TIME_NOW_IN_SECONDS / $TIME_NOW_IN_DATE_FORMAT"
+    echo "User custom send time / USER_CUSTOM_TIME_IN_SECONDS / User custom time date format : $SEND_TIME / $USER_CUSTOM_TIME_IN_SECONDS / $USER_CUSTOM_TIME_IN_DATE_FORMAT"
+    echo "MY_INTERVAL_IN_SECONDS / Time next check in date format : $MY_INTERVAL_IN_SECONDS / $MY_INTERVAL_IN_DATE_FORMAT"
+    echo "SECONDS_TO_SEND_USER_CUSTOM_TELEGRAM / TIME_TO_SEND_USER_CUSTOM_TELEGRAM_IN_DATE_FORMAT : $SECONDS_TO_SEND_USER_CUSTOM_TELEGRAM / $TIME_TO_SEND_USER_CUSTOM_TELEGRAM_IN_DATE_FORMAT"
+fi
+
+if [[ $TIME_NOW_IN_SECONDS -gt $USER_CUSTOM_TIME_IN_SECONDS ]]; then
+#    echo "La hora actual es mayor que la de la alerta"
+#    echo
+    return
+fi
+
+if [[ $MY_INTERVAL_IN_SECONDS -ge $USER_CUSTOM_TIME_IN_SECONDS ]]; then
+    SLEEP_TIME=$(($USER_CUSTOM_TIME_IN_SECONDS - $TIME_NOW_IN_SECONDS))
+    echo "Sleeping $SLEEP_TIME seconds before send user custom time telegram"
+    SEND_USER_CUSTOM_TELEGRAM=1
+    sleep $SLEEP_TIME
+fi
+
+}
+
+
+function custom_telegram_ordered_by_user ()
+{
+if [[ $USE_USER_CUSTOM_TIMES_TELEGRAM -eq 1 ]]; then
+    SEND_USER_CUSTOM_TELEGRAM=0
+    WRONG_TIME_FORMAT=""
+    ELEMENT="W_BAD_USER_SEND_TIME_FORMAT="
+    CHECK_TIME_REGEX="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"
+
+    # First must check that array is not empty
+    TIMES_LENGTH=${#USER_CUSTOM_TIMES_TO_SEND_TELEGRAM[@]} # Get number of elements
+
+    if [[ $TIMES_LENGTH -ne 0 ]]; then # Is not empty
+
+	# In this loop I do:
+	# 1. Time format is right?
+	# 2. Calculate if it's the right time to send the user custom time telegram
+	for ((INDEX=0; INDEX < $TIMES_LENGTH ; INDEX=INDEX+1)) # First element of array has index 0
+	do
+	    SEND_TIME=${USER_CUSTOM_TIMES_TO_SEND_TELEGRAM[$INDEX]}	# Get time to send telegram
+	    # Check if time has the right format (hh:mm, 0-23 and 0-9)
+	    if [[ "$SEND_TIME" =~ $CHECK_TIME_REGEX ]]; then
+#		echo "Time OK : "$SEND_TIME
+
+		# Check if is time to send telegram according to user customization
+		time_of_day_to_send
+
+		if [[ $SEND_USER_CUSTOM_TELEGRAM -eq 1 ]]; then
+		    break
+		fi
+
+	    else
+#		echo "Time wrong : "$SEND_TIME
+		WRONG_TIME_FORMAT=$SEND_TIME" "$WRONG_TIME_FORMAT
+	    fi
+	done
+
+	# If user custom time format is wrong var "WRONG_TIME_FORMAT" is NOT empty
+	if [[ ! -z "$WRONG_TIME_FORMAT" ]]; then
+	    # Remove last char which is a space
+	    WRONG_TIME_FORMAT=$(echo $WRONG_TIME_FORMAT | sed 's/ $//')
+	    # Insert warning in file as the first line
+	    sed -i "2s/^/WARNING: Bad user custom time format in var \"USER_CUSTOM_TIMES_TO_SEND_TELEGRAM\"\nBad times: \"$WRONG_TIME_FORMAT\"\n/" $KK003_WORKBENCH/files/system_data.txt
+
+	    sed -i "2s/^/WARNING: Bad user custom time format in var \"USER_CUSTOM_TIMES_TO_SEND_TELEGRAM\"\nBad times: \"$WRONG_TIME_FORMAT\"\n/" $KK003_WORKBENCH/files/system_data_log_file.txt
+
+	    W_BAD_USER_SEND_TIME_FORMAT=1
+
+	    # Write the warning count (+1) to warning variable
+	    modify_warnings_file
+
+
+	else        # if there is not warning then reset the value to "0"
+
+    	    TOTAL_WARNINGS=0
+    	    sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
+
+	fi
+
+    fi
+
+fi
+}
+
+
+function check_telegram_send_interval ()
+{
+ELEMENT="W_INTERVAL_SEND_TELEGRAM_CHANGED="
+
+# Check if "LAST_SEND_TELEGRAM_INTERVAL" exist in data file
+grep -q "LAST_SEND_TELEGRAM_INTERVAL=" $DATA_FILE
+CODE_GREP=$?
+LAST_SEND_TELEGRAM_INTERVAL=$(cat $DATA_FILE | grep "LAST_SEND_TELEGRAM_INTERVAL=" | cut -d"=" -f2)	# Get value
+
+if [[ $CODE_GREP -ne 0 || -z "$LAST_SEND_TELEGRAM_INTERVAL" ]]; then			# If string no found or no value then
+
+    sed -i "/LAST_SEND_TELEGRAM_INTERVAL=/d" $DATA_FILE					# Removes ALL lines (just in the rare case of duplicated lines) lines containing the string....
+    echo "LAST_SEND_TELEGRAM_INTERVAL=$TELEGRAM_TIMEOUT_IN_MINUTES" >> $DATA_FILE	# and write interval from 1bash
+	
+    TOTAL_WARNINGS=0
+    sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE 			# I write the new value to file
+    return
+fi
+
+if [[ "$LAST_SEND_TELEGRAM_INTERVAL" != "" && "$LAST_SEND_TELEGRAM_INTERVAL" != "$TELEGRAM_TIMEOUT_IN_MINUTES" ]]; then		# In this case interval has changed
+    sed -i "/LAST_SEND_TELEGRAM_INTERVAL=/ cLAST_SEND_TELEGRAM_INTERVAL=${TELEGRAM_TIMEOUT_IN_MINUTES}" $DATA_FILE		# Update interval to send telegram to data file
+
+    sed -i "2s/^/WARNING: Interval in minutes to send telegram has changed from $LAST_SEND_TELEGRAM_INTERVAL to $TELEGRAM_TIMEOUT_IN_MINUTES\n/" $KK003_WORKBENCH/files/system_data.txt
+
+    sed -i "2s/^/WARNING: Interval in minutes to send telegram has changed from $LAST_SEND_TELEGRAM_INTERVAL to $TELEGRAM_TIMEOUT_IN_MINUTES\n/" $KK003_WORKBENCH/files/system_data_log_file.txt
+
+    W_INTERVAL_SEND_TELEGRAM_CHANGED=1
+
+    # Write the warning count (+1) to warning variable and set TOTAL_WARNINGS=1
+    modify_warnings_file
+
+else # if there is not warning then reset the value to "0"
+
+    TOTAL_WARNINGS=0
+    sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
+fi
+
+}
+
+
+function send_telegram ()
+{
+# I send the telegram/s here. I prefer to send the main one first ( got api key and user id form 1bash )
+# and then deal with the addictional ones if there's any
+#
+# Send the mail telegram
+if [[ $SEND_WARNING -eq 1 || $USE_NVOC_DEFAULT_TIMES_TELEGRAM -eq 1 || $SEND_USER_CUSTOM_TELEGRAM -eq 1 ]]; then
+
+    curl -s -X POST --output /dev/null https://api.telegram.org/bot${APIKEY}/sendMessage -d "text=${MSG_TELEGRAM}" -d chat_id=${CHATID}
+    CODE_CURL=$?
+
+    # Check if the mgs went out ok
+    if [[ $CODE_CURL -eq 0 ]]; then
+	echo "Msg for main telegram account with:"
+	echo "Api Key      : $APIKEY"
+	echo "Chat/User Id : $CHATID"
+	echo "Sent ok!!!!"
+    else
+	echo "WARNING: Msg for main telegram account with:"
+	echo "Api Key      : $APIKEY"
+	echo "Chat/User Id : $CHATID"
+	echo "probably has not reached its destination"
+	echo "Got a non zero exit code from curl : $CODE_CURL"
+    fi
+
+sleep 1
+
+# Send the rest of telegrams if any on array
+# First must check that elements in the array are a even number and is not empty
+TELEGRAM_ADDITIONAL_RECIPIENTS_LENGTH=${#TELEGRAM_ADDITIONAL_RECIPIENTS[@]} 					# Get number of elements
+
+    if [[ $TELEGRAM_ADDITIONAL_RECIPIENTS_LENGTH -ne 0 ]]; then 						# Is not empty
+
+	if [[ $((TELEGRAM_ADDITIONAL_RECIPIENTS_LENGTH%2)) -eq 0 ]]; then   					# Number of elements is even?. If so I assume api key and user id / chat id are well matched in array
+
+    	    for ((INDEX_EVEN=0; INDEX_EVEN < $TELEGRAM_ADDITIONAL_RECIPIENTS_LENGTH ; INDEX_EVEN=INDEX_EVEN+2)) # First element of array have index 0
+    	    do                                                                          			# Even elements are the gpu names, odd elements are alias
+
+        	APIKEY=${TELEGRAM_ADDITIONAL_RECIPIENTS[$INDEX_EVEN]}                                		# Get the name of the gpu in array
+        	INDEX_ODD=$(($INDEX_EVEN + 1))                                          			# +1 to get the alias index
+        	CHATID=${TELEGRAM_ADDITIONAL_RECIPIENTS[$INDEX_ODD]}                                		# Get the alias of the gpu in array
+
+		# Send the telegram
+		curl -s -X POST --output /dev/null https://api.telegram.org/bot${APIKEY}/sendMessage -d "text=${MSG_TELEGRAM}" -d chat_id=${CHATID}
+		CODE_CURL=$?
+
+		# Check if the mgs went out ok
+		if [[ $CODE_CURL -eq 0 ]]; then
+		    echo "Msg for additional telegram account with:"
+		    echo "Api Key      : $APIKEY"
+		    echo "Chat/User Id : $CHATID"
+		    echo "sent ok!!!!"
+		else
+		    echo "WARNING: Msg for additional telegram account with:"
+		    echo "Api Key      : $APIKEY"
+		    echo "Chat/User Id : $CHATID"
+		    echo "probably has not reached its destination"
+		    echo "Got a non zero exit code from curl : $CODE_CURL"
+		fi
+		sleep 1
+	    done
+
+	# I get this way out if number of elements in array are odd and I don't send any additional telegram
+	else
+    	    echo "Number of elements in variable TELEGRAM_ADDITIONAL_RECIPIENTS are odd and I don't send any additional telegram."
+    	    echo "Check variable TELEGRAM_ADDITIONAL_RECIPIENTS if you want to send additional telegrams"
+	fi
+
+# I get this way out if array in variable MODELS is empty
+    else
+	echo "Variable TELEGRAM_ADDITIONAL_RECIPIENTS is empty and I don't send any additional telegram."
+	echo "Check variable TELEGRAM_ADDITIONAL_RECIPIENTS if you want to send additional telegrams"
+    fi
+fi
+}
+
+function source_1bash ()
+{
+# Get some vars from 1bash if exists
+ONE_BASH=0	# 0=Assume 1bash exists and its in place, 1=1bash is missing
+if [[ -f ~/1bash ]]; then
+    source ~/1bash
+
+    # If TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is not seted up I must leave the script
+    TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY=0
+    if [[ -z $TELEGRAM_TIMEOUT_IN_MINUTES ]]; then
+	TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY=1
+	salida
+    else
+    ONE_BASH_TELEGRAM_INTERVAL_IN_SECONDS=$(($TELEGRAM_TIMEOUT_IN_MINUTES * 60))
+    fi
+
+    # If TELEGRAM_CHATID in 1bash is not seted up I must leave the script
+    TELEGRAM_CHATID_EMPTY=0
+    if [[ -z $TELEGRAM_CHATID ]]; then
+	TELEGRAM_CHATID_EMPTY=1
+	salida
+    else
+	CHATID=$TELEGRAM_CHATID
+    fi
+
+    # If TELEGRAM_APIKEY in 1bash is not seted up I must leave the script
+    TELEGRAM_APIKEY_EMPTY=0
+    if [[ -z $TELEGRAM_APIKEY ]]; then
+	TELEGRAM_APIKEY_EMPTY=1
+	salida
+    else
+	APIKEY=$TELEGRAM_APIKEY
+    fi
+
+else # 1bash not found
+
+    ONE_BASH=1 # 1bash is missing
+    salida
+fi
+
+
+}
+
+function nvoc_script_requested_telegram ()
+{
+# Check if some Nvoc system script want to send a telegram and give priority to it
+
+#
+# Array with list of names for system scripts that may want to send a telegram
+#
+NVOC_SYSTEM_SCRIPTS_MAY_REQUEST_TELEGRAM=(
+					    "IAmNotAJeep_and_Maxximus007_WATCHDOG"
+					    )
+
+# Get name of parent process that has requested a telegram
+PARENT_PROCESS_NAME=$(cat /proc/$PPID/cmdline)
+echo "Parent process name  : " $PARENT_PROCESS_NAME
+
+for SCRIPT_NAME in "${NVOC_SYSTEM_SCRIPTS_MAY_REQUEST_TELEGRAM[@]}"
+do
+    # Check for script name element in array
+    echo $PARENT_PROCESS_NAME | grep -oq "$SCRIPT_NAME"
+    if [[ $? -eq 0  ]]; then                                        # Script name found
+	echo "Parent script name  : " $SCRIPT_NAME
+	NAME_SYSTEM_SCRIPT_REQUESTED_TELEGRAM=$SCRIPT_NAME
+	SEND_WARNING=1                                              # Send telegram warning triged by system script
+	SYSTEM_SCRIPT_REQUESTED_TELEGRAM=1
+    fi
+
+done
+
+}
+
+function valida_ip ()
+{
+local  ip=$1
+ESTADO_TEST_IP=1
+
+if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    OIFS=$IFS
+    IFS='.'
+    ip=($ip)
+    IFS=$OIFS
+    [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+        && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+    ESTADO_TEST_IP=$?
+fi
+return $ESTADO_TEST_IP
+}
+
+
+function salida ()
+{
+END_TIME=`date "+%Y-%m-%d %H:%M:%S"`
+
+echo
+
+if [[ $ONE_BASH -eq 1 || $TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY -eq 1 || $TELEGRAM_CHATID_EMPTY -eq 1 || $TELEGRAM_APIKEY_EMPTY -eq 1 || $MAIN_TELEGRAM_TIME_COUNTER_MISSING -eq 1 ]]; then
+
+    if [[ $ONE_BASH -eq 1 ]]; then # Ensure in 1bash exists
+	echo "WARNING: 1bash file is missing (/home/m1/1bash)"
+    fi
+
+    if [[ $TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_TIMEOUT_IN_MINUTES in 1bash has a value
+	echo "WARNING: variable TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+    fi
+
+    if [[ $TELEGRAM_CHATID_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_CHATID in 1bash has a value
+	echo "WARNING: variable TELEGRAM_CHATID in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+    fi
+
+    if [[ $TELEGRAM_APIKEY_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_APIKEY_EMPTY in 1bash has a value
+	echo "WARNING: variable TELEGRAM_APIKEY_EMPTY in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+    fi    
+
+    if [[ $MAIN_TELEGRAM_TIME_COUNTER_MISSING -eq 1 ]]; then # Ensure main time counter file is 
+	echo "WARNING: main time counter file is missing: $MAIN_TELEGRAM_TIME_COUNTER_1 and/or $MAIN_TELEGRAM_TIME_COUNTER_2"
+    fi
+
+    # I get out this way as I am missing some parameter to send the telegram, so I write the problem to the log file and exit
+    bad_exit
+fi
+
+if [[ $SEND_WARNING -eq 1 || $USE_NVOC_DEFAULT_TIMES_TELEGRAM -eq 1 || $SEND_USER_CUSTOM_TELEGRAM -eq 1 ]]; then
+
+    echo "Telegram sent: YES"
+    echo "Message follows :"
+else
+    echo "Telegram sent: NO"
+    echo "There was no warnings or telegram scheduled to send."
+    echo "Just saving report to log file :"
+    echo
+fi
+
+# Dump the data collected to the log file (just have to do a echo becouse I am using the "(" and ")" around the code I'm interested in) 
+echo "$MSG_LOG_FILE"
+echo
+echo "End time: " $END_TIME
+
+echo
+echo "**************************"
+echo
+exit
+}
+
+function bad_exit ()
+{
+echo "Telegram sent: NO"
+echo "Saved report to log file :"
+echo
+
+# Dump the data collected to the log file (just have to do a echo becouse I am using the "(" and ")" around the code I'm interested in).
+echo "$MSG_LOG_FILE"
+echo
+echo "End time: " $END_TIME
+
+echo
+echo "**************************"
+echo
+exit
+
+}
+
+
+#
+### Main body code starts here ###
+#
+
+echo "Start time: " $START_TIME
+
+# By defaul don't send telegram triged by warnings
+SEND_WARNING=0 # set to "0"
+
+# By defaul I say no known miner is running 
+KNOWN_MINER_RUNNING=0 # "0" not a known miner running, "1" found a known miner running
+
+# By defaul I say non system script has requested a telegram
+SYSTEM_SCRIPT_REQUESTED_TELEGRAM=0
+
+# Check if some Nvoc system script want to send a telegram
+    nvoc_script_requested_telegram
+
+# Nvoc sends a telegram as soon as it starts running and that causes
+# some values not to be available.
+# Same applies in case Xorg has been restarted so
+# to avoid this I wait three minutes before send the telegram msg
+# when I found out any of these two cases
+
+TIME_TO_WAIT_IN_SEGS=180							# Don't send a telegram at less the system and Xorg is up for more than 180 segs
+
+SYSTEM_RESTARTED=0								# 1=system just restarted, 0=system has been operating for more than 3 minutes
+SYSTEM_TIME_UP_IN_SEGS=$(cat /proc/uptime | cut -d"." -f1) 			# Get the system's time up in seconds
+# Check system up time
+if [[ $SYSTEM_TIME_UP_IN_SEGS -le $TIME_TO_WAIT_IN_SEGS ]]; then
+    SYSTEM_RESTARTED=1 								# 1=system just restarted, 0=system has been operating for more than 3 minutes
+    
+    WAITING_SEGS=$(($TIME_TO_WAIT_IN_SEGS - $SYSTEM_TIME_UP_IN_SEGS))
+    echo "System just started. Waiting $WAITING_SEGS seconds before data collect"
+    sleep $WAITING_SEGS
+
+fi
+
+XORG_RESTARTED=0								# 1=Xorg just restarted, 0=Xorg has been operating for more than 3 minutes
+ps aux | grep -v grep | grep -q "Xorg"                                          # Check if procces exists
+if [[ $? -eq 0 ]]; then
+    XORG_TIME_UP_IN_SEGS=$(ps -o etimes= -p $(pgrep -f Xorg) | sed 's/ //g')	# Get the Xorg's time up in seconds
+
+    # Check Xorg up time
+    if [[ $XORG_TIME_UP_IN_SEGS -le $TIME_TO_WAIT_IN_SEGS ]]; then
+	XORG_RESTARTED=1 							# 1=Xorg just restarted, 0=Xorg has been operating for more than 3 minutes
+
+	WAITING_SEGS=$(($TIME_TO_WAIT_IN_SEGS - $XORG_TIME_UP_IN_SEGS))
+	echo "Xorg just started. Waiting $WAITING_SEGS seconds before data collect"
+	sleep $WAITING_SEGS
+    fi
+else
+
+    echo "Xorg process seems to be missing"
+fi
+
+# Check source 1bash
+    source_1bash
+
+# I allways check the state of the warnings file
+    regenerate_warnings_file
+
+#
+# Collect some info from system
+#
+
+# Number of gpus nvidia-smi reports
+GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
+
+# Get system info
+    system_info
+
+# I make sure the current interval for running this script is equal to the value of var "TELEGRAM_TIMEOUT_IN_MINUTES" in 1bash
+# For it I save the value of var TELEGRAM_TIMEOUT_IN_MINUTES in 1bash on startup and compare it with the current value when running this script
+# If different I send a warning and restart service
+    check_telegram_send_interval
+
+# Check if is time to send a telegram ordered by user (array USER_CUSTOM_TIMES_TO_SEND_TELEGRAM)
+# Its better leave this call here so I can use system_data.txt to alert the user if there is a bad time format
+    custom_telegram_ordered_by_user
+
+# Get minimal report or not from nvidia-smi
+
+if [[ $MODE_NVIDIA_SMI_REPORT -eq 1 || $MODE_NVIDIA_SMI_REPORT -eq 2 ]]; then
+
+    nvidia_smi_minimal_report
+
+    # Insert the Title for nvidia-smi report
+    sed -i "1s/^/-- Nvidia-smi Information :\n/" $KK003_WORKBENCH/files/nvidia_smi_values.csv
+    sed -i "1s/^/-- Nvidia-smi Information :\n/" $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+else
+
+    # ### block for nvidia-smi report code (do not change the order of these lines or you may not get correctly the output of section "nvidia-smi information")
+    #
+    # Get the gpus's info I am interested in
+    nvidia-smi --query-gpu=$NVIDIA_SMI_QUERY_ARGUMENTS --format=csv -f $KK003_WORKBENCH/files/nvidia_smi_values.csv
+
+    cp $KK003_WORKBENCH/files/nvidia_smi_values.csv $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+
+    # I organize some things my way
+    if [[ "$USE_function_my_custom_mods_for_nvidia_smi" == "YES" ]]; then
+
+	my_custom_mods_for_nvidia_smi
+
+    fi
+
+	# Insert the Title for nvidia-smi report
+	sed -i "1s/^/-- Nvidia-smi Information :\n/" $KK003_WORKBENCH/files/nvidia_smi_values.csv
+	sed -i "1s/^/-- Nvidia-smi Information :\n/" $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv
+    #
+    # ### End of block for nvidia-smi report code
+fi
+
+# Collect Claymore statics if configured so
+claymore_statics
+
+# Collect the Genoil statics if configured so
+genoil_statics
+
+# Collect the ethminer statics if configured so
+ethminer_statics
+
+# Find out if there is any Known miner running
+if [[ $KNOWN_MINER_RUNNING -eq 0 ]]; then	# 0= there is NOT any Known miner running
+    echo "WARNING: There is not a Known miner running from where to get mining statics!!!"
+fi
+
+# Set system info+nvidia-smi+mining info together
+if [[ "$USE_CLAYMORE_STATICS" == "YES" && "$CLAYMORE_IS_RUNNING" == "YES" || "$USE_GENOIL_STATICS" == "YES" && "$GENOIL_IS_RUNNING" == "YES" || "$USE_ETHMINER_STATICS" == "YES" && "$ETHMINER_IS_RUNNING" == "YES" ]]; then
+    cat $KK003_WORKBENCH/files/system_data.txt $KK003_WORKBENCH/files/nvidia_smi_values.csv $KK003_WORKBENCH/files/miner_statics.txt > $KK003_WORKBENCH/files/report.txt
+
+    cat $KK003_WORKBENCH/files/system_data_log_file.txt $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv $KK003_WORKBENCH/files/miner_statics_log_file.txt > $KK003_WORKBENCH/files/report_log_file.txt
+else
+    cat $KK003_WORKBENCH/files/system_data.txt $KK003_WORKBENCH/files/nvidia_smi_values.csv > $KK003_WORKBENCH/files/report.txt
+
+    cat $KK003_WORKBENCH/files/system_data_log_file.txt $KK003_WORKBENCH/files/nvidia_smi_values_log_file.csv > $KK003_WORKBENCH/files/report_log_file.txt
+fi
+
+# Before send the telegram check if length >= 4096 UTF8 characters
+# If so I just send the warning, no the full data
+LENGTH_MSG=$(cat $KK003_WORKBENCH/files/report.txt | wc -m)
+
+if [[ $LENGTH_MSG -ge $TELEGRAM_CURRENT_CHARS_LIMT ]]; then
+
+    # I set SEND_WARNING=1 so I allways send a warning telegram when telegram is too long and telegram server would reject it
+    # Note I do not treat this warning like others; don't write it to file, don't count it, etc
+    SEND_WARNING=1 
+
+    TOO_MUCH_CHARS=$(($LENGTH_MSG - $TELEGRAM_CURRENT_CHARS_LIMT))
+
+    # Delete all lines in report file from the system information headers (included) to bottom
+    # Note that I keep untouched the log report file ($KK003_WORKBENCH/files/report_log_file.txt) as there is not charaters limit there 
+    sed -i "/$TITLE_SYSTEM_INFORMATION/Q" $KK003_WORKBENCH/files/report.txt
+
+    # Insert a warning saying I don't send the msg becouse telegram server will reject it
+    sed -i "2s/^/WARNING: Telegram is $LENGTH_MSG charaters long, limit is $TELEGRAM_CURRENT_CHARS_LIMT.\nThere is $TOO_MUCH_CHARS characters left. Telegram server will reject this message so you must customize your preferences to decrease the length of the message.\n/" $KK003_WORKBENCH/files/report.txt
+
+    sed -i "2s/^/WARNING: Telegram is $LENGTH_MSG charaters long, limit is $TELEGRAM_CURRENT_CHARS_LIMT.\nThere is $TOO_MUCH_CHARS characters left. Telegram server will reject this message so you must customize your preferences to decrease the length of the message.\n/" $KK003_WORKBENCH/files/report_log_file.txt
+else
+
+    # Always show number of characters in log file
+    echo "Number of characters in telegram Msg :" $LENGTH_MSG 
+fi
+
+CONTENT_TELEGRAM=$(cat $KK003_WORKBENCH/files/report.txt)
+
+CONTENT_LOG_FILE=$(cat $KK003_WORKBENCH/files/report_log_file.txt)
+
+MSG_TELEGRAM="$CONTENT_TELEGRAM"
+
+MSG_LOG_FILE="$CONTENT_LOG_FILE"
+
+# Send telegram/s
+send_telegram
+
+# If telegram send interval changed I restart the "service" in order to use the new interval and get the hole telegram system synchronized
+# If kk003_TELEGRAM_ALERTS exits I should be on Nvoc 19 stable
+# If BaliMiner_TELEGRAM_ALERTS exists but kk003_TELEGRAM_ALERTS does not I should be on Nvoc 19+ or highest
+
+MAIN_TELEGRAM_TIME_COUNTER_1=~/kk003_TELEGRAM_ALERTS
+MAIN_TELEGRAM_TIME_COUNTER_2=~/BaliMiner_TELEGRAM_ALERTS
+MAIN_TELEGRAM_TIME_COUNTER_3=~/7telegram
+
+if [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_1" ]]; then					# In this case running Nvoc 19 stable
+    MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_1
+elif [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_2" ]]; then					# In this case running Nvoc 19+ or highest
+    MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_2
+elif [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_3" ]]; then					# In this case running Nvoc 19.2 or highest
+    MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_3
+else
+    MAIN_TELEGRAM_TIME_COUNTER_MISSING=1
+    salida # exit
+fi
+
+if [[ $SYNC_TELEGRAM_SYSTEM -eq 1 ]]; then						# SYNC_TELEGRAM_SYSTEM=1 then Sync telegram system
+
+    if [[ $W_INTERVAL_SEND_TELEGRAM_CHANGED -eq 1 ]]; then				# If eq 1 the user has changed the interval in 1bash
+        echo "Current send telegram interval and interval in 1bash file are not equal"
+        echo "Killing and restarting $MAIN_TELEGRAM_TIME_COUNTER"
+
+        pkill -f $MAIN_TELEGRAM_TIME_COUNTER
+        if [[ $? -eq 0 ]]; then
+	    echo "Ok, Telegram system successfully stopped"
+	    bash $MAIN_TELEGRAM_TIME_COUNTER &
+	    if [[ $? -eq 0 ]]; then
+	        echo "Ok, Telegram system successfully started"
+	    else
+	        echo "ERROR, Telegram system failed to restart"
+	    fi
+
+	else # Try again
+	    sleep 2
+
+	    pkill -f $MAIN_TELEGRAM_TIME_COUNTER
+	    if [[ $? -eq 0 ]]; then
+	        echo "Ok, Telegram system successfully stopped (on second try)"
+	        bash $MAIN_TELEGRAM_TIME_COUNTER &
+		if [[ $? -eq 0 ]]; then
+		    echo "Ok, Telegram system successfully started"
+		else
+		    echo "ERROR, Telegram system failed to restart"
+		fi
+	    fi
+
+	fi
+    fi
+fi
+
+salida # exit
+
+) >> $KK003_LOG_FILE ##### DON'T REMOVE THIS CLOSED PARENTHESIS OR WE'LL MISS THE LOG FILE

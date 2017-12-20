@@ -9,9 +9,9 @@
 ##########################################################################
 # v=0001 : 
 # v=0002 : Papampi : Telegram changes
+# v=0003 : Papampi : WTM_MINIMUM_MINING_TIME 
 
-
-nvOC_1bash_ver="v0019-2.0.002"   # Do not edit this
+nvOC_1bash_ver="v0019-2.0.003"   # Do not edit this
 
 
 # 1bash for v0019-2.0 (1bash subversion 001)
@@ -359,6 +359,8 @@ WTM_AUTO_SWITCH_SYNC_INTERVAL="3" # Time to sync with WTM for best coin
 WTM_PROFIT_CHECK_INTERVAL="60" # interval between checking profit for web info
 
 WTM_MIN_DIFFERENCE="5" # Minimum difference in percent when switch to new coin, to prevent too many switches.
+
+WTM_MINIMUM_MINING_TIME="30" # Minimum mining time before checking and switching to prevent fast switches.
 
 WTM_CURRENCY="USD" # USD, AUD, BRL, CAD, CHF, CLP, CNY, DKK, EUR, GBP, HKD, INR, ISK, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD
 
@@ -1045,3 +1047,4 @@ then
     MEMORY_OVERCLOCK=-1000
   fi
 fi
+

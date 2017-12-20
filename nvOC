@@ -36,16 +36,15 @@
 # v=0006 : Stubo
 #          changed calls of other external functions to internal subroutine calls
 #          papampi
-#          added wtm_auto_switch version  
+#          added wtm_auto_switch version   
 #
 # v=0007 : papampi
 #          Changed ~/1bash to /home/m1/1bash for known reasons ... 
 
 # DEV_VERSION=0007
 
-
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.0.0007"                   # Do not edit this
+nvOC_nvOC_ver="v0019-2.0.007"                   # Do not edit this
 
 
 export DISPLAY=:0
