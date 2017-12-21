@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# ******************************************
+# Resize Linux ext4 partition to fill hdd
+# ******************************************
+
+if [ "$(id -u)" != "0" ]; then
+
+	echo "Script must be run as root !"
+	exit 0
+fi
+
+_REL=`lsb_release -sc`
+
+_rootpart=`mount | grep "on / " | awk '{print $1}'`
+if [ "${_rootpart}" = "/dev/sda2" ]; then
+        rootdrv="sda2"
+        hdd="/dev/sda"
+elif [ "${_rootpart}" = "/dev/sdb2" ]; then
+        rootdrv="sdb2"
+        hdd="/dev/sdb"
+else
+        echo "Root fs mount partition not found!"
+        exit 1
+fi
+echo ""
+
+fdisk -l $hdd | grep $hdd
+echo ""
+
+_btrfs=`mount | grep -o btrfs`
+
+hdd_part=`fdisk -l $hdd | grep $rootdrv | awk '{print $1}'`
+hdd_sect=`fdisk -l $hdd | grep "Disk $hdd" | awk '{print $7}'`
+if [ "${hdd_sect}" = "" ]; then
+    hdd_sect=`fdisk -l $hdd | grep total | awk '{print $8}'`
+fi
+hdd_end=$(expr $hdd_sect - 1024)
+
+part_start=`fdisk -l $hdd | grep $rootdrv | awk '{print $2}'`
+part_end=`fdisk -l $hdd | grep $rootdrv | awk '{print $3}'`
+
+echo "  Max block: $hdd_end"
+echo "   Part end: $part_end"
+echo " Part start: $part_start"
+if [ ! "${_btrfs}" = "" ]; then
+    echo " btrfs part: yes"
+    _resize="btrfs filesystem resize max /"
+else
+    _resize="resize2fs ${hdd_part}"
+fi
+echo ""
+if [ $part_end -ge $hdd_end ]; then
+    echo "Partition allready maximum size !"
+    rm /usr/local/bin/fs_resize_warning > /dev/null 2>&1
+    exit 0
+fi
+
+echo -n "WARNING: Do you want to resize \"$hdd_part\" (y/N)?  "
+
+read -n 1 ANSWER
+if [ ! "${ANSWER}" = "y" ] ; then
+    echo ""
+    echo "Canceled.."
+    exit 0
+fi
+echo ""
+
+# RESIZE PARTITION
+
+echo -e "p\nd\n2\nn\np\n2\n$part_start\n$hdd_end\nw" | fdisk ${hdd} > /dev/null 2>&1
+#if [ $? -ne 0 ]; then
+#	echo "ERROR resizing partition!"
+#	exit 1
+#fi
+
+echo "PARTITION RESIZED."
