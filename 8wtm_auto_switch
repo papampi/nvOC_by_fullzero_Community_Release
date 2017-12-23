@@ -29,11 +29,13 @@
 # v=0007 : Papampi: Changes for plusCPU
 #
 # v=0008 : Papampi: Added minimum mining time, 24H Average revenue
+#
+# v=0009 : Papampi: Fixed minimum mining time
 
 
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.008"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.0.009"   # Do not edit this
 
 echo ""
 echo ""
@@ -83,7 +85,7 @@ do
     fi
 
     #If miner running time is lower than given time don't check for better coin
-    MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep -i screen | grep miner |awk '{print $2}') | awk '{print $2}')
+    MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2}') | awk '{print $2}')
     MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
     if [[ $MINER_TIME_MIN -lt $WTM_MINIMUM_MINING_TIME ]] ; then
       echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes , looking for a better coin to mine in less than $(($WTM_MINIMUM_MINING_TIME - $MINER_TIME_MIN)) minutes" | tee -a $LOG_FILE
@@ -145,6 +147,7 @@ do
           echo "Miner is running, lets make the switch" | tee -a $LOG_FILE
           if [[ $MINER_WATCHDOG == "YES" ]]; then
             pkill -f 5watchdog
+            echo "WTM Auto Switch Restarted watchdog"  | tee -a $LOG_FILE $WDOG_LOG
             sleep 1
             screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
             echo "watchdog restarted in screen wdog; ~/nvOC wdog-log" | tee -a $LOG_FILE
@@ -163,6 +166,7 @@ do
       elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM ]]; then
         echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"  | tee -a $LOG_FILE
         pkill -f 5watchdog
+        echo "WTM Auto Switch Restarted watchdog"  | tee -a $LOG_FILE $WDOG_LOG
         sleep 1
         pkill -f 3main
       fi
@@ -195,4 +199,3 @@ do
     echo "Auto start miner set to NO" | tee -a $LOG_FILE
   fi
 done
-
