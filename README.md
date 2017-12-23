@@ -20,6 +20,8 @@ Download nvOC-19-2-update: https://github.com/papampi/nvOC_by_fullzero_Community
 
 Dropbox update script link :https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
 
+Testing Image install link: https://mega.nz/#!NZkCnT4D!RVNPzpRtqzX559Kjsm0InF_WK0d15ZmQ5MU0ZQQBTGc
+
 These are unofficial edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
 
 
