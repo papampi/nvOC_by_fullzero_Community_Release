@@ -30,15 +30,18 @@
 #
 # v=0005 : papampi
 #          Minor change on miner launch and output
+#
+# v=0006 : papampi
+#          Changes local watchdog and temp control start and guake output
 
 
-# DEV_VERSION=0005
+# DEV_VERSION=0006
 
 
 source /home/m1/1bash
 
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.005"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.006"                  # Do not edit this
 
 
 
@@ -350,30 +353,30 @@ then
   fi
   sleep 2
   echo ""
-  echo "LAUNCHING:  MINER TEMP CONTROL "
   HCD='/home/m1/6tempcontrol'
   running=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
-  remote_running=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
   if [ "$running" == "" ]
   then
+    echo "LAUNCHING:  MINER TEMPCONTROL"
     if [ $LOCALorREMOTE == "LOCAL" ]
     then
-      guake -n $HCD -r MINER_TEMP_CONTROL -e "bash /home/m1/6tempcontrol"
+      #guake -n $HCD -r MINER_TEMP_CONTROL -e "bash /home/m1/6tempcontrol"
       echo ""
-      echo "process in guake terminal Tab (f12)"
+      echo "process in screen temp, guake terminal Tab (f12), ~/nvOC temp-log"
+      screen -c /home/m1/screenrc-tempcontrol -dmSL temp bash /home/m1/6tempcontrol
+      #if guake tab is already showing temp control output dont open a new one
+      if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/tempcontrol-screenlog.0" |grep -v grep) ]];then
+        guake -n /home/m1/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -f  /home/m1/nvoc_logs/tempcontrol-screenlog.0 "
+      fi
       echo ""
       running=""
-    fi
-  fi
-  if [ "$remote_running" == "" ]
-  then
-    if [ $LOCALorREMOTE == "REMOTE" ]
+    elif [ $LOCALorREMOTE == "REMOTE" ]
     then
       screen -c /home/m1/screenrc-tempcontrol -dmSL temp bash /home/m1/6tempcontrol
       echo ""
-      echo "process in screen temp; attach with: screen -r temp"
+      echo "process in screen temp; ~/nvOC temp-log"
       echo ""
-      remote_running=""
+      running=""
     fi
   fi
 fi
@@ -382,24 +385,28 @@ if [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ] && [ $SALFTER 
 then
   HCD='/home/m1/5watchdog'
   echo ""
-  echo "LAUNCHING:  MINER WATCHDOG"
   sleep 2
   running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
   if [ "$running" == "" ]
   then
+    echo "LAUNCHING:  MINER WATCHDOG"
     if [ $LOCALorREMOTE == "LOCAL" ]
     then
-      guake -n $HCD -r MINER_WATCHDOG -e "bash $HCD"
       echo ""
-      echo "process in guake terminal Tab (f12)"
+      echo "process in screen wdog, guake terminal Tab (f12), ~/nvOC wdog-log"
+      screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
+      #guake -n $HCD -r MINER_WATCHDOG -e "bash /home/m1/5watchdog"
+      #if guake tab is already showing watchdog output dont open a new one
+      if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
+        guake -n /home/m1/5watchdog -r MINER_WATCHDOG -e "tail -f  /home/m1/nvoc_logs/watchdog-screenlog.0 "
+      fi
       echo ""
       running=""
-    fi
-    if [ $LOCALorREMOTE == "REMOTE" ]
+    elif [ $LOCALorREMOTE == "REMOTE" ]
     then
       screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
       echo ""
-      echo "process in screen wdog; attach with: screen -r wdog"
+      echo "process in screen wdog; ~/nvOC wdog-log"
       echo ""
       running=""
     fi
@@ -1031,10 +1038,15 @@ then
       then
         if [ $LOCALorREMOTE == "LOCAL" ]
         then
-          guake -n $HCD -r MINER_WATCHDOG -e "bash $HCD"
           echo "LAUNCHING:  MINER WATCHDOG"
           echo ""
-          echo "process in guake terminal Tab (f12)"
+          echo "process in screen wdog, guake terminal Tab (f12), ~/nvOC wdog-log"
+          screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
+          #guake -n $HCD -r MINER_WATCHDOG -e "bash /home/m1/5watchdog"
+          #if guake tab is already showing watchdog output dont open a new one
+          if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
+            guake -n /home/m1/5watchdog -r MINER_WATCHDOG -e "tail -f  /home/m1/nvoc_logs/watchdog-screenlog.0 "
+          fi
           echo ""
           running=""
         elif [ $LOCALorREMOTE == "REMOTE" ]
@@ -1042,7 +1054,7 @@ then
           screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
           echo "LAUNCHING:  MINER WATCHDOG"
           echo ""
-          echo "process in screen wdog; attach with: screen -r wdog"
+          echo "process in screen wdog; ~/nvOC wdog-log"
           running=""
         fi
       fi
@@ -1124,4 +1136,3 @@ while true
 do
   sleep 60
 done
-
