@@ -978,7 +978,7 @@ then
 
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETC_SC" ]
