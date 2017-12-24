@@ -46,7 +46,7 @@ do
   sleep 5
   source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
   CURRENT_COIN=$COIN
-  TOP_COIN=$(cat /home/m1/WTM_top_coin | sed 's/:[0-9]//')
+  TOP_COIN=$(cat /home/m1/WTM_top_coin | sed 's/:[0-9]*//')
   TIMEIN=$WTM_PROFIT_CHECK_INTERVAL
   TIMEOUT=$(($TIMEIN * 60))
   echo ""
