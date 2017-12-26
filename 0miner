@@ -12,9 +12,11 @@
 
 # DEV Mod Log:
 # v=0001 : papampi: Initial Release
+# v=0002 : papampi: fix lbc
+
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0001"   # Do not edit this
+nvOC_0miner_ver="v0019-2.0.0002"   # Do not edit this
 
 source /home/m1/1bash
 
@@ -1039,7 +1041,7 @@ then
   EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_EXP_SC" ]
@@ -1094,7 +1096,7 @@ then
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_MUSIC_SC" ]
@@ -1173,7 +1175,7 @@ then
 
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETH_SC" ]
@@ -1258,7 +1260,7 @@ then
 
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_SOIL_SC" ]
@@ -1343,7 +1345,7 @@ then
 
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_UBQ_SC" ]
