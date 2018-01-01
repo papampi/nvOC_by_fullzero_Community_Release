@@ -9,7 +9,7 @@ bash nvOC-19-2-update
 
 Update script link :https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
 
-Image install link: https://mega.nz/#!NZkCnT4D!RVNPzpRtqzX559Kjsm0InF_WK0d15ZmQ5MU0ZQQBTGc
+Image install link: https://mega.nz/#!UV9UlASA!JNUSOR0A0XuzWkXYM3YhWWvtTsQlH17PU4v9Pez6Hhc
 
 These are community edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
 
