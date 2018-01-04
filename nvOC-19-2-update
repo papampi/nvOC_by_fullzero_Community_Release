@@ -11,18 +11,23 @@ echo "";echo ""
 
 
 echo " Stopping gnome-terminal, miner, wdog, temp, ..."
-echo "pkill -f gnome-terminal"
+echo "kill gnome-terminal"
 pkill -f gnome-terminal
-echo "pkill -f WATCHDOG"
+echo "kill WATCHDOG"
 pkill -f WATCHDOG
-echo "pkill -f GRAM"
+pkill -f 5watchdog
+echo "kill  Telegram"
 pkill -f GRAM
+pkill -f 7telegram
 echo "pkill -f TEMP"
 pkill -f TEMP
-echo "pkill -f PAPAMPI"
+pkill -f 6autotemp
+echo "kill WTM"
 pkill -f PAPAMPI
-echo "pkill -e screen"
+pkill -f 8wtm
+echo "pkill all programs running in screen"
 pkill -e screen
+
 
 sleep 1;echo "";echo ""
 
@@ -57,9 +62,9 @@ sleep 1;echo "";echo ""
 
 echo "sudo dpkg --configure -a"
 sudo dpkg --configure -a
-echo "Updating and Upgrading system packages and installing needed packages"
-sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y; sudo apt install -y moreutils gawk'
-
+#echo "Updating and Upgrading system packages and installing needed packages"
+#sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y; sudo apt install -y moreutils gawk'
+sudo -- sh -c ' sudo apt install -y moreutils gawk'
 
 sleep 1;echo "";echo ""
 
@@ -206,28 +211,28 @@ else
 fi
 
 sleep 1;echo "";echo ""
-echo "Checking KlausT ccminer 8.15"
-if [ ! $( cat /home/m1/KTccminer/version | grep 8.15) ]
+echo "Checking KlausT ccminer 8.17"
+if [ ! $( cat /home/m1/KTccminer/version | grep 8.17) ]
 then
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/KTccminer-8.15.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/KTccminer-8.17.tar.gz ]
   then
-    echo "Remove Old KTccminer-8.15"
-    rm /home/m1/Downloads/miners/KTccminer-8.15.tar.gz
+    echo "Remove Old KTccminer-8.17"
+    rm /home/m1/Downloads/miners/KTccminer-8.17.tar.gz
   fi
   echo "Downloading Klaust ccminer"
-  echo "wget -c https://www.dropbox.com/s/zqa9mqt5zzx8owr/KTccminer-8.15.tar.gz"
-  wget -c https://www.dropbox.com/s/zqa9mqt5zzx8owr/KTccminer-8.15.tar.gz
-  echo "Extracting KTccminer-8.15.tar.gz"
-  tar -xvzf KTccminer-8.15.tar.gz
-  rm KTccminer-8.15.tar.gz
+  echo "wget -c https://www.dropbox.com/s/hs2ej9qul7stgn4/KTccminer-8.17.tar.gz"
+  wget -c https://www.dropbox.com/s/hs2ej9qul7stgn4/KTccminer-8.17.tar.gz
+  echo "Extracting KTccminer-8.17.tar.gz"
+  tar -xvzf KTccminer-8.17.tar.gz
+  rm KTccminer-8.17.tar.gz
   echo "cp -R /home/m1/Downloads/miners/KTccminer/* /home/m1/KTccminer/"
   mkdir -p /home/m1/KTccminer/
   cp -R /home/m1/Downloads/miners/KTccminer/* /home/m1/KTccminer/
 else
-  echo "KTccminer-8.15 already downloaded"
+  echo "KTccminer-8.17 already downloaded"
 fi
 
 sleep 1;echo "";echo ""
@@ -305,7 +310,7 @@ fi
 
 sleep 1;echo "";echo ""
 
-echo "Checking Etminer directory"
+echo "Checking Ethminer directory"
 if [[ ! -d /home/m1/eth/ethminer/ ]]
 then
   echo "Moving ethminer old miners"
@@ -320,22 +325,22 @@ then
   echo "rm -rf ethminer_11 ethminer_12dev2 "
   rm -rf ethminer_11 ethminer_12dev2
 else
-  echo "ethminer directory structre already fixed"
+  echo "Ethminer directory structure already fixed"
 fi
 
 sleep 1;echo "";echo ""
 
-echo "Checking ethminer 0.12.0"
+echo "Checking Ethminer 0.12.0"
 
 if [ ! $(cat /home/m1/eth/ethminer/latest/version | grep 0.12.0) ]
 then
-  echo "Downloading and making changes for ethminer 0.12.0"
+  echo "Downloading and making changes for Ethminer 0.12.0"
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
   if [ -e /home/m1/Downloads/miners/ethminer-0.12.0.tar.gz ]
   then
-    echo "Remove Old ethminer"
+    echo "Remove Old Ethminer"
     rm /home/m1/Downloads/miners/ethminer-0.12.0.tar.gz
   fi
   wget https://www.dropbox.com/s/dhvq2zhlpih01y8/ethminer-0.12.0.tar.gz
@@ -352,9 +357,7 @@ then
 else
   echo "ethminer-0.12.0 already downloaded"
 fi
-
 sleep 1;echo "";echo ""
-
 echo "Checking KTccminer-cryptonight"
 if [ ! $( cat /home/m1/KTccminer-cryptonight/version | grep 2.06) ]
 then
@@ -390,6 +393,7 @@ echo "Downloading V0019-2.0 - Community Release"
 if [ -e /home/m1/Downloads/nvOC-19-2.tar.gz ]
 then
   rm /home/m1/Downloads/nvOC-19-2.tar.gz
+  rm -rf /home/m1/Downloads/nvOC-19-2
 fi
 wget https://www.dropbox.com/s/bajt2gaf87kgjrp/nvOC-19-2.tar.gz
 echo "Extracting the update files"
@@ -484,6 +488,10 @@ echo "cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC"
 cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC
 echo "cp /home/m1/Downloads/nvOC-19-2/7telegram /home/m1/7telegram"
 cp /home/m1/Downloads/nvOC-19-2/7telegram /home/m1/7telegram
+echo "cp /home/m1/Downloads/nvOC-19-2/kk003_telegram /home/m1/kk003_telegram"
+cp /home/m1/Downloads/nvOC-19-2/kk003_telegram /home/m1/kk003_telegram
+echo "cp /home/m1/Downloads/nvOC-19-2/ext/multiminer.html /var/www/html"
+sudo cp /home/m1/Downloads/nvOC-19-2/ext/multiminer.html /var/www/html/multiminer.html
 
 sleep 1;echo "";echo ""
 
@@ -532,6 +540,7 @@ then
   sleep 5
 fi
 
+
 if [[ -z $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.00' ) ]]; then
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
@@ -553,7 +562,7 @@ if [[ -n $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
-  echo "                            Your 1bash is v0019-2.0-001, latest version is v0019-2.0-002"
+  echo "                            Your 1bash is v0019-2.0-001, latest version is v0019-2.0-003"
   echo "                                      Changes will be applied to your 1bash"
   echo "                              Telegram section changed in 1bash, review and edit it"
   echo "**************************************************************************************************************************"
@@ -561,15 +570,33 @@ if [[ -n $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
   echo "**************************************************************************************************************************"
   sed -i 's/v0019-2.0.001/v0019-2.0.002/g' /home/m1/1bash
   sed -i 's/BaliMiner_TELEGRAM_ALERTS/TELEGRAM_MESSAGES/g' /home/m1/1bash
-  sed -i '/TELEGRAM_MESSAGES/a TELEGRAM_ALERTS="YES" # YES or NO # Set to No if you Dont want to get Telegram Alerts'  /home/m1/1bash
+  sed -i '/TELEGRAM_MESSAGES=/a TELEGRAM_ALERTS="YES" # YES or NO # Set to No if you Dont want to get Telegram Alerts'  /home/m1/1bash
   sleep 5
 fi
+if [[ -n $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.002' ) ]]; then
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "                            Your 1bash is v0019-2.0-002, latest version is v0019-2.0-003"
+  echo "                                      Changes will be applied to your 1bash"
+  echo "                          WhatToMine Auto Switch section changed in 1bash, review and edit it"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  echo "**************************************************************************************************************************"
+  sed -i 's/v0019-2.0.002/v0019-2.0.003/g' /home/m1/1bash
+  sed -i '/WTM_MIN_DIFFERENCE=/a #WTM_MINIMUM_MINING_TIME="30" #Disabled for now. Minimum mining time before checking and switching to prevent fast switches.'  /home/m1/1bash
+  sleep 5
+fi
+#Fix file owners if update is run by root privilege
+sudo chown -R m1 /home/m1/
 
 sleep 1;echo "";echo ""
 
 echo "**************************************************************************************************************************"
 echo "**************************************************************************************************************************"
 echo "                                                             All Done"
+echo "     Read '/home/m1/Downloads/nvOC-19-2/SSD-USB Resize Guide' to learn how to resize your drive and add swap partition"
 echo "                    Old 1bash, 3main, wdog and temp are copied to /home/m1/backups/old_to_19.2/*.bak"
 echo "                                Edit your 1bash, Set auto start miner then reboot your rig"
 echo "                                                  Keep Calm and Carry on Mining"
