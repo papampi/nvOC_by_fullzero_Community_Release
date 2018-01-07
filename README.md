@@ -11,11 +11,9 @@ Update script link :https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
 
 Mega.nz Image install link: https://mega.nz/#!UV9UlASA!JNUSOR0A0XuzWkXYM3YhWWvtTsQlH17PU4v9Pez6Hhc
 
-Mega Checksum: SHA256: 424124D5FC47F635947A266E151B48BC776BAFDA5C1A03A7708EAE73730AB3D5
-
 Google Drive Image Install link:https://drive.google.com/file/d/1B7NW7fj5MOWQRzIG_X4bO5FE-ZCfVvEK/view?usp=sharing
 
-Google Drive Checksum SHA256: 424124D5FC47F635947A266E151B48BC776BAFDA5C1A03A7708EAE73730AB3D5
+Checksum SHA256: 424124D5FC47F635947A266E151B48BC776BAFDA5C1A03A7708EAE73730AB3D5
 
 These are community edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
 
