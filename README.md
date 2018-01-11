@@ -9,6 +9,8 @@ bash nvOC-19-2-update
 
 Update script link :https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
 
+Image INstall Direct Download https://nvoc-mining-os.com/downloads/community-builds/
+
 Mega.nz Image install link: https://mega.nz/#!UV9UlASA!JNUSOR0A0XuzWkXYM3YhWWvtTsQlH17PU4v9Pez6Hhc
 
 Google Drive Image Install link:https://drive.google.com/file/d/1B7NW7fj5MOWQRzIG_X4bO5FE-ZCfVvEK/view?usp=sharing
