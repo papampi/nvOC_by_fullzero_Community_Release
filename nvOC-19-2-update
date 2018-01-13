@@ -156,32 +156,32 @@ fi
 
 sleep 1;echo "";echo ""
 
-echo "Checking Claymore 10.2"
+echo "Checking Claymore 10.3"
 
-if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.02) ]
+if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.3) ]
 then
-  echo "Downloading and making changes for Claymore 10_2"
+  echo "Downloading and making changes for Claymore 10_3"
   mkdir -p /home/m1/Downloads/miners
   echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/Claymore-v10.2.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/Claymore-v10.3.tar.gz ]
   then
     echo "Remove Old Claymore"
-    rm /home/m1/Downloads/miners/Claymore-v10.2.tar.gz
+    rm /home/m1/Downloads/miners/Claymore-v10.3.tar.gz
   fi
-  wget https://www.dropbox.com/s/dbwl2bs4olazyh6/Claymore-v10.2.tar.gz
-  echo "tar -xvzf Claymore-v10.2.tar.gz"
-  tar -xvzf Claymore-v10.2.tar.gz
-  rm Claymore-v10.2.tar.gz
-  mkdir -p /home/m1/eth/claymore/10_2/
-  cp -R /home/m1/Downloads/miners/Claymore-v10.2/* /home/m1/eth/claymore/10_2/
+  wget https://www.dropbox.com/s/brvis6hdb0vwx5g/Claymore-v10.3.tar.gz?dl=0
+  echo "tar -xvzf Claymore-v10.3.tar.gz"
+  tar -xvzf Claymore-v10.3.tar.gz
+  rm Claymore-v10.3.tar.gz
+  mkdir -p /home/m1/eth/claymore/10_3/
+  cp -R /home/m1/Downloads/miners/Claymore-v10.3/* /home/m1/eth/claymore/10_3/
   mkdir -p /home/m1/eth/claymore/latest/
-  echo "cp -R /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/"
-  cp -R /home/m1/eth/claymore/10_2/* /home/m1/eth/claymore/latest/
+  echo "cp -R /home/m1/eth/claymore/10_3/* /home/m1/eth/claymore/latest/"
+  cp -R /home/m1/eth/claymore/10_3/* /home/m1/eth/claymore/latest/
   echo "chmod a+x /home/m1/eth/claymore/*/ethdcrminer64"
   chmod a+x  /home/m1/eth/claymore/latest/ethdcrminer64
 else
-  echo "Claymore-v10.2 already downloaded"
+  echo "Claymore-v10.3 already downloaded"
 fi
 
 sleep 1;echo "";echo ""
