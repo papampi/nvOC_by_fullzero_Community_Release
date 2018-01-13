@@ -33,11 +33,13 @@
 # v=0009 : Papampi: Fixed minimum mining time
 #
 # v=0010 : Papampi: Yet another Fix for minimum mining time
+#
+# v=0011 : Papampi: Disable minimum mining time, causing problems
 
 
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.0010"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.0.0011"   # Do not edit this
 
 echo ""
 echo ""
@@ -46,6 +48,7 @@ echo ""
 
 source /home/m1/1bash
 CURRENT_COIN=$COIN
+WDOG_LOG="/home/m1/nvoc_logs/watchdog-screenlog.0"
 
 # Creating a log file to record coin switch
 LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
@@ -83,18 +86,18 @@ do
         echo "" | tee -a $LOG_FILE
         sleep 5
       done
-    fi
-    if [[ -n  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];  then
-      echo "Miner is running now" | tee -a $LOG_FILE
-      #If miner running time is lower than given time don't check for better coin
-      MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2}') | awk '{print $2}')
-      MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
-      if [[ $MINER_TIME_MIN -lt $WTM_MINIMUM_MINING_TIME ]] ; then
-        echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes , looking for a better coin to mine in less than $(($WTM_MINIMUM_MINING_TIME - $MINER_TIME_MIN)) minutes" | tee -a $LOG_FILE
-        sleep $(( (($WTM_MINIMUM_MINING_TIME - $MINER_TIME_MIN)) * 60 ))
-        echo  "Looking for better coin" | tee -a $LOG_FILE
-      else
-        echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes, looking for a better coin to mine" | tee -a $LOG_FILE
+
+      if [[ -n  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];  then
+        echo "Miner is running" | tee -a $LOG_FILE
+        #If miner running time is lower than given time don't check for better coin
+        #MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2}') | awk '{print $2}')
+        #MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
+        #if [[ $MINER_TIME_MIN -lt $WTM_MINIMUM_MINING_TIME ]] ; then
+        #echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes , looking for a better coin to mine in less than $(($WTM_MINIMUM_MINING_TIME - $MINER_TIME_MIN)) minutes" | tee -a $LOG_FILE
+        #sleep $(( (($WTM_MINIMUM_MINING_TIME - $MINER_TIME_MIN)) * 60 ))
+        #echo  "Looking for better coin" | tee -a $LOG_FILE
+        #else
+        #echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes, looking for a better coin to mine" | tee -a $LOG_FILE
       fi
     fi
 
@@ -143,7 +146,7 @@ do
       echo "Top Coin Algo: $TOP_COIN_ALGORITHM" | tee -a $LOG_FILE
       echo "Top Coin: $TOP_COIN" | tee -a $LOG_FILE
 
-      if  [[ $ALGO_SPECIFIC_OC == "NO" && $plusCPU == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
+      if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
         echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner" | tee -a $LOG_FILE
         echo "" | tee -a $LOG_FILE
         if [[ -n  $(ps ax | grep -i screen | grep miner) ]]; then
@@ -202,4 +205,3 @@ do
     echo "Auto start miner set to NO" | tee -a $LOG_FILE
   fi
 done
-
