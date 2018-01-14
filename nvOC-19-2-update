@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 echo " nvOC by fullzero, V0019-2.0 - Community Release"
 echo " Backup your old 1bash and any important stuff"
 sleep 5
@@ -11,21 +12,16 @@ echo "";echo ""
 
 
 echo " Stopping gnome-terminal, miner, wdog, temp, ..."
-echo "kill gnome-terminal"
+
 pkill -f gnome-terminal
-echo "kill WATCHDOG"
 pkill -f WATCHDOG
 pkill -f 5watchdog
-echo "kill  Telegram"
 pkill -f GRAM
 pkill -f 7telegram
-echo "pkill -f TEMP"
 pkill -f TEMP
 pkill -f 6autotemp
-echo "kill WTM"
 pkill -f PAPAMPI
 pkill -f 8wtm
-echo "pkill all programs running in screen"
 pkill -e screen
 
 
@@ -47,11 +43,9 @@ echo "Fix 19.1-4 fstab problem"
 
 if [[ -z $(cat /etc/fstab | grep "#UUID=55184403759586FB")  ]] && [[ -n $(cat /etc/fstab | grep "UUID=55184403759586FB") ]]
 then
-  echo "sudo sed -i -e 's/UUID=55184403759586FB/#UUID=55184403759586FB/g' /etc/fstab"
   sudo sed -i -e 's/UUID=55184403759586FB/#UUID=55184403759586FB/g' /etc/fstab
 elif [[ -z $(cat /etc/fstab | grep "#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231") ]] && [[ -n $(cat /etc/fstab | grep "/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231") ]]
 then
-  echo "sudo sed -i -e 's\/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\g' /etc/fstab"
   sudo sed -i -e 's\/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\#/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C530001260812105231\g' /etc/fstab
 else
   echo "fstab has no problem"
@@ -60,7 +54,6 @@ fi
 
 sleep 1;echo "";echo ""
 
-echo "sudo dpkg --configure -a"
 sudo dpkg --configure -a
 #echo "Updating and Upgrading system packages and installing needed packages"
 #sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y; sudo apt install -y moreutils gawk'
@@ -71,7 +64,6 @@ sleep 1;echo "";echo ""
 if [[ -z  $(cat /etc/screenrc | grep nvoc_log) ]]
 then
   echo "Moving miner screenlog.o to tmpf to lower disk read/writes"
-  echo "sudo echo logfile  /home/m1/nvoc_logs/screenlog.0 | sudo tee -a  /etc/screenrc"
   sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc
   sleep 1;echo "";echo ""
 else
@@ -84,11 +76,8 @@ if [[ -z  $(cat /etc/fstab | grep nvoc_log) ]]
 then
   echo "making tmpfs nvoc_logs folder for logs"
   sleep 1;echo "";echo ""
-  echo "mkdir -p /home/m1/nvoc_logs"
   mkdir -p /home/m1/nvoc_logs
-  echo "sudo echo tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0 | sudo tee -a   /etc/fstab"
   sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab
-  echo "sudo mount -a"
   sudo mount -a
 else
   echo "tmpfs nvoc_logs already created"
@@ -97,7 +86,6 @@ fi
 sleep 1;echo "";echo ""
 
 mkdir -p /home/m1/Downloads/miners
-echo "cd /home/m1/Downloads/miners"
 cd /home/m1/Downloads/miners
 
 echo "Checking DSTM zm miner 0.5.8"
@@ -105,28 +93,13 @@ if [ ! $(cat /home/m1/zec/zm/latest/version | grep 0.5.8) ]
 then
   echo "Downloading and making changes for DSTM ZM miner 0.5.8"
   echo "Downloading dstm zm miner 5_8"
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
-  cd /home/m1/Downloads/miners
   if [ -e /home/m1/Downloads/miners/DSTM_0.5.8.tar.gz ]
   then
     echo "Remove Old DSTM"
     rm /home/m1/Downloads/miners/DSTM_0.5.8.tar.gz
   fi
-  wget https://www.dropbox.com/s/z7hec5mfnkn9ttn/DSTM_0.5.8.tar.gz
-  echo "Extracting the zm miner"
-  tar -xvzf DSTM_0.5.8.tar.gz
-  rm DSTM_0.5.8.tar.gz
-  echo "mkdir -p /home/m1/zec/zm/5_8"
-  mkdir -p /home/m1/zec/zm/5_8
-  echo "cp -R /home/m1/Downloads/miners/5_8 /home/m1/zec/zm/5_8"
-  cp -R /home/m1/Downloads/miners/5_8 /home/m1/zec/zm/
-  echo "chmod a+x /home/m1/zec/zm/5_8/zm_miner"
-  chmod a+x /home/m1/zec/zm/5_8/zm_miner
   mkdir -p /home/m1/zec/zm/latest
-  echo "cp -R /home/m1/zec/zm/5_8/ /home/m1/zec/zm/latest/"
-  cp -R /home/m1/zec/zm/5_8/* /home/m1/zec/zm/latest/
-  echo "chmod a+x /home/m1/zec/zm/latest/zm_miner"
+  wget -O- https://www.dropbox.com/s/z7hec5mfnkn9ttn/DSTM_0.5.8.tar.gz | tar -xzC /home/m1/zec/zm/latest/ --strip 1
   chmod a+x /home/m1/zec/zm/latest/zm_miner
 else
   echo "DSTM zm miner 0.5.8 already downloaded"
@@ -137,19 +110,9 @@ sleep 1;echo "";echo ""
 echo "Checking Claymore directory"
 if [[ ! -d /home/m1/eth/claymore/ ]]
 then
-  echo "Moving claymore old miners"
-  echo "mkdir -p /home/m1/eth/claymore/"
-  mkdir -p /home/m1/eth/claymore/
-  echo "mkdir -p /home/m1/eth/claymore/10_2"
-  mkdir -p /home/m1/eth/claymore/10_2
-  echo "mkdir -p /home/m1/eth/claymore/latest"
+  echo "Removing claymore old miners"
   mkdir -p /home/m1/eth/claymore/latest
-  echo "cd /home/m1/eth/"
-  cd /home/m1/eth/
-  echo "cp -r 8_0 9_4 9_5 9_7 9_8 10_0 /home/m1/eth/claymore/"
-  cp -r 8_0 9_4 9_5 9_7 9_8 10_0 /home/m1/eth/claymore/
-  echo "rm -rf 8_0 9_4 9_5 9_7 9_8 10_0 "
-  rm -rf 8_0 9_4 9_5 9_7 9_8 10_0
+  rm -rf /home/m1/eth/{8_0,9_4,9_5,9_7,9_8,10_0}
 else
   echo "Claymore directory structre already fixed"
 fi
@@ -161,25 +124,14 @@ echo "Checking Claymore 10.3"
 if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.3) ]
 then
   echo "Downloading and making changes for Claymore 10_3"
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
-  cd /home/m1/Downloads/miners
   if [ -e /home/m1/Downloads/miners/Claymore-v10.3.tar.gz ]
   then
     echo "Remove Old Claymore"
     rm /home/m1/Downloads/miners/Claymore-v10.3.tar.gz
   fi
-  wget https://www.dropbox.com/s/brvis6hdb0vwx5g/Claymore-v10.3.tar.gz?dl=0
-  echo "tar -xvzf Claymore-v10.3.tar.gz"
-  tar -xvzf Claymore-v10.3.tar.gz
-  rm Claymore-v10.3.tar.gz
-  mkdir -p /home/m1/eth/claymore/10_3/
-  cp -R /home/m1/Downloads/miners/Claymore-v10.3/* /home/m1/eth/claymore/10_3/
   mkdir -p /home/m1/eth/claymore/latest/
-  echo "cp -R /home/m1/eth/claymore/10_3/* /home/m1/eth/claymore/latest/"
-  cp -R /home/m1/eth/claymore/10_3/* /home/m1/eth/claymore/latest/
-  echo "chmod a+x /home/m1/eth/claymore/*/ethdcrminer64"
-  chmod a+x  /home/m1/eth/claymore/latest/ethdcrminer64
+  wget -O- https://www.dropbox.com/s/brvis6hdb0vwx5g/Claymore-v10.3.tar.gz | tar -xzC /home/m1/eth/claymore/latest/ --strip 1
+  chmod a+x /home/m1/eth/claymore/latest/ethdcrminer64
 else
   echo "Claymore-v10.3 already downloaded"
 fi
@@ -189,23 +141,14 @@ sleep 1;echo "";echo ""
 echo "Checking Tpruvot ccminer-2.2.3"
 if [ ! $(cat /home/m1/TPccminer/version | grep 2.2.3) ]
 then
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
-  cd /home/m1/Downloads/miners
   echo "Downloading Tpruvot 2.2.3"
-  if [ -e /home/m1/Downloads/miners/ccminer-2.2.3-tpruvot.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/*tpruvot* ]
   then
     echo "Remove Old Tpruvot ccminer"
-    rm /home/m1/Downloads/miners/ccminer-2.2.3-tpruvot.tar.gz
+    rm /home/m1/Downloads/miners/*tpruvot*
   fi
-  echo "wget -c https://www.dropbox.com/s/ys9pgw0cvmfwd0y/ccminer-2.2.3-tpruvot.tar.gz"
-  wget -c https://www.dropbox.com/s/ys9pgw0cvmfwd0y/ccminer-2.2.3-tpruvot.tar.gz
-  echo "Extracting Tpruvot 2.2.3"
-  tar -xvzf ccminer-2.2.3-tpruvot.tar.gz
-  rm ccminer-2.2.3-tpruvot.tar.gz
-  mkdir -p /home/m1/TPccminer/
-  echo "cp -R /home/m1/Downloads/miners/TPccminer/ /home/m1/TPccminer/"
-  cp -R /home/m1/Downloads/miners/TPccminer/* /home/m1/TPccminer/
+  wget -O- https://www.dropbox.com/s/ys9pgw0cvmfwd0y/ccminer-2.2.3-tpruvot.tar.gz | tar -xzC /home/m1/TPccminer/ --strip 1
+  chmod a+x /home/m1/TPccminer/ccminer
 else
   echo "Tpccminer-2.2.3 already downloaded"
 fi
@@ -214,23 +157,14 @@ sleep 1;echo "";echo ""
 echo "Checking KlausT ccminer 8.17"
 if [ ! $( cat /home/m1/KTccminer/version | grep 8.17) ]
 then
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
-  cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/KTccminer-8.17.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/KTccminer* ]
   then
     echo "Remove Old KTccminer-8.17"
-    rm /home/m1/Downloads/miners/KTccminer-8.17.tar.gz
+    rm /home/m1/Downloads/miners/KTccminer*
   fi
   echo "Downloading Klaust ccminer"
-  echo "wget -c https://www.dropbox.com/s/hs2ej9qul7stgn4/KTccminer-8.17.tar.gz"
-  wget -c https://www.dropbox.com/s/hs2ej9qul7stgn4/KTccminer-8.17.tar.gz
-  echo "Extracting KTccminer-8.17.tar.gz"
-  tar -xvzf KTccminer-8.17.tar.gz
-  rm KTccminer-8.17.tar.gz
-  echo "cp -R /home/m1/Downloads/miners/KTccminer/* /home/m1/KTccminer/"
-  mkdir -p /home/m1/KTccminer/
-  cp -R /home/m1/Downloads/miners/KTccminer/* /home/m1/KTccminer/
+  wget -O- https://www.dropbox.com/s/hs2ej9qul7stgn4/KTccminer-8.17.tar.gz | tar -xzC /home/m1/KTccminer/ --strip 1
+  chmod a+x /home/m1/KTccminer/ccminer
 else
   echo "KTccminer-8.17 already downloaded"
 fi
@@ -239,23 +173,13 @@ sleep 1;echo "";echo ""
 echo "Checking vertminer-1.8.3r4"
 if [ ! $( cat /home/m1/vertminer/version | grep 1.8.3r4 ) ]
 then
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
-  cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/vertminer-1.8.3r4.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/vertminer* ]
   then
     echo "Remove Old vertminer"
-    rm /home/m1/Downloads/miners/vertminer-1.8.3r4.tar.gz
+    rm /home/m1/Downloads/miners/vertminer*
   fi
   echo "Downloading vertminer-1.8.3r4"
-  echo "https://www.dropbox.com/s/0mhxbcu0v1c7pfj/vertminer-1.8.3r4.tar.gz"
-  wget -c https://www.dropbox.com/s/0mhxbcu0v1c7pfj/vertminer-1.8.3r4.tar.gz
-  echo "Extracting vertminer-1.8.3r4.tar.gz"
-  tar -xvzf vertminer-1.8.3r4.tar.gz
-  rm vertminer-1.8.3r4.tar.gz
-  mkdir -p /home/m1/vertminer/
-  echo "cp -R /home/m1/Downloads/miners/vertminer/* /home/m1/vertminer/"
-  cp -R /home/m1/Downloads/miners/vertminer/* /home/m1/vertminer/
+  wget -O- https://www.dropbox.com/s/0mhxbcu0v1c7pfj/vertminer-1.8.3r4.tar.gz | tar -xzC /home/m1/vertminer/ --strip 1
 else
   echo "vertminer-1.8.3r4 already downloaded"
 fi
@@ -264,22 +188,15 @@ sleep 1;echo "";echo ""
 echo "Checking nanashi-ccminer-2.2"
 if [ ! $(cat /home/m1/NAccminer/version | grep 2.2 ) ]
 then
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
-  cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/nanashi-ccminer-2.2.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/nanashi* ]
   then
     echo "Remove Old nanashi ccminer"
-    rm /home/m1/Downloads/miners/nanashi-ccminer-2.2.tar.gz
+    rm /home/m1/Downloads/miners/nanashi*
   fi
   echo "Downloading nanashi ccminer 2.2"
-  wget -c https://www.dropbox.com/s/fw4aqkr0ke3hbvt/nanashi-ccminer-2.2.tar.gz
-  echo "Extracting nanashi-ccminer-2.2.tar.gz"
-  tar -xvzf nanashi-ccminer-2.2.tar.gz
-  rm nanashi-ccminer-2.2.tar.gz
-  mkdir -p /home/m1/NAccminer/
-  echo "cp -R /home/m1/Downloads/miners/nanashi-ccminer/* /home/m1/NAccminer/"
-  cp -R /home/m1/Downloads/miners/nanashi-ccminer/* /home/m1/NAccminer/
+
+  wget -O- https://www.dropbox.com/s/fw4aqkr0ke3hbvt/nanashi-ccminer-2.2.tar.gz | tar -xzC /home/m1/NAccminer/ --strip 1
+  chmod a+x /home/m1/NAccminer/ccminer
 else
   echo "nanashi-ccminer-2.2 already downloaded"
 fi
@@ -288,22 +205,15 @@ sleep 1;echo "";echo ""
 echo "Checking KXccminer-skunk-2.2"
 if [ ! $( cat /home/m1/KXccminer-skunk/version | grep 2.2) ]
 then
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
   cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/KXccminer-skunk-2.2.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/KXccminer-skunk* ]
   then
     echo "Remove Old krnlx ccminer"
-    rm /home/m1/Downloads/miners/KXccminer-skunk-2.2.tar.gz
+    rm /home/m1/Downloads/miners/KXccminer-skunk*
   fi
   echo "Downloading krnlx ccminer 2.2"
-  wget -c https://www.dropbox.com/s/c3ogj353mmaumua/KXccminer-skunk-2.2.tar.gz
-  echo "Extracting KXccminer-skunk-2.2.tar.gz"
-  tar -xvzf KXccminer-skunk-2.2.tar.gz
-  rm KXccminer-skunk-2.2.tar.gz
-  mkdir -p /home/m1/KXccminer-skunk/
-  echo "cp -R /home/m1/Downloads/miners/KXccminer-skunk/* /home/m1/KXccminer-skunk/"
-  cp -R /home/m1/Downloads/miners/KXccminer-skunk/* /home/m1/KXccminer-skunk/
+  wget -O- https://www.dropbox.com/s/c3ogj353mmaumua/KXccminer-skunk-2.2.tar.gz | tar -xzC /home/m1/KXccminer-skunk/ --strip 1
+  chmod a+x /home/m1/KXccminer-skunk/ccminer
 else
   echo "KXccminer-skunk-2.2 already downloaded"
 fi
@@ -313,17 +223,9 @@ sleep 1;echo "";echo ""
 echo "Checking Ethminer directory"
 if [[ ! -d /home/m1/eth/ethminer/ ]]
 then
-  echo "Moving ethminer old miners"
-  echo "mkdir -p /home/m1/eth/ethminer/"
-  mkdir -p /home/m1/eth/ethminer/
-  echo "mkdir -p /home/m1/eth/ethminer/latest"
+  echo "Removing ethminer old miners"
   mkdir -p /home/m1/eth/ethminer/latest
-  echo "cd /home/m1/eth/"
-  cd /home/m1/eth/
-  echo "cp -r ethminer_11 ethminer_12dev2 /home/m1/eth/ethminer/"
-  cp -r ethminer_11 ethminer_12dev2 /home/m1/eth/ethminer/
-  echo "rm -rf ethminer_11 ethminer_12dev2 "
-  rm -rf ethminer_11 ethminer_12dev2
+  rm -rf /home/m1/eth/{ethminer_11,ethminer_12dev2}
 else
   echo "Ethminer directory structure already fixed"
 fi
@@ -335,48 +237,30 @@ echo "Checking Ethminer 0.12.0"
 if [ ! $(cat /home/m1/eth/ethminer/latest/version | grep 0.12.0) ]
 then
   echo "Downloading and making changes for Ethminer 0.12.0"
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
-  cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/ethminer-0.12.0.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/ethminer* ]
   then
     echo "Remove Old Ethminer"
-    rm /home/m1/Downloads/miners/ethminer-0.12.0.tar.gz
+    rm /home/m1/Downloads/miners/ethminer*
   fi
-  wget https://www.dropbox.com/s/dhvq2zhlpih01y8/ethminer-0.12.0.tar.gz
-  echo "tar -xvzf ethminer-0.12.0.tar.gz"
-  tar -xvzf ethminer-0.12.0.tar.gz
-  rm ethminer-0.12.0.tar.gz
-  mkdir -p /home/m1/eth/ethminer/0.12.0/
-  cp -R /home/m1/Downloads/miners/ethminer/* /home/m1/eth/ethminer/0.12.0/
-  mkdir -p /home/m1/eth/ethminer/latest/
-  echo "cp -R /home/m1/eth/ethminer/0.12.0/* /home/m1/eth/ethminer/latest/"
-  cp -R /home/m1/eth/ethminer/0.12.0/* /home/m1/eth/ethminer/latest/
-  echo "chmod a+x /home/m1/eth/ethminer/latest/ethminer"
+  wget -O- https://www.dropbox.com/s/dhvq2zhlpih01y8/ethminer-0.12.0.tar.gz | tar -xzC /home/m1/eth/ethminer/latest/ --strip 1
   chmod a+x  /home/m1/eth/ethminer/latest/ethminer
 else
   echo "ethminer-0.12.0 already downloaded"
 fi
+
 sleep 1;echo "";echo ""
+
 echo "Checking KTccminer-cryptonight"
 if [ ! $( cat /home/m1/KTccminer-cryptonight/version | grep 2.06) ]
 then
-  mkdir -p /home/m1/Downloads/miners
-  echo "cd /home/m1/Downloads/miners"
-  cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/KTccminer-cryptonight.tar.gz ]
+  if [ -e /home/m1/Downloads/miners/KTccminer-cryptonight* ]
   then
     echo "Remove Old KTccminer-cryptonight"
-    rm /home/m1/Downloads/miners/KTccminer-cryptonight.tar.gz
+    rm /home/m1/Downloads/miners/KTccminer-cryptonight*
   fi
   echo "Downloading KTccminer-cryptonight 2.06"
-  wget -c https://www.dropbox.com/s/higix1x99eyu5z1/KTccminer-cryptonight.tar.gz
-  echo "Extracting KTccminer-cryptonight.tar.gz"
-  tar -xvzf KTccminer-cryptonight.tar.gz
-  rm KTccminer-cryptonight.tar.gz
-  mkdir -p /home/m1/KTccminer-cryptonight/
-  echo "cp -R /home/m1/Downloads/miners/KTccminer-cryptonight/* /home/m1/KTccminer-cryptonight/"
-  cp -R /home/m1/Downloads/miners/KTccminer-cryptonight/* /home/m1/KTccminer-cryptonight/
+  wget -O- https://www.dropbox.com/s/higix1x99eyu5z1/KTccminer-cryptonight.tar.gz | tar -xzC /home/m1/KTccminer-cryptonight/ --strip 1
+  chmod a+x /home/m1/KTccminer-cryptonight/
 else
   echo "KTccminer-cryptonight 2.06 already downloaded"
 fi
@@ -407,9 +291,7 @@ echo " Checking hostname and permanently fixing it if there is conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
   echo "hostname has conflict, Permanently fixing it"
-  echo "sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts"
   sudo cp /home/m1/Downloads/nvOC-19-2/hosts /etc/hosts
-  echo "sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname"
   sudo cp /home/m1/Downloads/nvOC-19-2/hostname /etc/hostname
 else
   echo "hostname had no conflicts"
@@ -420,32 +302,20 @@ sleep 1;echo "";echo ""
 if [ ! -d /home/m1/backups/old_to_19.2 ]
 then
   echo "Making a backup of changed files in /home/m1/backups"
-  echo "mkdir -p /home/m1/backups"
-  mkdir -p /home/m1/backups
-  echo "mkdir -p /home/m1/backups/old_to_19.2"
   mkdir -p /home/m1/backups/old_to_19.2
   sleep 1;echo "";echo ""
-  echo "cp /home/m1/1bash /home/m1/backups/old_to_19.2/1bash.bak"
   cp /home/m1/1bash /home/m1/backups/old_to_19.2/1bash.bak
-  echo "cp /home/m1/3main /home/m1/backups/old_to_19.2/3main.bak"
   cp /home/m1/3main /home/m1/backups/old_to_19.2/3main.bak
-  echo "mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/old_to_19.2/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak"
   mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/old_to_19.2/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak
-  echo "mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/old_to_19.2/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak"
   mv /home/m1/IAmNotAJeep_and_Maxximus007_WATCHDOG /home/m1/backups/old_to_19.2/IAmNotAJeep_and_Maxximus007_WATCHDOG.bak
-  echo "mv /home/m1/PAPAMPI_WTM /home/m1/backups/old_to_19.2/PAPAMPI_WTM.bak"
   mv /home/m1/PAPAMPI_WTM /home/m1/backups/old_to_19.2/PAPAMPI_WTM.bak
-  echo "mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/old_to_19.2/PAPAMPI_PROFIT_CHECK.bak"
   mv /home/m1/PAPAMPI_PROFIT_CHECK /home/m1/backups/old_to_19.2/PAPAMPI_PROFIT_CHECK.bak
-  echo "mv /home/m1/WTM_AUTO_SWITCH /home/m1/backups/old_to_19.2/WTM_AUTO_SWITCH.bak"
   mv /home/m1/WTM_AUTO_SWITCH /home/m1/backups/old_to_19.2/WTM_AUTO_SWITCH.bak
-  echo "cp /home/m1/2unix /home/m1/backups/old_to_19.2/2unix.bak"
   cp /home/m1/2unix /home/m1/backups/old_to_19.2/2unix.bak
 else
   echo "No new backups, already have backups in /home/m1/backups/old_to_19.2"
 fi
 if [ -e /home/m1/BaliMiner_TELEGRAM_ALERTS ];then
-  echo "mv /home/m1/BaliMiner_TELEGRAM_ALERTS /home/m1/backups/old_to_19.2/BaliMiner_TELEGRAM_ALERTS.bak"
   mv /home/m1/BaliMiner_TELEGRAM_ALERTS /home/m1/backups/old_to_19.2/BaliMiner_TELEGRAM_ALERTS.bak
 fi
 
@@ -455,65 +325,39 @@ echo "Copying updates"
 
 sleep 1;echo "";echo ""
 
-echo "cp /home/m1/Downloads/nvOC-19-2/2unix /home/m1/2unix"
+
 cp /home/m1/Downloads/nvOC-19-2/2unix /home/m1/2unix
-echo "cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner"
 cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner
-echo "cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main"
 cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main
-echo "cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate"
 cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate
-echo "cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/www/cgi-bin/minerinfo"
 cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/www/cgi-bin/minerinfo
-echo "cp /home/m1/Downloads/nvOC-19-2/ext/clearalerts /home/m1/www/cgi-bin/clearalerts"
 cp /home/m1/Downloads/nvOC-19-2/ext/clearalerts /home/m1/www/cgi-bin/clearalerts
 
-echo "cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram"
 cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram
-echo "cp /home/m1/Downloads/nvOC-19-2/6tempcontrol /home/m1/6tempcontrol"
 cp /home/m1/Downloads/nvOC-19-2/6tempcontrol /home/m1/6tempcontrol
-echo "cp /home/m1/Downloads/nvOC-19-2/5watchdog /home/m1/5watchdog"
 cp /home/m1/Downloads/nvOC-19-2/5watchdog /home/m1/5watchdog
-echo "cp /home/m1/Downloads/nvOC-19-2/8wtm_auto_switch /home/m1/8wtm_auto_switch"
 cp /home/m1/Downloads/nvOC-19-2/8wtm_auto_switch /home/m1/8wtm_auto_switch
-echo "cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_check"
 cp /home/m1/Downloads/nvOC-19-2/8wtm_profit_check /home/m1/8wtm_profit_check
-echo "cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER"
 cp /home/m1/Downloads/nvOC-19-2/ext/WTM_SWITCHER /home/m1/WTM_SWITCHER
-echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tempcontrol"
 cp /home/m1/Downloads/nvOC-19-2/screenrc-tempcontrol /home/m1/screenrc-tempcontrol
-echo "cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog"
 cp /home/m1/Downloads/nvOC-19-2/screenrc-watchdog /home/m1/screenrc-watchdog
-echo "cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC"
 cp /home/m1/Downloads/nvOC-19-2/nvOC /home/m1/nvOC
-echo "cp /home/m1/Downloads/nvOC-19-2/7telegram /home/m1/7telegram"
 cp /home/m1/Downloads/nvOC-19-2/7telegram /home/m1/7telegram
-echo "cp /home/m1/Downloads/nvOC-19-2/kk003_telegram /home/m1/kk003_telegram"
 cp /home/m1/Downloads/nvOC-19-2/kk003_telegram /home/m1/kk003_telegram
-echo "cp /home/m1/Downloads/nvOC-19-2/ext/multiminer.html /var/www/html"
 sudo cp /home/m1/Downloads/nvOC-19-2/ext/multiminer.html /var/www/html/multiminer.html
 
 sleep 1;echo "";echo ""
 
-echo "chmod a+x /home/m1/www/cgi-bin/minerinfo"
+
 chmod a+x /home/m1/www/cgi-bin/minerinfo
-echo "chmod a+x /home/m1/www/cgi-bin/clearalerts"
 chmod a+x /home/m1/www/cgi-bin/clearalerts
-echo "touch /home/m1/5_watchdoglog"
 touch /home/m1/5_watchdoglog
-echo "touch /home/m1/6_autotemplog"
 touch /home/m1/6_autotemplog
-echo "touch /home/m1/WTM_switch_history"
 touch /home/m1/WTM_switch_history
-echo "touch /home/m1/nvoc_logs/screenlog.0"
 touch /home/m1/nvoc_logs/screenlog.0
-echo "chmod 666 /home/m1/nvoc_logs/*"
 chmod 666 /home/m1/nvoc_logs/*
-echo "chmod 666 /home/m1/6_autotemplog"
 chmod 666 /home/m1/6_autotemplog
-echo "chmod 666 /home/m1/5_watchdoglog"
 chmod 666 /home/m1/5_watchdoglog
-echo "chmod a+x /home/m1/nvOC"
 chmod a+x /home/m1/nvOC
 sleep 1;echo "";echo ""
 echo "cleaning old temp and watchdog logs"
@@ -536,6 +380,16 @@ then
   echo "Adding miner-restart alias"
   echo "alias miner-restart='pkill -f 5watchdog && pkill -f 3main'" | tee -a /home/m1/.bash_aliases
   echo "run miner-restart in guake or ssh sessions, to restart 3main"
+  echo " "
+  sleep 5
+fi
+
+if [[ -z  $(cat /home/m1/.bash_aliases | grep nvOC) ]]
+then
+  echo "Adding nvOC alias"
+  echo "alias nvoc=/home/m1/nvOC" | tee -a /home/m1/.bash_aliases
+  echo "alias nvOC=/home/m1/nvOC" | tee -a /home/m1/.bash_aliases
+  echo "run nvoc in guake or ssh sessions, to use"
   echo " "
   sleep 5
 fi
