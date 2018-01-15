@@ -17,6 +17,16 @@ Google Drive Image link:https://drive.google.com/file/d/1B7NW7fj5MOWQRzIG_X4bO5F
 
 Checksum SHA256: 424124D5FC47F635947A266E151B48BC776BAFDA5C1A03A7708EAE73730AB3D5
 
+
+After copying the image run the update script to get the latest miners and changes:
+
+```
+cd /home/m1/Downloads
+wget https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
+bash /home/m1/Downloads/nvOC-19-2-update
+```
+
+
 These are community edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
 
 Thanks to all contributors, testers and nvOC community.
