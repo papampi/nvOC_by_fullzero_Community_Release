@@ -1,17 +1,12 @@
 #!/bin/bash
 set -x
-echo " nvOC by fullzero, V0019-2.0 - Community Release"
-echo " Backup your old 1bash and any important stuff"
+echo "nvOC by fullzero, V0019-2.0 - Community Release"
+echo "Backup your old 1bash and any important stuff"
 sleep 5
 
-echo "";echo ""
-
-sleep 1;echo "";echo ""
 echo "DO NOT OPEN THE TERMINAL OR RESTART THE RIG UNTIL UPDATE IS FINISHED AND EDITED YOUR NEW 1BASH"
-echo "";echo ""
 
-
-echo " Stopping gnome-terminal, miner, wdog, temp, ..."
+echo "Stopping gnome-terminal, miner, wdog, temp, ..."
 
 pkill -f gnome-terminal
 pkill -f WATCHDOG
@@ -24,9 +19,6 @@ pkill -f PAPAMPI
 pkill -f 8wtm
 pkill -e screen
 
-
-sleep 1;echo "";echo ""
-
 echo "Checking hostname conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
 then
@@ -36,8 +28,6 @@ then
 else
   echo "No Problems found"
 fi
-
-sleep 1;echo "";echo ""
 
 echo "Fix 19.1-4 fstab problem"
 
@@ -51,39 +41,28 @@ else
   echo "fstab has no problem"
 fi
 
-
-sleep 1;echo "";echo ""
-
 sudo dpkg --configure -a
 #echo "Updating and Upgrading system packages and installing needed packages"
 #sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y; sudo apt install -y moreutils gawk'
 sudo -- sh -c ' sudo apt install -y moreutils gawk'
 
-sleep 1;echo "";echo ""
-
 if [[ -z  $(cat /etc/screenrc | grep nvoc_log) ]]
 then
   echo "Moving miner screenlog.o to tmpf to lower disk read/writes"
   sudo echo "logfile  /home/m1/nvoc_logs/screenlog.0" | sudo tee -a  /etc/screenrc
-  sleep 1;echo "";echo ""
 else
   echo "screen settings for screenlog.0 is ok"
 fi
 
-sleep 1;echo "";echo ""
-
 if [[ -z  $(cat /etc/fstab | grep nvoc_log) ]]
 then
   echo "making tmpfs nvoc_logs folder for logs"
-  sleep 1;echo "";echo ""
   mkdir -p /home/m1/nvoc_logs
   sudo echo "tmpfs /home/m1/nvoc_logs tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M 0 0" | sudo tee -a   /etc/fstab
   sudo mount -a
 else
   echo "tmpfs nvoc_logs already created"
 fi
-
-sleep 1;echo "";echo ""
 
 mkdir -p /home/m1/Downloads/miners
 cd /home/m1/Downloads/miners
@@ -92,20 +71,12 @@ echo "Checking DSTM zm miner 0.5.8"
 if [ ! $(cat /home/m1/zec/zm/latest/version | grep 0.5.8) ]
 then
   echo "Downloading and making changes for DSTM ZM miner 0.5.8"
-  echo "Downloading dstm zm miner 5_8"
-  if [ -e /home/m1/Downloads/miners/DSTM_0.5.8.tar.gz ]
-  then
-    echo "Remove Old DSTM"
-    rm /home/m1/Downloads/miners/DSTM_0.5.8.tar.gz
-  fi
   mkdir -p /home/m1/zec/zm/latest
   wget -O- https://www.dropbox.com/s/z7hec5mfnkn9ttn/DSTM_0.5.8.tar.gz | tar -xzC /home/m1/zec/zm/latest/ --strip 1
   chmod a+x /home/m1/zec/zm/latest/zm_miner
 else
   echo "DSTM zm miner 0.5.8 already downloaded"
 fi
-
-sleep 1;echo "";echo ""
 
 echo "Checking Claymore directory"
 if [[ ! -d /home/m1/eth/claymore/ ]]
@@ -117,108 +88,66 @@ else
   echo "Claymore directory structre already fixed"
 fi
 
-sleep 1;echo "";echo ""
+echo "Checking Claymore 10.4"
 
-echo "Checking Claymore 10.3"
-
-if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.3) ]
+if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.4) ]
 then
-  echo "Downloading and making changes for Claymore 10_3"
-  if [ -e /home/m1/Downloads/miners/Claymore-v10.3.tar.gz ]
-  then
-    echo "Remove Old Claymore"
-    rm /home/m1/Downloads/miners/Claymore-v10.3.tar.gz
-  fi
+  echo "Downloading and making changes for Claymore 10.4"
   mkdir -p /home/m1/eth/claymore/latest/
-  wget -O- https://www.dropbox.com/s/brvis6hdb0vwx5g/Claymore-v10.3.tar.gz | tar -xzC /home/m1/eth/claymore/latest/ --strip 1
+  wget -O- https://www.dropbox.com/s/ycx8u6fqfwkmc71/Claymore-10.4.tar.gz | tar -xzC /home/m1/eth/claymore/latest/ --strip 1
   chmod a+x /home/m1/eth/claymore/latest/ethdcrminer64
 else
-  echo "Claymore-v10.3 already downloaded"
+  echo "Claymore-v10.4 already downloaded"
 fi
 
-sleep 1;echo "";echo ""
-
-echo "Checking Tpruvot ccminer-2.2.3"
-if [ ! $(cat /home/m1/TPccminer/version | grep 2.2.3) ]
+echo "Checking Tpruvot ccminer-2.2.4"
+if [ ! $(cat /home/m1/TPccminer/version | grep 2.2.4) ]
 then
-  echo "Downloading Tpruvot 2.2.3"
-  if [ -e /home/m1/Downloads/miners/*tpruvot* ]
-  then
-    echo "Remove Old Tpruvot ccminer"
-    rm /home/m1/Downloads/miners/*tpruvot*
-  fi
-  wget -O- https://www.dropbox.com/s/ys9pgw0cvmfwd0y/ccminer-2.2.3-tpruvot.tar.gz | tar -xzC /home/m1/TPccminer/ --strip 1
+  echo "Downloading Tpruvot 2.2.4"
+  wget -O- https://www.dropbox.com/s/c3uitjc2zcy0yw5/ccminer-2.2.4-tpruvot.tar.gz | tar -xzC /home/m1/TPccminer/ --strip 1
   chmod a+x /home/m1/TPccminer/ccminer
 else
-  echo "Tpccminer-2.2.3 already downloaded"
+  echo "Tpccminer-2.2.4 already downloaded"
 fi
 
-sleep 1;echo "";echo ""
 echo "Checking KlausT ccminer 8.17"
 if [ ! $( cat /home/m1/KTccminer/version | grep 8.17) ]
 then
-  if [ -e /home/m1/Downloads/miners/KTccminer* ]
-  then
-    echo "Remove Old KTccminer-8.17"
-    rm /home/m1/Downloads/miners/KTccminer*
-  fi
-  echo "Downloading Klaust ccminer"
-  wget -O- https://www.dropbox.com/s/hs2ej9qul7stgn4/KTccminer-8.17.tar.gz | tar -xzC /home/m1/KTccminer/ --strip 1
+  echo "Downloading Klaust ccminer 8.17"
+  wget -O- https://www.dropbox.com/s/5lpzsgdj0r22p0t/KTccminer-8.17.tar.gz | tar -xzC /home/m1/KTccminer/ --strip 1
   chmod a+x /home/m1/KTccminer/ccminer
 else
   echo "KTccminer-8.17 already downloaded"
 fi
 
-sleep 1;echo "";echo ""
 echo "Checking vertminer-1.8.3r4"
 if [ ! $( cat /home/m1/vertminer/version | grep 1.8.3r4 ) ]
 then
-  if [ -e /home/m1/Downloads/miners/vertminer* ]
-  then
-    echo "Remove Old vertminer"
-    rm /home/m1/Downloads/miners/vertminer*
-  fi
   echo "Downloading vertminer-1.8.3r4"
   wget -O- https://www.dropbox.com/s/0mhxbcu0v1c7pfj/vertminer-1.8.3r4.tar.gz | tar -xzC /home/m1/vertminer/ --strip 1
 else
   echo "vertminer-1.8.3r4 already downloaded"
 fi
 
-sleep 1;echo "";echo ""
 echo "Checking nanashi-ccminer-2.2"
 if [ ! $(cat /home/m1/NAccminer/version | grep 2.2 ) ]
 then
-  if [ -e /home/m1/Downloads/miners/nanashi* ]
-  then
-    echo "Remove Old nanashi ccminer"
-    rm /home/m1/Downloads/miners/nanashi*
-  fi
   echo "Downloading nanashi ccminer 2.2"
-
   wget -O- https://www.dropbox.com/s/fw4aqkr0ke3hbvt/nanashi-ccminer-2.2.tar.gz | tar -xzC /home/m1/NAccminer/ --strip 1
   chmod a+x /home/m1/NAccminer/ccminer
 else
   echo "nanashi-ccminer-2.2 already downloaded"
 fi
 
-sleep 1;echo "";echo ""
 echo "Checking KXccminer-skunk-2.2"
 if [ ! $( cat /home/m1/KXccminer-skunk/version | grep 2.2) ]
 then
-  cd /home/m1/Downloads/miners
-  if [ -e /home/m1/Downloads/miners/KXccminer-skunk* ]
-  then
-    echo "Remove Old krnlx ccminer"
-    rm /home/m1/Downloads/miners/KXccminer-skunk*
-  fi
   echo "Downloading krnlx ccminer 2.2"
   wget -O- https://www.dropbox.com/s/c3ogj353mmaumua/KXccminer-skunk-2.2.tar.gz | tar -xzC /home/m1/KXccminer-skunk/ --strip 1
   chmod a+x /home/m1/KXccminer-skunk/ccminer
 else
   echo "KXccminer-skunk-2.2 already downloaded"
 fi
-
-sleep 1;echo "";echo ""
 
 echo "Checking Ethminer directory"
 if [[ ! -d /home/m1/eth/ethminer/ ]]
@@ -230,34 +159,20 @@ else
   echo "Ethminer directory structure already fixed"
 fi
 
-sleep 1;echo "";echo ""
-
 echo "Checking Ethminer 0.12.0"
 
 if [ ! $(cat /home/m1/eth/ethminer/latest/version | grep 0.12.0) ]
 then
   echo "Downloading and making changes for Ethminer 0.12.0"
-  if [ -e /home/m1/Downloads/miners/ethminer* ]
-  then
-    echo "Remove Old Ethminer"
-    rm /home/m1/Downloads/miners/ethminer*
-  fi
   wget -O- https://www.dropbox.com/s/dhvq2zhlpih01y8/ethminer-0.12.0.tar.gz | tar -xzC /home/m1/eth/ethminer/latest/ --strip 1
   chmod a+x  /home/m1/eth/ethminer/latest/ethminer
 else
   echo "ethminer-0.12.0 already downloaded"
 fi
 
-sleep 1;echo "";echo ""
-
 echo "Checking KTccminer-cryptonight"
 if [ ! $( cat /home/m1/KTccminer-cryptonight/version | grep 2.06) ]
 then
-  if [ -e /home/m1/Downloads/miners/KTccminer-cryptonight* ]
-  then
-    echo "Remove Old KTccminer-cryptonight"
-    rm /home/m1/Downloads/miners/KTccminer-cryptonight*
-  fi
   echo "Downloading KTccminer-cryptonight 2.06"
   wget -O- https://www.dropbox.com/s/higix1x99eyu5z1/KTccminer-cryptonight.tar.gz | tar -xzC /home/m1/KTccminer-cryptonight/ --strip 1
   chmod a+x /home/m1/KTccminer-cryptonight/
@@ -265,27 +180,17 @@ else
   echo "KTccminer-cryptonight 2.06 already downloaded"
 fi
 
-sleep 1;echo "";echo ""
-
-
 echo "Downloading new miners finished"
-
-sleep 1;echo "";echo ""
 
 cd /home/m1/Downloads
 echo "Downloading V0019-2.0 - Community Release"
 if [ -e /home/m1/Downloads/nvOC-19-2.tar.gz ]
 then
   rm /home/m1/Downloads/nvOC-19-2.tar.gz
-  rm -rf /home/m1/Downloads/nvOC-19-2
 fi
-wget https://www.dropbox.com/s/bajt2gaf87kgjrp/nvOC-19-2.tar.gz
-echo "Extracting the update files"
-tar -xvzf nvOC-19-2.tar.gz
+wget -O- https://www.dropbox.com/s/bajt2gaf87kgjrp/nvOC-19-2.tar.gz | tar -xzC /home/m1/Downloads/nvOC-19-2/ --strip 1
 echo "Making sure update files are in correct format"
 dos2unix /home/m1/Downloads/nvOC-19-2/*
-
-sleep 1;echo "";echo ""
 
 echo " Checking hostname and permanently fixing it if there is conflict"
 if [[ -z $(cat /etc/hosts | grep $(cat /etc/hostname) ) ]]
@@ -297,13 +202,10 @@ else
   echo "hostname had no conflicts"
 fi
 
-sleep 1;echo "";echo ""
-
 if [ ! -d /home/m1/backups/old_to_19.2 ]
 then
   echo "Making a backup of changed files in /home/m1/backups"
   mkdir -p /home/m1/backups/old_to_19.2
-  sleep 1;echo "";echo ""
   cp /home/m1/1bash /home/m1/backups/old_to_19.2/1bash.bak
   cp /home/m1/3main /home/m1/backups/old_to_19.2/3main.bak
   mv /home/m1/Maxximus007_AUTO_TEMPERATURE_CONTROL /home/m1/backups/old_to_19.2/Maxximus007_AUTO_TEMPERATURE_CONTROL.bak
@@ -319,12 +221,7 @@ if [ -e /home/m1/BaliMiner_TELEGRAM_ALERTS ];then
   mv /home/m1/BaliMiner_TELEGRAM_ALERTS /home/m1/backups/old_to_19.2/BaliMiner_TELEGRAM_ALERTS.bak
 fi
 
-sleep 1;echo "";echo ""
-
 echo "Copying updates"
-
-sleep 1;echo "";echo ""
-
 
 cp /home/m1/Downloads/nvOC-19-2/2unix /home/m1/2unix
 cp /home/m1/Downloads/nvOC-19-2/0miner /home/m1/0miner
@@ -332,7 +229,6 @@ cp /home/m1/Downloads/nvOC-19-2/3main /home/m1/3main
 cp /home/m1/Downloads/nvOC-19-2/log_rotate /home/m1/log_rotate
 cp /home/m1/Downloads/nvOC-19-2/ext/minerinfo /home/m1/www/cgi-bin/minerinfo
 cp /home/m1/Downloads/nvOC-19-2/ext/clearalerts /home/m1/www/cgi-bin/clearalerts
-
 cp /home/m1/Downloads/nvOC-19-2/telegram /home/m1/telegram
 cp /home/m1/Downloads/nvOC-19-2/6tempcontrol /home/m1/6tempcontrol
 cp /home/m1/Downloads/nvOC-19-2/5watchdog /home/m1/5watchdog
@@ -346,9 +242,6 @@ cp /home/m1/Downloads/nvOC-19-2/7telegram /home/m1/7telegram
 cp /home/m1/Downloads/nvOC-19-2/kk003_telegram /home/m1/kk003_telegram
 sudo cp /home/m1/Downloads/nvOC-19-2/ext/multiminer.html /var/www/html/multiminer.html
 
-sleep 1;echo "";echo ""
-
-
 chmod a+x /home/m1/www/cgi-bin/minerinfo
 chmod a+x /home/m1/www/cgi-bin/clearalerts
 touch /home/m1/5_watchdoglog
@@ -359,7 +252,7 @@ chmod 666 /home/m1/nvoc_logs/*
 chmod 666 /home/m1/6_autotemplog
 chmod 666 /home/m1/5_watchdoglog
 chmod a+x /home/m1/nvOC
-sleep 1;echo "";echo ""
+
 echo "cleaning old temp and watchdog logs"
 echo " " > /home/m1/5_watchdoglog
 echo " " > /home/m1/6_autotemplog
@@ -371,8 +264,7 @@ then
   sed -i '/^alias master-log/d' /home/m1/.bash_aliases
   echo "alias master-log='tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/tempcontrol-screenlog.0 /home/m1/nvoc_logs/watchdog-screenlog.0 /home/m1/nvoc_logs/8_wtmautoswitchlog'" | tee -a /home/m1/.bash_aliases
   echo "If local_or_remote=remote, run master-log in guake or ssh sessions, to watch all your logs live"
-  echo " "
-  sleep 5
+  sleep 2
 fi
 
 if [[ -z  $(cat /home/m1/.bash_aliases | grep miner-restart) ]]
@@ -380,8 +272,7 @@ then
   echo "Adding miner-restart alias"
   echo "alias miner-restart='pkill -f 5watchdog && pkill -f 3main'" | tee -a /home/m1/.bash_aliases
   echo "run miner-restart in guake or ssh sessions, to restart 3main"
-  echo " "
-  sleep 5
+  sleep 2
 fi
 
 if [[ -z  $(cat /home/m1/.bash_aliases | grep nvOC) ]]
@@ -390,8 +281,7 @@ then
   echo "alias nvoc=/home/m1/nvOC" | tee -a /home/m1/.bash_aliases
   echo "alias nvOC=/home/m1/nvOC" | tee -a /home/m1/.bash_aliases
   echo "run nvoc in guake or ssh sessions, to use"
-  echo " "
-  sleep 5
+  sleep 2
 fi
 
 
@@ -422,30 +312,13 @@ if [[ -n $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.001' ) ]]; then
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
   echo "**************************************************************************************************************************"
-  sed -i 's/v0019-2.0.001/v0019-2.0.002/g' /home/m1/1bash
+  sed -i 's/v0019-2.0.001/v0019-2.0.003/g' /home/m1/1bash
   sed -i 's/BaliMiner_TELEGRAM_ALERTS/TELEGRAM_MESSAGES/g' /home/m1/1bash
   sed -i '/TELEGRAM_MESSAGES=/a TELEGRAM_ALERTS="YES" # YES or NO # Set to No if you Dont want to get Telegram Alerts'  /home/m1/1bash
-  sleep 5
-fi
-if [[ -n $(head -n 50 /home/m1/1bash | grep 'v0019-2.0.002' ) ]]; then
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  echo "                            Your 1bash is v0019-2.0-002, latest version is v0019-2.0-003"
-  echo "                                      Changes will be applied to your 1bash"
-  echo "                          WhatToMine Auto Switch section changed in 1bash, review and edit it"
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  echo "**************************************************************************************************************************"
-  sed -i 's/v0019-2.0.002/v0019-2.0.003/g' /home/m1/1bash
-  sed -i '/WTM_MIN_DIFFERENCE=/a #WTM_MINIMUM_MINING_TIME="30" #Disabled for now. Minimum mining time before checking and switching to prevent fast switches.'  /home/m1/1bash
-  sleep 5
+  sleep 2
 fi
 #Fix file owners if update is run by root privilege
 sudo chown -R m1 /home/m1/
-
-sleep 1;echo "";echo ""
 
 echo "**************************************************************************************************************************"
 echo "**************************************************************************************************************************"
