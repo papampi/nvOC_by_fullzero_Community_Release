@@ -4,26 +4,30 @@ by papampi, Stubo and leenoox
 
 based on the original code from nvOC v0019-1.4 by fullzero
 
-
-This is work in progress, 
-
-Almost there ... 
-
-Hopefully will be announced in less than a week.
-
-
-
 To update to v0019-2.0 download "nvOC-19-2-update" and run: 
 bash nvOC-19-2-update
 
-Download nvOC-19-2-update: https://github.com/papampi/nvOC_by_fullzero_Community_Release/blob/19.2/nvOC-19-2-update
+Update script link :https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
 
-Dropbox update script link :https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
+Image Install Direct link https://nvoc-mining-os.com/download/1142/
 
-Testing Image install link: https://mega.nz/#!NZkCnT4D!RVNPzpRtqzX559Kjsm0InF_WK0d15ZmQ5MU0ZQQBTGc
+Mega.nz Image link: https://mega.nz/#!UV9UlASA!JNUSOR0A0XuzWkXYM3YhWWvtTsQlH17PU4v9Pez6Hhc
 
-These are unofficial edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
+Google Drive Image link:https://drive.google.com/file/d/1B7NW7fj5MOWQRzIG_X4bO5FE-ZCfVvEK/view?usp=sharing
 
+Checksum SHA256: 424124D5FC47F635947A266E151B48BC776BAFDA5C1A03A7708EAE73730AB3D5
+
+
+After copying the image run the update script to get the latest miners and changes:
+
+```
+cd /home/m1/Downloads
+wget https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
+bash /home/m1/Downloads/nvOC-19-2-update
+```
+
+
+These are community edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
 
 Thanks to all contributors, testers and nvOC community.
 
