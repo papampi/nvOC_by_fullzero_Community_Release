@@ -360,8 +360,6 @@ WTM_PROFIT_CHECK_INTERVAL="60" # interval between checking profit for web info
 
 WTM_MIN_DIFFERENCE="5" # Minimum difference in percent when switch to new coin, to prevent too many switches.
 
-WTM_MINIMUM_MINING_TIME="30" # Minimum mining time before checking and switching to prevent fast switches.
-
 WTM_CURRENCY="USD" # USD, AUD, BRL, CAD, CHF, CLP, CNY, DKK, EUR, GBP, HKD, INR, ISK, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD
 
 #Read below for how to change the url

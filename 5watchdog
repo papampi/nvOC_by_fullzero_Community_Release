@@ -146,7 +146,7 @@ while true; do
   UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
   echo "GPU UTILIZATION: " $UTILIZATIONS
   echo "      GPU_COUNT: " $GPU_COUNT
-  echo " "
+
 
   #If WTM auto switch python cant sync, kill it
   if [[  $WTM_AUTO_SWITCH  ==  "YES"  ]] || [[ $WTM_PROFIT_CHECK == "YES" ]]
@@ -315,7 +315,7 @@ while true; do
     # All is good, reset the counter
     COUNT=$((6 * $GPU_COUNT))
     echo "$(date) - No mining issues detected."
-
+    echo " "
     # No need for a reboot after 5 times through the main loop with no issues
     if [ $REBOOTRESET -gt 5 ]
     then

@@ -978,7 +978,7 @@ then
 
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETC_SC" ]
@@ -1039,7 +1039,7 @@ then
   EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_EXP_SC" ]
@@ -1094,7 +1094,7 @@ then
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_MUSIC_SC" ]
@@ -1173,7 +1173,7 @@ then
 
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETH_SC" ]
@@ -1258,7 +1258,7 @@ then
 
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_SOIL_SC" ]
@@ -1343,7 +1343,7 @@ then
 
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
 
-  screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$LBCL_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
+  screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_UBQ_SC" ]

@@ -33,6 +33,8 @@
 #
 # v=0006 : papampi
 #          Changes local watchdog and temp control start and guake output
+# v=0007 : papampi
+#          Revert local miner to screen
 
 
 # DEV_VERSION=0006
@@ -1083,12 +1085,10 @@ EOF
     fi
 
     reup=0
-    #running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
 
     if [ "$running" != "" ]
     then
-      #target=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
       target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
       kill $target
       reup=1
@@ -1097,7 +1097,6 @@ EOF
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
-    #running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
@@ -1113,8 +1112,7 @@ EOF
         running=""
       elif [ $LOCALorREMOTE == "LOCAL" ]
       then
-        touch /home/m1/nvoc_logs/screenlog.0
-        tail -f /home/m1/nvoc_logs/screenlog.0
+        screen -r miner
       fi
     fi
 
@@ -1136,3 +1134,4 @@ while true
 do
   sleep 60
 done
+
