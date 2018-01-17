@@ -22,7 +22,7 @@ After copying the image run the update script to get the latest miners and chang
 
 ```
 cd /home/m1/Downloads
-wget https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
+wget -N https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
 bash /home/m1/Downloads/nvOC-19-2-update
 ```
 
