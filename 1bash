@@ -16,10 +16,13 @@
 # v=0004 : Papampi : More NiceHash mining algos 
 #
 # v=0005 : damNmad : New Coins LUX, SUMO, DSR
+#
+# v=0006 : Papampi : New Coin ELLA 
+#
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0005"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0006"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -174,7 +177,7 @@ nvOC_1bash_ver="v0019-2.1.0005"   # Do not edit this
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 
-### New Coins: LUX, SUMO, DSR
+### New Coins: LUX, SUMO, DSR, ELLA
 
 
 
@@ -685,6 +688,14 @@ LUX_INTENSITY="20"
 ONION_ADDRESS="replace_with_your_ONION_address"
 ONION_POOL="kawaiipool.party"
 ONION_PORT="3633"
+
+#Ellaism ELLA
+ELLA_WORKER="$WORKERNAME"
+ELLA_ADDRESS="replace_with_your_address"
+ELLA_POOL="replace_with_pool_address"
+ELLA_PORT="replace_with_pool_port"
+ELLA_EXTENSION_ARGUMENTS=""    # add any additional Claymore miner arguments here
+
 
 
 USE_ENVIRONMENTAL_VARIBLES="NO"   # YES or NO # Not needed vor nvidia cards. Default: NO
