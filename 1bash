@@ -2,19 +2,25 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-2.0 - Community Release   #################
+#################   nvOC v0019-2.1 - Community Release   #################
 ##############        by papampi, Stubo and leenoox         ##############
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
-# v=0001 : 
+# v=0001 : Community Release
+#
 # v=0002 : Papampi : Telegram changes
+#
 # v=0003 : Papampi : WTM_MINIMUM_MINING_TIME 
+#
+# v=0004 : Papampi : More NiceHash mining algos 
 
-nvOC_1bash_ver="v0019-2.0.003"   # Do not edit this
+
+nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0005"   # Do not edit this
 
 
-# 1bash for v0019-2.0 (1bash subversion 001)
+# 1bash for v0019-2.1 (1bash subversion 001)
 
 
 # fullzero:     nvOC creator
@@ -91,7 +97,7 @@ nvOC_1bash_ver="v0019-2.0.003"   # Do not edit this
 
 # CHOOSE COIN FROM:
 
-#ALGO - X11-GOST
+#ALGO - SIB
 ######### SIB
 
 #ALGO - CryptoNight
@@ -101,19 +107,22 @@ nvOC_1bash_ver="v0019-2.0.003"   # Do not edit this
 ######### SIGT  ZPOOL_SKUNK ALTCOM
 
 #ALGO - Ethash
-######### ETH  ETC  EXP  UBQ  MUSIC  SOIL
+######### ETH  ETC  EXP  UBQ  MUSIC  SOIL PIRL
+
+#ALGO - SKUNKASH
+######### ALTCOM
 
 #ALGO - Equihash
 ######### ZEC  ZEN  HUSH  ZCL  KMD BTG BTCZ
 
 #ALGO - NiceHash
-######### DUAL_NICEHASH (Ethash + Decred)  NICE_EQUIHASH  NICE_ETHASH
+######### DUAL_NICEHASH (Ethash + Decred)  NICE-EQUIHASH  NICE-ETHASH
 
 #ALGO - X13
 ######### ONION
 
 #ALGO - Neoscrypt
-######### PXC  FTC  ORB  TZC VIVO
+######### PXC  FTC  ORB  TZC VIVO DSR
 
 #ALGO - Myriad-Groestl
 ######### XMY
@@ -142,6 +151,9 @@ nvOC_1bash_ver="v0019-2.0.003"   # Do not edit this
 #ALGO - timetravel10
 ######### BTX
 
+#ALGO - PHI
+######### LUX
+
 #TYPE - Zpool (auto converts to BTC)
 ######### ZPOOL_LYRA2V2  ZPOOL_BLAKE2S  ZPOOL_EQUIHASH  ZPOOL_LBC  ZPOOL_NEOSCRYPT  ZPOOL_LBRY  ZPOOL_SKEIN
 
@@ -160,7 +172,8 @@ nvOC_1bash_ver="v0019-2.0.003"   # Do not edit this
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 
-### New Coins: Electroneum(ETN), Trezarcoin(TZC), Vivo(VIVO), Pirl(PIRL), Altcommunity(ALTCOM)
+### New Coins: LUX, SUMO, DSR
+
 
 
 
@@ -326,11 +339,12 @@ __CORE_OVERCLOCK=100        # Global Core overclock for all GPU's if not using I
 MEMORY_OVERCLOCK=100        # Global Memory overclock for all GPU's if not using INDIVIDUAL settings
 
 
-# SET OC and POWERLIMIT dependant on what mining ALGO is used (see end of 1bash for ALGO OC settings)
+# SET OC and POWERLIMIT dependant on what mining ALGO is used (see end of 1bash for damNmad ALGO OC settings)
 # Please note that this works for Global settings only, can not use INDIVIDUAL settings with this.
-# For OPT use of PAPAMPI_WTM_AUTO_SWITCH use ALGO_SPECIFIC_OC !!
+# For OPT use of PAPAMPI_WTM_AUTO_SWITCH use damNmad ALGO_SPECIFIC_OC!!
 # Default values set at the end of 1bash are for 1060, remember to set yours accordingly.
-ALGO_SPECIFIC_OC="NO"       # YES or NO # See the description above
+
+ALGO_SPECIFIC_OC="NO"       # YES or NO # damNmad ALGO_SPECIFIC_OC settings, See the description above
 
 P106_100_FULL_HEADLESS_MODE="NO"  # YES or NO # If using P106_100 GPU's in a full headless (no monitor) rig, set this to YES
 
@@ -347,14 +361,14 @@ GPUPowerMizerMode=1           # Set PowerMizerMode
 
 WTM_AUTO_SWITCH="NO"        # ( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
 
-WTM_PROFIT_CHECK="YES"      # whattomine.com Profit check for webinfo
+WTM_PROFIT_CHECK="YES"      # whattomine.com Profit check for webinfo, only use if WTM_AUTO_SWITCH=NO
 
 # note!! all selected COINS must HAVE ADDRESSES in the coin section below (no need for address if switch=no and profit=yes )
 # select which coins you want to mine or check profit (profit switch only using this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
 
 WTM_AUTO_SWITCH_COINS="ZEC;ZEN;ETH;BTG;FTC" ### coins to check profit or make the switch with format "ZEC;ETH;ETC;XMR"
 
-WTM_AUTO_SWITCH_SYNC_INTERVAL="3" # Time to sync with WTM for best coin
+WTM_AUTO_SWITCH_SYNC_INTERVAL="3" # Time to sync with WTM for best coin, minimum 3 minutes.
 
 WTM_PROFIT_CHECK_INTERVAL="60" # interval between checking profit for web info
 
@@ -421,6 +435,8 @@ EWBF_OPTS=""
 # change EWBF_PERCENT to alter donation percent for EWBF Miner
 EWBF_PERCENT="0"
 
+MPH_ADDRESS="replace_with_your_MPH_username"
+
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
@@ -458,7 +474,7 @@ BTG_ADDRESS="replace_with_your_address"
 BTG_POOL="replace_with_your_BTG_POOL"
 BTG_PORT="replace_with_your_BTG_PORT"
 
-# Nice Equihash
+# Nice-Equihash
 NICE_EQUIHASH_WORKER="$WORKERNAME"
 NICE_EQUIHASH_ADDRESS="$BTC_ADDRESS"
 NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
@@ -501,6 +517,12 @@ SIGT_ADDRESS="replace_with_your_address"
 SIGT_POOL="us.hashbag.cc"
 SIGT_PORT="8644"
 SIGT_INTENSITY="25"
+
+# Sumo Koin(SUMO) ## No Need to add stratum+tcp:// to server address
+SUMO_WORKER="$WORKERNAME"
+SUMO_ADDRESS="replace_with_your_address"
+SUMO_POOL="SUMO_POOL"
+SUMO_PORT="SUMO_PORT"
 
 # Altcommunity(ALTCOM) ## No Need to add stratum+tcp:// to server address
 ALTCOM_WORKER="$WORKERNAME"
@@ -559,13 +581,11 @@ ZPOOL_SKEIN_INTENSITY="22"
 
 # MPH_EQUIHASH
 MPH_WORKER="$WORKERNAME"
-MPH_ADDRESS="replace_with_your_MPH_username"
 MPH_EQUIHASH_POOL="us-east.equihash-hub.miningpoolhub.com"
 MPH_EQUIHASH_PORT="17023"
 
 # MPH_ETHASH
 MPH_WORKER="$WORKERNAME"
-MPH_ADDRESS="replace_with_your_MPH_username"
 MPH_ETHASH_POOL="us-east.ethash-hub.miningpoolhub.com"
 MPH_ETHASH_PORT="17020"
 
@@ -604,7 +624,14 @@ TZC_POOL="TZC POOL"
 TZC_PORT="TZC PORT"
 TZC_INTENSITY="21"
 
-# NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
+# DSR ## No Need to add stratum+tcp:// to server address
+DSR_WORKER="$WORKERNAME"
+DSR_ADDRESS="replace_with_your_address"
+DSR_POOL="DSR_POOL"
+DSR_PORT="DSR_PORT"
+DSR_INTENSITY="21"
+
+# NICE-ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
 NICE_ETHASH_WORKER="$WORKERNAME"
 NICE_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
 GENOIL_NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com:3353"
@@ -645,6 +672,13 @@ VIVO_POOL="VIVO POOL"
 VIVO_PORT="VIVO PORT"
 VIVO_INTENSITY="21"
 
+#LUXCORE LUX ## No Need to add stratum+tcp:// to server address
+LUX_WORKER="$WORKERNAME"
+LUX_ADDRESS="Your Address"
+LUX_POOL="yiimp.eu"
+LUX_PORT="8333"
+LUX_INTENSITY="20"
+
 # ONION ## No Need to add stratum+tcp:// to server address
 ONION_ADDRESS="replace_with_your_ONION_address"
 ONION_POOL="kawaiipool.party"
@@ -657,7 +691,7 @@ USE_ENVIRONMENTAL_VARIBLES="NO"   # YES or NO # Not needed vor nvidia cards. Def
 # Depending on the pool you use, set this approprietly:
 DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
 
-CLAYMORE_VERSION="latest"    # choose: latest or 10_0 or 9_8 or 9_7 or 9_5 or 9_4 or 8_0.  (type latest to use 10_2)
+CLAYMORE_VERSION="latest"    #  latest for 10.4  
 
 ETHMINER_or_GENOIL_or_CLAYMORE="CLAYMORE"  # choose CLAYMORE or ETHMINER or GENOIL 
 
@@ -779,7 +813,7 @@ POWER_COST=0.20
 
 MINIMUM_PROFIT=0.0
 
-MPH_USERNAME=replace_with_your_MPH_username
+MPH_USERNAME="replace_with_your_MPH_username"
 
 PAYMENT_ADDRESS="$BTC_ADDRESS"
 
@@ -971,7 +1005,54 @@ MEMORY_OVERCLOCK_18=100
 
 ########################################################
 #                                                      #
-# ALGO_SPECIFIC_OC settings                            #
+###############    NiceHash Info       #################
+#                                                      #
+########################################################
+
+
+NICE_WORKER="$WORKERNAME"
+NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"
+
+# NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
+NICE_ETHASH_WORKER="$WORKERNAME"
+NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
+NICE_ETHASH_PORT="3353"
+NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
+
+# Nice Equihash
+NICE_EQUIHASH_WORKER="$WORKERNAME"
+NICE_EQUIHASH_ADDRESS="$BTC_ADDRESS"
+NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
+NICE_EQUIHASH_PORT="3357"
+
+#NICE_LYRA2REV2 stratum+tcp://
+NICE_LYRA2REV2_POOL="lyra2rev2.eu.nicehash.com"
+NICE_LYRA2REV2_PORT="3347"
+NICE_LYRA2REV2_INTENSITY="21"
+
+#NICE_NEOSCRYPT  stratum+tcp://
+NICE_NEOSCRYPT_POOL="neoscrypt.eu.nicehash.com"
+NICE_NEOSCRYPT_PORT="3341"
+NICE_NEOSCRYPT_INTENSITY="17"		# 17 because using KTccminer latest version that give best hashrate in Neoscrypt but more intensity crash ccminer
+
+#NICE_CRYPTONIGHT stratum+tcp://
+NICE_CRYPTONIGHT_POOL="cryptonight.eu.nicehash.com:3355"
+NICE_CRYPTONIGHT_PORT="3355"
+NICE_CRYPTONIGHT_INTENSITY="21"
+
+#NICE_X11GOST stratum+tcp://
+NICE_X11GOST_POOL="x11gost.eu.nicehash.com"
+NICE_X11GOST_PORT="3359"
+NICE_X11GOST_INTENSITY="21"
+
+#NICE_SKUNKHASH stratum+tcp://
+NICE_SKUNKHASH_POOL="skunk.eu.nicehash.com:"
+NICE_SKUNKHASH_PORT="3362"
+NICE_SKUNKHASH_INTENSITY="21"
+
+########################################################
+#                                                      #
+# damNmad ALGO_SPECIFIC_OC settings                    #
 #                                                      #
 ########################################################
 
@@ -983,7 +1064,7 @@ if [ $ALGO_SPECIFIC_OC == "YES" ]
 then
 
   # Neoscrypt
-  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC" ]
+  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC"  -o $COIN == "NICE-NEOSCRYPT" -o $COIN == "DSR" ]
   then
     ALGORITHM="NEOSCRYPT"
     POWERLIMIT_WATTS=80
@@ -992,7 +1073,7 @@ then
   fi
 
   # Ethash
-  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH" -o $COIN == "PIRL" ]
+  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE-ETHASH" -o $COIN == "PIRL" -o $COIN == "NICE-ETHASH" ]
   then
     ALGORITHM="ETHASH"
     POWERLIMIT_WATTS=76
@@ -1001,7 +1082,7 @@ then
   fi
 
   # Equihash
-  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE_EQUIHASH" -o $COIN == "VOTE" ]
+  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE" ]
   then
     ALGORITHM="EQUIHASH"
     POWERLIMIT_WATTS=76
@@ -1010,7 +1091,7 @@ then
   fi
 
   # Skunk
-  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN == "ALTCOM" ]
+  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN == "ALTCOM" -o $COIN == "NICE-SKUNKHASH" ]
   then
     ALGORITHM="SKUNK"
     POWERLIMIT_WATTS=78
@@ -1019,7 +1100,7 @@ then
   fi
 
   # Cryptonight
-  if [ $COIN == "XMR" -o $COIN == "KRB" -o $COIN == "ETN" ]
+  if [ $COIN == "XMR" -o $COIN == "KRB" -o $COIN == "ETN" -o $COIN == "NICE-CRYPTONIGHT" ]
   then
     ALGORITHM="CRYPTONIGHT"
     POWERLIMIT_WATTS=62
@@ -1028,7 +1109,7 @@ then
   fi
 
   # lyra2vRev2
-  if [ $COIN == "MONA" -o $COIN == "VTC" ]
+  if [ $COIN == "MONA" -o $COIN == "VTC" -o $COIN == "NICE-LYRA2REV2" ]
   then
     ALGORITHM="LYRA2REV2"
     POWERLIMIT_WATTS=65
@@ -1045,4 +1126,3 @@ then
     MEMORY_OVERCLOCK=-1000
   fi
 fi
-
