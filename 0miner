@@ -2,22 +2,38 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-2.0 - Community Release   #################
-##############        by papampi, Stubo and leenoox         ##############
+#################   nvOC v0019-2.1 - Community Release   #################
+##############      by papampi, Stubo, leenoox, damNmad   ################
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
 
-# 0miner for nvOC v0019-2.0 by papampi
+# 0miner for nvOC v0019-2.1 by papampi
 
 # DEV Mod Log:
 # v=0001 : papampi: Initial Release
+#
+# v=0002 : papampi: 
+#          fix lbc
+#
+# v=0003 : papampi: 
+#          More NiceHash, MINER_PWD failsafe, 
+#          COIN_EXTENSION_ARGUMENTS for ethminer and genoil
+#
+# v=0004 : damNmad: 
+#          New Coins LUX, SUMO, DSR
+#
 
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0001"   # Do not edit this
+nvOC_Ver="nvOC v0019-2.1 - Community Release"
+nvOC_0miner_ver="v0019-2.0.0004"   # Do not edit this
 
 source /home/m1/1bash
 
+# Set MINER_PWD if unset
+if [ -z ${MINER_PWD+x} ]
+then
+  MINER_PWD="x"
+fi
 
 if [ $COIN == "ONION" ]
 then
@@ -115,32 +131,7 @@ then
   fi
 fi
 
-if [ $COIN == "NICE_EQUIHASH" ]
-then
 
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/zec/v3_3/miner'
-  fi
-
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/zec/v3_4/miner'
-  fi
-
-  NICE_EQUIHASHADDR="$NICE_EQUIHASH_ADDRESS.$NICE_EQUIHASH_WORKER"
-
-  if [ $ZM_or_EWBF == "ZM" ]
-  then
-    HCD='/home/m1/zec/zm/latest/zm_miner'
-    screen -dmSL miner $HCD --server $NICE_EQUIHASH_POOL --user $NICE_EQUIHASHADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  --time $ZM_OPTS ;
-  fi
-
-  if [ $ZM_or_EWBF == "EWBF" ]
-  then
-    screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $NICE_EQUIHASH_POOL --user $NICE_EQUIHASHADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  $EWBF_OPTS ;
-  fi
-fi
 
 if [ $COIN == "BTCZ" ]
 then
@@ -540,7 +531,7 @@ then
       PIRLADDR="$PIRL_ADDRESS.$PIRL_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $PIRL_POOL:$PIRL_PORT -O $PIRLADDR:x -SP 1 -U
+    screen -dmSL miner $HCD -S $PIRL_POOL:$PIRL_PORT -O $PIRLADDR:x -SP 1 -U $PIRL_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
@@ -554,7 +545,7 @@ then
       PIRLADDR="$PIRL_ADDRESS.$PIRL_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $PIRL_POOL:$PIRL_PORT -O $PIRLADDR:x -SP 1 -U
+    screen -dmSL miner $HCD -S $PIRL_POOL:$PIRL_PORT -O $PIRLADDR:x -SP 1 -U $PIRL_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
@@ -587,7 +578,7 @@ then
       UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $UBQ_POOL:$UBQ_PORT -O $UBQADDR:x -SP 1 -U
+    screen -dmSL miner $HCD -S $UBQ_POOL:$UBQ_PORT -O $UBQADDR:x -SP 1 -U $UBQ_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
@@ -601,7 +592,7 @@ then
       UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $UBQ_POOL:$UBQ_PORT -O $UBQADDR:x -SP 1 -U
+    screen -dmSL miner $HCD -S $UBQ_POOL:$UBQ_PORT -O $UBQADDR:x -SP 1 -U $UBQ_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
@@ -634,7 +625,7 @@ then
       ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $ETC_POOL:$ETC_PORT -O $ETCADDR:x -U
+    screen -dmSL miner $HCD -S $ETC_POOL:$ETC_PORT -O $ETCADDR:x -U $ETC_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
@@ -648,7 +639,7 @@ then
       ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $ETC_POOL:$ETC_PORT -O $ETCADDR:x -U
+    screen -dmSL miner $HCD -S $ETC_POOL:$ETC_PORT -O $ETCADDR:x -U $ETC_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
@@ -676,7 +667,7 @@ then
 
     EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
 
-    screen -dmSL miner $HCD -S $EXP_POOL:$EXP_PORT -O $EXPADDR:x -U
+    screen -dmSL miner $HCD -S $EXP_POOL:$EXP_PORT -O $EXPADDR:x -U $EXP_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
@@ -690,7 +681,7 @@ then
       EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $EXP_POOL:$EXP_PORT -O $EXPADDR:x -U
+    screen -dmSL miner $HCD -S $EXP_POOL:$EXP_PORT -O $EXPADDR:x -U $EXP_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
@@ -718,7 +709,7 @@ then
       ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $ETH_POOL:$ETH_PORT -O $ETHADDR:x -U
+    screen -dmSL miner $HCD -S $ETH_POOL:$ETH_PORT -O $ETHADDR:x -U $ETH_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
@@ -732,7 +723,7 @@ then
       ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $ETH_POOL:$ETH_PORT -O $ETHADDR:x -U
+    screen -dmSL miner $HCD -S $ETH_POOL:$ETH_PORT -O $ETHADDR:x -U $ETH_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
@@ -765,7 +756,7 @@ then
       MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -O $MPH_ETHASH_ADDR:x -U
+    screen -dmSL miner $HCD -S $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -O $MPH_ETHASH_ADDR:x -U $MPH_ETHASH_EXTENSION_ARGUMENTS
   fi
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
@@ -778,7 +769,7 @@ then
       MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -O $MPH_ETHASH_ADDR:x -U
+    screen -dmSL miner $HCD -S $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -O $MPH_ETHASH_ADDR:x -U $MPH_ETHASH_EXTENSION_ARGUMENTS
   fi
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
@@ -805,7 +796,7 @@ then
 
     MUSICADDR="$MUSIC_ADDRESS.$MUSIC_WORKER"
 
-    screen -dmSL miner $HCD -S $MUSIC_POOL:$MUSIC_PORT -O $MUSICADDR:x -U
+    screen -dmSL miner $HCD -S $MUSIC_POOL:$MUSIC_PORT -O $MUSICADDR:x -U $MUSIC_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
@@ -819,7 +810,7 @@ then
       MUSICADDR="$MUSIC_ADDRESS.$MUSIC_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $MUSIC_POOL:$MUSIC_PORT -O $MUSICADDR:x -U
+    screen -dmSL miner $HCD -S $MUSIC_POOL:$MUSIC_PORT -O $MUSICADDR:x -U $MUSIC_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
@@ -842,7 +833,7 @@ then
 
     SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
 
-    screen -dmSL miner $HCD -S $SOIL_POOL:$SOIL_PORT -O $SOILADDR:x -SP 1 -U
+    screen -dmSL miner $HCD -S $SOIL_POOL:$SOIL_PORT -O $SOILADDR:x -SP 1 -U $SOIL_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
@@ -856,7 +847,7 @@ then
       SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
     fi
 
-    screen -dmSL miner $HCD -S $SOIL_POOL:$SOIL_PORT -O $SOILADDR:x -SP 1 -U
+    screen -dmSL miner $HCD -S $SOIL_POOL:$SOIL_PORT -O $SOILADDR:x -SP 1 -U $SOIL_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
@@ -1363,7 +1354,7 @@ then
   screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
 fi
 
-if [ $COIN == "NICE_ETHASH" ]
+if [ $COIN == "NICE-ETHASH" ]
 then
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
@@ -1372,7 +1363,7 @@ then
 
     NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
 
-    screen -dmSL miner $HCD -SP 2 -S $GENOIL_NICE_ETHASH_POOL -O $NICEADDR:x -U
+    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
@@ -1381,7 +1372,7 @@ then
 
     NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
 
-    screen -dmSL miner $HCD -SP 2 -S $GENOIL_NICE_ETHASH_POOL -O $NICEADDR:x -U
+    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
@@ -1391,6 +1382,89 @@ then
 
     NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
 
-    screen -dmSL miner $HCD -epool $NICE_ETHASH_POOL -ewal $NICEADDR -epsw x -esm 3 -allpools 1 -estale 0 -dbg -1 $NICE_ETHASH_EXTENSION_ARGUMENTS
+    screen -dmSL miner $HCD -epool $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -ewal $NICEADDR -epsw x -esm 3 -allpools 1 -estale 0 -dbg -1 $NICE_ETHASH_EXTENSION_ARGUMENTS
   fi
+fi
+
+if [ $COIN == "DSR" ]
+then
+  HCD='/home/m1/SPccminer/ccminer'
+  ADDR="$DSR_ADDRESS"
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$DSR_POOL:$DSR_PORT -u $ADDR -p c=$MINER_PWD -i $DSR_INTENSITY
+fi
+
+if [ $COIN == "LUX" ]
+then
+  HCD='/home/m1/ANXccminer/ccminer'
+  ADDR="$LUX_ADDRESS"
+  screen -dmSL miner $HCD -a phi -o stratum+tcp://$LUX_POOL:$LUX_PORT -u $ADDR -p $LUX_WORKER -i $LUX_INTENSITY
+fi
+
+if [ $COIN == "SUMO" ]
+then
+  HCD='/home/m1/KTccminer-cryptonight/ccminer'
+  ADDR="$SUMO_ADDRESS"
+  screen -dmSL miner $HCD -o stratum+tcp://$SUMO_POOL:$SUMO_PORT -u $ADDR -p $MINER_PWD
+fi
+
+if [ $COIN == "NICE-EQUIHASH" ]
+then
+
+  if [ $EWBF_VERSION == "3_3" ]
+  then
+    HCD='/home/m1/zec/v3_3/miner'
+  fi
+
+  if [ $EWBF_VERSION == "3_4" ]
+  then
+    HCD='/home/m1/zec/v3_4/miner'
+  fi
+
+  NICE_EQUIHASHADDR="$NICE_EQUIHASH_ADDRESS.$NICE_EQUIHASH_WORKER"
+
+  if [ $ZM_or_EWBF == "ZM" ]
+  then
+    HCD='/home/m1/zec/zm/latest/zm_miner'
+    screen -dmSL miner $HCD --server $NICE_EQUIHASH_POOL --user $NICE_EQUIHASHADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  --time $ZM_OPTS ;
+  fi
+
+  if [ $ZM_or_EWBF == "EWBF" ]
+  then
+    screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $NICE_EQUIHASH_POOL --user $NICE_EQUIHASHADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  $EWBF_OPTS ;
+  fi
+fi
+
+if [ $COIN == "NICE-NEOSCRYPT" ]
+then
+  HCD='/home/m1/KTccminer/ccminer'
+  ADDR="$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$NICE_NEOSCRYPT_POOL:$NICE_NEOSCRYPT_PORT -u $ADDR -p x -i $NICE_NEOSCRYPT_INTENSITY
+fi
+
+if [ $COIN == "NICE-LYRA2REV2" ]
+then
+  HCD='/home/m1/ASccminer/ccminer'
+  ADDR="$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$NICE_LYRA2REV2_POOL:$NICE_LYRA2REV2_PORT -u $ADDR -p x -i $NICE_LYRA2REV2_INTENSITY
+fi
+
+if [ $COIN == "NICE-X11GOST" ]
+then
+  HCD='/home/m1/SPccminer/ccminer'
+  ADDR="$$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  screen -dmSL miner $HCD -a sib -o stratum+tcp://$NICE_X11GOST_POOL:$NICE_X11GOST_PORT -u $ADDR -p x -i $NICE_X11GOST_INTENSITY
+fi
+
+if [ $COIN == "NICE-SKUNKHASH" ]
+then
+  HCD='/home/m1/TPccminer/ccminer'
+  ADDR="$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  screen -dmSL miner $HCD -a skunk -o stratum+tcp://$NICE_SKUNKHASH_POOL:$NICE_SKUNKHASH_PORT -u $ADDR -p x -i $NICE_SKUNKHASH_INTENSITY
+fi
+
+if [ $COIN == "NICE-CRYPTONIGHT" ]
+then
+  HCD='/home/m1/KTccminer-cryptonight/ccminer'
+  ADDR="$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  screen -dmSL miner $HCD -o stratum+tcp://$NICE_CRYPTONIGHT_POOL:$NICE_CRYPTONIGHT_PORT -u $ADDR -p x -i $NICE_CRYPTONIGHT_INTENSITY
 fi
