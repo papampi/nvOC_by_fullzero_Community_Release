@@ -13,15 +13,17 @@
 # DEV Mod Log:
 # v=0001 : papampi: Initial Release
 #
-# v=0002 : papampi: 
+# v=0002 : papampi:
 #          fix lbc
 #
-# v=0003 : papampi: 
-#          More NiceHash, MINER_PWD failsafe, 
+# v=0003 : papampi:
+#          More NiceHash, MINER_PWD failsafe,
 #          COIN_EXTENSION_ARGUMENTS for ethminer and genoil
 #
-# v=0004 : damNmad: 
+# v=0004 : damNmad:
 #          New Coins LUX, SUMO, DSR
+# v=0005 : papampi:
+#          New Coin ELLA
 #
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
@@ -130,8 +132,6 @@ then
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZCL_POOL --user $ZCLADDR --pass $MINER_PWD --port $ZCL_PORT  $EWBF_OPTS ;
   fi
 fi
-
-
 
 if [ $COIN == "BTCZ" ]
 then
@@ -520,224 +520,134 @@ fi
 if [ $COIN == "PIRL" ]
 then
 
+  PIRLADDR="$PIRL_ADDRESS/$PIRL_WORKER"
+  if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+  then
+    PIRLADDR="$PIRL_ADDRESS.$PIRL_WORKER"
+  fi
+
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    PIRLADDR="$PIRL_ADDRESS/$PIRL_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      PIRLADDR="$PIRL_ADDRESS.$PIRL_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $PIRL_POOL:$PIRL_PORT -O $PIRLADDR:x -SP 1 -U $PIRL_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    PIRLADDR="$PIRL_ADDRESS/$PIRL_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      PIRLADDR="$PIRL_ADDRESS.$PIRL_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $PIRL_POOL:$PIRL_PORT -O $PIRLADDR:x -SP 1 -U $PIRL_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
-
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    PIRLADDR="$PIRL_ADDRESS/$PIRL_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      PIRLADDR="$PIRL_ADDRESS.$PIRL_WORKER"
-    fi
-
     screen -dmSL miner $HCD -epool $PIRL_POOL:$PIRL_PORT -ewal $PIRLADDR -epsw x -mode 1 -allpools 1 -dbg -1 $PIRL_EXTENSION_ARGUMENTS
   fi
 fi
 
 if [ $COIN == "UBQ" ]
 then
+  UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
+  if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+  then
+    UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
+  fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $UBQ_POOL:$UBQ_PORT -O $UBQADDR:x -SP 1 -U $UBQ_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $UBQ_POOL:$UBQ_PORT -O $UBQADDR:x -SP 1 -U $UBQ_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
-
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
-    fi
-
     screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQADDR -epsw x -mode 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
   fi
 fi
 
 if [ $COIN == "ETC" ]
 then
-
+  ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
+  if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+  then
+    ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
+  fi
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $ETC_POOL:$ETC_PORT -O $ETCADDR:x -U $ETC_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $ETC_POOL:$ETC_PORT -O $ETCADDR:x -U $ETC_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
-
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
-    fi
-
     screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -mode 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
   fi
 fi
 
 if [ $COIN == "EXP" ]
 then
+  EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
+
+  if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+  then
+    EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
+  fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
-
     screen -dmSL miner $HCD -S $EXP_POOL:$EXP_PORT -O $EXPADDR:x -U $EXP_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $EXP_POOL:$EXP_PORT -O $EXPADDR:x -U $EXP_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
-
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
-
     screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -mode 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
   fi
 fi
 
 if [ $COIN == "ETH" ]
 then
-
+  ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
+  if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+  then
+    ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
+  fi
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $ETH_POOL:$ETH_PORT -O $ETHADDR:x -U $ETH_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $ETH_POOL:$ETH_PORT -O $ETHADDR:x -U $ETH_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
-
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
-    fi
-
     screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -mode 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
   fi
 fi
@@ -748,115 +658,70 @@ then
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    MPH_ETHASH_ADDR="$MPH_ADDRESS/$MPH_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
-    fi
-
+    MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
     screen -dmSL miner $HCD -S $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -O $MPH_ETHASH_ADDR:x -U $MPH_ETHASH_EXTENSION_ARGUMENTS
   fi
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    MPH_ETHASH_ADDR="$MPH_ADDRESS/$MPH_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -O $MPH_ETHASH_ADDR:x -U $MPH_ETHASH_EXTENSION_ARGUMENTS
   fi
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
-
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    MPH_ETHASH_ADDR="$MPH_ADDRESS/$MPH_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      MPH_ETHASH_ADDR="$MPH_ADDRESS.$MPH_WORKER"
-    fi
-
     screen -dmSL miner $HCD -epool $MPH_ETHASH_POOL:$MPH_ETHASH_PORT -ewal $MPH_ETHASH_ADDR -epsw x -mode 1 -dbg -1 $MPH_EXTENSION_ARGUMENTS
   fi
 fi
 
 if [ $COIN == "MUSIC" ]
 then
+  MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
+  if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+  then
+    MUSICADDR="$MUSIC_ADDRESS.$MUSIC_WORKER"
+  fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    MUSICADDR="$MUSIC_ADDRESS.$MUSIC_WORKER"
-
     screen -dmSL miner $HCD -S $MUSIC_POOL:$MUSIC_PORT -O $MUSICADDR:x -U $MUSIC_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      MUSICADDR="$MUSIC_ADDRESS.$MUSIC_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $MUSIC_POOL:$MUSIC_PORT -O $MUSICADDR:x -U $MUSIC_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
-
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
-
     screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -mode 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
   fi
 fi
 
 if [ $COIN == "SOIL" ]
 then
-
+  SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
+  if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+  then
+    SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
+  fi
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
-
     screen -dmSL miner $HCD -S $SOIL_POOL:$SOIL_PORT -O $SOILADDR:x -SP 1 -U $SOIL_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
-
-    if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
-    then
-      SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
-    fi
-
     screen -dmSL miner $HCD -S $SOIL_POOL:$SOIL_PORT -O $SOILADDR:x -SP 1 -U $SOIL_EXTENSION_ARGUMENTS
   fi
 
   if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
   then
-
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
-
     screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOILADDR -epsw x -mode 1 -allpools 1 -dbg -1 $SOIL_EXTENSION_ARGUMENTS
   fi
 fi
@@ -865,7 +730,6 @@ if [ $COIN == "DCR" ]
 then
   HCD='/home/m1/pasc/sgminer'
   ADDR="$DCR_ADDRESS.$DCR_WORKER"
-
   screen -dmSL miner $HCD -k decred -o stratum+tcp://$DCR_POOL:$DCR_PORT -u $ADDR -p $MINER_PWD  -I 21 -w 64 -g2
 fi
 
@@ -873,15 +737,13 @@ if [ $COIN == "PASC" ]
 then
   HCD='/home/m1/pasc/sgminer'
   ADDR="$PASC_ADDRESS..$PASC_WORKER"
-
   screen -dmSL miner $HCD -k pascal -o $PASC_POOL:$PASC_PORT -u $ADDR  -p $MINER_PWD -I 21 -w 64 -g2
 fi
 
 if [ $COIN == "PASL" ]
 then
   HCD='/home/m1/pasc/sgminer'
-  ADDR="$PASL_ADDRESS..$PASL_WORKER"
-
+  ADDR="$PASL_ADDRESS.$PASL_WORKER"
   screen -dmSL miner $HCD -k pascal -o stratum+tcp://$PASL_POOL:$PASL_PORT -u $ADDR  -p $MINER_PWD -I 21 -w 64 -g2
 fi
 
@@ -889,7 +751,6 @@ if [ $COIN == "SIA" ]
 then
   HCD='/home/m1/SPccminer/ccminer'
   SCADDR="$SC_ADDRESS/$SC_WORKER"
-
   screen -dmSL miner $HCD -a sia -o $SC_GW_POOL:$SC_GW_PORT -u $SCADDR -p $MINER_PWD
 fi
 
@@ -897,494 +758,331 @@ if [ $COIN == "DUAL_NICEHASH" ]
 then
 
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETHASH_ADDR="$DUAL_BTC_ADDRESS.$DUAL_WORKER"
   DCR_ADDR="$DUAL_BTC_ADDRESS.$DUAL_WORKER"
-
   screen -dmSL miner $HCD -epool $DUAL_ETHASH_POOL -ewal $ETHASH_ADDR -epsw x -allcoins 1 -allpools 1 -dpool $DUAL_DCR_POOL -dwal $DCR_ADDR -dpsw x $DUAL_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETC_DCR" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
   fi
-
   DADDR="$DCR_ADDRESS.$DCR_WORKER"
-
   screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETC_PASC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
   fi
-
-  ADDR="$PASC_ADDRESS..$PASC_WORKER"
-
+  ADDR="$PASC_ADDRESS.$PASC_WORKER"
   screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETC_PASL" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
   fi
-
-  ADDR="$PASL_ADDRESS..$PASL_WORKER"
-
+  ADDR="$PASL_ADDRESS.$PASL_WORKER"
   screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETC_LBC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
   fi
-
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
-
   screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETC_SC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETCADDR="$ETC_ADDRESS/$ETC_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETCADDR="$ETC_ADDRESS.$ETC_WORKER"
   fi
-
   SCADDR="$SC_ADDRESS/$SC_WORKER"
-
   screen -dmSL miner $HCD -epool $ETC_POOL:$ETC_PORT -ewal $ETCADDR -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_EXP_DCR" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
   DADDR="$DCR_ADDRESS.$DCR_WORKER"
-
   screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dcoin drc -allcoins 1 -allpools 1 -dpsw x $EXP_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_EXP_PASC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
-  ADDR="$PASC_ADDRESS..$PASC_WORKER"
-
+  ADDR="$PASC_ADDRESS.$PASC_WORKER"
   screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_EXP_PASL" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   EXPADDR="$EXP_ADDRESS.$EXP_WORKER"
-  ADDR="$PASL_ADDRESS..$PASL_WORKER"
-
+  ADDR="$PASL_ADDRESS.$PASL_WORKER"
   screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_EXP_LBC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
-
   screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_EXP_SC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   EXPADDR="$EXP_ADDRESS/$EXP_WORKER"
   SCADDR="$SC_ADDRESS/$SC_WORKER"
-
   screen -dmSL miner $HCD -epool $EXP_POOL:$EXP_PORT -ewal $EXPADDR -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $EXP_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_MUSIC_DCR" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   DADDR="$DCR_ADDRESS.$DCR_WORKER"
-
   screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_MUSIC_PASC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
-  ADDR="$PASC_ADDRESS..$PASC_WORKER"
-
+  ADDR="$PASC_ADDRESS.$PASC_WORKER"
   screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_MUSIC_PASL" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
-  ADDR="$PASL_ADDRESS..$PASL_WORKER"
-
+  ADDR="$PASL_ADDRESS.$PASL_WORKER"
   screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_MUSIC_LBC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
-
   screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_MUSIC_SC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   MUSICADDR="$MUSIC_ADDRESS/$MUSIC_WORKER"
   SCADDR="$SC_ADDRESS/$SC_WORKER"
-
   screen -dmSL miner $HCD -epool $MUSIC_POOL:$MUSIC_PORT -ewal $MUSICADDR -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $MUSIC_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETH_DCR" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
   fi
-
   DADDR="$DCR_ADDRESS.$DCR_WORKER"
-
   screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETH_PASC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
   fi
-
   ADDR="$PASC_ADDRESS..$PASC_WORKER"
-
   screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETH_PASL" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
   fi
-
   ADDR="$PASL_ADDRESS..$PASL_WORKER"
-
   screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETH_LBC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
   fi
-
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
-
   screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_ETH_SC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   ETHADDR="$ETH_ADDRESS/$ETH_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     ETHADDR="$ETH_ADDRESS.$ETH_WORKER"
   fi
-
   SCADDR="$SC_ADDRESS/$SC_WORKER"
-
   screen -dmSL miner $HCD -epool $ETH_POOL:$ETH_PORT -ewal $ETHADDR -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $ETH_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_SOIL_DCR" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
   fi
-
   DADDR="$DCR_ADDRESS.$DCR_WORKER"
-
   screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $SOIL_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_SOIL_PASC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
   fi
-
   ADDR="$PASC_ADDRESS..$PASC_WORKER"
-
   screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dcoin pasc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_SOIL_PASL" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
   fi
-
   ADDR="$PASL_ADDRESS..$PASL_WORKER"
-
   screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dcoin pasc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_SOIL_LBC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
   fi
-
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
-
   screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_SOIL_SC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   SOILADDR="$SOIL_ADDRESS/$SOIL_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     SOILADDR="$SOIL_ADDRESS.$SOIL_WORKER"
   fi
-
   SCADDR="$SC_ADDRESS/$SC_WORKER"
-
   screen -dmSL miner $HCD -epool $SOIL_POOL:$SOIL_PORT -ewal $SOIL_ADDRESS -eworker $SOIL_WORKER -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dpsw x $SOIL_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_UBQ_DCR" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
   fi
-
   DADDR="$DCR_ADDRESS.$DCR_WORKER"
-
   screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$DCR_POOL:$DCR_PORT -dwal $DADDR -dpsw x -dcoin dcr -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_UBQ_PASC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
   fi
-
   ADDR="$PASC_ADDRESS..$PASC_WORKER"
-
   screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool $PASC_POOL:$PASC_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_UBQ_PASL" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
   fi
-
   ADDR="$PASL_ADDRESS..$PASL_WORKER"
-
   screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$PASL_POOL:$PASL_PORT -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_UBQ_LBC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
   fi
-
   ADDR="$LBC_ADDRESS.$LBC_WORKER"
-
   screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool stratum+tcp://$LBC_POOL:$LBC_PORT -dwal $ADDR -dpsw x -dcoin lbc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
 fi
 
 if [ $COIN == "DUAL_UBQ_SC" ]
 then
-
   HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
   UBQADDR="$UBQ_ADDRESS/$UBQ_WORKER"
-
   if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
   then
     UBQADDR="$UBQ_ADDRESS.$UBQ_WORKER"
   fi
-
   SCADDR="$SC_ADDRESS/$SC_WORKER"
-
   screen -dmSL miner $HCD -epool $UBQ_POOL:$UBQ_PORT -ewal $UBQ_ADDRESS -eworker $UBQ_WORKER -epsw x -dpool $SC_POOL:$SC_PORT -dwal $SCADDR -dpsw x -dcoin sc -allcoins 1 -allpools 1 -dbg -1 $UBQ_EXTENSION_ARGUMENTS
 fi
 
-if [ $COIN == "NICE-ETHASH" ]
-then
-
-  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
-  then
-    HCD='/home/m1/eth/Genoil-U/ethminer'
-
-    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
-
-    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
-  fi
-
-  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
-  then
-    HCD='/home/m1/eth/ethminer/latest/ethminer'
-
-    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
-
-    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
-  fi
-
-  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
-  then
-
-    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-
-    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
-
-    screen -dmSL miner $HCD -epool $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -ewal $NICEADDR -epsw x -esm 3 -allpools 1 -estale 0 -dbg -1 $NICE_ETHASH_EXTENSION_ARGUMENTS
-  fi
-fi
 
 if [ $COIN == "DSR" ]
 then
@@ -1405,6 +1103,56 @@ then
   HCD='/home/m1/KTccminer-cryptonight/ccminer'
   ADDR="$SUMO_ADDRESS"
   screen -dmSL miner $HCD -o stratum+tcp://$SUMO_POOL:$SUMO_PORT -u $ADDR -p $MINER_PWD
+fi
+
+if [ $COIN == "ELLA" ]
+then
+  ELLAADDR="$ELLA_ADDRESS/$ELLA_WORKER"
+  if [ $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT == "DOT" ]
+  then
+    ELLAADDR="$ELLA_ADDRESS.$ELLA_WORKER"
+  fi
+  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+  then
+    HCD='/home/m1/eth/Genoil-U/ethminer'
+    screen -dmSL miner $HCD -S $ELLA_POOL:$ELLA_PORT -O $ELLAADDR:x -SP 1 -U $ELLA_EXTENSION_ARGUMENTS
+  fi
+  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+  then
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
+    screen -dmSL miner $HCD -S $ELLA_POOL:$ELLA_PORT -O $ELLAADDR:x -SP 1 -U $ELLA_EXTENSION_ARGUMENTS
+  fi
+  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+  then
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
+    screen -dmSL miner $HCD -epool $ELLA_POOL:$ELLA_PORT -ewal $ELLAADDR -epsw x -mode 1 -allpools 1 -dbg -1 $ELLA_EXTENSION_ARGUMENTS
+  fi
+fi
+
+
+if [ $COIN == "NICE-ETHASH" ]
+then
+
+  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "GENOIL" ]
+  then
+    HCD='/home/m1/eth/Genoil-U/ethminer'
+    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
+    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
+  fi
+
+  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER" ]
+  then
+    HCD='/home/m1/eth/ethminer/latest/ethminer'
+    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
+    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
+  fi
+
+  if [ $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE" ]
+  then
+    HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
+    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
+    screen -dmSL miner $HCD -epool $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -ewal $NICEADDR -epsw x -esm 3 -allpools 1 -estale 0 -dbg -1 $NICE_ETHASH_EXTENSION_ARGUMENTS
+  fi
 fi
 
 if [ $COIN == "NICE-EQUIHASH" ]
