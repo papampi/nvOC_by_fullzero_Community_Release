@@ -14,6 +14,8 @@
 # v=0003 : Papampi : WTM_MINIMUM_MINING_TIME 
 #
 # v=0004 : Papampi : More NiceHash mining algos 
+#
+# v=0005 : damNmad : New Coins LUX, SUMO, DSR
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
