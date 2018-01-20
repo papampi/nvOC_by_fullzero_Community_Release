@@ -26,6 +26,16 @@ wget -N https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
 bash /home/m1/Downloads/nvOC-19-2-update
 ```
 
+Beta Testing Shrinkied Image:
+
+Mega.nz Download link: https://mega.nz/#!tYUFTAJa!bRsFjN2Yk0dS5V3r2qPn4Lg9Muprp5E9gu657nMcfnI
+
+```
+Image size: 11 GB
+ZIP size: 3.8 GB
+Auto Expand to full size on first boot
+Fixed copy 1bash from fat partition to SSD/HDD on first boot
+```
 
 These are community edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
 
