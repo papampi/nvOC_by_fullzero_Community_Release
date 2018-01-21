@@ -9,7 +9,7 @@
 ##########################################################################
 
 
-# 3main for v0019-2.0
+# 3main for v0019-2.1
 
 #
 # Dev Mod Log:
@@ -33,15 +33,21 @@
 #
 # v=0006 : papampi
 #          Changes local watchdog and temp control start and guake output
+# v=0007 : papampi
+#          Revert local miner to screen
+#          Launch wtm auto switch in screen
+# v=0008 : papampi
+#          Local with wtm auto switch shows tail to prevent showing miner terminated
 
 
-# DEV_VERSION=0006
+
+# DEV_VERSION=0008
 
 
 source /home/m1/1bash
 
-nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.006"                  # Do not edit this
+nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
+nvOC_3main_ver="v0019-2.0.008"                  # Do not edit this
 
 
 
@@ -161,12 +167,6 @@ then
 fi
 
 IP=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
-
-# Set MINER_PWD if unset
-if [ -z ${MINER_PWD+x} ]
-then
-  MINER_PWD="x"
-fi
 
 echo ""
 echo ""
@@ -537,7 +537,7 @@ then
    "daggerhashimoto": {
      "speed": 0.087, "power": 0.397,
      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
-     "cmd": "/home/m1/eth/ethminer_12dev2/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
+     "cmd": "/home/m1/eth/ethminer/latest/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
    },
    "equihash": {
      "speed": 0.000001140, "power": 0.397,
@@ -720,7 +720,7 @@ then
     },
     "Ethash":
     {
-      "bin": "/home/m1/eth/ethminer_12dev2/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "bin": "home/m1/eth/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
       "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
       "speed": 0.087, "power": 0.397
     },
@@ -1077,18 +1077,27 @@ EOF
       running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
       if [ "$running" == "" ]
       then
-        guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
+        screen -c /home/m1/screenrc-wtm -dmSL wtm bash /home/m1/8wtm_auto_switch
+        #guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
         running=""
+        if [ $LOCALorREMOTE == "LOCAL" ];        then
+          echo ""
+          echo "process in screen wtm, guake terminal Tab (f12)"
+          if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/8_wtmautoswitchlog" |grep -v grep) ]];then
+            guake -n /home/m1/8wtm_auto_switch -r WTM_AUTO_SWITCH -e "tail -f  /home/m1/nvoc_logs/8_wtmautoswitchlog"
+          elif [ $LOCALorREMOTE == "REMOTE" ];          then
+            echo "process in screen wtm, ~/nvOC wtm-log"
+            echo "    "
+          fi
+        fi
       fi
     fi
 
     reup=0
-    #running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
 
     if [ "$running" != "" ]
     then
-      #target=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
       target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
       kill $target
       reup=1
@@ -1097,7 +1106,6 @@ EOF
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
-    #running=$(ps ax | grep -i screen | grep miner | awk '"miner" {print $1}')
     running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
@@ -1105,16 +1113,23 @@ EOF
       echo "    "
       echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
       echo "    "
+      running=""
       if [ $LOCALorREMOTE == "REMOTE" ]
       then
         echo "Miner output: ~/nvOC miner-log"
         echo "    "
         echo "    "
-        running=""
       elif [ $LOCALorREMOTE == "LOCAL" ]
       then
-        touch /home/m1/nvoc_logs/screenlog.0
-        tail -f /home/m1/nvoc_logs/screenlog.0
+        if [ $WTM_AUTO_SWITCH == "YES" ]
+        then
+          echo "Miner output: ~/nvOC miner-log"
+          echo "    "
+          echo "    "
+          tail -f /home/m1/nvoc_logs/screenlog.0
+        else
+          screen -r miner
+        fi
       fi
     fi
 
