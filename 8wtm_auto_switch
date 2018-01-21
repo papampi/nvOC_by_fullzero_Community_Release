@@ -2,14 +2,14 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-2.0 - Community Release   #################
+#################   nvOC v0019-2.1 - Community Release   #################
 ##############        by papampi, Stubo and leenoox         ##############
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
 
 # WhatToMine.com Auto Switch by papampi
-# for nvOC v0019-2.0 - Community Release
+# for nvOC v0019-2.1 - Community Release
 
 
 # DEV Mod Log:
@@ -35,11 +35,13 @@
 # v=0010 : Papampi: Yet another Fix for minimum mining time
 #
 # v=0011 : Papampi: Disable minimum mining time, causing problems
+#
+# v=0012 : Papampi: Added NiceHash, Start in screen and changed logging system.
 
 
 
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.0011"   # Do not edit this
+nvOC_Ver="nvOC v0019-2.1 - Community Release"
+wtm_auto_switch_ver="v0019-2.0.0012"   # Do not edit this
 
 echo ""
 echo ""
@@ -52,11 +54,6 @@ WDOG_LOG="/home/m1/nvoc_logs/watchdog-screenlog.0"
 
 # Creating a log file to record coin switch
 LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
-if [[ -e "$LOG_FILE" ]] ; then
-  #Limit the logfile, just keep the last 5K
-  echo "$(cat $LOG_FILE | tail -n 5k)" > $LOG_FILE
-fi
-
 WTM_HISTORY="/home/m1/WTM_switch_history"
 if [[ -e "$WTM_HISTORY" ]] ; then
   #Limit the logfile, just keep the last 100 lines
@@ -79,29 +76,20 @@ do
 
   #Waiting for miner start before start switching
     if [[ -z  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];then
-      echo "Miner not running" | tee -a $LOG_FILE
-      echo "" | tee -a $LOG_FILE
+      echo "Miner not running"  
+      echo ""  
       while [[ -z  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];  do
-        echo "Miner still not running, waiting ..." | tee -a $LOG_FILE
-        echo "" | tee -a $LOG_FILE
+        echo "Miner still not running, waiting ..."  
+        echo ""  
         sleep 5
       done
 
       if [[ -n  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];  then
-        echo "Miner is running" | tee -a $LOG_FILE
-        #If miner running time is lower than given time don't check for better coin
-        #MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2}') | awk '{print $2}')
-        #MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
-        #if [[ $MINER_TIME_MIN -lt $WTM_MINIMUM_MINING_TIME ]] ; then
-        #echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes , looking for a better coin to mine in less than $(($WTM_MINIMUM_MINING_TIME - $MINER_TIME_MIN)) minutes" | tee -a $LOG_FILE
-        #sleep $(( (($WTM_MINIMUM_MINING_TIME - $MINER_TIME_MIN)) * 60 ))
-        #echo  "Looking for better coin" | tee -a $LOG_FILE
-        #else
-        #echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes, looking for a better coin to mine" | tee -a $LOG_FILE
+        echo "Miner is running"  
       fi
     fi
 
-    python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json  | tee -a $LOG_FILE
+    python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json   
     sleep 5
     source /home/m1/1bash  # source 1bash again in case it was edited between our timer checks
     CURRENT_COIN=$COIN
@@ -111,22 +99,22 @@ do
     TIMEOUT=$(($TIMEIN * 60))
 
     if [ $ALGO_SPECIFIC_OC == "YES" ]; then
-      if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" -o $TOP_COIN == "VIVO" -o $TOP_COIN == "TZC" ]; then
+      if [ $TOP_COIN == "FTC" -o $TOP_COIN == "ORB" -o $TOP_COIN == "PXC" -o $TOP_COIN == "VIVO" -o $TOP_COIN == "TZC" -o $TOP_COIN == "NICE-NEOSCRYPT" ]; then
         TOP_COIN_ALGORITHM="NEOSCRYPT"
       fi
-      if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL" -o $TOP_COIN == "PIRL" ]; then
+      if [ $TOP_COIN == "ETH" -o $TOP_COIN == "ETC" -o $TOP_COIN == "EXP" -o $TOP_COIN == "UBQ" -o $TOP_COIN == "MUSIC" -o $TOP_COIN == "SOIL" -o $TOP_COIN == "PIRL" -o $TOP_COIN == "NICE-ETHASH"  ]; then
         TOP_COIN_ALGORITHM="ETHASH"
       fi
-      if [ $TOP_COIN == "BTG" -o $TOP_COIN == "ZEC" -o $TOP_COIN == "ZEN" -o $TOP_COIN == "HUSH" -o $TOP_COIN == "ZCL" -o $TOP_COIN == "KMD" -o $TOP_COIN == "VOTE" ]; then
+      if [ $TOP_COIN == "BTG" -o $TOP_COIN == "ZEC" -o $TOP_COIN == "ZEN" -o $TOP_COIN == "HUSH" -o $TOP_COIN == "ZCL" -o $TOP_COIN == "KMD" -o $TOP_COIN == "VOTE" -o $TOP_COIN == "NICE-EQUIHASH" ]; then
         TOP_COIN_ALGORITHM="EQUIHASH"
       fi
-      if [ $TOP_COIN == "SIGT" -o $TOP_COIN == "ALTCOM" ]; then
+      if [ $TOP_COIN == "SIGT" -o $TOP_COIN == "ALTCOM"  -o $TOP_COIN == "NICE-SKUNKHASH" ]; then
         TOP_COIN_ALGORITHM="SKUNK"
       fi
-      if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" -o $TOP_COIN == "ETN" ]; then
+      if [ $TOP_COIN == "XMR" -o $TOP_COIN == "KRB" -o $TOP_COIN == "ETN"  -o $TOP_COIN == "NICE-CRYPTONIGHT" ]; then
         TOP_COIN_ALGORITHM="CRYPTONIGHT"
       fi
-      if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" ]; then
+      if [ $TOP_COIN == "MONA" -o $TOP_COIN == "VTC" -o $TOP_COIN == "NICE-LYRA2REV2" ]; then
         TOP_COIN_ALGORITHM="LYRA2REV2"
       fi
       if [ $TOP_COIN == "ZCOIN" ]; then
@@ -141,56 +129,56 @@ do
       echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
       sed -i '/^$/d' /home/m1/WTM_24H_REV
       sleep 1
-      echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM" | tee -a $LOG_FILE
-      echo "Current Coin: $CURRENT_COIN" | tee -a $LOG_FILE
-      echo "Top Coin Algo: $TOP_COIN_ALGORITHM" | tee -a $LOG_FILE
-      echo "Top Coin: $TOP_COIN" | tee -a $LOG_FILE
+      echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"  
+      echo "Current Coin: $CURRENT_COIN"  
+      echo "Top Coin Algo: $TOP_COIN_ALGORITHM"  
+      echo "Top Coin: $TOP_COIN"  
 
-      if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
-        echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner" | tee -a $LOG_FILE
-        echo "" | tee -a $LOG_FILE
+      if  [[ $ALGO_SPECIFIC_OC == "NO" && $plusCPU == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
+        echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner"  
+        echo ""  
         if [[ -n  $(ps ax | grep -i screen | grep miner) ]]; then
-          echo "Miner is running, lets make the switch" | tee -a $LOG_FILE
+          echo "Miner is running, lets make the switch"  
           if [[ $MINER_WATCHDOG == "YES" ]]; then
             pkill -f 5watchdog
-            echo "WTM Auto Switch Restarted watchdog"  | tee -a $LOG_FILE $WDOG_LOG
+            echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
             sleep 1
             screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
-            echo "watchdog restarted in screen wdog; ~/nvOC wdog-log" | tee -a $LOG_FILE
-            echo "" | tee -a $LOG_FILE
+            echo "watchdog restarted in screen wdog; ~/nvOC wdog-log"  
+            echo ""  
           fi
           target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
           kill $target
           sleep 1
-          echo "Commencing Miner Start Command..." | tee -a $LOG_FILE
+          echo "Commencing Miner Start Command..."  
           bash /home/m1/0miner
-          echo $( ps ax | grep miner | grep -o 'SCREEN.*' ) | tee -a $LOG_FILE
-          echo "process in screen miner; ~/nvOC miner-log" | tee -a $LOG_FILE
-          echo "" | tee -a $LOG_FILE
+          echo $( ps ax | grep miner | grep -o 'SCREEN.*' )  
+          echo "process in screen miner; ~/nvOC miner-log"  
+          echo ""  
         fi
 
       elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM ]]; then
-        echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"  | tee -a $LOG_FILE
+        echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"   
         pkill -f 5watchdog
-        echo "WTM Auto Switch Restarted watchdog"  | tee -a $LOG_FILE $WDOG_LOG
+        echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
         sleep 1
         pkill -f 3main
       fi
-      echo "$(date) - Mining switched from $CURRENT_COIN to $TOP_COIN" | tee -a $LOG_FILE $WTM_HISTORY
+      echo "$(date) - Mining switched from $CURRENT_COIN to $TOP_COIN" | tee -a $WTM_HISTORY
       echo "24 Hour Average Revenue: $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV) $WTM_CURRENCY"
-      echo "Check again in $TIMEOUT seconds" | tee -a $LOG_FILE
-      echo "" | tee -a $LOG_FILE
-      echo "" | tee -a $LOG_FILE
+      echo "Check again in $TIMEOUT seconds"  
+      echo ""  
+      echo ""  
 
       sleep $TIMEOUT
 
 
     else
-      echo "$(date) - Same Coin on Top, Continue mining $CURRENT_COIN"   | tee -a $LOG_FILE
+      echo "$(date) - Same Coin on Top, Continue mining $CURRENT_COIN"    
       echo "24 Hour Average Revenue: $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV) $WTM_CURRENCY"
-      echo "Check again in $TIMEOUT seconds" | tee -a $LOG_FILE
-      echo "" | tee -a $LOG_FILE
-      echo "" | tee -a $LOG_FILE
+      echo "Check again in $TIMEOUT seconds"  
+      echo ""  
+      echo ""  
       sleep 1
       cat /home/m1/WTM_current_revenue | grep `cat /home/m1/WTM_top_coin | awk -F: '{print $1}'` | awk -F: '{print $2}' >> /home/m1/WTM_24H_REV
       SYNC_COUNT=$((`expr 1440 / $WTM_AUTO_SWITCH_SYNC_INTERVAL`))
@@ -199,10 +187,7 @@ do
       sleep $TIMEOUT
     fi
 
-
-
   else
-    echo "Auto start miner set to NO" | tee -a $LOG_FILE
+    echo "Auto start miner set to NO"  
   fi
 done
-
