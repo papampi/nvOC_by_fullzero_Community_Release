@@ -36,6 +36,8 @@ Image size: 11 GB
 ZIP size: 3.8 GB
 Auto Expand to full size on first boot
 Fixed copy 1bash from fat partition to SSD/HDD on first boot
+SHA256: ACCA9787169E6E722ED74FB02DBE1C44E7760CEB537CB79D4C61C7FFF8AD3057
+
 ```
 
 These are community edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
