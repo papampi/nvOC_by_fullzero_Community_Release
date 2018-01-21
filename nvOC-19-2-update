@@ -88,16 +88,16 @@ else
   echo "Claymore directory structre already fixed"
 fi
 
-echo "Checking Claymore 10.4"
+echo "Checking Claymore 10.5"
 
-if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.4) ]
+if [ ! $(cat /home/m1/eth/claymore/latest/version | grep 10.5) ]
 then
-  echo "Downloading and making changes for Claymore 10.4"
+  echo "Downloading and making changes for Claymore 10.5"
   mkdir -p /home/m1/eth/claymore/latest/
-  wget -O- https://www.dropbox.com/s/ycx8u6fqfwkmc71/Claymore-10.4.tar.gz | tar -xzC /home/m1/eth/claymore/latest/ --strip 1
+  wget -O- https://www.dropbox.com/s/62ecp9xu42eiwf0/Claymore-10.5.tar.gz | tar -xzC /home/m1/eth/claymore/latest/ --strip 1
   chmod a+x /home/m1/eth/claymore/latest/ethdcrminer64
 else
-  echo "Claymore-v10.4 already downloaded"
+  echo "Claymore-v10.5 already downloaded"
 fi
 
 echo "Checking Tpruvot ccminer-2.2.4"
@@ -188,6 +188,7 @@ if [ -e /home/m1/Downloads/nvOC-19-2.tar.gz ]
 then
   rm /home/m1/Downloads/nvOC-19-2.tar.gz
 fi
+mkdir -p /home/m1/Downloads/nvOC-19-2
 wget -O- https://www.dropbox.com/s/bajt2gaf87kgjrp/nvOC-19-2.tar.gz | tar -xzC /home/m1/Downloads/nvOC-19-2/ --strip 1
 echo "Making sure update files are in correct format"
 dos2unix /home/m1/Downloads/nvOC-19-2/*
@@ -320,6 +321,7 @@ fi
 #Fix file owners if update is run by root privilege
 sudo chown -R m1 /home/m1/
 
+
 echo "**************************************************************************************************************************"
 echo "**************************************************************************************************************************"
 echo "                                                             All Done"
@@ -329,3 +331,4 @@ echo "                                Edit your 1bash, Set auto start miner then
 echo "                                                  Keep Calm and Carry on Mining"
 echo "**************************************************************************************************************************"
 echo "**************************************************************************************************************************"
+rm /home/m1/Downloads/nvOC-19-2-update
