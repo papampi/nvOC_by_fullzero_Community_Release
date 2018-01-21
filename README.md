@@ -29,7 +29,7 @@ bash /home/m1/Downloads/nvOC-19-2-update
 Beta Testing Shrinkied Image:
 
 Mega.nz Download link: https://mega.nz/#!tYUFTAJa!bRsFjN2Yk0dS5V3r2qPn4Lg9Muprp5E9gu657nMcfnI
-
+dl.free.free Download link: http://dl.free.fr/5sjQBr/Atomicomunity
 ```
 Image size: 11 GB
 ZIP size: 3.8 GB
