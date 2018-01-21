@@ -5,6 +5,13 @@
 ### damNmad BTC address:  1Mtf6K7c3ZhBDcPz91c4wcQ95DxLn88zC
 ### hurvajs77 BTC address:  3NRMRn3ZKrxwQqkwPfEsjb14dkVDWobyBC
 
+# v=0001 : Initial release
+# v=0002 : Papampi : Some changes with damNmad help
+# v=0003 : Papampi : More changes with hurvajs77 help
+# v=0004 : Papampi : Added NiceHash with Rumo and CryptAtomeTrader44 help
+
+
+
 import json
 import requests
 import sys
@@ -78,8 +85,12 @@ except:
 
 # filter WTM coins by user selection only
 for i in reversed(data):
+    if i["tag"] == "NICEHASH":
+       i["tag"] = "NICE_" + i["algorithm"].upper()
+
+for i in reversed(data):
     if i["tag"] not in includedCoins:
-        data.remove(i)
+       data.remove(i)
 
 # calculate coin revenue
 #print currency + " Revenue"
