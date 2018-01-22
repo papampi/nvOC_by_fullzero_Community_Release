@@ -17,7 +17,7 @@
 #
 # v=0005 : damNmad : New Coins LUX, SUMO, DSR
 #
-# v=0006 : Papampi : New Coin ELLA 
+# v=0006 : Papampi : New Coins ELLA, XVG, GBX, CRC
 #
 
 
@@ -177,7 +177,7 @@ nvOC_1bash_ver="v0019-2.1.0006"   # Do not edit this
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 
-### New Coins: LUX, SUMO, DSR, ELLA
+### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC
 
 
 
@@ -696,6 +696,28 @@ ELLA_POOL="replace_with_pool_address"
 ELLA_PORT="replace_with_pool_port"
 ELLA_EXTENSION_ARGUMENTS=""    # add any additional Claymore miner arguments here
 
+#GoByte(GBX) ##No Need to add add stratum+tcp:// to server address
+GBX_WORKER="$WORKERNAME"
+GBX_ADDRESS="replace_with_your_address"	
+GBX_POOL="replace_with_pool_address" 
+GBX_PORT="replace_with_pool_port"
+GBX_INTENSITY="17"
+
+#GoByte(CRC) ##No Need to add add stratum+tcp:// to server address
+CRC_WORKER="$WORKERNAME"
+CRC_ADDRESS="replace_with_your_address"	
+CRC_POOL="replace_with_pool_address" 
+CRC_PORT="replace_with_pool_port"
+CRC_INTENSITY="17"
+
+#Verge-Lyra2REv2(XVG) ##No Need to add stratum+tcp:// to server address
+XVG_WORKER="$WORKERNAME"
+XVG_ADDRESS="replace_with_your_address" 
+XVG_POOL="replace_with_pool_address" 
+XVG_PORT="replace_with_pool_port"
+XVG_INTENSITY="21"
+
+
 
 
 USE_ENVIRONMENTAL_VARIBLES="NO"   # YES or NO # Not needed vor nvidia cards. Default: NO
@@ -1077,7 +1099,7 @@ if [ $ALGO_SPECIFIC_OC == "YES" ]
 then
 
   # Neoscrypt
-  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC"  -o $COIN == "NICE-NEOSCRYPT" -o $COIN == "DSR" ]
+  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC"  -o $COIN == "NICE-NEOSCRYPT" -o $COIN == "DSR" -o $COIN == "CRC" -o $COIN == "GBX" ]
   then
     ALGORITHM="NEOSCRYPT"
     POWERLIMIT_WATTS=80
@@ -1122,7 +1144,7 @@ then
   fi
 
   # lyra2vRev2
-  if [ $COIN == "MONA" -o $COIN == "VTC" -o $COIN == "NICE-LYRA2REV2" ]
+  if [ $COIN == "MONA" -o $COIN == "VTC" -o $COIN == "NICE-LYRA2REV2" -o $COIN == "XVG" ]
   then
     ALGORITHM="LYRA2REV2"
     POWERLIMIT_WATTS=65
