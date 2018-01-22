@@ -23,7 +23,7 @@
 # v=0004 : damNmad:
 #          New Coins LUX, SUMO, DSR
 # v=0005 : papampi:
-#          New Coin ELLA
+#          New Coin ELLA,  XVG, GBX, CRC
 #
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
@@ -1127,6 +1127,27 @@ then
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
     screen -dmSL miner $HCD -epool $ELLA_POOL:$ELLA_PORT -ewal $ELLAADDR -epsw x -mode 1 -allpools 1 -dbg -1 $ELLA_EXTENSION_ARGUMENTS
   fi
+fi
+
+if [ $COIN == "CRC" ]
+then
+  HCD='/home/m1/KTccminer/ccminer'
+  ADDR="$CRC_ADDRESS.$CRC_WORKER"
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$CRC_POOL:$CRC_PORT -u $ADDR -p $MINER_PWD -i $CRC_INTENSITY
+fi
+
+if [ $COIN == "GBX" ]
+then
+  HCD='/home/m1/KTccminer/ccminer'
+  ADDR="$GBX_ADDRESS.$GBX_WORKER"
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$GBX_POOL:$GBX_PORT -u $ADDR -p $MINER_PWD -i $GBX_INTENSITY
+fi
+
+if [ $COIN == "XVG" ]
+then
+  HCD='/home/m1/ASccminer/ccminer'
+  ADDR="$XVG_ADDRESS.$XVG_WORKER"
+  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$XVG_POOL:$XVG_PORT -u $ADDR -p $MINER_PWD -i $XVG_INTENSITY
 fi
 
 
