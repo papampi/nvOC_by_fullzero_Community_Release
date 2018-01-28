@@ -15,5 +15,5 @@ if [[ -z $(cat /home/m1/1bash | grep bminer) ]];then
   sed -i '/#bminer optional arguments./a BMINER_OPTS="" ' /home/m1/1bash
   sed -i 's/ETHMINER_or_GENOIL_or_CLAYMORE=/ETHASH_MINER=/g' /home/m1/1bash
   wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/1bash_19-2_1_New_Coins.txt
-  sed -i '/ONION_PORT="3633"/r /home/m1/Downloads/1bash_19-2_1_New_Coins.txt' /home/m1/Dropbox/0_mining/backups/1bash-1
+  sed -i '/ONION_PORT="3633"/r /home/m1/Downloads/1bash_19-2_1_New_Coins.txt' /home/m1/1bash
 fi
