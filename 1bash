@@ -9,20 +9,26 @@
 ##########################################################################
 # v=0001 : Community Release
 #
-# v=0002 : Papampi : Telegram changes
+# v=0002 : Papampi
+#          Telegram changes
 #
-# v=0003 : Papampi : WTM_MINIMUM_MINING_TIME 
+# v=0003 : Papampi
+#          WTM_MINIMUM_MINING_TIME
 #
-# v=0004 : Papampi : More NiceHash mining algos 
+# v=0004 : Papampi
+#          More NiceHash mining algos
 #
-# v=0005 : damNmad : New Coins LUX, SUMO, DSR
+# v=0005 : damNmad
+#          New Coins LUX, SUMO, DSR
 #
-# v=0006 : Papampi : New Coins ELLA, XVG, GBX, CRC
+# v=0006 : Papampi
+#          New Coins ELLA, XVG, GBX, CRC
 #
-
+# v=0007 : Papampi
+#          EQUIHASH_MINER, ETHASH_MINER, bminer,
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0006"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0007"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -205,8 +211,8 @@ AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, t
 NUMBER_GPUS_INSTALLED=""    # Number or "" # Set number of GPUs installed. Watchdog will check installed vs detected. Leave empty to not check
 
 LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local access to the rig. Set to REMOTE if logging remotely to the rig
-                            # LOCAL will attach the mining process to the gnome or guake terminal
-                            # REMOTE will leave it unattached, it will be launched using "screen", ready for SSH
+# LOCAL will attach the mining process to the gnome or guake terminal
+# REMOTE will leave it unattached, it will be launched using "screen", ready for SSH
 
 
 TEAMVIEWER="NO"             # YES or NO # If you use Team Viewer to remotely connect to this rig set this to YES
@@ -232,8 +238,8 @@ AUTO_WORKERNAME="HOST"      # HOST or MAC or CUSTOM # Use HOST IP address or net
 CUSTOM_WORKERNAME="19_2"    # If AUTO_WORKERNAME="CUSTOM" enter your desired workername here
 
 
-
-AUTO_UPDATE="STABLE"        # STABLE or BETA # To update to the latest STABLE or BETA releases, manually run 4update in guake terminal
+#Auto update is disabled on v0019-2.x Community Release.
+AUTO_UPDATE="STABLE"        # STABLE or BETA # To update to the latest STABLE or BETA releases, manually run 4update in guake terminal 
 
 
 
@@ -337,7 +343,7 @@ TELEGRAM_APIKEY="Your Telegram API"  # Enter your API Key here
 
 POWERLIMIT="YES"            # YES or NO # Choose YES to set Global Power Limit for all GPU's
 
-POWERLIMIT_WATTS=75         # Global Power Limit in watts for all GPU's. If enabled, INDIVIDUAL settings will override this. 
+POWERLIMIT_WATTS=75         # Global Power Limit in watts for all GPU's. If enabled, INDIVIDUAL settings will override this.
 
 __CORE_OVERCLOCK=100        # Global Core overclock for all GPU's if not using INDIVIDUAL settings
 
@@ -355,7 +361,7 @@ P106_100_FULL_HEADLESS_MODE="NO"  # YES or NO # If using P106_100 GPU's in a ful
 
 GPUPowerMizerMode_Adjust="NO" # YES or NO # Use nvidia PowerMizerMode
 
-GPUPowerMizerMode=1           # Set PowerMizerMode 
+GPUPowerMizerMode=1           # Set PowerMizerMode
 
 
 ########################################################
@@ -392,7 +398,7 @@ WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_28
 
 
 ########################################################################################
-# GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section                    # 
+# GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section                    #
 ########################################################################################
 IPW=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
 IP_AS_WORKER=$(echo -n $IPW | tail -c -3 | sed 'y/./0/')
@@ -420,13 +426,16 @@ fi
 #                                                      #
 ########################################################
 
+USE_ENVIRONMENTAL_VARIBLES="NO"   # YES or NO # Not needed for nvidia cards. Default: NO
 
 BTC_ADDRESS="replace_with_your_BTC_address"
+
+MPH_ADDRESS="replace_with_your_MPH_username"
 
 # For zpool use MINER_PWD="$WORKERNAME,c=btc"
 MINER_PWD="x"               # Set the miner password. Default: x
 
-ZM_or_EWBF="ZM"  # choose ZM or EWBF miner
+EQUIHASH_MINER="ZM"  # choose "ZM" for dstm or "EWBF" or "BMINER" or "BMINER_SSL"
 
 # DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 ZM_OPTS=""
@@ -437,11 +446,17 @@ EWBF_VERSION="3_4" # choose 3_3  or  3_4
 # EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
 EWBF_OPTS=""
 
+# Bminer optional arguments. add "--api $IPW:42000" if you want web info
+BMINER_OPTS=""
+
 # change EWBF_PERCENT to alter donation percent for EWBF Miner
 EWBF_PERCENT="0"
 
-MPH_ADDRESS="replace_with_your_MPH_username"
+# Some pools require dot (address.worker), some require slash (address/worker) format.
+# Depending on the pool you use, set this approprietly:
+DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
 
+ETHASH_MINER="CLAYMORE"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
@@ -698,37 +713,24 @@ ELLA_EXTENSION_ARGUMENTS=""    # add any additional Claymore miner arguments her
 
 #GoByte(GBX) ##No Need to add add stratum+tcp:// to server address
 GBX_WORKER="$WORKERNAME"
-GBX_ADDRESS="replace_with_your_address"	
-GBX_POOL="replace_with_pool_address" 
+GBX_ADDRESS="replace_with_your_address"
+GBX_POOL="replace_with_pool_address"
 GBX_PORT="replace_with_pool_port"
 GBX_INTENSITY="17"
 
 #GoByte(CRC) ##No Need to add add stratum+tcp:// to server address
 CRC_WORKER="$WORKERNAME"
-CRC_ADDRESS="replace_with_your_address"	
-CRC_POOL="replace_with_pool_address" 
+CRC_ADDRESS="replace_with_your_address"
+CRC_POOL="replace_with_pool_address"
 CRC_PORT="replace_with_pool_port"
 CRC_INTENSITY="17"
 
 #Verge-Lyra2REv2(XVG) ##No Need to add stratum+tcp:// to server address
 XVG_WORKER="$WORKERNAME"
-XVG_ADDRESS="replace_with_your_address" 
-XVG_POOL="replace_with_pool_address" 
+XVG_ADDRESS="replace_with_your_address"
+XVG_POOL="replace_with_pool_address"
 XVG_PORT="replace_with_pool_port"
 XVG_INTENSITY="21"
-
-
-
-
-USE_ENVIRONMENTAL_VARIBLES="NO"   # YES or NO # Not needed vor nvidia cards. Default: NO
-
-# Some pools require dot (address.worker), some require slash (address/worker) format.
-# Depending on the pool you use, set this approprietly:
-DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
-
-CLAYMORE_VERSION="latest"    #  latest for 10.4  
-
-ETHMINER_or_GENOIL_or_CLAYMORE="CLAYMORE"  # choose CLAYMORE or ETHMINER or GENOIL 
 
 # ETH
 ETH_WORKER="$WORKERNAME"
@@ -812,7 +814,7 @@ PASL_ADDRESS="replace_with_your_PASL_ACCOUNT"
 PASL_POOL="mine.pasl.fairpool.xyz"
 PASL_PORT="4009"
 
-# XMR : if plusCPU is "YES" replace with your XMR info  
+# XMR : if plusCPU is "YES" replace with your XMR info
 ## No Need to add stratum+tcp:// to server address
 XMR_WORKER="$WORKERNAME"
 XMR_ADDRESS="replace_with_your_XMR_address"
