@@ -1180,7 +1180,7 @@ then
   if [ $ETHASH_MINER == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
+    NICEADDR="$NICE_ADDRESS.$NICE_ETHASH_WORKER"
     screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
   fi
   if [ $ETHASH_MINER == "ETHMINER" ]
@@ -1199,7 +1199,7 @@ fi
 
 if [ $COIN == "NICE-EQUIHASH" ]
 then
-  NICE_EQUIHASHADDR="$NICE_EQUIHASH_ADDRESS.$NICE_EQUIHASH_WORKER"
+  NICE_EQUIHASHADDR="$NICE_ADDRESS.$NICE_EQUIHASH_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
     HCD='/home/m1/zec/v3_3/miner'
@@ -1232,34 +1232,34 @@ fi
 if [ $COIN == "NICE-NEOSCRYPT" ]
 then
   HCD='/home/m1/KTccminer/ccminer'
-  ADDR="$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  ADDR="$NICE_ADDRESS.$NICE_WORKER"
   screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$NICE_NEOSCRYPT_POOL:$NICE_NEOSCRYPT_PORT -u $ADDR -p x -i $NICE_NEOSCRYPT_INTENSITY
 fi
 
 if [ $COIN == "NICE-LYRA2REV2" ]
 then
   HCD='/home/m1/ASccminer/ccminer'
-  ADDR="$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  ADDR="$NICE_ADDRESS.$NICE_WORKER"
   screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$NICE_LYRA2REV2_POOL:$NICE_LYRA2REV2_PORT -u $ADDR -p x -i $NICE_LYRA2REV2_INTENSITY
 fi
 
 if [ $COIN == "NICE-X11GOST" ]
 then
   HCD='/home/m1/SPccminer/ccminer'
-  ADDR="$$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  ADDR="$$NICE_ADDRESS.$NICE_WORKER"
   screen -dmSL miner $HCD -a sib -o stratum+tcp://$NICE_X11GOST_POOL:$NICE_X11GOST_PORT -u $ADDR -p x -i $NICE_X11GOST_INTENSITY
 fi
 
 if [ $COIN == "NICE-SKUNKHASH" ]
 then
   HCD='/home/m1/TPccminer/ccminer'
-  ADDR="$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  ADDR="$NICE_ADDRESS.$NICE_WORKER"
   screen -dmSL miner $HCD -a skunk -o stratum+tcp://$NICE_SKUNKHASH_POOL:$NICE_SKUNKHASH_PORT -u $ADDR -p x -i $NICE_SKUNKHASH_INTENSITY
 fi
 
 if [ $COIN == "NICE-CRYPTONIGHT" ]
 then
   HCD='/home/m1/KTccminer-cryptonight/ccminer'
-  ADDR="$NICEHASH_BTC_ADDRESS.$NICE_WORKER"
+  ADDR="$NICE_ADDRESS.$NICE_WORKER"
   screen -dmSL miner $HCD -o stratum+tcp://$NICE_CRYPTONIGHT_POOL:$NICE_CRYPTONIGHT_PORT -u $ADDR -p x -i $NICE_CRYPTONIGHT_INTENSITY
 fi
