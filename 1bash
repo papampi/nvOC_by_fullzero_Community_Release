@@ -26,8 +26,6 @@
 #
 # v=0007 : Papampi
 #          EQUIHASH_MINER, ETHASH_MINER, bminer,
-# v=0008 : Papampi
-#          Bug fixes
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
 nvOC_1bash_ver="v0019-2.1.0007"   # Do not edit this
@@ -825,46 +823,6 @@ SMART_POOL="pool-eu.smartcash.cc"
 SMART_PORT="3333"
 SMART_INTENSITY="25"
 
-
-NICE_WORKER="$WORKERNAME"
-NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"
-
-# NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
-NICE_ETHASH_WORKER="$WORKERNAME"
-NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
-NICE_ETHASH_PORT="3353"
-NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
-
-# Nice Equihash
-NICE_EQUIHASH_WORKER="$WORKERNAME"
-NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
-NICE_EQUIHASH_PORT="3357"
-
-#NICE_LYRA2REV2 stratum+tcp://
-NICE_LYRA2REV2_POOL="lyra2rev2.eu.nicehash.com"
-NICE_LYRA2REV2_PORT="3347"
-NICE_LYRA2REV2_INTENSITY="21"
-
-#NICE_NEOSCRYPT  stratum+tcp://
-NICE_NEOSCRYPT_POOL="neoscrypt.eu.nicehash.com"
-NICE_NEOSCRYPT_PORT="3341"
-NICE_NEOSCRYPT_INTENSITY="17"		# 17 because using KTccminer latest version that give best hashrate in Neoscrypt but more intensity crash ccminer
-
-#NICE_CRYPTONIGHT stratum+tcp://
-NICE_CRYPTONIGHT_POOL="cryptonight.eu.nicehash.com:3355"
-NICE_CRYPTONIGHT_PORT="3355"
-NICE_CRYPTONIGHT_INTENSITY="21"
-
-#NICE_X11GOST stratum+tcp://
-NICE_X11GOST_POOL="x11gost.eu.nicehash.com"
-NICE_X11GOST_PORT="3359"
-NICE_X11GOST_INTENSITY="21"
-
-#NICE_SKUNKHASH stratum+tcp://
-NICE_SKUNKHASH_POOL="skunk.eu.nicehash.com:"
-NICE_SKUNKHASH_PORT="3362"
-NICE_SKUNKHASH_INTENSITY="21"
-
 ########################################################
 #                                                      #
 # SALFTER_NICEHASH_PROFIT_SWITCHING &                  #
@@ -1087,7 +1045,6 @@ NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments des
 
 # Nice Equihash
 NICE_EQUIHASH_WORKER="$WORKERNAME"
-NICE_EQUIHASH_ADDRESS="$BTC_ADDRESS"
 NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
 NICE_EQUIHASH_PORT="3357"
 
