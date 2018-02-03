@@ -1178,7 +1178,7 @@ fi
 
 if [ $COIN == "NICE-ETHASH" ]
 then
-  ADDR="$NICE_ADDRESS.$NICE_ETHASH_WORKER"
+  ADDR="$NICE_ADDRESS.$NICE_WORKER"
   if [ $ETHASH_MINER == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
@@ -1198,7 +1198,7 @@ fi
 
 if [ $COIN == "NICE-EQUIHASH" ]
 then
-  ADDR="$NICE_ADDRESS.$NICE_EQUIHASH_WORKER"
+  ADDR="$NICE_ADDRESS.$NICE_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
     HCD='/home/m1/zec/v3_3/miner'
