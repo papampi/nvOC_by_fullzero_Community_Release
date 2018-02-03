@@ -27,7 +27,8 @@
 #
 # v=0006 : papampi:
 #          EQUIHASH_MINER, bminer, ETHASH_MINER
-
+# v=0007 : papampi:
+#          Nicehash bug fixes
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
@@ -1177,29 +1178,27 @@ fi
 
 if [ $COIN == "NICE-ETHASH" ]
 then
+  ADDR="$NICE_ADDRESS.$NICE_ETHASH_WORKER"
   if [ $ETHASH_MINER == "GENOIL" ]
   then
     HCD='/home/m1/eth/Genoil-U/ethminer'
-    NICEADDR="$NICE_ADDRESS.$NICE_ETHASH_WORKER"
-    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
+    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $ADDR:x -U
   fi
   if [ $ETHASH_MINER == "ETHMINER" ]
   then
     HCD='/home/m1/eth/ethminer/latest/ethminer'
-    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
-    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $NICEADDR:x -U
+    screen -dmSL miner $HCD -SP 2 -S $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -O $ADDR:x -U
   fi
   if [ $ETHASH_MINER == "CLAYMORE" ]
   then
     HCD=/home/m1/eth/claymore/$CLAYMORE_VERSION/ethdcrminer64
-    NICEADDR="$BTC_ADDRESS.$NICE_ETHASH_WORKER"
-    screen -dmSL miner $HCD -epool $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -ewal $NICEADDR -epsw x -esm 3 -allpools 1 -estale 0 -dbg -1 $NICE_ETHASH_EXTENSION_ARGUMENTS
+    screen -dmSL miner $HCD -epool $NICE_ETHASH_POOL:$NICE_ETHASH_PORT -ewal $ADDR -epsw x -esm 3 -allpools 1 -estale 0 -dbg -1 $NICE_ETHASH_EXTENSION_ARGUMENTS
   fi
 fi
 
 if [ $COIN == "NICE-EQUIHASH" ]
 then
-  NICE_EQUIHASHADDR="$NICE_ADDRESS.$NICE_EQUIHASH_WORKER"
+  ADDR="$NICE_ADDRESS.$NICE_EQUIHASH_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
     HCD='/home/m1/zec/v3_3/miner'
@@ -1211,21 +1210,21 @@ then
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/zec/zm/latest/zm_miner'
-    screen -dmSL miner $HCD --server $NICE_EQUIHASH_POOL --user $NICE_EQUIHASHADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  --time $ZM_OPTS ;
+    screen -dmSL miner $HCD --server $NICE_EQUIHASH_POOL --user $ADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
-    screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $NICE_EQUIHASH_POOL --user $NICE_EQUIHASHADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  $EWBF_OPTS ;
+    screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $NICE_EQUIHASH_POOL --user $ADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
     HCD='/home/m1/zec/bminer/latest/bminer'
-    screen -dmSL miner $HCD -uri stratum://$NICE_EQUIHASHADDR:$MINER_PWD@$NICE_EQUIHASH_POOL:$NICE_EQUIHASH_PORT $BMINER_OPTS ;
+    screen -dmSL miner $HCD -uri stratum://$ADDR:$MINER_PWD@$NICE_EQUIHASH_POOL:$NICE_EQUIHASH_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
     HCD='/home/m1/zec/bminer/latest/bminer'
-    screen -dmSL miner $HCD -uri stratum+ssl://$NICE_EQUIHASHADDR:$MINER_PWD@$NICE_EQUIHASH_POOL:$NICE_EQUIHASH_PORT $BMINER_OPTS ;
+    screen -dmSL miner $HCD -uri stratum+ssl://$ADDR:$MINER_PWD@$NICE_EQUIHASH_POOL:$NICE_EQUIHASH_PORT $BMINER_OPTS ;
   fi
 fi
 
