@@ -38,6 +38,8 @@
 #          Launch wtm auto switch in screen
 # v=0008 : papampi
 #          Local with wtm auto switch shows tail to prevent showing miner terminated
+# v=0009 : papampi
+#          Added P104 and changed P106 to P10X
 
 
 
@@ -47,7 +49,7 @@
 source /home/m1/1bash
 
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.008"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.0009"                  # Do not edit this
 
 
 
@@ -109,7 +111,7 @@ ___1050_or_1050ti="NO"
 
 NORMAL="NO"
 
-P106_100="NO"
+P10X_100="NO"
 
 nvidia-smi -L > /tmp/tempa
 
@@ -121,8 +123,15 @@ fi
 if grep -q "P106-100" /tmp/tempa;
 then
   ___1050_or_1050ti="YES"
-  P106_100="YES"
+  P10X_100="YES"
 fi
+
+if grep -q "P104-100" /tmp/tempa;
+then
+  ___1050_or_1050ti="YES"
+  P10X_100="YES"
+fi
+
 
 if grep -q -E '1060|1070|1080' /tmp/tempa;
 then
@@ -141,7 +150,7 @@ fi
 # dev note by leenoox:
 # I don't see the relevance of this code, if the previous check for 28800 fails, but this one passes, it
 # will mistakenly set XORG="OK" even though the check for 28800 failed. This needs to be revisited
-if [ $P106_100 == "YES" ]
+if [ $P10X_100 == "YES" ]
 then
   XORG="OK"
 fi
@@ -943,7 +952,7 @@ then
   fi
 
 
-  if [ $P106_100_FULL_HEADLESS_MODE == "NO" ]
+  if [ $P10X_100_FULL_HEADLESS_MODE == "NO" ]
   then
 
     gpu=0
@@ -983,7 +992,7 @@ then
 
   UPDATE="YES"
 
-  if [ $P106_100_FULL_HEADLESS_MODE == "YES" ]
+  if [ $P10X_100_FULL_HEADLESS_MODE == "YES" ]
   then
     if grep -q "XORG_UPDATED" /home/m1/xorg_flag;
     then
