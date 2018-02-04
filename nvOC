@@ -683,13 +683,14 @@ fi
 echo
 
 # 1bash miners
-echo "ZM_or_EWBF ................: $ZM_or_EWBF"
-if [[ $ZM_or_EWBF == "EWBF" ]]; then
+echo "Equihash Miner ................: $EQUIHASH_MINER"
+if [[ $EQUIHASH_MINER == "EWBF" ]]; then
 echo "EWBF_VERSION ..............: $EWBF_VERSION"
 echo "EWBF_PERCENT ..............: $EWBF_PERCENT"
 fi
 echo
-
+echo "Ethash Miner ..................: $ETHASH_MINER"
+echo
 # 1bash coin, pool, port, address
 echo "COIN ......................: $COIN"
 if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]]; then
