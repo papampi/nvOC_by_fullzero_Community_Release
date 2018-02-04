@@ -326,7 +326,7 @@ RESTORE_POWER_LIMIT=90      # Restore original Power Limit if fan speed is lower
 
 TELEGRAM_MESSAGES="NO"       # YES or NO # Set to YES if you want to receive Telegram Periodic Messages
 
-TELEGRAM_ALERTS="YES"       # YES or NO # Set to No if you Dont want to get Telegram Alerts
+TELEGRAM_ALERTS="NO"       # YES or NO # Set to No if you Dont want to get Telegram Alerts
 
 TELEGRAM_TYPE="papampi"              # kk003 or papampi or damNmad or BaliMiner # There are 4 versions. Please choose one
 
@@ -374,7 +374,7 @@ GPUPowerMizerMode=1           # Set PowerMizerMode
 
 WTM_AUTO_SWITCH="NO"        # ( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
 
-WTM_PROFIT_CHECK="YES"      # whattomine.com Profit check for webinfo, only use if WTM_AUTO_SWITCH=NO
+WTM_PROFIT_CHECK="NO"      # whattomine.com Profit check for webinfo, only use if WTM_AUTO_SWITCH=NO
 
 # note!! all selected COINS must HAVE ADDRESSES in the coin section below (no need for address if switch=no and profit=yes )
 # select which coins you want to mine or check profit (profit switch only using this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
@@ -428,16 +428,18 @@ fi
 #                                                      #
 ########################################################
 
-USE_ENVIRONMENTAL_VARIBLES="NO"   # YES or NO # Not needed for nvidia cards. Default: NO
+USE_ENVIRONMENTAL_VARIBLES="NO"                 # YES or NO # Not needed for nvidia cards. Default: NO
 
-BTC_ADDRESS="replace_with_your_BTC_address"
+BTC_ADDRESS="replace_with_your_BTC_address"     # Your BTC addrees to use with zpool
 
-MPH_ADDRESS="replace_with_your_MPH_username"
+MPH_ADDRESS="replace_with_your_MPH_username"    #You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
 
+NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"            # Your internal Nicehash BTC addrees to use with nicehash
+
+MINER_PWD="x"                                   # Set the miner password. Default: x
 # For zpool use MINER_PWD="$WORKERNAME,c=btc"
-MINER_PWD="x"               # Set the miner password. Default: x
 
-EQUIHASH_MINER="ZM"  # choose "ZM" for dstm or "EWBF" or "BMINER" or "BMINER_SSL"
+EQUIHASH_MINER="ZM"                             # "ZM" for dstm, "EWBF", "BMINER" or "BMINER_SSL"
 
 # DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 ZM_OPTS=""
@@ -454,11 +456,12 @@ BMINER_OPTS=""
 # change EWBF_PERCENT to alter donation percent for EWBF Miner
 EWBF_PERCENT="0"
 
-# Some pools require dot (address.worker), some require slash (address/worker) format.
-# Depending on the pool you use, set this approprietly:
-DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
-
 ETHASH_MINER="CLAYMORE"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
+
+DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
+# Some pools require dot (address.worker), some require slash (address/worker) format.
+# Depending on the pool you use, set this approprietl
+
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
@@ -734,7 +737,7 @@ ETH_EXTENSION_ARGUMENTS=""    # add any additional Claymore miner arguments here
 ETC_WORKER="$WORKERNAME"
 ETC_ADDRESS="replace_with_your_address"
 ETC_POOL="europe.ethash-hub.miningpoolhub.com"
-ETC_PORT="xxxx"
+ETC_PORT="20555"
 ETC_EXTENSION_ARGUMENTS=""    # add any additional Claymore miner arguments here
 
 # EXP
@@ -1035,9 +1038,6 @@ MEMORY_OVERCLOCK_18=100
 #                                                      #
 ########################################################
 
-
-NICE_WORKER="$WORKERNAME"
-NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"
 
 # NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
 NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
