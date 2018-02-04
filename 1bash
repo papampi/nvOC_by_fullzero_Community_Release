@@ -28,9 +28,12 @@
 #          EQUIHASH_MINER, ETHASH_MINER, bminer,
 # v=0008 : Papampi
 #          Nicehash bug fixes
+# v=0009 : papampi
+#          Added P104 and changed P106 to P10X
+
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0007"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0009"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -359,7 +362,7 @@ MEMORY_OVERCLOCK=100        # Global Memory overclock for all GPU's if not using
 
 ALGO_SPECIFIC_OC="NO"       # YES or NO # damNmad ALGO_SPECIFIC_OC settings, See the description above
 
-P106_100_FULL_HEADLESS_MODE="NO"  # YES or NO # If using P106_100 GPU's in a full headless (no monitor) rig, set this to YES
+P10X_100_FULL_HEADLESS_MODE="NO"  # YES or NO # If using P106_100, P104-100 GPU's in a full headless (no monitor) rig, set this to YES
 
 GPUPowerMizerMode_Adjust="NO" # YES or NO # Use nvidia PowerMizerMode
 
@@ -428,18 +431,18 @@ fi
 #                                                      #
 ########################################################
 
-USE_ENVIRONMENTAL_VARIBLES="NO"                 # YES or NO # Not needed for nvidia cards. Default: NO
+USE_ENVIRONMENTAL_VARIBLES="NO"                  # YES or NO # Not needed for nvidia cards. Default: NO
 
-BTC_ADDRESS="replace_with_your_BTC_address"     # Your BTC addrees to use with zpool
+BTC_ADDRESS="replace_with_your_BTC_address"      # Your BTC addrees to use with zpool
 
-MPH_ADDRESS="replace_with_your_MPH_username"    #You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
+NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"            # Your internal Nicehash BTC addrees to use with nicehash		
 
-NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"            # Your internal Nicehash BTC addrees to use with nicehash
+MPH_ADDRESS="replace_with_your_MPH_username"     #You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
 
-MINER_PWD="x"                                   # Set the miner password. Default: x
+MINER_PWD="x"                                    # Set the miner password. Default: x
 # For zpool use MINER_PWD="$WORKERNAME,c=btc"
 
-EQUIHASH_MINER="ZM"                             # "ZM" for dstm, "EWBF", "BMINER" or "BMINER_SSL"
+EQUIHASH_MINER="ZM"                              # choose "ZM" for dstm or "EWBF" or "BMINER" or "BMINER_SSL"
 
 # DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 ZM_OPTS=""
@@ -460,7 +463,8 @@ ETHASH_MINER="CLAYMORE"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
 DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
 # Some pools require dot (address.worker), some require slash (address/worker) format.
-# Depending on the pool you use, set this approprietl
+# Depending on the pool you use, set this approprietly:
+
 
 
 ################################################################
@@ -1038,6 +1042,8 @@ MEMORY_OVERCLOCK_18=100
 #                                                      #
 ########################################################
 
+
+NICE_WORKER="$WORKERNAME"
 
 # NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
 NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
