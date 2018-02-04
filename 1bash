@@ -1096,7 +1096,7 @@ then
   fi
 
   # Ethash
-  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE-ETHASH" -o $COIN == "PIRL" -o $COIN == "NICE-ETHASH" ]
+  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "PIRL" -o $COIN == "NICE-ETHASH" ]
   then
     ALGORITHM="ETHASH"
     POWERLIMIT_WATTS=76
