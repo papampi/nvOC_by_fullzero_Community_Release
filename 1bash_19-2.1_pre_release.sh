@@ -8,7 +8,7 @@ echo "Renamed ETHMINER_or_GENOIL_or_CLAYMORE to ETHASH_MINER"
 echo "Added BMINER and BMINER_OPTS"
 
 cd /home/m1/Downloads
-if [[ -z $(cat /home/m1/1bash | grep bminer) ]];then
+if [[ -z $(cat /home/m1/1bash | grep EQUIHASH_MINER) ]];then
   cp /home/m1/1bash /home/m1/backups/1bash.pre_19-2.1.bak
   sed -i 's/ZM_or_EWBF=/EQUIHASH_MINER=/g' /home/m1/1bash
   sed -i 's/# choose ZM or EWBF miner/# choose "ZM" or "EWBF" or "BMINER" or "BMINER_SSL"/g' /home/m1/1bash
