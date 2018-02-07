@@ -39,6 +39,12 @@ Fixed copy 1bash from fat partition to SSD/HDD on first boot
 SHA256: ACCA9787169E6E722ED74FB02DBE1C44E7760CEB537CB79D4C61C7FFF8AD3057
 ```
 
+Update and recompile miners:
+```
+cd /home/m1/Downloads
+wget -N https://raw.githubusercontent.com/papampi/nvOC_miners/master/nvOC_miner_update.sh
+bash /home/m1/Downloads/nvOC_miner_update.sh
+```
 These are community edits, fixes, enhacements and improvments from nvOC contributors and forum member suggestions
 
 Thanks to all contributors, testers and nvOC community.
