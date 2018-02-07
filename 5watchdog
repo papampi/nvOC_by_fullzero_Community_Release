@@ -193,7 +193,7 @@ while true; do
     if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]; then
       if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
         # Not numeric so: Help we've lost a GPU, so reboot
-        echo "$(date) - Lost GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
+        echo "$(date) - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
         echo ""
         # Hope PCI BUS info will help find the faulty GPU
         nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
@@ -206,14 +206,14 @@ while true; do
         sudo reboot
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
-        echo "$(date) - GPU $GPU under threshold found - GPU UTILIZATION:  " $UTIL  | tee -a ${LOG_FILE}
+        echo "$(date) - GPU$GPU under threshold found - GPU UTILIZATION:  " $UTIL  | tee -a ${LOG_FILE}
         COUNT=$(($COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
       fi
     else
       if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
         # Not numeric so: Help we've lost a GPU, so reboot
-        echo "$(date) - Lost GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
+        echo "$(date) - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
         echo ""
         # Hope PCI BUS info will help find the faulty GPU
         nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
@@ -226,7 +226,7 @@ while true; do
         sudo reboot
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
-        echo "$(date) - GPU $GPU under threshold found - GPU UTILIZATION:  " $UTIL
+        echo "$(date) - GPU$GPU under threshold found - GPU UTILIZATION:  " $UTIL | tee -a ${LOG_FILE}
         COUNT=$(($COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
       fi
