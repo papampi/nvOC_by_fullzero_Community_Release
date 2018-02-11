@@ -10,7 +10,6 @@
 
 
 # 3main for v0019-2.1
-
 #
 # Dev Mod Log:
 #
@@ -43,17 +42,9 @@
 # v=0010 : papampi
 #          Download and Restore default xorg.conf
 
-
-
-# DEV_VERSION=0010
-
-
 source /home/m1/1bash
-
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
 nvOC_3main_ver="v0019-2.0.0010"                  # Do not edit this
-
-
 
 #########################################################################
 #########################################################################
@@ -133,7 +124,6 @@ then
   ___1050_or_1050ti="YES"
   P10X_100="YES"
 fi
-
 
 if grep -q -E '1060|1070|1080' /tmp/tempa;
 then
@@ -364,7 +354,6 @@ if [ $MINER_TEMP_CONTROL == "YES" ]
 then
   reup=0
   running=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
-
   if [ "$running" != "" ]
   then
     target=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
@@ -451,7 +440,6 @@ then
   fi
 fi
 
-
 if [ "$FAN_SPEED" -lt "40" ]
 then
   FAN_SPEED=40
@@ -472,7 +460,6 @@ then
  "currency":"$WTM_CURRENCY"
 }
 EOF
-
   HCD='/home/m1/8wtm_profit_check'
   running=$(ps -ef | awk '$NF~"8wtm_profit_check" {print $2}')
   if [ "$running" == "" ]
@@ -490,7 +477,6 @@ then
   then
     HOSTEDIT="NO"
   fi
-
   if [ $HOSTEDIT == "YES" ]
   then
     sudo -- sh -c -e "echo '' >> /etc/hosts";
@@ -635,9 +621,7 @@ fi
 
 if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ] && [ $AUTO_START_MINER == "YES" ]
 then
-
   cd /home/m1
-
   if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
   then
     gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
@@ -818,14 +802,11 @@ EOF
     guake -n 1 -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
   fi
 
-
-
   while true
   do
     echo ""
     cat current-profit
     echo ""
-
     if [ $LOCALorREMOTE == "LOCAL" ]
     then
       guake -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
@@ -835,7 +816,6 @@ EOF
       sleep $PROFIT_CHECK_TIMEOUT
       python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
     fi
-
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
       echo "ENTER:"
@@ -961,7 +941,6 @@ then
   then
     sleep 6
   fi
-
 
   if [ $P10X_100_FULL_HEADLESS_MODE == "NO" ]
   then
