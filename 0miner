@@ -60,15 +60,15 @@ then
   BTGADDR="$BTG_ADDRESS.$BTG_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $BTG_POOL --user $BTGADDR --pass $MINER_PWD --port $BTG_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -77,12 +77,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$BTGADDR:$MINER_PWD@$BTG_POOL:$BTG_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$BTGADDR:$MINER_PWD@$BTG_POOL:$BTG_PORT $BMINER_OPTS ;
   fi
 fi
@@ -92,15 +92,15 @@ then
   ZECADDR="$ZEC_ADDRESS.$ZEC_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $ZEC_POOL --user $ZECADDR --pass $MINER_PWD --port $ZEC_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -109,12 +109,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$ZECADDR:$MINER_PWD@$ZEC_POOL:$ZEC_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$ZECADDR:$MINER_PWD@$ZEC_POOL:$ZEC_PORT $BMINER_OPTS ;
   fi
 fi
@@ -124,15 +124,15 @@ then
   ZCLADDR="$ZCL_ADDRESS.$ZCL_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $ZCL_POOL --user $ZCLADDR --pass $MINER_PWD --port $ZCL_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -141,12 +141,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$ZCLADDR:$MINER_PWD@$ZCL_POOL:$ZCL_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$ZCLADDR:$MINER_PWD@$ZCL_POOL:$ZCL_PORT $BMINER_OPTS ;
   fi
 fi
@@ -156,15 +156,15 @@ then
   BTCZADDR="$BTCZ_ADDRESS.$BTCZ_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmS miner $HCD --server $BTCZ_POOL --user $BTCZADDR --pass $MINER_PWD --port $BTCZ_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -173,12 +173,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$BTCZADDR:$MINER_PWD@$BTCZ_POOL:$BTCZ_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$BTCZADDR:$MINER_PWD@$BTCZ_POOL:$BTCZ_PORT $BMINER_OPTS ;
   fi
 fi
@@ -188,15 +188,15 @@ then
   KMDADDR="$KMD_ADDRESS.$KMD_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $KMD_POOL --user $KMDADDR --pass $MINER_PWD --port $KMD_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -205,12 +205,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$KMDADDR:$MINER_PWD@$KMD_POOL:$KMD_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$KMDADDR:$MINER_PWD@$KMD_POOL:$KMD_PORT $BMINER_OPTS ;
   fi
 fi
@@ -220,15 +220,15 @@ then
   ZENADDR="$ZEN_ADDRESS.$ZEN_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $ZEN_POOL --user $ZENADDR --pass $MINER_PWD --port $ZEN_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -237,12 +237,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$ZENADDR:$MINER_PWD@$ZEN_POOL:$ZEN_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$ZENADDR:$MINER_PWD@$ZEN_POOL:$ZEN_PORT $BMINER_OPTS ;
   fi
 fi
@@ -252,15 +252,15 @@ then
   HUSHADDR="$HUSH_ADDRESS.$HUSH_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $HUSH_POOL --user $HUSHADDR --pass $MINER_PWD --port $HUSH_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -269,12 +269,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$HUSHADDR:$MINER_PWD@$HUSH_POOL:$HUSH_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$HUSHADDR:$MINER_PWD@$HUSH_POOL:$HUSH_PORT $BMINER_OPTS ;
   fi
 fi
@@ -284,15 +284,15 @@ then
   MPHADDR="$MPH_ADDRESS.$MPH_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $MPH_EQUIHASH_POOL --user $MPHADDR --pass $MINER_PWD --port $MPH_EQUIHASH_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -301,12 +301,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$MPHADDR:$MINER_PWD@$MPH_EQUIHASH_POOL:$MPH_EQUIHASH_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$MPHADDR:$MINER_PWD@$MPH_EQUIHASH_POOL:$MPH_EQUIHASH_PORT $BMINER_OPTS ;
   fi
 fi
@@ -315,15 +315,15 @@ if [ $COIN == "ZPOOL_EQUIHASH" ]
 then
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $ZPOOL_EQUIHASH_POOL --user $BTC_ADDRESS --pass $MINER_PWD --port $ZPOOL_EQUIHASH_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -332,12 +332,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$BTC_ADDRESS:$MINER_PWD@$ZPOOL_EQUIHASH_POOL:$ZPOOL_EQUIHASH_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$BTC_ADDRESS:$MINER_PWD@$ZPOOL_EQUIHASH_POOL:$ZPOOL_EQUIHASH_PORT $BMINER_OPTS ;
   fi
 fi
@@ -1200,15 +1200,15 @@ then
   ADDR="$NICE_ADDRESS.$NICE_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
-    HCD='/home/m1/ewbf/v3_3/miner'
+    HCD='/home/m1/zec/v3_3/miner'
   fi
   if [ $EWBF_VERSION == "3_4" ]
   then
-    HCD='/home/m1/ewbf/v3_4/miner'
+    HCD='/home/m1/zec/v3_4/miner'
   fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
-    HCD='/home/m1/dstm/latest/zm_miner'
+    HCD='/home/m1/zec/zm/latest/zm_miner'
     screen -dmSL miner $HCD --server $NICE_EQUIHASH_POOL --user $ADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
@@ -1217,12 +1217,12 @@ then
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum://$ADDR:$MINER_PWD@$NICE_EQUIHASH_POOL:$NICE_EQUIHASH_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
-    HCD='/home/m1/bminer/latest/bminer'
+    HCD='/home/m1/zec/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$ADDR:$MINER_PWD@$NICE_EQUIHASH_POOL:$NICE_EQUIHASH_PORT $BMINER_OPTS ;
   fi
 fi
