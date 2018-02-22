@@ -1,6 +1,6 @@
 #!/bin/bash
-# minerinfo written by papampi for nvOC
-# feel free to edit, copy and use as you want.
+# minerinfo written by papampi for nvOC 
+#Rev 0002
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -17,50 +17,101 @@ echo '</style>'
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
 LSB_RELEASE=$(lsb_release -s -d)
 UNAME=$(uname -r)
-TAIL_GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1 |awk '{ SUM += $1+3}  ; { print SUM }')
+
 SYSTEM_BOOT_TIME=$(uptime -s)
 SYSTEM_UP_TIME=$(uptime -p)
 LOAD_AVERAGE=$(cat /proc/loadavg | awk '{print $1,$2,$3}')
-GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
-REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
+GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+TAIL_GPU_COUNT=$(( $GPU_COUNT + 3 ))
+REBOOT_REQUIRED=$( -f /var/run/reboot-required && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
 MINER_PID=$(pgrep -f -o  miner)
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
 TEMP_FAN_POWER=$(tail  -50 /home/m1/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
-TEMP_ALERT_LOG=$(tail  -50 /home/m1/6_autotemplog | awk '{print $0,"<br>"}')
-WDOG_ALERT_LOG=$(tail  -50 /home/m1/5_watchdoglog | awk '{print $0,"<br>"}')
+TEMP_ALERT_LOG=$(cat /home/m1/6_autotemplog | awk '{print $0,"<br>"}')
+WDOG_ALERT_LOG=$(cat /home/m1/5_watchdoglog | awk '{print $0,"<br>"}')
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
 DISK=$(df -h / | awk '{ a = $2 } END { print a }')
 DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
 MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
 FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
 CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
+GPU_OC=$__CORE_OVERCLOCK
+GPU_MC=$MEMORY_OVERCLOCK
+GPU_PL=$POWERLIMIT_WATTS
+MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o '/home.*')
+eval 'COIN_POOL=${COIN}_POOL'
+
+
+# If number gpu installed is set in 1bash give a comparison
+if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
+then
+  if [[ $(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits) -ne $NUMBER_GPUS_INSTALLED ]]
+  then
+    GPU_COUNT="<tt style=\"text-align:left; color:red\">$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)</tt>"
+  else
+    GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+  fi
+else
+  GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+fi
 
 if [ $MINER_TEMP_CONTROL == "YES" ]
 then
-  AUTO_TEMPERATURE_CONTROL=("Enabled,")
+  AUTO_TEMPERATURE_CONTROL="Enabled,"
   if ps aux | grep -v grep | grep -q 6tempcontrol
   then
-    TEMP_CHECK=(" Running")
+    TEMP_CHECK=" Running"
   else
-    TEMP_CHECK=("<tt style=\"text-align:left; color:red\"> Not Running</tt>")
+    TEMP_CHECK="<tt style=\"text-align:left; color:red\"> Not Running</tt>"
+  fi
+  if [[ (( $(stat -c%s "/home/m1/6_autotemplog") -gt 1 )) ]]; then
+    TEMP_WARNING="<tt style=\"text-align:left; color:red\">, WARNING</tt>"
+  else
+    TEMP_WARNING=", No Warning"
   fi
 else
-  AUTO_TEMPERATURE_CONTROL=("Disbaled")
+  AUTO_TEMPERATURE_CONTROL="Disabled"
 fi
 
 if [ $MINER_WATCHDOG == "YES" ]
 then
-  WATCHDOG=("Enabled,")
+  WATCHDOG="Enabled,"
   if ps aux | grep -v grep | grep -q 5watchdog
   then
-    WDOG_CHECK=(" Running")
+    WDOG_CHECK=" Running"
   else
-    WDOG_CHECK=("<tt style=\"text-align:left; color:red\"> Not Running</tt>")
+    WDOG_CHECK="<tt style=\"text-align:left; color:red\"> Not Running</tt>"
+  fi
+  if [[ (( $(stat -c%s "/home/m1/5_watchdoglog") -gt 1 )) ]]; then
+    WATCHDOG_WARNING="<tt style=\"text-align:left; color:red\">, WARNING</tt>"
+  else
+    WATCHDOG_WARNING=", No Warning"
   fi
 else
-  WATCHDOG=("Disbaled")
+  WATCHDOG="Disabled"
 fi
+
+if [ $SYSTEM_WATCH == "YES" ]
+then
+  SYS_WATCH="Enabled,"
+  if ps aux | grep -v grep | grep -q 9system_watch
+  then
+    SYS_CHECK=" Running"
+  else
+    SYS_CHECK="<tt style=\"text-align:left; color:red\"> Not Running</tt>"
+  fi
+else
+  SYS_WATCH="Disabled"
+fi
+
+mbvendor=$(cat /sys/devices/virtual/dmi/id/board_vendor)
+mbmodel=$(cat /sys/devices/virtual/dmi/id/board_name)
+mbversion=$(cat /sys/devices/virtual/dmi/id/board_version)
+biosver=$(cat /sys/devices/virtual/dmi/id/bios_version)
+biosdate=$(cat /sys/devices/virtual/dmi/id/bios_date)
+if [[ "$mbvendor" == ASUSTeK* ]]; then mbvendor="ASUS"; fi
+if [[ "$mbvendor" == BIOSTAR* ]]; then mbvendor="BIOSTAR"; fi
 
 #################################################################
 ########### Auto Switch History and current mining ##############
@@ -69,14 +120,14 @@ if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
 then
   CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
   MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
-  AUTO_SWITCH=("Salfter MPH Auto Switch")
+  AUTO_SWITCH="Salfter MPH Auto Switch"
 
 
 elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
 then
   CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
   MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
-  AUTO_SWITCH=("Salfter Nicehash Auto Switch")
+  AUTO_SWITCH="Salfter Nicehash Auto Switch"
 
 
 elif [ $WTM_AUTO_SWITCH == "YES" ]
@@ -92,7 +143,7 @@ then
   P_WTM_AVERAGE_REV="$WTM_AVERAGE_REV <br>"
   BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
   BTC_PRICE="BTC PRICE: "
-  WTM_Current_Profitabilty="WTM Current Profitabilty:"
+  WTM_Current_Profitabilty="WTM Current Profitability:"
   WTM_Current_Revenue="WTM Current Revenue: "
   Average_Revenue="24H Average Revenue: "
   LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
@@ -100,9 +151,9 @@ then
 
   if ps aux | grep -v grep | grep -q 8wtm_auto_switch
   then
-    WTM_SWITCH=("Running")
+    WTM_SWITCH="Running"
   else
-    WTM_SWITCH=("<tt style=\"text-align:left; color:red\">Not Running</tt>")
+    WTM_SWITCH="<tt style=\"text-align:left; color:red\">Not Running</tt>"
   fi
 
 #if python script syncing
@@ -110,7 +161,7 @@ then
   then
     WTM_A_S="Syncing data with WTM.com"
   fi
-  AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH $WTM_A_S")
+  AUTO_SWITCH="WTM Auto Switch $WTM_SWITCH $WTM_A_S"
 
 
 elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
@@ -121,11 +172,11 @@ then
   P_WTM_PROFIT="$WTM_PROFIT <br>"
   WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
   P_WTM_REV=$"$WTM_REV <br>"
-  WTM_SWITCH=("WTM Profit Check Running. ")
+  WTM_SWITCH="WTM Profit Check Running. "
   BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
   BTC_PRICE="BTC PRICE: "
   WTM_AVERAGE_REV=""
-  WTM_Current_Profitabilty="WTM Current Profitabilty: "
+  WTM_Current_Profitabilty="WTM Current Profitability: "
   WTM_Current_Revenue="WTM Current Revenue: "
   Average_Revenue=""
   LAST_10_AUTO_SWITCHES=""
@@ -134,8 +185,7 @@ then
   then
     WTM_A_S="Syncing data with WTM.com"
   fi
-  AUTO_SWITCH=("$WTM_SWITCH $WTM_A_S" )
-
+  AUTO_SWITCH="$WTM_SWITCH $WTM_A_S"
 
 else
   CURRENT_COIN=$COIN
@@ -155,46 +205,46 @@ fi
 ##################################################################
 ########################### Miner Logs ###########################
 
-if [ $COIN == "BTG" ] || [ $COIN == "MPH_EQUIHASH" ] || [ $COIN == "BTCZ" ] || [ $COIN == "ZEC"  ] || [  $COIN == "ZEN"  ] || [  $COIN == "ZCL"  ] || [  $COIN == "HUSH"  ] || [  $COIN == "KMD"  ] && [  $ZM_or_EWBF == "ZM"  ]
-then
+if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
   MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
-elif [ $COIN == "BTG" ] || [ $COIN == "MPH_EQUIHASH" ] || [  $COIN == "BTCZ"  ] || [  $COIN == "ZEC"  ] || [  $COIN == "ZEN"  ] || [  $COIN == "ZCL"  ] || [  $COIN == "HUSH"  ] || [  $COIN == "KMD"  ] && [  $ZM_or_EWBF == "EWBF"  ]
-then
+elif  ps ax | grep miner| grep -v grep | grep -q "zec/v3_" ;then
   MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
-elif  [  $COIN == "SIB"  ] || [  $COIN == "LBC"  ] || [  $COIN == "MONA"  ] || [  $COIN == "SIA"  ] || [  $COIN == "ZPOOL_LYRA2V2"  ] || [  $COIN == "ZPOOL_LBRY"  ]  || [  $COIN == "ZPOOL_BLAKE2S"  ]
-then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "S/A/T" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+elif  ps ax | grep miner| grep -v grep | grep -q "bminer" ;then
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e Total |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
-elif [ $COIN == "FTC"  ] || [ $COIN == "ORB"  ] || [ $COIN == "PXC"  ] || [ $COIN == "KRB"  ]
-then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+elif  ps ax | grep miner| grep -v grep | grep -q "SPccminer" ;then
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
-elif [ $COIN == "ETH"  ] || [  $COIN == "ETC"  ] || [  $COIN == "EXP"  ] || [  $COIN == "UBQ"  ] || [  $COIN == "MUSIC"  ] || [  $COIN == "SOIL"  ]  && [  $ETHMINER_or_GENOIL_or_CLAYMORE == "ETHMINER"  ]
-then
+elif  ps ax | grep miner| grep -v grep | grep -q "TPccminer" ;then
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+
+elif  ps ax | grep miner| grep -v grep | grep -q "KTccminer" ;then
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+
+elif  ps ax | grep miner| grep -v grep | grep -q "ASccminer" ;then
+  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "S/A/T" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+
+elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
   MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "ethminer" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
-elif [ $COIN == "ETH"  ] || [  $COIN == "ETC"  ] || [  $COIN == "EXP"  ] || [  $COIN == "UBQ"  ] || [  $COIN == "MUSIC"  ] || [  $COIN == "SOIL"  ] || [  $COIN == "DUAL_*"  ] && [  $ETHMINER_or_GENOIL_or_CLAYMORE == "CLAYMORE"  ]
-then
+elif  ps ax | grep miner| grep -v grep | grep -q "claymore" ;then
   MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 else
   MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 fi
 
-
 ###################################################################
 ######################### BODY ####################################
 
 echo '<br></br>'
 echo '<body style="background-color:black; color:#ffff66;font-size: 16px ">'
-
 echo "<strong>"
 echo "<button>"
 echo '<a href="minerinfo" class="button">Miner Info</a>'
 echo "</button>"
-
 echo '<title>Worker: '$WORKERNAME'</title>'
 echo '</head>'
 echo '<body>'
@@ -207,7 +257,29 @@ echo "System Up Time: " "<tt style=\"text-align:left; color:white\">" "$SYSTEM_U
 
 echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_TIME<br> </tt>"
 
+echo "Auto Temp Control: "  "<tt style=\"text-align:left; color:white\">" "$AUTO_TEMPERATURE_CONTROL$TEMP_CHECK$TEMP_WARNING <br> </tt>"
+
+echo "Watch Dog: "  "<tt style=\"text-align:left; color:white\">" "$WATCHDOG$WDOG_CHECK$WATCHDOG_WARNING <br> </tt>"
+
+echo "System Watch: "  "<tt style=\"text-align:left; color:white\">" "$SYS_WATCH$SYS_CHECK<br> </tt>"
+
+echo "Auto Switcher: " "<tt style=\"text-align:left; color:white\">" "$AUTO_SWITCH <br></tt>"
+
+echo "Gpu Count: " "<tt style=\"text-align:left; color:white\">" "$GPU_COUNT <br> </tt>"
+
+echo "GPU Utilization: "  "<tt style=\"text-align:left; color:white\">" "$GPU_UTILIZATIONS <br> </tt>"
+
+echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
+
+echo "Mining Pool: " "<tt style=\"text-align:left; color:white\">" "${!COIN_POOL} <br> </tt>"
+
+echo "Miner Command: " "<tt style=\"text-align:left; color:white\">" "$MINER_CMD <br> </tt>"
+
 echo "Distro: " "<tt style=\"text-align:left; color:white; \">" "$LSB_RELEASE $UNAME <br> </tt>"
+
+echo "Motherboard: " "<tt style=\"text-align:left; color:white\">" "$mbvendor, $mbmodel, $mbversion<br> </tt>"
+
+echo "BIOS Version, Date: " "<tt style=\"text-align:left; color:white\">" "$biosver, $biosdate<br> </tt>"
 
 echo "CPU: " "<tt style=\"text-align:left; color:white\">" "$CPU<br> </tt>"
 
@@ -221,21 +293,15 @@ echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$
 
 echo "Reboot Required: "  "<tt style=\"text-align:left; color:white\">" "$REBOOT_REQUIRED <br> </tt>"
 
-echo "Auto Temp Control: "  "<tt style=\"text-align:left; color:white\">" "$AUTO_TEMPERATURE_CONTROL$TEMP_CHECK <br> </tt>"
+echo "Global GPU PL: " "<tt style=\"text-align:left; color:white\">" "$GPU_PL <br> </tt>"
 
-echo "Watch Dog: "  "<tt style=\"text-align:left; color:white\">" "$WATCHDOG$WDOG_CHECK <br> </tt>"
+echo "Global GPU OC: " "<tt style=\"text-align:left; color:white\">" "$GPU_OC <br> </tt>"
 
-echo "Gpu Count: " "<tt style=\"text-align:left; color:white\">" "$GPU_COUNT <br> </tt>"
+echo "Global GPU MC: " "<tt style=\"text-align:left; color:white\">" "$GPU_MC <br> </tt>"
 
 echo "GPU Target Temp: "  "<tt style=\"text-align:left; color:white\">" "$TARGET_TEMP <br> </tt>"
 
 echo "GPU Minimum Fan Speed: "  "<tt style=\"text-align:left; color:white\">" "$MINIMAL_FAN_SPEED <br> </tt>"
-
-echo "GPU Utilization: "  "<tt style=\"text-align:left; color:white\">" "$GPU_UTILIZATIONS <br> </tt>"
-
-echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
-
-echo "Auto Switcher: " "<tt style=\"text-align:left; color:white\">" "$AUTO_SWITCH <br></tt>"
 
 echo "$BTC_PRICE " "<tt style=\"text-align:left; color:white\">" "$BTC_PRICE_VALUE $WTM_CURRENCY<br> </tt>"
 
