@@ -65,8 +65,8 @@ try:
 except:
     content = "-:0"
 
-topCoin = content.split(":")
-print "Currently mining coin: %s, last profit: %s" % (topCoin[0], topCoin[1])
+miningCoin = content.split(":")
+print "Currently mining coin: %s, last profit: %s" % (miningCoin[0], miningCoin[1])
 
 try:
     httpResponse = requests.get(requestUrl)
@@ -105,44 +105,44 @@ for i, j in newRev:
     print  i, '%02.2f' %(j*exchrate) +" " + currency
 RevLog.close()
 
-# calculate coin profitability
-newProfits = {}
-for i in data:
-    newProfits[i["tag"]] = i["profitability"]
-newProfits = sorted(newProfits.items(), key=lambda x: x[1], reverse=True)
+# sort by coin profitability
+updatedTopCoins = sorted(data, key=lambda x: x["profitability"], reverse=True)
 
 # save current profit
 print "New profits"
 profitLog = open("WTM_current_profit", "w")
-for i, j in newProfits:
-    profitLog.write("%s:%s\n" % (i, j))
-    print str(i) + ": " + str(j) + " %"
+for i in updatedTopCoins:
+    profitLog.write("%s:%s\n" % (i["tag"], i["profitability"]))
+    print "%s: %s %%" % (i["tag"], i["profitability"])
 profitLog.close()
 
-# is currently mining coin same as a new the most profitability coin?
-if newProfits[0][0] == topCoin[0]:
-    print "Same coin"
-    saveTopCoin(str(newProfits[0][0]) + ":" + str(newProfits[0][1]))
+# is currently mining coin the same as most profitable coin at the moment?
+if miningCoin[0] == updatedTopCoins[0]["tag"]:
+    print "Same coin, no switch"
+    saveTopCoin(str(updatedTopCoins[0]["tag"]) + ":" + str(updatedTopCoins[0]["profitability"]))
     sys.exit()
 
-if (float(newProfits[0][1]) - minimumDifference) < float(topCoin[1]):
-    # try find actual top coin and compare their profit with maximum of current profits
-    try:
-        topCoinNewProfit = filter(lambda x: x["tag"] == topCoin[0], data)[0]
-        if (float(newProfits[0][1]) - minimumDifference) > float(topCoinNewProfit["profitability"]):
-            print "Currently mining %s coin is no longer more profitabile with %s" % (topCoin[0], topCoin[1])
-            print "Switching to new %s coin %s" % (newProfits[0][0], newProfits[0][1])
-        else:
-            print "Currently mining coin is still more profitabile (with subtracted difference) than new top coin"
-            print "Continuing mining %s " % topCoin[0]
-            saveTopCoin(topCoin[0] + ":" + topCoinNewProfit["profitability"])
-            sys.exit()
-    except:
-	# Some errors, blankedd this line "Top coin was not found in list of included coins"
-        print ""
-        sys.exit()
-else:
-    # current profit is higher that currently mining
-    print "Found %s coin with higher profitability %s" % (newProfits[0][0], newProfits[0][1])
+# corrently mining coin is no more the top one
 
-saveTopCoin(str(newProfits[0][0]) + ":" + str(newProfits[0][1]))
+oldTopCoin = { "tag": "-", "profitability": 0 }
+try:
+    oldTopCoin = filter(lambda x: x["tag"] == miningCoin[0], data)[0]
+except:
+    print "Currently mining coin was not found in inclusion list, will switch to the new best one"
+
+# try parse new top coins and compare their profit with current mining coin profit
+try:
+    if (float(updatedTopCoins[0]["profitability"]) - minimumDifference) >= float(oldTopCoin["profitability"]):
+        print "Currently mining %s coin is no longer more profitabile with %s" % (miningCoin[0], miningCoin[1])
+        print "Switching to new %s coin %s" % (updatedTopCoins[0]["tag"], updatedTopCoins[0]["profitability"])
+    else:
+        print "Currently mining coin is still enaugh profitabile w.r.t. the new top coin"
+        print "Keep mining %s " % miningCoin[0]
+        saveTopCoin(miningCoin[0] + ":" + oldTopCoin["profitability"])
+        sys.exit()
+except:
+# Some errors
+    print ""
+    sys.exit()
+
+saveTopCoin(str(updatedTopCoins[0]["tag"]) + ":" + str(updatedTopCoins[0]["profitability"]))
