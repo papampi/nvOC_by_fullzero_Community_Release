@@ -38,13 +38,14 @@
 #
 # v=0012 : Papampi: Added NiceHash, Start in screen and changed logging system.
 #
-# v=0013 : Papampi: testing minimum mining time
+# v=0013 : Papampi: Enable and Change minimum mining time
 #
+# v=0014 : Papampi: Added force switch to bypass minimum wait time is profit is higher than given value.
 
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.0013"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.0.0014"   # Do not edit this
 
 echo ""
 echo ""
@@ -54,6 +55,7 @@ echo ""
 source /home/m1/1bash
 CURRENT_COIN=$COIN
 WDOG_LOG="/home/m1/nvoc_logs/watchdog-screenlog.0"
+WDOG_ALERT_LOG="/home/m1/5_watchdoglog"
 
 # Creating a log file to record coin switch
 LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
@@ -86,19 +88,6 @@ do
         echo ""
         sleep 5
       done
-    fi
-    if [[ -n  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];  then
-      echo "Miner is running"
-      #If miner running time is lower than given time don't check for better coin
-      MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2}') | awk '{print $2}')
-      MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
-      if [[ $MINER_TIME -lt $WTM_MINIMUM_MINING_TIME ]] ; then
-        echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes, looking for a better coin to mine in $(($WTM_MINIMUM_MINING_TIME - $MINER_TIME)) seconds"
-        sleep $(($WTM_MINIMUM_MINING_TIME - $MINER_TIME))
-        echo  "Looking for better coin"
-      else
-        echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes, looking for a better coin to mine"
-      fi
     fi
 
     python2.7 '/home/m1/WTM_SWITCHER' /home/m1/WTM.json
@@ -134,57 +123,82 @@ do
       fi
     fi
 
-    if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]; then
-      sed -i '/^#/!s/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
-      cat /home/m1/WTM_current_revenue | grep `cat /home/m1/WTM_top_coin | awk -F: '{print $1}'` | awk -F: '{print $2}' >> /home/m1/WTM_24H_REV
-      SYNC_COUNT=$((`expr 1440 / $WTM_AUTO_SWITCH_SYNC_INTERVAL`))
-      echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
-      sed -i '/^$/d' /home/m1/WTM_24H_REV
-      sleep 1
-      echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"
-      echo "Current Coin: $CURRENT_COIN"
-      echo "Top Coin Algo: $TOP_COIN_ALGORITHM"
-      echo "Top Coin: $TOP_COIN"
+    MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2}') | awk '{print $2}')
+    MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
+    echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
 
-      if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
-        echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner"
-        echo ""
-        if [[ -n  $(ps ax | grep -i screen | grep miner) ]]; then
-          echo "Miner is running, lets make the switch"
-          if [[ $MINER_WATCHDOG == "YES" ]]; then
-            pkill -f 5watchdog
-            echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
+    if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]; then
+
+      #If miner running time is more than given time or profit is more than given value switch the coin
+      FORCE_SWITCH=0
+      CURRENT_COIN_PROFIT=$(cat WTM_current_profit | grep $(cat /home/m1/WTM_top_coin | sed 's/:[0-9]*//') | sed 's/[A-Z]*://')
+      TOP_COIN_PROFIT=$( cat WTM_top_coin | sed 's/[A-Z]*://')
+      echo "Current coin profit $CURRENT_COIN_PROFIT"
+      echo "Top coin profit $TOP_COIN_PROFIT"
+      echo "force switch $WTM_FORCE_SWITCH"
+      if [[ $(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) -ge $WTM_FORCE_SWITCH ]]
+      then
+        FORCE_SWITCH=1
+      fi
+      if [[ $MINER_TIME -ge $WTM_MINIMUM_MINING_TIME ]] || [[ $FORCE_SWITCH == 1 ]]; then
+        if [[ $FORCE_SWITCH == 1 ]];then
+          echo "New coin has %$(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) more profit"
+        fi
+        sed -i '/^#/!s/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
+        cat /home/m1/WTM_current_revenue | grep `cat /home/m1/WTM_top_coin | awk -F: '{print $1}'` | awk -F: '{print $2}' >> /home/m1/WTM_24H_REV
+        SYNC_COUNT=$((`expr 1440 / $WTM_AUTO_SWITCH_SYNC_INTERVAL`))
+        echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
+        sed -i '/^$/d' /home/m1/WTM_24H_REV
+        sleep 1
+        echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"
+        echo "Current Coin: $CURRENT_COIN"
+        echo "Top Coin Algo: $TOP_COIN_ALGORITHM"
+        echo "Top Coin: $TOP_COIN"
+
+        if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
+          echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner"
+          echo ""
+          if [[ -n  $(ps ax | grep -i screen | grep miner) ]]; then
+            echo "Miner is running, lets make the switch"
+            if [[ $MINER_WATCHDOG == "YES" ]]; then
+              pkill -f 5watchdog
+              echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
+              sleep 1
+              screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
+              echo "watchdog restarted in screen wdog; ~/nvOC wdog-log"
+              echo ""
+            fi
+            target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
+            kill $target
             sleep 1
-            screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
-            echo "watchdog restarted in screen wdog; ~/nvOC wdog-log"
+            echo "Commencing Miner Start Command..."
+            bash /home/m1/0miner
+            echo $( ps ax | grep miner | grep -o 'SCREEN.*' )
+            echo "process in screen miner; ~/nvOC miner-log"
             echo ""
           fi
-          target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-          kill $target
+
+          if [[ -z $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];then
+            bash /home/m1/0miner
+            echo "WTM WARNING: $(date) - Found no miner, Restart it" | tee -a $WDOG_ALERT_LOG
+          fi
+
+        elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM ]]; then
+          echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"
+          pkill -f 5watchdog
+          echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
           sleep 1
-          echo "Commencing Miner Start Command..."
-          bash /home/m1/0miner
-          echo $( ps ax | grep miner | grep -o 'SCREEN.*' )
-          echo "process in screen miner; ~/nvOC miner-log"
-          echo ""
+          pkill -f 3main
         fi
-
-      elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM ]]; then
-        echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"
-        pkill -f 5watchdog
-        echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
-        sleep 1
-        pkill -f 3main
+        echo "$(date) - Mining switched from $CURRENT_COIN to $TOP_COIN" | tee -a $WTM_HISTORY
+        echo "24 Hour Average Revenue: $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV) $WTM_CURRENCY"
+        echo "Check again in $TIMEOUT seconds"
+        echo ""
+        echo ""
+      else
+        echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes, continue mining $CURRENT_COIN for $(($WTM_MINIMUM_MINING_TIME - $MINER_TIME)) more seconds"
       fi
-      echo "$(date) - Mining switched from $CURRENT_COIN to $TOP_COIN" | tee -a $WTM_HISTORY
-      echo "24 Hour Average Revenue: $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV) $WTM_CURRENCY"
-      echo "Check again in $TIMEOUT seconds"
-      echo ""
-      echo ""
-
       sleep $TIMEOUT
-
-
     else
       echo "$(date) - Same Coin on Top, Continue mining $CURRENT_COIN"
       echo "24 Hour Average Revenue: $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV) $WTM_CURRENCY"
@@ -196,6 +210,12 @@ do
       SYNC_COUNT=$((`expr 1440 / $WTM_AUTO_SWITCH_SYNC_INTERVAL`))
       echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
       sed -i '/^$/d' /home/m1/WTM_24H_REV
+
+      if [[ -z $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];then
+        bash /home/m1/0miner
+        echo "WTM WARNING: $(date) - Found no miner, Restart it" | tee -a $WDOG_ALERT_LOG
+      fi
+
       sleep $TIMEOUT
     fi
 
