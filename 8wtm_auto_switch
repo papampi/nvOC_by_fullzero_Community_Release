@@ -122,9 +122,10 @@ do
         TOP_COIN_ALGORITHM="LYRA2V2"
       fi
     fi
-
+    
+    SIXTY=60
     MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2}') | awk '{print $2}')
-    MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
+    MINER_TIME_MIN=$(( $MINER_TIME / $SIXTY ))
     echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
 
     if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]; then
