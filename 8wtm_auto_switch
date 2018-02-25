@@ -139,7 +139,7 @@ do
       fi
       if [[ $MINER_TIME -ge $WTM_MINIMUM_MINING_TIME ]] || [[ $FORCE_SWITCH == 1 ]]; then
         if [[ $FORCE_SWITCH == 1 ]];then
-          echo "New coin has %$(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) more profit"
+          echo "New coin has %$(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) more profit, switching now"
         fi
         sed -i '/^#/!s/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
         cat /home/m1/WTM_current_revenue | grep `cat /home/m1/WTM_top_coin | awk -F: '{print $1}'` | awk -F: '{print $2}' >> /home/m1/WTM_24H_REV
