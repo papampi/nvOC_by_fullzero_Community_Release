@@ -132,7 +132,7 @@ do
 
       #If miner running time is more than given time or profit is more than given value switch the coin
       FORCE_SWITCH=0
-      CURRENT_COIN_PROFIT=$(cat WTM_current_profit | grep $COIN | sed 's/[A-Z]*://')
+      CURRENT_COIN_PROFIT=$(cat WTM_current_profit | grep $COIN | sed 's/.*://')
       TOP_COIN_PROFIT=$( cat WTM_top_coin | sed 's/[A-Z]*://')
       if [[ $(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) -ge $WTM_FORCE_SWITCH ]]
       then
