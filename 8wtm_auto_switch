@@ -40,7 +40,7 @@
 #
 # v=0013 : Papampi: Enable and Change minimum mining time
 #
-# v=0014 : Papampi: Added force switch to bypass minimum wait time is profit is higher than given value.
+# v=0014 : Papampi: Added force switch to bypass minimum wait time if profit is higher than given value.
 
 
 
