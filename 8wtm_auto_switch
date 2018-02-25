@@ -123,9 +123,8 @@ do
       fi
     fi
     
-    SIXTY=60
-    MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2}') | awk '{print $2}')
-    MINER_TIME_MIN=$(( $MINER_TIME / $SIXTY ))
+    MINER_TIME=$(ps -eo pid,etimes | grep $(screen -ls  miner | grep miner | awk '{print $1}' | sed 's/.miner//') | awk '{print $2}')
+    MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
     echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
 
     if [[ "$CURRENT_COIN" != "$TOP_COIN" ]]; then
