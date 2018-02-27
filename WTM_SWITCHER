@@ -1,10 +1,10 @@
 #!/usr/bin/env python2.7
 # _*_ coding: utf-8 _*_
 #### Whattomine auto switch written by papampi + hurvajs77 + damNmad
-### papampi BTC address:  1NsnsnqkkVuopTGvUSGrkMhhug8kg6zgP9
-### damNmad BTC address:  1Mtf6K7c3ZhBDcPz91c4wcQ95DxLn88zC
-### hurvajs77 BTC address:  3NRMRn3ZKrxwQqkwPfEsjb14dkVDWobyBC
-### LuKePicci BTC address
+### papampi BTC address:     1NsnsnqkkVuopTGvUSGrkMhhug8kg6zgP9
+### damNmad BTC address:     1Mtf6K7c3ZhBDcPz91c4wcQ95DxLn88zC
+### hurvajs77 BTC address:   3NRMRn3ZKrxwQqkwPfEsjb14dkVDWobyBC
+### LuKePicci BTC address:   1MTc9fczdo1CXjvYHbPc987HoWCrzzr2gB
 
 # v=0001 : Papampi    : Initial release
 # v=0002 : Papampi    : Some changes with damNmad help
