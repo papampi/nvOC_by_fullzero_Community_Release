@@ -126,7 +126,7 @@ do
       fi
     fi
     
-    MINER_TIME=$(ps -eo pid,etimes | grep $(screen -ls  miner | grep miner | awk '{print $1;exit}' | sed 's/.miner//') | awk '{print $2;exit}')
+    MINER_TIME=$(ps -eo pid,etimes | grep $(screen -ls  miner | grep miner | head -1 | awk '{print $1;exit}' | sed 's/.miner//') | head -1 | awk '{print $2;exit}')
     MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
     echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
 
