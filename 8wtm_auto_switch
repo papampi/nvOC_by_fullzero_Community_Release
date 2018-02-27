@@ -42,11 +42,13 @@
 #
 # v=0014 : Papampi: Added force switch to bypass minimum wait time if profit is higher than given value.
 #
-# v=0015 : Papampi: Change in top coin resolve
+# v=0015 : Papampi: Changed top coin resolve
+#
+# v=0016 : Papampi: New miner time based on last switch
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.0014"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.0.0016"   # Do not edit this
 
 echo ""
 echo ""
@@ -77,6 +79,7 @@ then
   echo "$FIRST_COIN:100" > /home/m1/WTM_top_coin
 fi
 
+MINER_START_TIME=$(date +%s)
 while true
 do
 
@@ -125,8 +128,11 @@ do
         TOP_COIN_ALGORITHM="LYRA2V2"
       fi
     fi
-    
-    MINER_TIME=$(ps -eo pid,etimes | grep $(screen -ls  miner | grep miner | head -1 | awk '{print $1;exit}' | sed 's/.miner//') | head -1 | awk '{print $2;exit}')
+
+    CURRENT_TIME=$(date +%s)
+    MINER_TIME=$(( $CURRENT_TIME - $MINER_START_TIME ))
+    #MINER_TIME=$(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep miner | grep -v cpuminer | head -1 | awk '{print $2;exit}') | awk '{print $2;exit}')
+    #MINER_TIME=$(ps -eo pid,etimes | grep $(screen -ls  miner | grep miner |head -1 | awk '{print $1;exit}' | sed 's/.miner//') | head -1 |  awk '{print $2;exit}')
     MINER_TIME_MIN=$(( $MINER_TIME / 60 ))
     echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
 
@@ -136,14 +142,16 @@ do
       FORCE_SWITCH=0
       CURRENT_COIN_PROFIT=$(cat WTM_current_profit | grep $COIN | sed 's/.*://')
       TOP_COIN_PROFIT=$( cat WTM_top_coin | sed 's/[A-Z]*://')
+
       if [[ $(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) -ge $WTM_FORCE_SWITCH ]]
       then
         FORCE_SWITCH=1
       fi
-      if [[ $MINER_TIME -ge $WTM_MINIMUM_MINING_TIME ]] || [[ $FORCE_SWITCH == 1 ]]; then
+      if [[ $MINER_TIME -ge $WTM_MINIMUM_MINING_TIME || $FORCE_SWITCH == 1 ]]; then
         if [[ $FORCE_SWITCH == 1 ]];then
-          echo "New coin has %$(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) more profit, switching now"
+          echo "New coin has %$(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) more profit, ignore timer and make the switch"
         fi
+        MINER_START_TIME=$(date +%s)
         sed -i '/^#/!s/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' /home/m1/1bash
         cat /home/m1/WTM_current_revenue | grep `cat /home/m1/WTM_top_coin | awk -F: '{print $1}'` | awk -F: '{print $2}' >> /home/m1/WTM_24H_REV
         SYNC_COUNT=$((`expr 1440 / $WTM_AUTO_SWITCH_SYNC_INTERVAL`))
@@ -205,6 +213,7 @@ do
       SYNC_COUNT=$((`expr 1440 / $WTM_AUTO_SWITCH_SYNC_INTERVAL`))
       echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
       sed -i '/^$/d' /home/m1/WTM_24H_REV
+
       sleep $TIMEOUT
     fi
 
@@ -212,4 +221,3 @@ do
     echo "Auto start miner set to NO"
   fi
 done
-
