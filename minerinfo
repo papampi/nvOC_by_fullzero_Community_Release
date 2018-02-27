@@ -93,19 +93,6 @@ else
   WATCHDOG="<tt style=\"text-align:left; color:red\">Disabled</tt>"
 fi
 
-if [ $SYSTEM_WATCH == "YES" ]
-then
-  SYS_WATCH="Enabled,"
-  if ps aux | grep -v grep | grep -q 9system_watch
-  then
-    SYS_CHECK=" Running"
-  else
-    SYS_CHECK="<tt style=\"text-align:left; color:red\"> Not Running</tt>"
-  fi
-else
-  SYS_WATCH="<tt style=\"text-align:left; color:red\">Disabled</tt>"
-fi
-
 mbvendor=$(cat /sys/devices/virtual/dmi/id/board_vendor)
 mbmodel=$(cat /sys/devices/virtual/dmi/id/board_name)
 mbversion=$(cat /sys/devices/virtual/dmi/id/board_version)
@@ -261,8 +248,6 @@ echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_
 echo "Auto Temp Control: "  "<tt style=\"text-align:left; color:white\">" "$AUTO_TEMPERATURE_CONTROL$TEMP_CHECK$TEMP_WARNING <br> </tt>"
 
 echo "Watch Dog: "  "<tt style=\"text-align:left; color:white\">" "$WATCHDOG$WDOG_CHECK$WATCHDOG_WARNING <br> </tt>"
-
-echo "System Watch: "  "<tt style=\"text-align:left; color:white\">" "$SYS_WATCH$SYS_CHECK<br> </tt>"
 
 echo "Auto Switcher: " "<tt style=\"text-align:left; color:white\">" "$AUTO_SWITCH <br></tt>"
 
