@@ -6,11 +6,12 @@
 ### hurvajs77 BTC address:  3NRMRn3ZKrxwQqkwPfEsjb14dkVDWobyBC
 ### LuKePicci BTC address
 
-# v=0001 : Initial release
+# v=0001 : Papampi    : Initial release
 # v=0002 : Papampi    : Some changes with damNmad help
 # v=0003 : Papampi    : More changes with hurvajs77 help
 # v=0004 : Papampi    : Added NiceHash with Rumo and CryptAtomeTrader44 help
-# v=0005 : LuKePicci  :  refactor, cleanup and minor modifications to switching …
+# v=0005 : LuKePicci  : Refactor, cleanup and minor modifications to switching …
+# v=0006 : papampi    : Comment out some output logs to prevent conflicts with 8wtm_auto_switch
 
 
 import json
@@ -67,7 +68,7 @@ except:
     content = "-:0"
 
 miningCoin = content.split(":")
-print "Currently mining coin: %s, last profit: %s" % (miningCoin[0], miningCoin[1])
+#print "Currently mining coin: %s, last profit: %s" % (miningCoin[0], miningCoin[1])
 
 try:
     httpResponse = requests.get(requestUrl)
@@ -119,7 +120,7 @@ profitLog.close()
 
 # is currently mining coin the same as most profitable coin at the moment?
 if miningCoin[0] == updatedTopCoins[0]["tag"]:
-    print "Same coin, no switch"
+    #print "Same coin, no switch"
     saveTopCoin(str(updatedTopCoins[0]["tag"]) + ":" + str(updatedTopCoins[0]["profitability"]))
     sys.exit()
 
@@ -135,10 +136,10 @@ except:
 try:
     if (float(updatedTopCoins[0]["profitability"]) - minimumDifference) >= float(oldTopCoin["profitability"]):
         print "Currently mining %s coin is no longer more profitabile with %s" % (miningCoin[0], miningCoin[1])
-        print "Switching to new %s coin %s" % (updatedTopCoins[0]["tag"], updatedTopCoins[0]["profitability"])
+        #print "Switching to new %s coin %s" % (updatedTopCoins[0]["tag"], updatedTopCoins[0]["profitability"])
     else:
-        print "Currently mining coin is still enaugh profitabile w.r.t. the new top coin"
-        print "Keep mining %s " % miningCoin[0]
+        #print "Currently mining coin is still enaugh profitabile w.r.t. the new top coin"
+        #print "Keep mining %s " % miningCoin[0]
         saveTopCoin(miningCoin[0] + ":" + oldTopCoin["profitability"])
         sys.exit()
 except:
