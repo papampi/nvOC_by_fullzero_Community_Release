@@ -471,6 +471,7 @@ DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
 # Some pools require dot (address.worker), some require slash (address/worker) format.
 # Depending on the pool you use, set this approprietly:
 
+CLAYMORE_VERSION="latest"    # choose: latest or any version you add its folder  (type latest to use 10_2)
 
 
 ################################################################
