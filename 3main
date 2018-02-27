@@ -224,32 +224,25 @@ then
   ${NVD} -a GPULogoBrightness=$LED_BRIGHTNESS
 fi
 
-if [ $POWERLIMIT == "YES" ]
+if [ $POWERLIMIT_MODE == "GLOBAL" ]
 then
   sudo nvidia-smi -pl $POWERLIMIT_WATTS
 fi
 
-if [ $INDIVIDUAL_POWERLIMIT == "YES" ]
+if [ $POWERLIMIT_MODE == "OVERRIDE" ]
 then
-  sudo nvidia-smi -i 0 -pl $INDIVIDUAL_POWERLIMIT_0
-  sudo nvidia-smi -i 1 -pl $INDIVIDUAL_POWERLIMIT_1
-  sudo nvidia-smi -i 2 -pl $INDIVIDUAL_POWERLIMIT_2
-  sudo nvidia-smi -i 3 -pl $INDIVIDUAL_POWERLIMIT_3
-  sudo nvidia-smi -i 4 -pl $INDIVIDUAL_POWERLIMIT_4
-  sudo nvidia-smi -i 5 -pl $INDIVIDUAL_POWERLIMIT_5
-  sudo nvidia-smi -i 6 -pl $INDIVIDUAL_POWERLIMIT_6
-  sudo nvidia-smi -i 7 -pl $INDIVIDUAL_POWERLIMIT_7
-  sudo nvidia-smi -i 8 -pl $INDIVIDUAL_POWERLIMIT_8
-  sudo nvidia-smi -i 9 -pl $INDIVIDUAL_POWERLIMIT_9
-  sudo nvidia-smi -i 10 -pl $INDIVIDUAL_POWERLIMIT_10
-  sudo nvidia-smi -i 11 -pl $INDIVIDUAL_POWERLIMIT_11
-  sudo nvidia-smi -i 12 -pl $INDIVIDUAL_POWERLIMIT_12
-  sudo nvidia-smi -i 13 -pl $INDIVIDUAL_POWERLIMIT_13
-  sudo nvidia-smi -i 14 -pl $INDIVIDUAL_POWERLIMIT_14
-  sudo nvidia-smi -i 15 -pl $INDIVIDUAL_POWERLIMIT_15
-  sudo nvidia-smi -i 16 -pl $INDIVIDUAL_POWERLIMIT_16
-  sudo nvidia-smi -i 17 -pl $INDIVIDUAL_POWERLIMIT_17
-  sudo nvidia-smi -i 18 -pl $INDIVIDUAL_POWERLIMIT_18
+  for i in $(seq 0 $(($GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((INDIVIDUAL_POWERLIMIT_$i))
+  done
+fi
+
+if [ $POWERLIMIT_MODE == "OFFSET" ]
+then
+  for i in $(seq 0 $(($GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
+  done
 fi
 
 if [ $TEAMVIEWER == "YES" ]
@@ -440,12 +433,12 @@ then
   fi
 fi
 
-if [ "$FAN_SPEED" -lt "40" ]
+if [[ $FAN_SPEED < 40 ]]
 then
   FAN_SPEED=40
 fi
 
-if [[ $WTM_PROFIT_CHECK == "YES" ]] && [[ $WTM_AUTO_SWITCH == "NO" ]]
+if [[ $WTM_PROFIT_CHECK == YES && $WTM_AUTO_SWITCH == NO ]]
 then
 
   echo ""
@@ -470,7 +463,7 @@ EOF
 fi
 
 
-if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "YES" ]
+if [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING && $AUTO_START_MINER == YES ]]
 then
   HOSTEDIT="YES"
   if grep -q "api.nicehash.com" /etc/hosts;
@@ -489,12 +482,16 @@ then
   sleep 2
   cd /home/m1
 
-  if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
+  if [[ $OVERCLOCK_MODE == OVERRIDE || $OVERCLOCK_MODE == OFFSET ]]
   then
-    gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
-
-    mem_clks_daggerhashimoto="[$MEMORY_OVERCLOCK_0,$MEMORY_OVERCLOCK_1,$MEMORY_OVERCLOCK_2,$MEMORY_OVERCLOCK_3,$MEMORY_OVERCLOCK_4,$MEMORY_OVERCLOCK_5,$MEMORY_OVERCLOCK_6,$MEMORY_OVERCLOCK_7,$MEMORY_OVERCLOCK_8,$MEMORY_OVERCLOCK_9,$MEMORY_OVERCLOCK_10,$MEMORY_OVERCLOCK_11,$MEMORY_OVERCLOCK_12,$MEMORY_OVERCLOCK_13,$MEMORY_OVERCLOCK_14,$MEMORY_OVERCLOCK_15,$MEMORY_OVERCLOCK_16,$MEMORY_OVERCLOCK_17,$MEMORY_OVERCLOCK_18]"
-
+    if [[ $OVERCLOCK_MODE == OFFSET ]]
+    then
+      eval gpu_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((__CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval mem_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+    else
+      eval gpu_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${__CORE_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
+      eval mem_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${MEMORY_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
+    fi
     gpu_clks_equihash=$gpu_clks_daggerhashimoto
     mem_clks_equihash=$mem_clks_daggerhashimoto
     gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
@@ -516,9 +513,14 @@ then
     mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
   fi
 
-  if [ "$INDIVIDUAL_POWERLIMIT" == "YES" ]
+  if [[ $POWERLIMIT_MODE == OVERRIDE || $POWERLIMIT_MODE == OFFSET ]]
   then
-    pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13,$INDIVIDUAL_POWERLIMIT_14,$INDIVIDUAL_POWERLIMIT_15,$INDIVIDUAL_POWERLIMIT_16,$INDIVIDUAL_POWERLIMIT_17,$INDIVIDUAL_POWERLIMIT_18]"
+    if [[ $POWERLIMIT_MODE == OFFSET ]]
+    then
+      eval pwr_lim_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
+    else
+      eval pwr_lim_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
+    fi
     pwr_lim_equihash=$pwr_lim_daggerhashimoto
     pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
     pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
@@ -607,7 +609,7 @@ EOF
     fi
   done
 
-elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "NO" ]
+elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING && $AUTO_START_MINER == NO ]]
 then
   echo "    "
   echo "    "
@@ -619,15 +621,21 @@ then
 fi
 
 
-if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ] && [ $AUTO_START_MINER == "YES" ]
+if [[ $COIN == SALFTER_MPH_PROFIT_SWITCHING && $AUTO_START_MINER == YES ]]
 then
+
   cd /home/m1
-  if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
+
+  if [[ $OVERCLOCK_MODE == OVERRIDE || $OVERCLOCK_MODE == OFFSET ]]
   then
-    gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
-
-    mem_clks_daggerhashimoto="[$MEMORY_OVERCLOCK_0,$MEMORY_OVERCLOCK_1,$MEMORY_OVERCLOCK_2,$MEMORY_OVERCLOCK_3,$MEMORY_OVERCLOCK_4,$MEMORY_OVERCLOCK_5,$MEMORY_OVERCLOCK_6,$MEMORY_OVERCLOCK_7,$MEMORY_OVERCLOCK_8,$MEMORY_OVERCLOCK_9,$MEMORY_OVERCLOCK_10,$MEMORY_OVERCLOCK_11,$MEMORY_OVERCLOCK_12,$MEMORY_OVERCLOCK_13,$MEMORY_OVERCLOCK_14,$MEMORY_OVERCLOCK_15,$MEMORY_OVERCLOCK_16,$MEMORY_OVERCLOCK_17,$MEMORY_OVERCLOCK_18]"
-
+    if [[ $OVERCLOCK_MODE == OFFSET ]]
+    then
+      eval gpu_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((__CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval mem_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+    else
+      eval gpu_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${__CORE_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
+      eval mem_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${MEMORY_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
+    fi
     gpu_clks_equihash=$gpu_clks_daggerhashimoto
     mem_clks_equihash=$mem_clks_daggerhashimoto
     gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
@@ -669,9 +677,14 @@ then
     mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
   fi
 
-  if [ "$INDIVIDUAL_POWERLIMIT" == "YES" ]
+  if [[ $POWERLIMIT_MODE == OVERRIDE || $POWERLIMIT_MODE == OFFSET ]]
   then
-    pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13,$INDIVIDUAL_POWERLIMIT_14,$INDIVIDUAL_POWERLIMIT_15,$INDIVIDUAL_POWERLIMIT_16,$INDIVIDUAL_POWERLIMIT_17,$INDIVIDUAL_POWERLIMIT_18]"
+    if [[ $POWERLIMIT_MODE == OFFSET ]]
+    then
+      eval pwr_lim_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
+    else
+      eval pwr_lim_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
+    fi
     pwr_lim_equihash=$pwr_lim_daggerhashimoto
     pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
     pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
@@ -807,7 +820,7 @@ EOF
     echo ""
     cat current-profit
     echo ""
-    if [ $LOCALorREMOTE == "LOCAL" ]
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
       guake -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
       echo ""
@@ -816,7 +829,7 @@ EOF
       sleep $PROFIT_CHECK_TIMEOUT
       python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
     fi
-    if [ $LOCALorREMOTE == "REMOTE" ]
+    if [[ $LOCALorREMOTE == REMOTE ]]
     then
       echo "ENTER:"
       echo ""
@@ -827,7 +840,7 @@ EOF
       python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
     fi
   done
-elif [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "NO" ]
+elif [[ $COIN == SALFTER_MPH_PROFIT_SWITCHING && $AUTO_START_MINER == NO ]]
 then
   echo "    "
   echo "    "
@@ -839,91 +852,43 @@ then
 fi
 
 
-if [ $SALFTER == "NO" ]
+if [[ $SALFTER == NO ]]
 then
-
-  if [ $INDIVIDUAL_CLOCKS == "YES" ]
+  if [[ $OVERCLOCK_MODE == NO ]]
   then
-    __CORE_OVERCLOCK[0]=$__CORE_OVERCLOCK_0
-    MEMORY_OVERCLOCK[0]=$MEMORY_OVERCLOCK_0
-    __CORE_OVERCLOCK[1]=$__CORE_OVERCLOCK_1
-    MEMORY_OVERCLOCK[1]=$MEMORY_OVERCLOCK_1
-    __CORE_OVERCLOCK[2]=$__CORE_OVERCLOCK_2
-    MEMORY_OVERCLOCK[2]=$MEMORY_OVERCLOCK_2
-    __CORE_OVERCLOCK[3]=$__CORE_OVERCLOCK_3
-    MEMORY_OVERCLOCK[3]=$MEMORY_OVERCLOCK_3
-    __CORE_OVERCLOCK[4]=$__CORE_OVERCLOCK_4
-    MEMORY_OVERCLOCK[4]=$MEMORY_OVERCLOCK_4
-    __CORE_OVERCLOCK[5]=$__CORE_OVERCLOCK_5
-    MEMORY_OVERCLOCK[5]=$MEMORY_OVERCLOCK_5
-    __CORE_OVERCLOCK[6]=$__CORE_OVERCLOCK_6
-    MEMORY_OVERCLOCK[6]=$MEMORY_OVERCLOCK_6
-    __CORE_OVERCLOCK[7]=$__CORE_OVERCLOCK_7
-    MEMORY_OVERCLOCK[7]=$MEMORY_OVERCLOCK_7
-    __CORE_OVERCLOCK[8]=$__CORE_OVERCLOCK_8
-    MEMORY_OVERCLOCK[8]=$MEMORY_OVERCLOCK_8
-    __CORE_OVERCLOCK[9]=$__CORE_OVERCLOCK_9
-    MEMORY_OVERCLOCK[9]=$MEMORY_OVERCLOCK_9
-    __CORE_OVERCLOCK[10]=$__CORE_OVERCLOCK_10
-    MEMORY_OVERCLOCK[10]=$MEMORY_OVERCLOCK_10
-    __CORE_OVERCLOCK[11]=$__CORE_OVERCLOCK_11
-    MEMORY_OVERCLOCK[11]=$MEMORY_OVERCLOCK_11
-    __CORE_OVERCLOCK[12]=$__CORE_OVERCLOCK_12
-    MEMORY_OVERCLOCK[12]=$MEMORY_OVERCLOCK_12
-    __CORE_OVERCLOCK[13]=$__CORE_OVERCLOCK_13
-    MEMORY_OVERCLOCK[13]=$MEMORY_OVERCLOCK_13
-    __CORE_OVERCLOCK[14]=$__CORE_OVERCLOCK_14
-    MEMORY_OVERCLOCK[14]=$MEMORY_OVERCLOCK_14
-    __CORE_OVERCLOCK[15]=$__CORE_OVERCLOCK_15
-    MEMORY_OVERCLOCK[15]=$MEMORY_OVERCLOCK_15
-    __CORE_OVERCLOCK[16]=$__CORE_OVERCLOCK_16
-    MEMORY_OVERCLOCK[16]=$MEMORY_OVERCLOCK_16
-    __CORE_OVERCLOCK[17]=$__CORE_OVERCLOCK_17
-    MEMORY_OVERCLOCK[17]=$MEMORY_OVERCLOCK_17
-    __CORE_OVERCLOCK[18]=$__CORE_OVERCLOCK_18
-    MEMORY_OVERCLOCK[18]=$MEMORY_OVERCLOCK_18
+    for i in $(seq 0 $(($GPUS-1)))
+    do
+      __CORE_OVERCLOCK[$i]=0
+      MEMORY_OVERCLOCK[$i]=0
+    done
   fi
 
-  if [ $INDIVIDUAL_CLOCKS == "NO" ]
+  if [[ $OVERCLOCK_MODE == GLOBAL ]]
   then
-    __CORE_OVERCLOCK[0]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[0]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[1]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[1]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[2]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[2]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[3]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[3]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[4]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[4]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[5]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[5]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[6]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[6]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[7]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[7]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[8]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[8]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[9]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[9]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[10]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[10]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[11]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[11]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[12]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[12]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[13]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[13]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[14]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[14]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[15]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[15]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[16]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[16]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[17]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[17]=$MEMORY_OVERCLOCK
-    __CORE_OVERCLOCK[18]=$__CORE_OVERCLOCK
-    MEMORY_OVERCLOCK[18]=$MEMORY_OVERCLOCK
+    # WARNING *_OVERCLOCK[0] already set from 1bash, not overwriting
+    for i in $(seq 1 $(($GPUS-1)))
+    do
+      __CORE_OVERCLOCK[$i]=$__CORE_OVERCLOCK
+      MEMORY_OVERCLOCK[$i]=$MEMORY_OVERCLOCK
+    done
+  fi
+
+  if [[ $OVERCLOCK_MODE == OFFSET ]]
+  then
+    for i in $(seq 0 $(($GPUS-1)))
+    do
+      __CORE_OVERCLOCK[$i]=$(( __CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
+      MEMORY_OVERCLOCK[$i]=$(( MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
+    done
+  fi
+
+  if [[ $OVERCLOCK_MODE == OVERRIDE ]]
+  then
+    for i in $(seq 0 $(($GPUS-1)))
+    do
+      __CORE_OVERCLOCK[$i]=$((__CORE_OVERCLOCK_$i))
+      MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
+    done
   fi
 
   TI="3"
@@ -946,7 +911,7 @@ then
   then
 
     gpu=0
-    while [ $gpu -lt $GPUS ]
+    while [[ $gpu < $GPUS ]]
     do
       for j in $TI
       do
@@ -961,7 +926,7 @@ then
     if [[ $MANUAL_FAN == "YES" && $MINER_TEMP_CONTROL == "NO" ]]
     then
       gpu=0
-      while [ $gpu -lt $GPUS ]
+      while [[ $gpu < $GPUS ]]
       do
         ${NVD} -a [gpu:$gpu]/GPUFanControlState=1
         ${NVD} -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}
@@ -972,7 +937,7 @@ then
     if [[ $MANUAL_FAN == "NO" && $MINER_TEMP_CONTROL == "NO" ]]
     then
       gpu=0
-      while [ $gpu -lt $GPUS ]
+      while [[ $gpu < $GPUS ]]
       do
         ${NVD} -a [gpu:$gpu]/GPUFanControlState=0
         gpu=$(($gpu+1))
@@ -1011,7 +976,7 @@ then
   if [ $GPUPowerMizerMode_Adjust == "YES" ]
   then
     gpu=0
-    while [ $gpu -lt $GPUS ]
+    while [[ $gpu < $GPUS ]]
     do
       sudo ${NVD} -a [gpu:$gpu]/GPUPowerMizerMode=${GPUPowerMizerMode}
       gpu=$(($gpu+1))
