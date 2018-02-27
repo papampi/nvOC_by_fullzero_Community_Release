@@ -305,7 +305,9 @@ MINER_TEMP_CONTROL="YES"    # YES or NO # Automatically adjusts the fan speed to
 
 # Automatically adjusts the fan speed to keep the desired target temp. If the actual temp is above the target temp this script will increase the fan speed. If the actual temp is 2C below the target temp this script will reduce the fan speed. If the target temperature can't be reached with fan adjustments it will decrease the Power Limit. If actual temp is above the desired target temp and fan speed is already at 100%, the script will lower the Power Limit. Once the target temp is reached, Power Limit will be restored.
 
-TARGET_TEMP=65              # Set the desired target temperature in Celsius. Recommended ranges: 55 - 75
+INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO, if YES global target temperature is overridden by individual per-GPU setting found at the end of this file
+
+TARGET_TEMP=65              # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
 
 ALLOWED_TEMP_DIFF=2         # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
 
@@ -348,21 +350,35 @@ TELEGRAM_APIKEY="Your Telegram API"  # Enter your API Key here
 #                                                      #
 ########################################################
 
-POWERLIMIT="YES"            # YES or NO # Choose YES to set Global Power Limit for all GPU's
+# Notes: - global means for all GPU's, not all algos
+#        - algo-specific settings always override
+#          __CORE_OVERCLOCK and MEMORY_OVERCLOCK globals and may be subject to
+#          overrides or variations by individual settings
+#        - algo-specific and individual settings are some sections below in this file
 
-POWERLIMIT_WATTS=75         # Global Power Limit in watts for all GPU's. If enabled, INDIVIDUAL settings will override this.
+POWERLIMIT_MODE="GLOBAL"    # NO, GLOBAL, OFFSET, OVERRIDE
+#        - GLOBAL mode means no individual gpu-specific settings are used
+#        - OFFSET mode means individual gpu specific settings are interpreted
+#          as relative offsets from global settings, either algo-specific or not
+#        - OVERRIDE mode emulates the old nvOC functionality where any
+#          individual setting is interpreted as an absolute override
 
-__CORE_OVERCLOCK=100        # Global Core overclock for all GPU's if not using INDIVIDUAL settings
+POWERLIMIT_WATTS=75         # Global base Power Limit in watts for all GPU's
 
-MEMORY_OVERCLOCK=100        # Global Memory overclock for all GPU's if not using INDIVIDUAL settings
+OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, OFFSET, OVERRIDE
+#        Same behavior as POWERLIMT_MODE, see above
 
+__CORE_OVERCLOCK=100        # Global base Core overclock for all algos
 
-# SET OC and POWERLIMIT dependant on what mining ALGO is used (see end of 1bash for damNmad ALGO OC settings)
-# Please note that this works for Global settings only, can not use INDIVIDUAL settings with this.
-# For OPT use of PAPAMPI_WTM_AUTO_SWITCH use damNmad ALGO_SPECIFIC_OC!!
-# Default values set at the end of 1bash are for 1060, remember to set yours accordingly.
+MEMORY_OVERCLOCK=100        # Global base Memory overclock for all algos
 
-ALGO_SPECIFIC_OC="NO"       # YES or NO # damNmad ALGO_SPECIFIC_OC settings, See the description above
+ALGO_SPECIFIC_OC="NO"       # YES or NO
+#        SET OC and POWERLIMIT base values depending on what mining ALGO is used, does not apply to SALFTER autoswitchers
+#        Please note that algo specific settings always override global base values,
+#        than also individual overrides or offsets apply according to the previously
+#        selected OVERCLOCK_MODE policy.
+#        For optimal use of PAPAMPI_WTM_AUTO_SWITCH use ALGO_SPECIFIC_OC !!
+#        Default values set at the end of 1bash are for 1060, remember to set yours accordingly.
 
 P10X_100_FULL_HEADLESS_MODE="NO"  # YES or NO # If using P106_100, P104-100 GPU's in a full headless (no monitor) rig, set this to YES
 
@@ -862,6 +878,10 @@ PROFIT_CHECK_TIMEOUT=600
 
 # ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed
 
+# Please note that algo specific settings always override global base values,
+# than also individual overrides or offsets apply according to the previously
+# selected OVERCLOCK_MODE policy.
+
 daggerhashimoto_POWERLIMIT_WATTS=120
 __daggerhashimoto_CORE_OVERCLOCK=100
 daggerhashimoto_MEMORY_OVERCLOCK=100
@@ -930,12 +950,13 @@ X11_MEMORY_OVERCLOCK=100
 #                                                      #
 ########################################################
 
-# Settings below are for rigs using INDIVIDUAL powerlimit / target temps / clocks only
-# If set to YES, the INDIVIDUAL settings will override the GLOBAL settings
+# Settings below are for rigs using INDIVIDUAL powerlimit / target temps / clocks
 
-INDIVIDUAL_POWERLIMIT="NO"    # YES or NO
+# Please note that individual clocks and powerlimit settings will be apply to
+# global base (eventually algo-specific) values as overrides or offsets according
+# to the previously selected OVERCLOCK_MODE / POWERLIMIT_MODE policy.
 
-# Set individual powerlimits here if INDIVIDUAL_POWERLIMIT="YES"
+# Set individual powerlimits here if POWERLIMIT_MODE is OVERRIDE or OFFSET
 INDIVIDUAL_POWERLIMIT_0=100
 INDIVIDUAL_POWERLIMIT_1=100
 INDIVIDUAL_POWERLIMIT_2=100
@@ -955,9 +976,6 @@ INDIVIDUAL_POWERLIMIT_15=100
 INDIVIDUAL_POWERLIMIT_16=100
 INDIVIDUAL_POWERLIMIT_17=100
 INDIVIDUAL_POWERLIMIT_18=100
-
-
-INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO
 
 # Set individual target temps here if INDIVIDUAL_TARGET_TEMPS="YES"
 TARGET_TEMP_0=75
@@ -980,10 +998,7 @@ TARGET_TEMP_16=75
 TARGET_TEMP_17=75
 TARGET_TEMP_18=75
 
-
-INDIVIDUAL_CLOCKS="NO"        # YES NO
-
-# Set individual clocks here if INDIVIDUAL_CLOCKS="YES"
+# Set individual clocks here if OVERCLOCK_MODE is OVERRIDE or OFFSET
 __CORE_OVERCLOCK_0=100
 MEMORY_OVERCLOCK_0=100
 
