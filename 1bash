@@ -36,6 +36,9 @@
 #          Pool Wallet Address Format
 # v=0012 : papampi
 #          New claymore dual mining 
+# v=0013 : damNmad
+#          Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable
+
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
@@ -194,7 +197,7 @@ nvOC_1bash_ver="v0019-2.1.0011"   # Do not edit this
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 
-### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC
+### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC, BTCP
 
 
 
@@ -475,7 +478,9 @@ CLAYMORE_VERSION="latest"    # choose: latest or any version you add its folder 
 
 WALLET_ADDRESS_FORMAT="."      # Choose between "." , "/" , "-" or any other separators your pool uses.
 # Some pools require dot (address.worker), some require slash (address/worker) format.
-# Depending on the pool you use, set this approprietly:
+# Depending on the pool you use, set this appropriately:
+# For most of the cryptonight pools (except Miningpoolhub and suprnova type of- 
+# user account based pools), please put the above variable and worker name for that coins as empty 
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
@@ -519,6 +524,12 @@ KMD_WORKER="$WORKERNAME"
 KMD_ADDRESS="replace_with_your_address"
 KMD_POOL="luckpool.org"
 KMD_PORT="3857"
+
+# BTCP
+BTCP_WORKER="$WORKERNAME"
+BTCP_ADDRESS="replace_with_your_address"
+BTCP_POOL="BTCP_POOL_ADDRESS"
+BTCP_PORT="BTCP_POOL_PORT"
 
 # BTX ## No Need to add stratum+tcp:// to server address
 BTX_WORKER="$WORKERNAME"
@@ -846,6 +857,7 @@ SMART_INTENSITY="25"
 # Claymore_Dual Mining                            #
 # Set COIN="Claymore_Dual"                        #  
 ###################################################
+
 ###You can use variables like this:
 #DUAL_ECOIN="ETH"
 #DUAL_EPOOL="$ETH_POOL"        
@@ -1154,7 +1166,7 @@ then
   fi
 
   # Equihash
-  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE" ]
+  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "BTCP" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE"  ]
   then
     ALGORITHM="EQUIHASH"
     POWERLIMIT_WATTS=76

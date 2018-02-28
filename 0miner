@@ -34,11 +34,12 @@
 # v=0009 : papampi
 #          Pool Wallet Address Format
 # v=0010 : papampi
-#          New Claymore Dual 
-
+#          New Claymore Dual Mining
+# v=0011 : damNmad
+#          Added BTCP 				  
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0009"   # Do not edit this
+nvOC_0miner_ver="v0019-2.0.0011"   # Do not edit this
 
 source /home/m1/1bash
 
@@ -54,7 +55,7 @@ then
   E_ADDR="$DUAL_EWAL$WALLET_ADDRESS_FORMAT$DUAL_EWORKER"
   D_ADDR="$DUAL_DWAL$WALLET_ADDRESS_FORMAT$DUAL_DWORKER"
   screen -dmSL miner $HCD -epool $DUAL_EPOOL:$DUAL_EPORT -ewal $E_ADDR -epsw  $DUAL_EPSW -dpool stratum+tcp://$DUAL_DPOOL:$DUAL_DPORT -dwal $D_ADDR -dpsw $DUAL_DPSW -dcoin $DUAL_DCOIN -allpools $ALL_POOLS -dbg -1 -mport $MPORT -mpsw $MPSW $DUAL_ADDITIONAL_ARGUMENTS
-fi
+fi	
 
 if [ $COIN == "ONION" ]
 then
@@ -354,6 +355,38 @@ then
   then
     HCD='/home/m1/miners/bminer/latest/bminer'
     screen -dmSL miner $HCD -uri stratum+ssl://$BTC_ADDRESS:$MINER_PWD@$ZPOOL_EQUIHASH_POOL:$ZPOOL_EQUIHASH_PORT $BMINER_OPTS ;
+  fi
+fi
+
+if [ $COIN == "BTCP" ]
+then
+  BTCPADDR="$BTCP_ADDRESS$WALLET_ADDRESS_FORMAT$BTCP_WORKER"
+  if [ $EWBF_VERSION == "3_3" ]
+  then
+    HCD='/home/m1/miners/ewbf/v3_3/miner'
+  fi
+  if [ $EWBF_VERSION == "3_4" ]
+  then
+    HCD='/home/m1/miners/ewbf/v3_4/miner'
+  fi
+  if [ $EQUIHASH_MINER == "ZM" ]
+  then
+    HCD='/home/m1/miners/dstm/latest/zm_miner'
+    screen -dmSL miner $HCD --server $BTCP_POOL --user $BTCPADDR --pass $MINER_PWD --port $BTCP_PORT  --time $ZM_OPTS ;
+  fi
+  if [ $EQUIHASH_MINER == "EWBF" ]
+  then
+    screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $BTCP_POOL --user $BTCPADDR --pass $MINER_PWD --port $BTCP_PORT  $EWBF_OPTS ;
+  fi
+  if [ $EQUIHASH_MINER == "BMINER" ]
+  then
+    HCD='/home/m1/miners/bminer/latest/bminer'
+    screen -dmSL miner $HCD -uri stratum://$BTCPADDR:$MINER_PWD@$BTCP_POOL:$BTCP_PORT $BMINER_OPTS ;
+  fi
+  if [ $EQUIHASH_MINER == "BMINER_SSL" ]
+  then
+    HCD='/home/m1/miners/bminer/latest/bminer'
+    screen -dmSL miner $HCD -uri stratum+ssl://$BTCPADDR:$MINER_PWD@$BTCP_POOL:$BTCP_PORT $BMINER_OPTS ;
   fi
 fi
 
