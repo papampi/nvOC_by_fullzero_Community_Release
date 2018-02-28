@@ -40,6 +40,7 @@
 #          Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable
 
 
+
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
 nvOC_1bash_ver="v0019-2.1.0011"   # Do not edit this
 
@@ -857,7 +858,14 @@ SMART_INTENSITY="25"
 # Set COIN="Claymore_Dual"                        #  
 ###################################################
 
-DUAL_EPOOL_FORMAT="DOT"                     #DOT or SLASH, Main pool wallet address format DOT or SLASH
+###You can use variables like this:
+#DUAL_ECOIN="ETH"
+#DUAL_EPOOL="$ETH_POOL"        
+#DUAL_EPORT="$ETH_PORT"            
+#DUAL_EWAL="$ETH_ADDRESS"       
+#DUAL_EPSW="$MINER_PWD"                       
+#DUAL_EWORKER="$ETH_WORKER"  
+
 DUAL_ECOIN="MAIN COIN"                      #Main Coin, Ethereum or any Ethash Coin
 DUAL_EPOOL="MAIN COIN POOL ADDREES"         #Main Coin pool address, no need to add stratum+tcp://
 DUAL_EPORT="MAIN COIN POOOL PORT"           #Main Coin Port Number
@@ -869,7 +877,7 @@ DUAL_DCOIN="DUAL COIN"                      #select second coin to mine in dual 
 DUAL_DPOOL="DUAL COIN POOL ADDRESS"         #2nd coin pool address
 DUAL_DPORT="DUAL COIN POOL PORT"            #2nd coin pool address
 DUAL_DWAL="DUAL COIN WALLET ADDRESS"        #2nd coin wallet address or worker name, it depends on pool.
-DUAL_DPSW="$MINERPWD"                       #Password for 2nd coin .
+DUAL_DPSW="$MINER_PWD"                       #Password for 2nd coin .
 DUAL_DWORKER="$WORKER"                      #Worker name for 2nd coin
 
 DCRI="40"                                   #2nd coin intensity.
@@ -877,7 +885,6 @@ ALL_POOLS="1"                               #Specify "-allpools 1" if miner does
 MPORT="-3333"                               #remote monitoring/management port. Default value is -3333 (read-only mode), specify "-mport 0" to disable remote monitoring/management feature. 
 MPSW=""                                     #remote monitoring/management password.
 DUAL_ADDITIONAL_ARGUMENTS=""                #add "-allcoins 1" if you mine Ethereum forks or other Ethash coins
-
 
 
 ########################################################
@@ -1159,7 +1166,7 @@ then
   fi
 
   # Equihash
-  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE" $COIN == "BTCP" ]
+  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "BTCP" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE"  ]
   then
     ALGORITHM="EQUIHASH"
     POWERLIMIT_WATTS=76

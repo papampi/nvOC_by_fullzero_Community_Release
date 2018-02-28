@@ -34,7 +34,7 @@
 # v=0009 : papampi
 #          Pool Wallet Address Format
 # v=0010 : papampi
-#          New Claymore Dual mining
+#          New Claymore Dual Mining
 # v=0011 : damNmad
 #          Added BTCP 				  
 
@@ -56,7 +56,7 @@ then
   D_ADDR="$DUAL_DWAL$WALLET_ADDRESS_FORMAT$DUAL_DWORKER"
   screen -dmSL miner $HCD -epool $DUAL_EPOOL:$DUAL_EPORT -ewal $E_ADDR -epsw  $DUAL_EPSW -dpool stratum+tcp://$DUAL_DPOOL:$DUAL_DPORT -dwal $D_ADDR -dpsw $DUAL_DPSW -dcoin $DUAL_DCOIN -allpools $ALL_POOLS -dbg -1 -mport $MPORT -mpsw $MPSW $DUAL_ADDITIONAL_ARGUMENTS
 fi	
-							
+
 if [ $COIN == "ONION" ]
 then
   HCD='/home/m1/miners/TPccminer/ccminer'
