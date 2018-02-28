@@ -33,7 +33,7 @@
 # v=0010 : papampi
 #          WTM minimum mining time and force switch
 # v=0011 : papampi
-#          Pool Address Format
+#          Pool Wallet Address Format
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
@@ -471,7 +471,7 @@ ETHASH_MINER="ETHMINER"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
 CLAYMORE_VERSION="latest"    # choose: latest or any version you add its folder  (type latest to use 10_2)
 
-POOL_ADDRESS_FORMAT="."      # Choose between "." , "/" , "-" or any other separators your pool uses.
+WALLET_ADDRESS_FORMAT="."      # Choose between "." , "/" , "-" or any other separators your pool uses.
 # Some pools require dot (address.worker), some require slash (address/worker) format.
 # Depending on the pool you use, set this approprietly:
 
