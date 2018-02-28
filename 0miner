@@ -32,7 +32,7 @@
 # v=0008 : papampi:
 #          Move all miners to /home/m1/miners/
 # v=0009 : papampi
-#          Pool Address Format
+#          Pool Wallet Address Format
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
 nvOC_0miner_ver="v0019-2.0.0009"   # Do not edit this
