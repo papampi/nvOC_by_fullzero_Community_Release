@@ -32,10 +32,12 @@
 #          Added P104 and changed P106 to P10X
 # v=0010 : papampi
 #          WTM minimum mining time and force switch
+# v=0011 : papampi
+#          Pool address format
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0009"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0011"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -467,12 +469,11 @@ EWBF_PERCENT="0"
 
 ETHASH_MINER="ETHMINER"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
-DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
-# Some pools require dot (address.worker), some require slash (address/worker) format.
-# Depending on the pool you use, set this approprietly:
-
 CLAYMORE_VERSION="latest"    # choose: latest or any version you add its folder  (type latest to use 10_2)
 
+POOL_ADDRESS_FORMAT="."      # Choose between "." , "/" , "-" or any other separators your pool uses.
+# Some pools require dot (address.worker), some require slash (address/worker) format.
+# Depending on the pool you use, set this approprietly:
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
