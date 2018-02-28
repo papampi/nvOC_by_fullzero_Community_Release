@@ -33,7 +33,7 @@
 # v=0010 : papampi
 #          WTM minimum mining time and force switch
 # v=0011 : papampi
-#          Pool address format
+#          Pool Address Format
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
