@@ -34,6 +34,10 @@
 #          WTM minimum mining time and force switch
 # v=0011 : papampi
 #          Pool Wallet Address Format
+# v=0012 : papampi
+#          New claymore dual mining 
+# v=0013 : damNmad
+#          Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
@@ -192,7 +196,7 @@ nvOC_1bash_ver="v0019-2.1.0011"   # Do not edit this
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 
-### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC
+### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC, BTCP
 
 
 
@@ -473,7 +477,9 @@ CLAYMORE_VERSION="latest"    # choose: latest or any version you add its folder 
 
 WALLET_ADDRESS_FORMAT="."      # Choose between "." , "/" , "-" or any other separators your pool uses.
 # Some pools require dot (address.worker), some require slash (address/worker) format.
-# Depending on the pool you use, set this approprietly:
+# Depending on the pool you use, set this appropriately:
+# For most of the cryptonight pools (except Miningpoolhub and suprnova type of- 
+# user account based pools), please put the above variable and worker name for that coins as empty 
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
@@ -517,6 +523,12 @@ KMD_WORKER="$WORKERNAME"
 KMD_ADDRESS="replace_with_your_address"
 KMD_POOL="luckpool.org"
 KMD_PORT="3857"
+
+# BTCP
+BTCP_WORKER="$WORKERNAME"
+BTCP_ADDRESS="replace_with_your_address"
+BTCP_POOL="BTCP_POOL_ADDRESS"
+BTCP_PORT="BTCP_POOL_PORT"
 
 # BTX ## No Need to add stratum+tcp:// to server address
 BTX_WORKER="$WORKERNAME"
@@ -840,6 +852,34 @@ SMART_POOL="pool-eu.smartcash.cc"
 SMART_PORT="3333"
 SMART_INTENSITY="25"
 
+###################################################
+# Claymore_Dual Mining                            #
+# Set COIN="Claymore_Dual"                        #  
+###################################################
+
+DUAL_EPOOL_FORMAT="DOT"                     #DOT or SLASH, Main pool wallet address format DOT or SLASH
+DUAL_ECOIN="MAIN COIN"                      #Main Coin, Ethereum or any Ethash Coin
+DUAL_EPOOL="MAIN COIN POOL ADDREES"         #Main Coin pool address, no need to add stratum+tcp://
+DUAL_EPORT="MAIN COIN POOOL PORT"           #Main Coin Port Number
+DUAL_EWAL="MAIN COIN WALLET ADDRESS"        #Main Coin Wallet address or pool username
+DUAL_EPSW="$MINER_PWD"                      #Main Coin worker password on pool
+DUAL_EWORKER"$WORKER"                       #Main Coin Worker Name
+
+DUAL_DCOIN="DUAL COIN"                      #select second coin to mine in dual mode. Possible options are "-dcoin dcr", "-dcoin sc", "-dcoin lbc", "-dcoin pasc", "-dcoin blake2s", "-dcoin keccak". Default value is "dcr".
+DUAL_DPOOL="DUAL COIN POOL ADDRESS"         #2nd coin pool address
+DUAL_DPORT="DUAL COIN POOL PORT"            #2nd coin pool address
+DUAL_DWAL="DUAL COIN WALLET ADDRESS"        #2nd coin wallet address or worker name, it depends on pool.
+DUAL_DPSW="$MINERPWD"                       #Password for 2nd coin .
+DUAL_DWORKER="$WORKER"                      #Worker name for 2nd coin
+
+DCRI="40"                                   #2nd coin intensity.
+ALL_POOLS="1"                               #Specify "-allpools 1" if miner does not want to mine on specified pool (because it cannot mine devfee on that pool), but you agree to use some default pools for devfee mining. 
+MPORT="-3333"                               #remote monitoring/management port. Default value is -3333 (read-only mode), specify "-mport 0" to disable remote monitoring/management feature. 
+MPSW=""                                     #remote monitoring/management password.
+DUAL_ADDITIONAL_ARGUMENTS=""                #add "-allcoins 1" if you mine Ethereum forks or other Ethash coins
+
+
+
 ########################################################
 #                                                      #
 # SALFTER_NICEHASH_PROFIT_SWITCHING &                  #
@@ -1119,7 +1159,7 @@ then
   fi
 
   # Equihash
-  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE" ]
+  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE" $COIN == "BTCP" ]
   then
     ALGORITHM="EQUIHASH"
     POWERLIMIT_WATTS=76
