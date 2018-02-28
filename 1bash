@@ -465,7 +465,7 @@ BMINER_OPTS=""
 # change EWBF_PERCENT to alter donation percent for EWBF Miner
 EWBF_PERCENT="0"
 
-ETHASH_MINER="CLAYMORE"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
+ETHASH_MINER="ETHMINER"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
 DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
 # Some pools require dot (address.worker), some require slash (address/worker) format.
