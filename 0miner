@@ -348,7 +348,7 @@ fi
 
 if [ $COIN == "BTCP" ]
 then
-  ZCLADDR="$ZCL_ADDRESS$WALLET_ADDRESS_FORMAT$ZCL_WORKER"
+  BTCPADDR="$BTCP_ADDRESS$WALLET_ADDRESS_FORMAT$BTCP_WORKER"
   if [ $EWBF_VERSION == "3_3" ]
   then
     HCD='/home/m1/miners/ewbf/v3_3/miner'
@@ -360,21 +360,21 @@ then
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
-    screen -dmSL miner $HCD --server $ZCL_POOL --user $ZCLADDR --pass $MINER_PWD --port $ZCL_PORT  --time $ZM_OPTS ;
+    screen -dmSL miner $HCD --server $BTCP_POOL --user $BTCPADDR --pass $MINER_PWD --port $BTCP_PORT  --time $ZM_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
-    screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZCL_POOL --user $ZCLADDR --pass $MINER_PWD --port $ZCL_PORT  $EWBF_OPTS ;
+    screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $BTCP_POOL --user $BTCPADDR --pass $MINER_PWD --port $BTCP_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
   then
     HCD='/home/m1/miners/bminer/latest/bminer'
-    screen -dmSL miner $HCD -uri stratum://$ZCLADDR:$MINER_PWD@$ZCL_POOL:$ZCL_PORT $BMINER_OPTS ;
+    screen -dmSL miner $HCD -uri stratum://$BTCPADDR:$MINER_PWD@$BTCP_POOL:$BTCP_PORT $BMINER_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER_SSL" ]
   then
     HCD='/home/m1/miners/bminer/latest/bminer'
-    screen -dmSL miner $HCD -uri stratum+ssl://$ZCLADDR:$MINER_PWD@$ZCL_POOL:$ZCL_PORT $BMINER_OPTS ;
+    screen -dmSL miner $HCD -uri stratum+ssl://$BTCPADDR:$MINER_PWD@$BTCP_POOL:$BTCP_PORT $BMINER_OPTS ;
   fi
 fi
 
