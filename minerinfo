@@ -10,7 +10,7 @@ echo ""
 echo '<html>'
 echo '<head>'
 echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8\n\n">'
-source /home/m1/1bash
+source ${NVOC}/1bash
 
 echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
 echo '</style>'
@@ -29,8 +29,8 @@ MINER_PID=$(pgrep -f -o  miner)
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
 TEMP_FAN_POWER=$(tail  -50 /home/m1/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
-TEMP_ALERT_LOG=$(cat /home/m1/6_autotemplog | awk '{print $0,"<br>"}')
-WDOG_ALERT_LOG=$(cat /home/m1/5_watchdoglog | awk '{print $0,"<br>"}')
+TEMP_ALERT_LOG=$(cat ${NVOC}/6_autotemplog | awk '{print $0,"<br>"}')
+WDOG_ALERT_LOG=$(cat ${NVOC}/5_watchdoglog | awk '{print $0,"<br>"}')
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
 DISK=$(df -h / | awk '{ a = $2 } END { print a }')
 DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
@@ -66,7 +66,7 @@ then
   else
     TEMP_CHECK="<tt style=\"text-align:left; color:red\"> Not Running</tt>"
   fi
-  if [[ (( $(stat -c%s "/home/m1/6_autotemplog") -gt 1 )) ]]; then
+  if [[ (( $(stat -c%s "${NVOC}/6_autotemplog") -gt 1 )) ]]; then
     TEMP_WARNING="<tt style=\"text-align:left; color:red\">, WARNING</tt>"
   else
     TEMP_WARNING=", No Warning"
@@ -84,7 +84,7 @@ then
   else
     WDOG_CHECK="<tt style=\"text-align:left; color:red\"> Not Running</tt>"
   fi
-  if [[ (( $(stat -c%s "/home/m1/5_watchdoglog") -gt 1 )) ]]; then
+  if [[ (( $(stat -c%s "${NVOC}/5_watchdoglog") -gt 1 )) ]]; then
     WATCHDOG_WARNING="<tt style=\"text-align:left; color:red\">, WARNING</tt>"
   else
     WATCHDOG_WARNING=", No Warning"
@@ -106,30 +106,30 @@ if [[ "$mbvendor" == BIOSTAR* ]]; then mbvendor="BIOSTAR"; fi
 
 if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
 then
-  CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-  MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
+  CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0,"<br>"}')
   AUTO_SWITCH="Salfter MPH Auto Switch"
 
 
 elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
 then
-  CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-  MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
+  CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0,"<br>"}')
   AUTO_SWITCH="Salfter Nicehash Auto Switch"
 
 
 elif [ $WTM_AUTO_SWITCH == "YES" ]
 then
   CURRENT_COIN=$COIN
-  MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
+  MINING_HISTORY=$(cat ${NVOC}/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
   P_MINING_HISTORY="$MINING_HISTORY <br>"
-  WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+  WTM_PROFIT=$(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')
   P_WTM_PROFIT="$WTM_PROFIT <br>"
-  WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+  WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')
   P_WTM_REV=$"$WTM_REV <br>"
-  WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
+  WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  ${NVOC}/WTM_24H_REV)
   P_WTM_AVERAGE_REV="$WTM_AVERAGE_REV <br>"
-  BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
+  BTC_PRICE_VALUE=$(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
   BTC_PRICE="BTC PRICE: "
   WTM_Current_Profitabilty="WTM Current Profitability:"
   WTM_Current_Revenue="WTM Current Revenue: "
@@ -156,12 +156,12 @@ elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
 then
   CURRENT_COIN=$COIN
   MINING_HISTORY=""
-  WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+  WTM_PROFIT=$(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')
   P_WTM_PROFIT="$WTM_PROFIT <br>"
-  WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+  WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')
   P_WTM_REV=$"$WTM_REV <br>"
   WTM_SWITCH="WTM Profit Check Running. "
-  BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
+  BTC_PRICE_VALUE=$(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
   BTC_PRICE="BTC PRICE: "
   WTM_AVERAGE_REV=""
   WTM_Current_Profitabilty="WTM Current Profitability: "

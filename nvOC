@@ -49,7 +49,7 @@ nvOC_nvOC_ver="v0019-2.0.007"                   # Do not edit this
 
 export DISPLAY=:0
 
-source /home/m1/1bash
+source ${NVOC}/1bash
 
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
@@ -120,12 +120,12 @@ Clearlogs()
    sudo su -c "> /var/log/Xorg.0.log"
    sudo su -c "> /var/log/kern.log"
 
-   echo "" > /home/m1/5_watchdoglog
-   echo "" > /home/m1/6_autotemplog
-   echo "" > /home/m1/current-profit
-   echo "" > /home/m1/algo-log
+   echo "" > ${NVOC}/5_watchdoglog
+   echo "" > ${NVOC}/6_autotemplog
+   echo "" > ${NVOC}/current-profit
+   echo "" > ${NVOC}/algo-log
 
-   rm -r /home/m1/kk003_telegram_data > /dev/null 2>&1
+   rm -r ${NVOC}/kk003_telegram_data > /dev/null 2>&1
    
    echo ""; echo "...done."
 }
@@ -507,12 +507,12 @@ echo ""
 #######################################
 
 nvidia_driver_ver=$(nvidia-smi -i 0 -q|grep "Driver Version"|cut -f 2 -d ":"|cut -f 2 -d " ")
-nvOC_ver_from_1bash=$(cat /home/m1/1bash | grep "nvOC v" | cut -d' ' -f 2- | head -n 1 | sed 's/   #################//');
-nvOC_ver_from_3main=$(head -n 100 /home/m1/3main | grep nvOC_ver= | sed 's/nvOC_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-nvOC_3main_ver=$(head -n 100 /home/m1/3main | grep nvOC_3main_ver= | sed 's/nvOC_3main_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-nvOC_wdog_ver=$(head -n 100 /home/m1/5watchdog | grep nvOC_wdog_ver= | sed 's/nvOC_wdog_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-nvOC_temp_ver=$(head -n 100 /home/m1/6tempcontrol | grep nvOC_temp_ver= | sed 's/nvOC_temp_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-nvOC_wtm_ver=$( head -n 100 /home/m1/8wtm_auto_switch | grep wtm_auto_switch_ver= | sed 's/wtm_auto_switch_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+nvOC_ver_from_1bash=$(cat ${NVOC}/1bash | grep "nvOC v" | cut -d' ' -f 2- | head -n 1 | sed 's/   #################//');
+nvOC_ver_from_3main=$(head -n 100 ${NVOC}/3main | grep nvOC_ver= | sed 's/nvOC_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+nvOC_3main_ver=$(head -n 100 ${NVOC}/3main | grep nvOC_3main_ver= | sed 's/nvOC_3main_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+nvOC_wdog_ver=$(head -n 100 ${NVOC}/5watchdog | grep nvOC_wdog_ver= | sed 's/nvOC_wdog_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+nvOC_temp_ver=$(head -n 100 ${NVOC}/6tempcontrol | grep nvOC_temp_ver= | sed 's/nvOC_temp_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+nvOC_wtm_ver=$( head -n 100 ${NVOC}/8wtm_auto_switch | grep wtm_auto_switch_ver= | sed 's/wtm_auto_switch_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
 kernel=$(cat /proc/version | cut -d' ' -f 3);
 # os_release=$(cat /usr/lib/os-release | grep PRETTY_NAME | sed 's/PRETTY_NAME=\"//' | sed 's/\"//');
 # os_release=$(cat /etc/lsb-release | grep DISTRIB_DESCRIPTION | sed 's/DISTRIB_DESCRIPTION=\"//' | sed 's/\"//');
@@ -600,7 +600,7 @@ echo
 #######################################
 echo -e "${B}1bash settings:${N}"
 # 1bash general
-echo "1bash version .............: $nvOC_1bash_ver"   # for pre 19.2 versions use $(cat /home/m1/1bash | grep "nvOC v" | cut -d' ' -f 2-)
+echo "1bash version .............: $nvOC_1bash_ver"   # for pre 19.2 versions use $(cat ${NVOC}/1bash | grep "nvOC v" | cut -d' ' -f 2-)
 echo "LOCAL or REMOTE ...........: $LOCALorREMOTE"
 echo "TEAMVIEWER started ........: $TEAMVIEWER"
 echo "SSH daemon started ........: $SSH"

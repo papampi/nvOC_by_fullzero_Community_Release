@@ -24,7 +24,7 @@ TIMEIN=$TELEGRAM_TIMEOUT_IN_MINUTES
 
 TIMEOUT=$(($TIMEIN * 60))
 
-bash '/home/m1/telegram'
+bash "${NVOC}/telegram"
 sleep 2
 echo ""
 echo "New Telegram in $TIMEOUT seconds"

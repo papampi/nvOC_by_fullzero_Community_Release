@@ -61,7 +61,7 @@ echo "Version: $nvOC_wdog_ver"
 echo ""
 
 export DISPLAY=:0
-source /home/m1/1bash
+source ${NVOC}/1bash
 
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
@@ -91,7 +91,7 @@ sleep 1
 
 # Log file handling (check existence, size limitation or creation)
 # Log file to record restarts, status, errors, utilization issues
-LOG_FILE="/home/m1/5_watchdoglog"
+LOG_FILE="${NVOC}/5_watchdoglog"
 if [ -e "$LOG_FILE" ] ; then
   # Limit the logfile, just keep the last 500 lines
   echo "$(tail -500 $LOG_FILE)" > $LOG_FILE
@@ -117,7 +117,7 @@ sleep 2
 
 # Don't send telegram alert after every WTM switch
 if [[ $TELEGRAM_ALERTS == "YES" && $WTM_AUTO_SWITCH == "NO" ]]; then
-  bash '/home/m1/telegram'
+  bash "${NVOC}/telegram"
 fi
 
 # Initialize vars
@@ -200,7 +200,7 @@ while true; do
         echo "$(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash '/home/m1/telegram'
+          bash "${NVOC}/telegram"
         fi
         sleep 10
         sudo reboot
@@ -220,7 +220,7 @@ while true; do
         echo "$(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash '/home/m1/telegram'
+          bash "${NVOC}/telegram"
         fi
         sleep 10
         sudo reboot
@@ -265,7 +265,7 @@ while true; do
       if [[ -z $(ps ax | grep -i screen | grep miner) ]]
       then
         echo "$(date) - miner is not running, start miner"
-        bash /home/m1/0miner
+        bash ${NVOC}/0miner
         #wait for miner to start hashing
         sleep  $SLEEP_TIME
       else
@@ -276,7 +276,7 @@ while true; do
 
     ######################## Beginning Pool Check
 
-    source /home/m1/1bash
+    source ${NVOC}/1bash
 
     if [[ $COIN == *DUAL* ]] ;   then
       COIN=$(echo $COIN| sed 's/DUAL_//' | cut -d _ -f 1)
@@ -305,7 +305,7 @@ while true; do
           sleep $MINER_TIME
         elif  [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
           echo "Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running, start miner"
-          bash /home/m1/0miner
+          bash ${NVOC}/0miner
           sleep $SLEEP_TIME
         fi
       fi
@@ -319,7 +319,7 @@ while true; do
       echo ""
 
     else
-      source /home/m1/1bash
+      source ${NVOC}/1bash
       eval 'COIN_POOL=${COIN}_POOL'
       eval 'COIN_PORT=${COIN}_PORT'
       eval 'COIN_POOL_2=${COIN}_POOL_2'
@@ -330,7 +330,7 @@ while true; do
         POOL=0
         if [[ $ALT_POOL == "YES" ]] && [[ -n ${!COIN_POOL_2} ]] 
         then
-          guake -n 9poolswitch -r POOL_SWITCH -e "bash /home/m1/9poolswitch"
+          guake -n 9poolswitch -r POOL_SWITCH -e "bash ${NVOC}/9poolswitch"
           sleep 300
         else
           while !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   do
@@ -353,7 +353,7 @@ while true; do
           sleep $MINER_TIME
         elif [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
           echo "Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running, start miner"
-          bash /home/m1/0miner
+          bash ${NVOC}/0miner
           sleep $SLEEP_TIME
         fi
       fi
@@ -392,7 +392,7 @@ while true; do
         echo "CRITICAL: $(date) - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash '/home/m1/telegram'
+          bash "${NVOC}/telegram"
         fi
         sleep 10
         sudo reboot
@@ -402,7 +402,7 @@ while true; do
       pkill -e miner
       echo "CRITICAL: $(date) - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE}
       if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-        bash '/home/m1/telegram'
+        bash "${NVOC}/telegram"
       fi
       # Best to restart 1bash - settings might be adjusted already
       target=$(ps -ef | awk '$NF~"3main" {print $2}')

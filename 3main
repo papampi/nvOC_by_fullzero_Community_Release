@@ -42,7 +42,7 @@
 # v=0010 : papampi
 #          Download and Restore default xorg.conf
 
-source /home/m1/1bash
+source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
 nvOC_3main_ver="v0019-2.0.0010"                  # Do not edit this
 
@@ -76,16 +76,16 @@ fi
 
 if [ $CLEAR_LOGS_ON_BOOT == "YES" ]
 then
-  sudo bash '/home/m1/clear_logs'
+  sudo bash "/home/m1/clear_logs"
 fi
 
 if [ $LOG_ROTATE == "YES" ]
 then
-  HCD='/home/m1/log_rotate'
+  HCD="${NVOC}/log_rotate"
   running=$(ps -ef | awk '$NF~"log_rotate" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r LOG_ROTATE -e "bash /home/m1/log_rotate"
+    guake -n $HCD -r LOG_ROTATE -e "bash ${NVOC}/log_rotate"
     running=""
   fi
 fi
@@ -292,14 +292,14 @@ then
   running=$(ps -ef | awk '$NF~"SRR" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r SRR -e "bash /home/m1/SRR"
+    guake -n $HCD -r SRR -e "bash ${NVOC}/SRR"
     running=""
   fi
 fi
 
 if [ $plusCPU == "YES" ] && [ $AUTO_START_MINER == "YES" ]
 then
-  HCD='/home/m1/cpuOPT/cpuminer'
+  HCD="${NVOC}/cpuOPT/cpuminer"
   XMRADDR="$XMR_ADDRESS.$XMR_WORKER"
   echo ""
   echo ""
@@ -321,11 +321,11 @@ fi
 
 if [ $AUTO_REBOOT == "YES" ]
 then
-  HCD='/home/m1/reboot'
+  HCD="${NVOC}/reboot"
   running=$(ps -ef | awk '$NF~"reboot" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r AUTO_REBOOT -e "bash /home/m1/reboot"
+    guake -n $HCD -r AUTO_REBOOT -e "bash ${NVOC}/reboot"
     running=""
   fi
 fi
@@ -333,7 +333,7 @@ fi
 
 if [ $_Parallax_MODE == "YES" ]
 then
-  HCD='/home/m1/upPASTE'
+  HCD="${NVOC}/upPASTE"
   running=$(ps -ef | awk '$NF~"upPASTE" {print $2}')
   if [ "$running" == "" ]
   then
@@ -343,7 +343,7 @@ then
     echo ""
     echo "process in guake terminal Tab (f12)"
     echo ""
-    guake -n $HCD -r PX_LP_upPASTE -e "bash /home/m1/upPASTE"
+    guake -n $HCD -r PX_LP_upPASTE -e "bash ${NVOC}/upPASTE"
     running=""
   fi
 fi
@@ -362,26 +362,26 @@ then
   fi
   sleep 2
   echo ""
-  HCD='/home/m1/6tempcontrol'
+  HCD="${NVOC}/6tempcontrol"
   running=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
   if [ "$running" == "" ]
   then
     echo "LAUNCHING:  MINER TEMPCONTROL"
     if [ $LOCALorREMOTE == "LOCAL" ]
     then
-      #guake -n $HCD -r MINER_TEMP_CONTROL -e "bash /home/m1/6tempcontrol"
+      #guake -n $HCD -r MINER_TEMP_CONTROL -e "bash ${NVOC}/6tempcontrol"
       echo ""
       echo "process in screen temp, guake terminal Tab (f12), ~/nvOC temp-log"
-      screen -c /home/m1/screenrc-tempcontrol -dmSL temp bash /home/m1/6tempcontrol
+      screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
       #if guake tab is already showing temp control output dont open a new one
       if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/tempcontrol-screenlog.0" |grep -v grep) ]];then
-        guake -n /home/m1/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -f  /home/m1/nvoc_logs/tempcontrol-screenlog.0 "
+        guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -f  /home/m1/nvoc_logs/tempcontrol-screenlog.0 "
       fi
       echo ""
       running=""
     elif [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -c /home/m1/screenrc-tempcontrol -dmSL temp bash /home/m1/6tempcontrol
+      screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
       echo ""
       echo "process in screen temp; ~/nvOC temp-log"
       echo ""
@@ -392,7 +392,7 @@ fi
 
 if [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ] && [ $SALFTER == "YES" ]
 then
-  HCD='/home/m1/5watchdog'
+  HCD="${NVOC}/5watchdog"
   echo ""
   sleep 2
   running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
@@ -403,17 +403,17 @@ then
     then
       echo ""
       echo "process in screen wdog, guake terminal Tab (f12), ~/nvOC wdog-log"
-      screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
-      #guake -n $HCD -r MINER_WATCHDOG -e "bash /home/m1/5watchdog"
+      screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
+      #guake -n $HCD -r MINER_WATCHDOG -e "bash ${NVOC}/5watchdog"
       #if guake tab is already showing watchdog output dont open a new one
       if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
-        guake -n /home/m1/5watchdog -r MINER_WATCHDOG -e "tail -f  /home/m1/nvoc_logs/watchdog-screenlog.0 "
+        guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  /home/m1/nvoc_logs/watchdog-screenlog.0 "
       fi
       echo ""
       running=""
     elif [ $LOCALorREMOTE == "REMOTE" ]
     then
-      screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
+      screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
       echo ""
       echo "process in screen wdog; ~/nvOC wdog-log"
       echo ""
@@ -431,11 +431,11 @@ fi
 
 if [ $TELEGRAM_MESSAGES == "YES" ]
 then
-  HCD='/home/m1/7telegram'
+  HCD="${NVOC}/7telegram"
   running=$(ps -ef | awk '$NF~"7telegram" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r TELEGRAM_MESSAGES -e "bash /home/m1/7telegram"
+    guake -n $HCD -r TELEGRAM_MESSAGES -e "bash ${NVOC}/7telegram"
     running=""
   fi
 fi
@@ -452,7 +452,7 @@ then
   echo "LAUNCHING:  WTM PROFIT CHECK "
   echo ""
 
-  cat <<EOF >/home/m1/WTM.json
+  cat <<EOF >${NVOC}/WTM.json
 {
  "WTM_URL": "$WTM_AUTO_SWITCH_URL",
  "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
@@ -460,11 +460,11 @@ then
  "currency":"$WTM_CURRENCY"
 }
 EOF
-  HCD='/home/m1/8wtm_profit_check'
+  HCD="${NVOC}/8wtm_profit_check"
   running=$(ps -ef | awk '$NF~"8wtm_profit_check" {print $2}')
   if [ "$running" == "" ]
   then
-    guake -n $HCD -r WTM_PROFIT_CHECK -e "bash /home/m1/8wtm_profit_check"
+    guake -n $HCD -r WTM_PROFIT_CHECK -e "bash ${NVOC}/8wtm_profit_check"
     running=""
   fi
 fi
@@ -487,7 +487,7 @@ then
   fi
 
   sleep 2
-  cd /home/m1
+  cd ${NVOC}
 
   if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
   then
@@ -531,7 +531,7 @@ then
     pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
   fi
 
-  cat <<EOF >/home/m1/conf.json
+  cat <<EOF >${NVOC}/conf.json
 {
  "currency": "$CURRENCY",
  "pwrcost": $POWER_COST,
@@ -543,27 +543,27 @@ then
    "daggerhashimoto": {
      "speed": 0.087, "power": 0.397,
      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
-     "cmd": "/home/m1/eth/ethminer/latest/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
+     "cmd": "${NVOC}/eth/ethminer/latest/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
    },
    "equihash": {
      "speed": 0.000001140, "power": 0.397,
      "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
-     "cmd": "/home/m1/zec/v3_4/miner --eexit 3 --fee 0 --pec --server equihash.usa.nicehash.com --user {ADDR}.{MINER} --pass z --port 3357"
+     "cmd": "${NVOC}/zec/v3_4/miner --eexit 3 --fee 0 --pec --server equihash.usa.nicehash.com --user {ADDR}.{MINER} --pass z --port 3357"
    },
    "neoscrypt": {
      "speed": 0.002160, "power": 0.397,
      "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
-     "cmd": "/home/m1/KTccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/KTccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
    },
    "lyra2rev2": {
      "speed": 0.081, "power": 0.386,
      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
-     "cmd": "/home/m1/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
    },
    "lbry": {
      "speed": 0.639, "power": 0.392,
      "power_limit": $pwr_lim_lbry, "gpu_oc": $gpu_clks_lbry, "mem_oc": $mem_clks_lbry, "fan": 0,
-     "cmd": "/home/m1/SPccminer/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/SPccminer/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
    }
  }
 }
@@ -572,7 +572,7 @@ EOF
   echo "LAUNCHING:  SALFTER_NICEHASH_PROFIT_SWITCHING "
   echo ""
 
-  python2.7 '/home/m1/switch' /home/m1/conf.json
+  python2.7 "${NVOC}/switch" ${NVOC}/conf.json
 
   if [ $LOCALorREMOTE == "LOCAL" ]
   then
@@ -592,7 +592,7 @@ EOF
       echo "mining process in Guake Tab"
       echo ""
       sleep $PROFIT_CHECK_TIMEOUT
-      python2.7 '/home/m1/switch' /home/m1/conf.json
+      python2.7 "${NVOC}/switch" ${NVOC}/conf.json
     fi
 
     if [ $LOCALorREMOTE == "REMOTE" ]
@@ -603,7 +603,7 @@ EOF
       echo ""
       echo "in a terminal to view mining process"
       sleep $PROFIT_CHECK_TIMEOUT
-      python2.7 '/home/m1/switch' /home/m1/conf.json
+      python2.7 "${NVOC}/switch" ${NVOC}/conf.json
     fi
   done
 
@@ -621,7 +621,7 @@ fi
 
 if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ] && [ $AUTO_START_MINER == "YES" ]
 then
-  cd /home/m1
+  cd ${NVOC}
   if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
   then
     gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
@@ -694,7 +694,7 @@ then
     pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
   fi
 
-  cat <<EOF >/home/m1/mph_conf.json
+  cat <<EOF >${NVOC}/mph_conf.json
 {
   "user_name": "$MPH_USERNAME",
   "miner_name": "$WORKER_NAME",
@@ -706,85 +706,85 @@ then
   {
     "Blake-Vanilla":
     {
-      "bin": "/home/m1/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Blake_Vanilla_POWERLIMIT_WATTS, "gpu_oc": $__Blake_Vanilla_CORE_OVERCLOCK, "mem_oc": $Blake_Vanilla_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 12.3, "power": 0.389
     },
     "Cryptonight":
     {
-      "bin": "/home/m1/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 0.000002, "power": 0.325
     },
     "Equihash":
     {
-      "bin": "/home/m1/zec/v3_4/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",
+      "bin": "${NVOC}/zec/v3_4/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",
       "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
       "speed": 0.000001140, "power": 0.397
     },
     "Ethash":
     {
-      "bin": "home/m1/eth/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "bin": "${NVOC}/eth/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
       "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
       "speed": 0.087, "power": 0.397
     },
     "Groestl":
     {
-      "bin": "/home/m1/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Groestl_CORE_OVERCLOCK, "mem_oc": $Groestl_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 0.0853, "power": 0.392
     },
     "Keccak":
     {
-      "bin": "/home/m1/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Keccak_POWERLIMIT_WATTS, "gpu_oc": $__Keccak_CORE_OVERCLOCK, "mem_oc": $Keccak_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 1.45, "power": 0.391
     },
     "Lyra2RE2":
     {
-      "bin": "/home/m1/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
       "speed": 0.081, "power": 0.386
     },
     "Myriad-Groestl":
     {
-      "bin": "/home/m1/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Myriad_Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Myriad_Groestl_CORE_OVERCLOCK, "mem_oc": $Myriad_Groestl_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 0.158, "power": 0.391
     },
     "NeoScrypt":
     {
-      "bin": "/home/m1/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
       "speed": 0.002160, "power": 0.397
     },
     "Qubit":
     {
-      "bin": "/home/m1/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Qubit_POWERLIMIT_WATTS, "gpu_oc": $__Qubit_CORE_OVERCLOCK, "mem_oc": $Qubit_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 0.0509, "power": 0.382
     },
     "Scrypt":
     {
-      "bin": "/home/m1/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Scrypt_POWERLIMIT_WATTS, "gpu_oc": $__Scrypt_CORE_OVERCLOCK, "mem_oc": $Scrypt_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 0.00224, "power": 0.403
     },
     "Sia":
     {
-      "bin": "/home/m1/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Sia_POWERLIMIT_WATTS, "gpu_oc": $__Sia_CORE_OVERCLOCK, "mem_oc": $Sia_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 3.700, "power": 0.403
     },
     "Skein":
     {
-      "bin": "/home/m1/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $Skein_POWERLIMIT_WATTS, "gpu_oc": $__Skein_CORE_OVERCLOCK, "mem_oc": $Skein_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 0.835, "power": 0.383
     },
     "X11":
     {
-      "bin": "/home/m1/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $X11_POWERLIMIT_WATTS, "gpu_oc": $__X11_CORE_OVERCLOCK, "mem_oc": $X11_MEMORY_OVERCLOCK, "fan": 0,
       "speed": 0.0327, "power": 0.403
     }
@@ -795,7 +795,7 @@ EOF
   echo "LAUNCHING:  SALFTER_MPH_PROFIT_SWITCHING "
   echo ""
 
-  python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+  python2.7 "${NVOC}/mph_switch" ${NVOC}/mph_conf.json
 
   if [ $LOCALorREMOTE == "LOCAL" ]
   then
@@ -814,7 +814,7 @@ EOF
       echo "mining process in Guake Tab"
       echo ""
       sleep $PROFIT_CHECK_TIMEOUT
-      python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+      python2.7 "${NVOC}/mph_switch" ${NVOC}/mph_conf.json
     fi
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
@@ -824,7 +824,7 @@ EOF
       echo ""
       echo "in a terminal to view mining process"
       sleep $PROFIT_CHECK_TIMEOUT
-      python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+      python2.7 "${NVOC}/mph_switch" ${NVOC}/mph_conf.json
     fi
   done
 elif [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "NO" ]
@@ -984,7 +984,7 @@ then
 
   if [ $P10X_100_FULL_HEADLESS_MODE == "YES" ]
   then
-    if grep -q "XORG_UPDATED" /home/m1/xorg_flag;
+    if grep -q "XORG_UPDATED" ${NVOC}/xorg_flag;
     then
       sleep 2
       UPDATE="NO"
@@ -992,8 +992,8 @@ then
     if [ $UPDATE == "YES" ]
     then
       sudo nvidia-xconfig --enable-all-gpus --cool-bits=12
-      cd /home/m1
-      echo XORG_UPDATED > '/home/m1/xorg_flag'
+      cd ${NVOC}
+      echo XORG_UPDATED > "${NVOC}/xorg_flag"
       sleep 4
       echo "XORG UPDATED"
       echo ''
@@ -1028,7 +1028,7 @@ then
     echo "Auto Start Miner Set to YES"
     if [ $MINER_WATCHDOG == "YES" ]
     then
-      HCD='/home/m1/5watchdog'
+      HCD="${NVOC}/5watchdog"
       echo ""
 
       sleep 2
@@ -1040,17 +1040,17 @@ then
           echo "LAUNCHING:  MINER WATCHDOG"
           echo ""
           echo "process in screen wdog, guake terminal Tab (f12), ~/nvOC wdog-log"
-          screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
-          #guake -n $HCD -r MINER_WATCHDOG -e "bash /home/m1/5watchdog"
+          screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
+          #guake -n $HCD -r MINER_WATCHDOG -e "bash ${NVOC}/5watchdog"
           #if guake tab is already showing watchdog output dont open a new one
           if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
-            guake -n /home/m1/5watchdog -r MINER_WATCHDOG -e "tail -f  /home/m1/nvoc_logs/watchdog-screenlog.0 "
+            guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  /home/m1/nvoc_logs/watchdog-screenlog.0 "
           fi
           echo ""
           running=""
         elif [ $LOCALorREMOTE == "REMOTE" ]
         then
-          screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
+          screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
           echo "LAUNCHING:  MINER WATCHDOG"
           echo ""
           echo "process in screen wdog; ~/nvOC wdog-log"
@@ -1064,7 +1064,7 @@ then
       echo ""
       echo "LAUNCHING:  WTM AUTO SWITCH "
       echo ""
-      cat <<EOF >/home/m1/WTM.json
+      cat <<EOF >${NVOC}/WTM.json
 {
  "WTM_URL": "$WTM_AUTO_SWITCH_URL",
  "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
@@ -1072,18 +1072,18 @@ then
  "currency":"$WTM_CURRENCY"
 }
 EOF
-      HCD='/home/m1/8wtm_auto_switch'
+      HCD="${NVOC}/8wtm_auto_switch"
       running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
       if [ "$running" == "" ]
       then
-        screen -c /home/m1/screenrc-wtm -dmSL wtm bash /home/m1/8wtm_auto_switch
-        #guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
+        screen -c ${NVOC}/screenrc-wtm -dmSL wtm bash ${NVOC}/8wtm_auto_switch
+        #guake -n $HCD -r WTM_AUTO_SWITCH -e "bash ${NVOC}/8wtm_auto_switch"
         running=""
         if [ $LOCALorREMOTE == "LOCAL" ];        then
           echo ""
           echo "process in screen wtm, guake terminal Tab (f12)"
           if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/8_wtmautoswitchlog" |grep -v grep) ]];then
-            guake -n /home/m1/8wtm_auto_switch -r WTM_AUTO_SWITCH -e "tail -f  /home/m1/nvoc_logs/8_wtmautoswitchlog"
+            guake -n ${NVOC}/8wtm_auto_switch -r WTM_AUTO_SWITCH -e "tail -f  /home/m1/nvoc_logs/8_wtmautoswitchlog"
           elif [ $LOCALorREMOTE == "REMOTE" ];          then
             echo "process in screen wtm, ~/nvOC wtm-log"
             echo "    "
@@ -1108,7 +1108,7 @@ EOF
     running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
     if [ "$running" == "" ]
     then
-      bash /home/m1/0miner
+      bash ${NVOC}/0miner
       echo "    "
       echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
       echo "    "

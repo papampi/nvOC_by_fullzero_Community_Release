@@ -17,11 +17,11 @@ nvOC_poolswitch_ver="v0019-2.1.0001"
 echo "Pool Switch for nvOC $nvOC_poolswitch_ver by papampi"
 ################################### Do not edit above this line #########################################
 
-WDOG_LOG="/home/m1//5_watchdoglog"
+WDOG_LOG="${NVOC}//5_watchdoglog"
 MINER_LOG="/home/m1/nvoc_logs/screenlog.0"
 WTM_LOG="/home/m1/nvoc_logs/8_wtmautoswitchlog"
 
-source /home/m1/1bash
+source ${NVOC}/1bash
 eval 'COIN_POOL=${COIN}_POOL'
 eval 'COIN_PORT=${COIN}_PORT'
 eval 'COIN_POOL_1=${COIN}_POOL_1'
@@ -36,13 +36,13 @@ do
   POOL=0
   if [[ ${!COIN_POOL} == ${!COIN_POOL_1} ]];  then
     echo "Switching Pool to ${!COIN_POOL_2}:${!COIN_PORT_2}" | tee -a $MINER_LOG $WDOG_LOG
-    sed -i 's/'"$COIN_POOL"'=$'"$COIN_POOL_1"'/'"$COIN_POOL"'=$'"$COIN_POOL_2"'/g' /home/m1/1bash
-    sed -i 's/'"$COIN_PORT"'=$'"$COIN_PORT_1"'/'"$COIN_PORT"'=$'"$COIN_PORT_2"'/g' /home/m1/1bash
+    sed -i 's/'"$COIN_POOL"'=$'"$COIN_POOL_1"'/'"$COIN_POOL"'=$'"$COIN_POOL_2"'/g' ${NVOC}/1bash
+    sed -i 's/'"$COIN_PORT"'=$'"$COIN_PORT_1"'/'"$COIN_PORT"'=$'"$COIN_PORT_2"'/g' ${NVOC}/1bash
     echo "Restarting miner and watchdog to complete switching" | tee -a $MINER_LOG $WDOG_LOG
     if [[ $WTM_AUTO_SWITCH == "YES" ]]; then
       WTM=1
       echo "Pool Switch is turning off WTM Auto Switch to prevent mixing coin data while ${!COIN_POOL_1} is down" | tee -a $WTM_LOG
-      sed -i 's/WTM_AUTO_SWITCH="YES"/WTM_AUTO_SWITCH="NO"/g'  /home/m1/1bash
+      sed -i 's/WTM_AUTO_SWITCH="YES"/WTM_AUTO_SWITCH="NO"/g'  ${NVOC}/1bash
       pkill -f 8wtm_auto_switch
     fi
     pkill -f 5watchdog
@@ -56,11 +56,11 @@ done
 if [[ nc -vzw1 ${!COIN_POOL_1} ${!COIN_PORT_1} ]] && [[ $POOL == 0 ]]; then
   echo "Main Pool ${!COIN_POOL_1}:${!COIN_PORT_1} is reachable now" | tee -a $MINER_LOG $WDOG_LOG
   echo "Switch back to main pool" 
-  sed -i 's/'"$COIN_POOL"'=$'"$COIN_POOL_2"'/'"$COIN_POOL"'=$'"$COIN_POOL_1"'/g' /home/m1/1bash
-  sed -i 's/'"$COIN_PORT"'=$'"$COIN_PORT_2"'/'"$COIN_PORT"'=$'"$COIN_PORT_1"'/g' /home/m1/1bash
+  sed -i 's/'"$COIN_POOL"'=$'"$COIN_POOL_2"'/'"$COIN_POOL"'=$'"$COIN_POOL_1"'/g' ${NVOC}/1bash
+  sed -i 's/'"$COIN_PORT"'=$'"$COIN_PORT_2"'/'"$COIN_PORT"'=$'"$COIN_PORT_1"'/g' ${NVOC}/1bash
   if [[ $WTM == 1 ]] ; then
     echo "Pool Switch is turning back on WTM Auto Switch"  | tee -a $WTM_LOG
-    sed -i 's/WTM_AUTO_SWITCH="NO"/WTM_AUTO_SWITCH="YES"/g' /home/m1/1bash
+    sed -i 's/WTM_AUTO_SWITCH="NO"/WTM_AUTO_SWITCH="YES"/g' ${NVOC}/1bash
   fi
   echo "Restarting miner and watchdog to complete switching back to ${!COIN_POOL_1}" | tee -a $MINER_LOG $WDOG_LOG
   pkill -f 5wathcdog

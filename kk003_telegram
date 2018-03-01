@@ -99,16 +99,16 @@ USE_USER_CUSTOM_TIMES_TELEGRAM=1	# 0, ignore user custom times to send telegram 
 # REMENBER: 00:00 won't work. You won't get a telegram at this time (may be i'll fix it later some time)
 # REMENBER: first time of day is 00:01 and last is 23:59
 # REMENBER: You'll never get a telegram at 00:00, set it up to 00:01 (yes, again)
-# REMENBER: If times you ask here for a telegram are in intervals smaller than value of var "TELEGRAM_TIMEOUT_IN_MINUTES" in /home/m1/1bash
+# REMENBER: If times you ask here for a telegram are in intervals smaller than value of var "TELEGRAM_TIMEOUT_IN_MINUTES" in ${NVOC}/1bash
 # you'll only get one of them (usually the one closest to time 00:01 of that day)
 # When this script is running it checks if time left to send a telegram is less than time left for next check. If so "sleeps" until it's time to send the msg
-# So, you better set up var "TELEGRAM_TIMEOUT_IN_MINUTES" in /home/m1/1bash at 10, 15, 20, or 30 minutes max. That way you'll get a rich log file full of info 
+# So, you better set up var "TELEGRAM_TIMEOUT_IN_MINUTES" in ${NVOC}/1bash at 10, 15, 20, or 30 minutes max. That way you'll get a rich log file full of info 
 # 
 #
 USER_CUSTOM_TIMES_TO_SEND_TELEGRAM=("11:00" "16:00" "21:32")
 
 # The script supports multi-telegrams. That is it can send the telegram message to several recipients
-# In /home/m1/1bash, as allways you still have to add your USER ID to variable "TELEGRAM_CHATID" and your API KEY to varible "TELEGRAM_APIKEY" 
+# In ${NVOC}/1bash, as allways you still have to add your USER ID to variable "TELEGRAM_CHATID" and your API KEY to varible "TELEGRAM_APIKEY" 
 # Then add the additional chats that you want to send a telegram to this variable
 # Data must be added this way:
 # 1. 2 values for chat
@@ -997,7 +997,7 @@ fi
 # Here I take my chances and I'll try to get the mining address directly from the process list.
 # The address field should be the larger string so that is what I will go for.
 # What I do is replace spaces for new lines (\n) so I split the hole thing in lines.
-# Then remove the line that contains "/home/m1" because is/may be a large one and I know for sure this is not the mining address.
+# Then remove the line that contains "${NVOC}" because is/may be a large one and I know for sure this is not the mining address.
 # I get the larger line with the help of "awk"
 # If there is a dot "." or lash "/" I remove all chars from it to the end of line because as long as I know address don't have a dot and usually not a slash (remove the worker name)
 # Other approach would be a search for "0x" but I'm not sure if that is a universal solution
@@ -1024,8 +1024,8 @@ fi
 
 # Miner exec name
 # There is not a unique varible in nvoc that defines path or miner so source from 1bash do not work
-MINER_EXEC_PATH=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "/home/m1/")
-MINER_NAME=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "/home/m1/" | grep -oE "[^/]+$")
+MINER_EXEC_PATH=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "${NVOC}/")
+MINER_NAME=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "${NVOC}/" | grep -oE "[^/]+$")
 if [[ "$SEND_MINER_EXEC_NAME" == "YES" && "$SEND_MINER_EXEC_PATH" == "YES" ]]; then
     echo -n "Exec : " >> $KK003_WORKBENCH/files/system_data.txt
     echo "$MINER_EXEC_PATH" >> $KK003_WORKBENCH/files/system_data.txt
@@ -1367,14 +1367,14 @@ if [[ "$AUTO_SWITCH_ON" == "YES" ]]; then
         echo -n "Revenue       : " >> $KK003_WORKBENCH/files/system_data_log_file.txt
         echo "$WTM_REV" >> $KK003_WORKBENCH/files/system_data_log_file.txt
 
-	WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
+	WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  ${NVOC}/WTM_24H_REV)
 	echo "Revenue Average (24h): " >> $KK003_WORKBENCH/files/system_data.txt
         echo "$WTM_AVERAGE_REV" >> $KK003_WORKBENCH/files/system_data.txt
 
         echo -n "Revenue Average (24h): " >> $KK003_WORKBENCH/files/system_data_log_file.txt
         echo "$WTM_AVERAGE_REV" >> $KK003_WORKBENCH/files/system_data_log_file.txt
 
-	BTC_PRICE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
+	BTC_PRICE=$(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
 	echo "BTC Price: " >> $KK003_WORKBENCH/files/system_data.txt
         echo "$BTC_PRICE" >> $KK003_WORKBENCH/files/system_data.txt
 
@@ -1756,19 +1756,19 @@ echo
 if [[ $ONE_BASH -eq 1 || $TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY -eq 1 || $TELEGRAM_CHATID_EMPTY -eq 1 || $TELEGRAM_APIKEY_EMPTY -eq 1 || $MAIN_TELEGRAM_TIME_COUNTER_MISSING -eq 1 ]]; then
 
     if [[ $ONE_BASH -eq 1 ]]; then # Ensure in 1bash exists
-	echo "WARNING: 1bash file is missing (/home/m1/1bash)"
+	echo "WARNING: 1bash file is missing (${NVOC}/1bash)"
     fi
 
     if [[ $TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_TIMEOUT_IN_MINUTES in 1bash has a value
-	echo "WARNING: variable TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+	echo "WARNING: variable TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
     fi
 
     if [[ $TELEGRAM_CHATID_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_CHATID in 1bash has a value
-	echo "WARNING: variable TELEGRAM_CHATID in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+	echo "WARNING: variable TELEGRAM_CHATID in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
     fi
 
     if [[ $TELEGRAM_APIKEY_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_APIKEY_EMPTY in 1bash has a value
-	echo "WARNING: variable TELEGRAM_APIKEY_EMPTY in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+	echo "WARNING: variable TELEGRAM_APIKEY_EMPTY in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
     fi    
 
     if [[ $MAIN_TELEGRAM_TIME_COUNTER_MISSING -eq 1 ]]; then # Ensure main time counter file is 

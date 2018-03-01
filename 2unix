@@ -1,8 +1,10 @@
 #!/bin/bash
 
+export NVOC=/home/m1
+
 firstBOOT="NO"
 
-if grep -q "convert" /home/m1/firstBOOT;
+if grep -q "convert" ${NVOC}/firstBOOT;
 then
   firstBOOT="YES"
 fi
@@ -11,29 +13,29 @@ if [ $firstBOOT == "YES" ]
 then
   echo "First Boot, Copying 1bash and Expanding root partition"
   sleep 5
-  rm /home/m1/firstBOOT
+  rm ${NVOC}/firstBOOT
   sleep 1
-  touch /home/m1/firstBOOT
+  touch ${NVOC}/firstBOOT
   if [ -e /media/m1/12D3-A869/1bash ]
   then
     echo "Copying 1bash"
-    sudo cp '/media/m1/12D3-A869/1bash' '/home/m1/1bash'
+    sudo cp '/media/m1/12D3-A869/1bash' "${NVOC}/1bash"
     echo "wait 15 seconds to minimize errors"
-    sudo dos2unix /home/m1/1bash
+    sudo dos2unix ${NVOC}/1bash
     sleep 15
   else
     echo "Mounting fat partition"
     sudo mkdir -p /media/m1/12D3-A869/
     sudo mount /dev/sda1 /media/m1/12D3-A869
     echo "Copying 1bash from fat partition"
-    sudo cp '/media/m1/12D3-A869/1bash' '/home/m1/1bash'
+    sudo cp '/media/m1/12D3-A869/1bash' "${NVOC}/1bash"
     echo "wait 5 seconds to minimize errors"
-    sudo dos2unix /home/m1/1bash
+    sudo dos2unix ${NVOC}/1bash
     sleep 5
   fi
   echo "Expanding root partition"
   sleep 1
-  sudo bash /home/m1/expand_rootfs.sh
+  sudo bash ${NVOC}/expand_rootfs.sh
   echo "Root Partition expanded, reboot in 5 seconds"
   sleep 5
   sudo reboot
@@ -44,7 +46,7 @@ sleep 3
 
 update="YES"
 
-if grep -q "v0019-2.1" /home/m1/1bash; then
+if grep -q "v0019-2.1" ${NVOC}/1bash; then
   update="NO"
   echo "nvOC v0019-2.1 - Community Release"
 fi
@@ -53,4 +55,4 @@ if [ $update == "YES" ] ; then
   echo "Update Available"
 fi
 
-bash '/home/m1/3main'
+bash "${NVOC}/3main"

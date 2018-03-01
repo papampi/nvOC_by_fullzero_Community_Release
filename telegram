@@ -5,7 +5,7 @@
 # ref: http://bernaerts.dyndns.org/linux/75-debian/351-debian-send-telegram-notification
 # v0019-2
 
-source /home/m1/1bash
+source ${NVOC}/1bash
 
 if [ $TELEGRAM_TYPE == "BaliMiner" ]
 then
@@ -17,7 +17,7 @@ then
   PD=$(/usr/bin/nvidia-smi --query-gpu=power.draw --format=csv,noheader)
   FAN=$(/usr/bin/nvidia-smi --query-gpu=fan.speed --format=csv,noheader)
   LF=$'\n'
-  PROFIT=$(cat /home/m1/current-profit)
+  PROFIT=$(cat ${NVOC}/current-profit)
   MSG="$WORKERNAME $LF Current Hashrate: $CURRENTHASH $LF GPU_UTILIZATIONS: $GPU_UTILIZATIONS $LF TEMPS: $TEMP  $LF  POWERDRAW: $PD"
   /usr/bin/curl -s -X POST --output /dev/null https://api.telegram.org/bot${APIKEY}/sendMessage -d "text=${MSG}" -d chat_id=${CHATID}
 fi
@@ -39,7 +39,7 @@ then
   FAN=$(/usr/bin/nvidia-smi --query-gpu=fan.speed --format=csv,noheader)
   CURRENTHASH=`/usr/bin/curl -s http://localhost:3333 | sed '/Total/!d; /Speed/!d;' | awk '{print $6}' | awk 'NR == 3'`
   LF=$'\n'
-  PROFIT=$(cat /home/m1/current-profit)
+  PROFIT=$(cat ${NVOC}/current-profit)
   MSG=" Worker: $WORKERNAME
   Current Hashrate: $CURRENTHASH
   System Boot Time: $SYSTEM_BOOT_TIME
@@ -62,15 +62,15 @@ then
   APIKEY=$TELEGRAM_APIKEY
   
   touch /home/m1/nvoc_logs/tempcontrol-screenlog.0
-  source /home/m1/1bash
+  source ${NVOC}/1bash
   SYSTEM_BOOT_TIME=$(uptime -s)
   SYSTEM_UP_TIME=$(uptime -p)
   GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
   REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "Yes!!!" || echo "No")
   GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | tr '\n' '   ')
   TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g')
-  WDOG_WARNINGS=$(tail -10 /home/m1/5_watchdoglog )
-  TEMP_WARNINGS=$(tail -10 /home/m1/6_autotemplog )
+  WDOG_WARNINGS=$(tail -10 ${NVOC}/5_watchdoglog )
+  TEMP_WARNINGS=$(tail -10 ${NVOC}/6_autotemplog )
 
   if [[ -n  $(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}') ]]
   then
@@ -84,15 +84,15 @@ then
 
   if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
   then
-    CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-    MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0}')
+    CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+    MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0}')
     AUTO_SWITCH=("Salfter MPH Auto Switch")
 
 
   elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
   then
-    CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-    MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0}')
+    CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+    MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0}')
     AUTO_SWITCH=("Salfter Nicehash Auto Switch")
 
 
@@ -100,11 +100,11 @@ then
   then
 
     CURRENT_COIN="Mining Coin: $COIN"
-    MINING_HISTORY="Mining History: $LF$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 5 |  awk '{print $0}')"
-    WTM_PROFIT="WTM Current Profit: $(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')"
-    WTM_REV="WTM Current Revenue ($WTM_CURRENCY): $(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')"
-    WTM_AVERAGE_REV="24H Average Revenue:  $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)"
-    BTC_PRICE="BTC Price: $(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
+    MINING_HISTORY="Mining History: $LF$(cat ${NVOC}/WTM_switch_history | grep 'Mining switched'|tail -n 5 |  awk '{print $0}')"
+    WTM_PROFIT="WTM Current Profit: $(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')"
+    WTM_REV="WTM Current Revenue ($WTM_CURRENCY): $(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')"
+    WTM_AVERAGE_REV="24H Average Revenue:  $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  ${NVOC}/WTM_24H_REV)"
+    BTC_PRICE="BTC Price: $(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
     if ps aux | grep -v grep | grep -q 8wtm_auto_switch
     then
       WTM_SWITCH=("Running")
@@ -117,10 +117,10 @@ then
   then
     CURRENT_COIN="Mining Coin: $COIN"
     MINING_HISTORY=""
-    WTM_PROFIT="WTM Current Profit: $(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')"
-    WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+    WTM_PROFIT="WTM Current Profit: $(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')"
+    WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')
     WTM_SWITCH=("WTM Profit Check Running. ")
-    BTC_PRICE="BTC Price: $(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
+    BTC_PRICE="BTC Price: $(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
     WTM_AVERAGE_REV=""
     AUTO_SWITCH=""
 
@@ -240,16 +240,16 @@ then
     # REMENBER: 00:00 won't work. You won't get a telegram at this time (may be i'll fix it later some time)
     # REMENBER: first time of day is 00:01 and last is 23:59
     # REMENBER: You'll never get a telegram at 00:00, set it up to 00:01 (yes, again)
-    # REMENBER: If times you ask here for a telegram are in intervals smaller than value of var "TELEGRAM_TIMEOUT_IN_MINUTES" in /home/m1/1bash
+    # REMENBER: If times you ask here for a telegram are in intervals smaller than value of var "TELEGRAM_TIMEOUT_IN_MINUTES" in ${NVOC}/1bash
     # you'll only get one of them (usually the one closest to time 00:01 of that day)
     # When this script is running it checks if time left to send a telegram is less than time left for next check. If so "sleeps" until it's time to send the msg
-    # So, you better set up var "TELEGRAM_TIMEOUT_IN_MINUTES" in /home/m1/1bash at 10, 15, 20, or 30 minutes max. That way you'll get a rich log file full of info
+    # So, you better set up var "TELEGRAM_TIMEOUT_IN_MINUTES" in ${NVOC}/1bash at 10, 15, 20, or 30 minutes max. That way you'll get a rich log file full of info
     #
     #
     USER_CUSTOM_TIMES_TO_SEND_TELEGRAM=("12:00" "18:00" "21:32")
 
     # The script supports multi-telegrams. That is it can send the telegram message to several recipients
-    # In /home/m1/1bash, as allways you still have to add your USER ID to variable "TELEGRAM_CHATID" and your API KEY to varible "TELEGRAM_APIKEY"
+    # In ${NVOC}/1bash, as allways you still have to add your USER ID to variable "TELEGRAM_CHATID" and your API KEY to varible "TELEGRAM_APIKEY"
     # Then add the additional chats that you want to send a telegram to this variable
     # Data must be added this way:
     # 1. 2 values for chat
@@ -1151,7 +1151,7 @@ then
       if [[ "$SEND_MINING_COIN" == "YES" ]]; then
 
         if [[ "$COIN" == "SALFTER_NICEHASH_PROFIT_SWITCHING" || "$COIN" == "SALFTER_MPH_PROFIT_SWITCHING" ]]; then
-          CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
+          CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
         else
           CURRENT_COIN=$COIN
         fi
@@ -1196,8 +1196,8 @@ then
 
       # Miner exec name
       # There is not a unique varible in nvoc that defines path or miner so source from 1bash do not work
-      MINER_EXEC_PATH=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "/home/m1/")
-      MINER_NAME=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "/home/m1/" | grep -oE "[^/]+$")
+      MINER_EXEC_PATH=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "${NVOC}/")
+      MINER_NAME=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "${NVOC}/" | grep -oE "[^/]+$")
       if [[ "$SEND_MINER_EXEC_NAME" == "YES" && "$SEND_MINER_EXEC_PATH" == "YES" ]]; then
         echo -n "Exec : " >> ~/kk003_telegram_data/files/system_data.txt
         echo "$MINER_EXEC_PATH" >> ~/kk003_telegram_data/files/system_data.txt
@@ -1806,19 +1806,19 @@ then
       if [[ $ONE_BASH -eq 1 || $TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY -eq 1 || $TELEGRAM_CHATID_EMPTY -eq 1 || $TELEGRAM_APIKEY_EMPTY -eq 1 || $MAIN_TELEGRAM_TIME_COUNTER_MISSING -eq 1 ]]; then
 
         if [[ $ONE_BASH -eq 1 ]]; then # Ensure in 1bash exists
-          echo "WARNING: 1bash file is missing (/home/m1/1bash)"
+          echo "WARNING: 1bash file is missing (${NVOC}/1bash)"
         fi
 
         if [[ $TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_TIMEOUT_IN_MINUTES in 1bash has a value
-          echo "WARNING: variable TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+          echo "WARNING: variable TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
         fi
 
         if [[ $TELEGRAM_CHATID_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_CHATID in 1bash has a value
-          echo "WARNING: variable TELEGRAM_CHATID in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+          echo "WARNING: variable TELEGRAM_CHATID in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
         fi
 
         if [[ $TELEGRAM_APIKEY_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_APIKEY_EMPTY in 1bash has a value
-          echo "WARNING: variable TELEGRAM_APIKEY_EMPTY in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+          echo "WARNING: variable TELEGRAM_APIKEY_EMPTY in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
         fi
 
         if [[ $MAIN_TELEGRAM_TIME_COUNTER_MISSING -eq 1 ]]; then # Ensure main time counter file is

@@ -3,7 +3,7 @@
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
 log_rotate_ver="v0019-2.0.002"
-source /home/m1/1bash
+source ${NVOC}/1bash
 
 echo "Log Rotate for $nvOC_Ver"
 echo "Version: : $log_rotate_ver" 
@@ -16,7 +16,7 @@ do
 
 
 # Rotating wdog logs
-WDOG_LOG_FILE="/home/m1/5_watchdoglog"
+WDOG_LOG_FILE="${NVOC}/5_watchdoglog"
 if [ -e "$WDOG_LOG_FILE" ] ; then
   if [ $(wc -c < "$WDOG_LOG_FILE")  -ge 200000 ]; then
     #Limit the logfile, just keep the last 100 lines
@@ -25,7 +25,7 @@ if [ -e "$WDOG_LOG_FILE" ] ; then
 fi
 
 # Rotating temp logs
-TEMP_LOG_FILE="/home/m1/6_autotemplog"
+TEMP_LOG_FILE="${NVOC}/6_autotemplog"
 if [ -e "$TEMP_LOG_FILE" ] ; then
   if [ $(wc -c < "$TEMP_LOG_FILE") -ge 200000 ]; then
     #Limit the logfile, just keep the last 100 lines
