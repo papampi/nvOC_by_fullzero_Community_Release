@@ -178,7 +178,7 @@ do
             fi
             target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
             kill $target
-            sleep 1
+            sleep 2
             echo "Commencing Miner Start Command..."
             bash /home/m1/0miner
             echo $( ps ax | grep miner | grep -o 'SCREEN.*' )
@@ -190,6 +190,8 @@ do
           echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"
           pkill -f 5watchdog
           echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
+          target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
+          kill $target
           sleep 1
           pkill -f 3main
         fi
