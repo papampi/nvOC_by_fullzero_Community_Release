@@ -100,6 +100,7 @@ newRev = {}
 for i in data:
     newRev[i["tag"]] = float(i["btc_revenue"])
 newRev = sorted(newRev.items(), key=lambda x: x[1], reverse=True)
+
 #save current revenue
 RevLog = open("WTM_current_revenue", "w")
 for i, j in newRev:
@@ -107,44 +108,32 @@ for i, j in newRev:
     print  i, '%02.2f' %(j*exchrate) +" " + currency
 RevLog.close()
 
-# sort by coin profitability
-updatedTopCoins = sorted(data, key=lambda x: x["profitability"], reverse=True)
-
 # save current profit
 print "New profits"
 profitLog = open("WTM_current_profit", "w")
-for i in updatedTopCoins:
+for i in data:
     profitLog.write("%s:%s\n" % (i["tag"], i["profitability"]))
     print "%s: %s %%" % (i["tag"], i["profitability"])
 profitLog.close()
-
-# is currently mining coin the same as most profitable coin at the moment?
-if miningCoin[0] == updatedTopCoins[0]["tag"]:
-    #print "Same coin, no switch"
-    saveTopCoin(str(updatedTopCoins[0]["tag"]) + ":" + str(updatedTopCoins[0]["profitability"]))
-    sys.exit()
-
-# corrently mining coin is no more the top one
 
 oldTopCoin = { "tag": "-", "profitability": 0 }
 try:
     oldTopCoin = filter(lambda x: x["tag"] == miningCoin[0], data)[0]
 except:
     print "Currently mining coin was not found in inclusion list, will switch to the new best one"
+    minimumDifference = 0
 
-# try parse new top coins and compare their profit with current mining coin profit
+newTopCoin = oldTopCoin
+# try searching for a new top coin comparing its profit with current mining coin profit
 try:
-    if (float(updatedTopCoins[0]["profitability"]) - minimumDifference) >= float(oldTopCoin["profitability"]):
-        print "Currently mining %s coin is no longer more profitabile with %s" % (miningCoin[0], miningCoin[1])
-        #print "Switching to new %s coin %s" % (updatedTopCoins[0]["tag"], updatedTopCoins[0]["profitability"])
-    else:
-        #print "Currently mining coin is still enaugh profitabile w.r.t. the new top coin"
-        #print "Keep mining %s " % miningCoin[0]
-        saveTopCoin(miningCoin[0] + ":" + oldTopCoin["profitability"])
-        sys.exit()
+    for coin in data:
+      # is this the currently mining coin or a better one?
+      if miningCoin[0] == coin["tag"] or (float(coin["profitability"]) - minimumDifference) >= float(oldTopCoin["profitability"]):
+         # Switch / update profitability
+         newTopCoin = coin
+         break
+    saveTopCoin(str(newTopCoin["tag"]) + ":" + str(newTopCoin["profitability"]))
 except:
 # Some errors
     print ""
     sys.exit()
-
-saveTopCoin(str(updatedTopCoins[0]["tag"]) + ":" + str(updatedTopCoins[0]["profitability"]))
