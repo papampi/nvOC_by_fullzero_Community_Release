@@ -158,13 +158,15 @@ do
         echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
         sed -i '/^$/d' /home/m1/WTM_24H_REV
         sleep 1
-        echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"
+          echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"
+          echo "Top Coin Algo: $TOP_COIN_ALGORITHM"
         echo "Current Coin: $CURRENT_COIN"
-        echo "Top Coin Algo: $TOP_COIN_ALGORITHM"
         echo "Top Coin: $TOP_COIN"
 
         if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
-          echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner"
+        echo "Current Coin: $CURRENT_COIN"
+        echo "Top Coin: $TOP_COIN"
+        echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner"
           echo ""
           if [[ -n  $(ps ax | grep SCREEN | grep miner) ]]; then
             echo "Miner is running, lets make the switch"
@@ -178,7 +180,7 @@ do
             fi
             target=$(ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}')
             kill $target
-            sleep 2
+            sleep 1
             echo "Commencing Miner Start Command..."
             bash /home/m1/0miner
             ps ax | grep miner | grep -o 'SCREEN.*'
@@ -187,6 +189,10 @@ do
           fi
 
         elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM ]]; then
+          echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"
+          echo "Top Coin Algo: $TOP_COIN_ALGORITHM"
+          echo "Current Coin: $CURRENT_COIN"
+          echo "Top Coin: $TOP_COIN"
           echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"
           pkill -f 5watchdog
           echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
