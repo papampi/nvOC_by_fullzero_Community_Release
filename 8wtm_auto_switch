@@ -45,6 +45,8 @@
 # v=0015 : Papampi: Changed top coin resolve
 #
 # v=0016 : Papampi: New miner time based on last switch
+#
+# v=0017 : Papampi: Kill miner before restart 3main to prevent GPU lockup
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
