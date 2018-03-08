@@ -38,6 +38,8 @@
 #          New claymore dual mining 
 # v=0013 : damNmad
 #          Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable
+# v=0014 : Falcon
+#          Added RavenCoin (RVN)
 
 
 
@@ -469,6 +471,9 @@ EWBF_OPTS=""
 # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 BMINER_OPTS=""
 
+#ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
+CCMINER_OPTS=""
+
 # change EWBF_PERCENT to alter donation percent for EWBF Miner
 EWBF_PERCENT="0"
 
@@ -524,6 +529,13 @@ KMD_WORKER="$WORKERNAME"
 KMD_ADDRESS="replace_with_your_address"
 KMD_POOL="luckpool.org"
 KMD_PORT="3857"
+
+# RVN ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
+RVN_WORKER="$WORKERNAME"
+RVN_ADDRESS="replace_with_your_address"
+RVN_POOL="RVN_POOL_ADDRESS"
+RVN_PORT="RVN_POOL_PORT"
+RVN_INTENSITY="19"
 
 # BTCP
 BTCP_WORKER="$WORKERNAME"
