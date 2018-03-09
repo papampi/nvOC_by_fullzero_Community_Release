@@ -61,7 +61,7 @@ fi
 
 if [ $COIN == "RVN" ]
 then
-  HCD='/home/m1/MSFTccminer/ccminer'
+  HCD='/home/m1/miners/MSFTccminer/ccminer'
   ADDR="$RVN_ADDRESS"
   screen -dmSL miner $HCD -a x16r -i $RVN_INTENSITY -o stratum+tcp://$RVN_POOL:$RVN_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
 fi
