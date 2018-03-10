@@ -40,11 +40,13 @@
 #          Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable
 # v=0014 : Falcon
 #          Added RavenCoin (RVN)
+# v=0015 : papampi
+#          Temp Control Maximum fan speed 
 
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0014"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0015"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -319,6 +321,8 @@ TARGET_TEMP=65              # Set the desired target temperature in Celsius. Rec
 ALLOWED_TEMP_DIFF=2         # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
 
 MINIMAL_FAN_SPEED=50        # Lowest fan speed that will be used. Recommended ranges: 40 - 60
+
+MAXIMUM_FAN_SPEED=95        # Maximum fan speed before temp control drops power limit to reach TARGET_TEMP. Recommended ranges: 90 - 100
 
 __FAN_ADJUST=5              # Fan adjustment size in percent
 
