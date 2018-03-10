@@ -49,12 +49,11 @@
 #          Pool check
 # v=0013 : Papampi 
 #          Alternate Pool switch with 9poolswitch
-#
+# v=0014 : Papampi 
+#          Check internet and miner before starting main loop
 
-# DEV_VERSION=0013
-
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-nvOC_wdog_ver="v0019-2.0.012"   # Do not edit this
+nvOC_Ver="nvOC v0019-2.1 - Community Release"
+nvOC_wdog_ver="v0019-2.0.014"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
@@ -145,16 +144,39 @@ then
   fi
 fi
 
-if [[ -z $(ps ax | grep -i screen | grep miner) ]]
-then
-  echo "WARNING: $(date) - Miner is not running, starting watchdog in 10 seconds to look for problems"
+
+## Check internet before starting main loop
+while ! nc -vzw1 google.com 443;
+do
+  echo "WARNING: $(date) - Internet is down, checking again in 30 seconds..."
+  sleep 30
+done
+
+## Before starting to check GPU utilization in main loop check if miner start was succefull or not
+## in case there is problem in miner variables or other problems, dont start main loop to restart 3main and eventually reboot.
+echo "Giving miner 10 seconds to stabilize"
+sleep 10
+
+REUP_MINER=0
+while [[ -z $(ps ax | grep SCREEN | grep miner) ]] ;do
+  echo "WARNING: $(date) - Miner not running, commencing miner start command again" | tee -a ${LOG_FILE}
+  bash /home/m1/0miner
+  ps ax | grep miner | grep -o 'SCREEN.*'
+  REUP_MINER=$(($REUP_MINER + 1))
+  sleep 10
+  echo "Miner restarted $REUP_MINER time(s), check your settings"
+done
+
+if [[ $REUP_MINER -gt 0 ]] ; then
+  echo "Miner is running after restarting $REUP_MINER time(s), waiting $SLEEP_TIME sec before going on watch" | tee -a ${LOG_FILE}
 else
-  echo "$(date) - Miner is running, waiting $SLEEP_TIME seconds before going 'on watch'"
-  sleep $SLEEP_TIME
+  echo "Miner is running, waiting $SLEEP_TIME sec before going on watch" | tee -a ${LOG_FILE}
 fi
+sleep $SLEEP_TIME
 
 
-# Main Loop [infinite]
+
+### Watchdog Main Loop [infinite]
 while true; do
 
   # Echo status
