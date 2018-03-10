@@ -159,7 +159,7 @@ sleep 10
 
 REUP_MINER=0
 while [[ -z $(ps ax | grep SCREEN | grep miner) ]] ;do
-  echo "WARNING: $(date) - Miner not running, commencing miner start command again" | tee -a ${LOG_FILE}
+  echo "WARNING: $(date) - Miner not running, commencing miner start command again" 
   bash /home/m1/0miner
   ps ax | grep miner | grep -o 'SCREEN.*'
   REUP_MINER=$(($REUP_MINER + 1))
@@ -173,8 +173,6 @@ else
   echo "Miner is running, waiting $SLEEP_TIME sec before going on watch" | tee -a ${LOG_FILE}
 fi
 sleep $SLEEP_TIME
-
-
 
 ### Watchdog Main Loop [infinite]
 while true; do
