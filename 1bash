@@ -328,7 +328,7 @@ __FAN_ADJUST=5              # Fan adjustment size in percent
 
 POWER_ADJUST=5              # Adjustment size in watts. If the target temp can not be achieved and fan is already at 100%, reduce Power Limit
 
-RESTORE_POWER_LIMIT=90      # Restore original Power Limit if fan speed is lower than this percentage. Recommended: 90
+RESTORE_POWER_LIMIT=85      # Restore original Power Limit if fan speed is lower than this percentage. Recommended: 10% less than Maximum fan speed
 
 
 ########################################################
