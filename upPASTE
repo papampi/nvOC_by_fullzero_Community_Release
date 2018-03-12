@@ -1,0 +1,51 @@
+#!/bin/bash
+
+source ~/1bash
+TIMEOUT=$(($upPASTE_TIMEOUT_IN_MINUTES * 60))
+echo ""
+echo "checks for a 1bash update every $TIMEOUT seconds"
+echo ""
+
+BITCOIN="theGROUND"
+
+while [ $BITCOIN == "theGROUND" ]
+do
+
+cd /tmp
+wget $pasteBASH       # Assumes the file we are getting is called 1bash
+cp '/tmp/1bash' '/home/m1/temp1bash'
+rm '/tmp/1bash'
+
+change="NO"
+
+old=$(md5sum '/home/m1/1bash' | sed 's/[^0-9]*//g')
+echo $old
+echo ""
+sleep 2
+new=$(md5sum '/home/m1/temp1bash' | sed 's/[^0-9]*//g')
+echo $new
+echo ""
+
+if [ $old != $new ]
+then
+change="YES"
+cp '/home/m1/temp1bash' '/home/m1/1bash'
+sleep 2
+pkill -e gnome-terminal
+pkill -f 3main
+pkill -e screen
+echo ""
+echo "1bash updated from paste: $pasteBASH"
+echo ""
+sleep 5
+gnome-terminal
+fi
+
+if [ $change == "NO" ]
+then
+echo "no changes"
+echo ""
+fi
+sleep $TIMEOUT
+done
+fi
