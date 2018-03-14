@@ -180,7 +180,7 @@ nvOC_1bash_ver="v0019-2.0.003"   # Do not edit this
 #                                                      #
 ########################################################
 
-COIN="ZEC"
+COIN="SALFTER_PROGRAMATIC_SWITCHING"
 
 AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
@@ -1045,3 +1045,4 @@ then
     MEMORY_OVERCLOCK=-1000
   fi
 fi
+
