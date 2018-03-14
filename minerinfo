@@ -130,6 +130,13 @@ then
   AUTO_SWITCH="Salfter Nicehash Auto Switch"
 
 
+elif [ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" ]
+then
+  CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
+  MINING_HISTORY=$(tail -n 5 /home/m1/algo-log |  awk '{print $0,"<br>"}')
+  AUTO_SWITCH=("Salfter Programatic Switch")
+
+
 elif [ $WTM_AUTO_SWITCH == "YES" ]
 then
   CURRENT_COIN=$COIN
