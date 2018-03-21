@@ -108,11 +108,6 @@ P10X_100="NO"
 
 nvidia-smi -L > /tmp/tempa
 
-if grep -q "1050" /tmp/tempa;
-then
-  ___1050_or_1050ti="YES"
-fi
-
 if grep -q -E '1050|P106|P104|P102' /tmp/tempa;
 then
   ___1050_or_1050ti="YES"
