@@ -64,22 +64,17 @@ NVD=nvidia-settings
 
 SALFTER="NO"
 
-if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
+if [[ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" || $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]]
 then
   SALFTER="YES"
 fi
 
-if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
-then
-  SALFTER="YES"
-fi
-
-if [ $CLEAR_LOGS_ON_BOOT == "YES" ]
+if [[ $CLEAR_LOGS_ON_BOOT == YES ]]
 then
   sudo bash '/home/m1/clear_logs'
 fi
 
-if [ $LOG_ROTATE == "YES" ]
+if [[ $LOG_ROTATE == YES ]]
 then
   HCD='/home/m1/log_rotate'
   running=$(ps -ef | awk '$NF~"log_rotate" {print $2}')
@@ -90,12 +85,12 @@ then
   fi
 fi
 
-if [ $SALFTER == "NO" ]
+if [[ $SALFTER == NO ]]
 then
   pkill -e miner
 fi
 
-if [ $LOCALorREMOTE == "REMOTE" ]
+if [[ $LOCALorREMOTE == REMOTE ]]
 then
   export DISPLAY=:0
 fi
@@ -108,10 +103,10 @@ P10X_100="NO"
 
 nvidia-smi -L > /tmp/tempa
 
-if grep -q "1050" /tmp/tempa;	
-then	
-  ___1050_or_1050ti="YES"	
-fi	
+if grep -q "1050" /tmp/tempa;
+then
+  ___1050_or_1050ti="YES"
+fi
 
 if grep -q -E 'P106|P104|P102' /tmp/tempa;
 then
@@ -136,19 +131,19 @@ fi
 # dev note by leenoox:
 # I don't see the relevance of this code, if the previous check for 28800 fails, but this one passes, it
 # will mistakenly set XORG="OK" even though the check for 28800 failed. This needs to be revisited
-if [ $P10X_100 == "YES" ]
+if [[ $P10X_100 == YES ]]
 then
   XORG="OK"
 fi
 
 # dev note by leenoox:
 # we need to create function for this:
-if [ $SLOW_USB_KEY_MODE == "YES" ]
+if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
   sleep 6
 fi
 
-if [ $XORG == "FAIL" ]
+if [[ $XORG == FAIL ]]
 then
   echo ""
   echo "Xorg PROBLEM DETECTED"
@@ -179,7 +174,7 @@ echo ""
 echo ""
 echo "rig MAC: $MAC"
 
-if [ $SLOW_USB_KEY_MODE == "YES" ]
+if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
   sleep 6
 fi
@@ -188,7 +183,7 @@ echo ""
 echo ''
 lspci | grep VGA
 
-if [ $SLOW_USB_KEY_MODE == "YES" ]
+if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
   sleep 6
 fi
@@ -198,12 +193,12 @@ echo ''
 nvidia-smi
 echo ""
 
-if [ $SLOW_USB_KEY_MODE == "YES" ]
+if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
   sleep 6
 fi
 
-if [ $USE_ENVIRONMENTAL_VARIBLES == "YES" ]
+if [[ $USE_ENVIRONMENTAL_VARIBLES == YES ]]
 then
   export GPU_FORCE_64BIT_PTR="0"
   export GPU_MAX_HEAP_SIZE="100"
@@ -213,17 +208,17 @@ then
   echo ENVIRONMENTAL VARIBLES SET
 fi
 
-if [ $CONTROL_GPU_LED == "YES" ]
+if [[ $CONTROL_GPU_LED == YES ]]
 then
-  ${NVD} -a GPULogoBrightness=$LED_BRIGHTNESS
+  ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
 fi
 
-if [ $POWERLIMIT == "YES" ]
+if [[ $POWERLIMIT == YES ]]
 then
-  sudo nvidia-smi -pl $POWERLIMIT_WATTS
+  sudo nvidia-smi -pl "$POWERLIMIT_WATTS"
 fi
 
-if [ $INDIVIDUAL_POWERLIMIT == "YES" ]
+if [[ $INDIVIDUAL_POWERLIMIT == YES ]]
 then
   sudo nvidia-smi -i 0 -pl $INDIVIDUAL_POWERLIMIT_0
   sudo nvidia-smi -i 1 -pl $INDIVIDUAL_POWERLIMIT_1
@@ -246,7 +241,7 @@ then
   sudo nvidia-smi -i 18 -pl $INDIVIDUAL_POWERLIMIT_18
 fi
 
-if [ $TEAMVIEWER == "YES" ]
+if [[ $TEAMVIEWER == YES ]]
 then
   running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
   if [ "$running" == "" ]
@@ -258,7 +253,7 @@ then
   fi
 fi
 
-if [ $TEAMVIEWER == "NO" ]
+if [[ $TEAMVIEWER == NO ]]
 then
   running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
   if [ "$running" != "" ]
@@ -269,17 +264,17 @@ then
   fi
 fi
 
-if [ $SSH == "YES" ]
+if [[ $SSH == YES ]]
 then
   sudo cp '/etc/init/ssh.conf-on' '/etc/init/ssh.conf'
 fi
 
-if [ $SSH == "NO" ]
+if [[ $SSH == NO ]]
 then
   sudo cp '/etc/init/ssh.conf-off' '/etc/init/ssh.conf'
 fi
 
-if [ $SRR == "YES" ]
+if [[ $SRR == YES ]]
 then
   sleep 2
   HCD='SRR'
@@ -291,16 +286,16 @@ then
   fi
 fi
 
-if [ $plusCPU == "YES" ] && [ $AUTO_START_MINER == "YES" ]
+if [[ $plusCPU == "YES" && $AUTO_START_MINER == "YES" ]]
 then
   HCD='/home/m1/cpuOPT/cpuminer'
   XMRADDR="$XMR_ADDRESS.$XMR_WORKER"
   echo ""
   echo ""
   echo "LAUNCHING:  plusCPU"
-  if [[ `ps -ef |grep cpuminer |grep -v grep |wc -l` -eq 0 ]]
+  if [[ $(ps -ef | grep -v grep | grep -c cpuminer ) -eq 0 ]]
   then
-    if [ $LOCALorREMOTE == "LOCAL" ]
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
       guake -n $HCD -r plusCPU -e "$HCD -a cryptonight -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT"
     else
@@ -313,7 +308,7 @@ then
   fi
 fi
 
-if [ $AUTO_REBOOT == "YES" ]
+if [[ $AUTO_REBOOT == YES ]]
 then
   HCD='/home/m1/reboot'
   running=$(ps -ef | awk '$NF~"reboot" {print $2}')
@@ -325,7 +320,7 @@ then
 fi
 
 
-if [ $_Parallax_MODE == "YES" ]
+if [[ $_Parallax_MODE == YES ]]
 then
   HCD='/home/m1/upPASTE'
   running=$(ps -ef | awk '$NF~"upPASTE" {print $2}')
@@ -344,15 +339,13 @@ fi
 
 sleep 2
 
-if [ $MINER_TEMP_CONTROL == "YES" ]
+if [[ $MINER_TEMP_CONTROL == YES ]]
 then
-  reup=0
   running=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
   if [ "$running" != "" ]
   then
     target=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
-    kill $target
-    reup=1
+    kill "$target"
   fi
   sleep 2
   echo ""
@@ -361,7 +354,7 @@ then
   if [ "$running" == "" ]
   then
     echo "LAUNCHING:  MINER TEMPCONTROL"
-    if [ $LOCALorREMOTE == "LOCAL" ]
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
       #guake -n $HCD -r MINER_TEMP_CONTROL -e "bash /home/m1/6tempcontrol"
       echo ""
@@ -373,7 +366,7 @@ then
       fi
       echo ""
       running=""
-    elif [ $LOCALorREMOTE == "REMOTE" ]
+    elif [[ $LOCALorREMOTE == REMOTE ]]
     then
       screen -c /home/m1/screenrc-tempcontrol -dmSL temp bash /home/m1/6tempcontrol
       echo ""
@@ -384,7 +377,7 @@ then
   fi
 fi
 
-if [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "YES" ] && [ $SALFTER == "YES" ]
+if [[ $MINER_WATCHDOG == "YES" && $AUTO_START_MINER == "YES" && $SALFTER == "YES" ]]
 then
   HCD='/home/m1/5watchdog'
   echo ""
@@ -393,7 +386,7 @@ then
   if [ "$running" == "" ]
   then
     echo "LAUNCHING:  MINER WATCHDOG"
-    if [ $LOCALorREMOTE == "LOCAL" ]
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
       echo ""
       echo "process in screen wdog, guake terminal Tab (f12), ~/nvOC wdog-log"
@@ -405,7 +398,7 @@ then
       fi
       echo ""
       running=""
-    elif [ $LOCALorREMOTE == "REMOTE" ]
+    elif [[ $LOCALorREMOTE == REMOTE ]]
     then
       screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
       echo ""
@@ -414,7 +407,7 @@ then
       running=""
     fi
   fi
-elif [ $MINER_WATCHDOG == "YES" ] && [ $AUTO_START_MINER == "NO" ] && [ $SALFTER == "YES" ]
+elif [[ $MINER_WATCHDOG == "YES" && $AUTO_START_MINER == "NO" && $SALFTER == "YES" ]]
 then
   echo "  "
   echo "  "
@@ -423,7 +416,7 @@ then
   echo "  "
 fi
 
-if [ $TELEGRAM_MESSAGES == "YES" ]
+if [[ $TELEGRAM_MESSAGES == YES ]]
 then
   HCD='/home/m1/7telegram'
   running=$(ps -ef | awk '$NF~"7telegram" {print $2}')
@@ -434,14 +427,13 @@ then
   fi
 fi
 
-if [ "$FAN_SPEED" -lt "40" ]
+if [[ $FAN_SPEED -lt 40 ]]
 then
   FAN_SPEED=40
 fi
 
-if [[ $WTM_PROFIT_CHECK == "YES" ]] && [[ $WTM_AUTO_SWITCH == "NO" ]]
+if [[ $WTM_PROFIT_CHECK == YES && $WTM_AUTO_SWITCH == NO ]]
 then
-
   echo ""
   echo "LAUNCHING:  WTM PROFIT CHECK "
   echo ""
@@ -464,14 +456,14 @@ EOF
 fi
 
 
-if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "YES" ]
+if [[ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" && $AUTO_START_MINER == "YES" ]]
 then
   HOSTEDIT="YES"
   if grep -q "api.nicehash.com" /etc/hosts;
   then
     HOSTEDIT="NO"
   fi
-  if [ $HOSTEDIT == "YES" ]
+  if [[ $HOSTEDIT == YES ]]
   then
     sudo -- sh -c -e "echo '' >> /etc/hosts";
     sudo -- sh -c -e "echo '104.20.158.21 api.nicehash.com' >> /etc/hosts";
@@ -483,7 +475,7 @@ then
   sleep 2
   cd /home/m1
 
-  if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
+  if [[ "$INDIVIDUAL_CLOCKS" == YES ]]
   then
     gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
 
@@ -510,7 +502,7 @@ then
     mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
   fi
 
-  if [ "$INDIVIDUAL_POWERLIMIT" == "YES" ]
+  if [[ "$INDIVIDUAL_POWERLIMIT" == YES ]]
   then
     pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13,$INDIVIDUAL_POWERLIMIT_14,$INDIVIDUAL_POWERLIMIT_15,$INDIVIDUAL_POWERLIMIT_16,$INDIVIDUAL_POWERLIMIT_17,$INDIVIDUAL_POWERLIMIT_18]"
     pwr_lim_equihash=$pwr_lim_daggerhashimoto
@@ -568,7 +560,7 @@ EOF
 
   python2.7 '/home/m1/switch' /home/m1/conf.json
 
-  if [ $LOCALorREMOTE == "LOCAL" ]
+  if [[ $LOCALorREMOTE == LOCAL ]]
   then
     guake -n 1 -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
   fi
@@ -579,29 +571,29 @@ EOF
     cat current-profit
     echo ""
 
-    if [ $LOCALorREMOTE == "LOCAL" ]
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
       guake -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
       echo ""
       echo "mining process in Guake Tab"
       echo ""
-      sleep $PROFIT_CHECK_TIMEOUT
+      sleep "$PROFIT_CHECK_TIMEOUT"
       python2.7 '/home/m1/switch' /home/m1/conf.json
     fi
 
-    if [ $LOCALorREMOTE == "REMOTE" ]
+    if [[ $LOCALorREMOTE == REMOTE ]]
     then
       echo "ENTER:"
       echo ""
       echo "screen -r miner"
       echo ""
       echo "in a terminal to view mining process"
-      sleep $PROFIT_CHECK_TIMEOUT
+      sleep "$PROFIT_CHECK_TIMEOUT"
       python2.7 '/home/m1/switch' /home/m1/conf.json
     fi
   done
 
-elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "NO" ]
+elif [[ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" && $AUTO_START_MINER == "NO" ]]
 then
   echo "    "
   echo "    "
@@ -613,10 +605,10 @@ then
 fi
 
 
-if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ] && [ $AUTO_START_MINER == "YES" ]
+if [[ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" && $AUTO_START_MINER == "YES" ]]
 then
   cd /home/m1
-  if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
+  if [[ "$INDIVIDUAL_CLOCKS" == YES ]]
   then
     gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
 
@@ -663,7 +655,7 @@ then
     mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
   fi
 
-  if [ "$INDIVIDUAL_POWERLIMIT" == "YES" ]
+  if [[ "$INDIVIDUAL_POWERLIMIT" == YES ]]
   then
     pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13,$INDIVIDUAL_POWERLIMIT_14,$INDIVIDUAL_POWERLIMIT_15,$INDIVIDUAL_POWERLIMIT_16,$INDIVIDUAL_POWERLIMIT_17,$INDIVIDUAL_POWERLIMIT_18]"
     pwr_lim_equihash=$pwr_lim_daggerhashimoto
@@ -679,7 +671,7 @@ then
     Scrypt_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
     Sia_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
     Skein_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto5
+    X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
   else
     pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
     pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
@@ -791,7 +783,7 @@ EOF
 
   python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
 
-  if [ $LOCALorREMOTE == "LOCAL" ]
+  if [[ $LOCALorREMOTE == LOCAL ]]
   then
     guake -n 1 -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
   fi
@@ -801,27 +793,27 @@ EOF
     echo ""
     cat current-profit
     echo ""
-    if [ $LOCALorREMOTE == "LOCAL" ]
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
       guake -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
       echo ""
       echo "mining process in Guake Tab"
       echo ""
-      sleep $PROFIT_CHECK_TIMEOUT
+      sleep "$PROFIT_CHECK_TIMEOUT"
       python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
     fi
-    if [ $LOCALorREMOTE == "REMOTE" ]
+    if [[ $LOCALorREMOTE == REMOTE ]]
     then
       echo "ENTER:"
       echo ""
       echo "screen -r miner"
       echo ""
       echo "in a terminal to view mining process"
-      sleep $PROFIT_CHECK_TIMEOUT
+      sleep "$PROFIT_CHECK_TIMEOUT"
       python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
     fi
   done
-elif [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]  && [ $AUTO_START_MINER == "NO" ]
+elif [[ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" && $AUTO_START_MINER == "NO" ]]
 then
   echo "    "
   echo "    "
@@ -833,10 +825,10 @@ then
 fi
 
 
-if [ $SALFTER == "NO" ]
+if [[ $SALFTER == NO ]]
 then
 
-  if [ $INDIVIDUAL_CLOCKS == "YES" ]
+  if [[ $INDIVIDUAL_CLOCKS == YES ]]
   then
     __CORE_OVERCLOCK[0]=$__CORE_OVERCLOCK_0
     MEMORY_OVERCLOCK[0]=$MEMORY_OVERCLOCK_0
@@ -878,7 +870,7 @@ then
     MEMORY_OVERCLOCK[18]=$MEMORY_OVERCLOCK_18
   fi
 
-  if [ $INDIVIDUAL_CLOCKS == "NO" ]
+  if [[ $INDIVIDUAL_CLOCKS == NO ]]
   then
     __CORE_OVERCLOCK[0]=$__CORE_OVERCLOCK
     MEMORY_OVERCLOCK[0]=$MEMORY_OVERCLOCK
@@ -922,25 +914,25 @@ then
 
   TI="3"
 
-  if [ $___1050_or_1050ti == "YES" ]
+  if [[ $___1050_or_1050ti == YES ]]
   then
     TI="2"
-    if [ $NORMAL == "YES" ]
+    if [[ $NORMAL == YES ]]
     then
       TI="2 3"
     fi
   fi
 
-  if [ $SLOW_USB_KEY_MODE == "YES" ]
+  if [[ $SLOW_USB_KEY_MODE == YES ]]
   then
     sleep 6
   fi
 
-  if [ $P10X_100_FULL_HEADLESS_MODE == "NO" ]
+  if [[ $P10X_100_FULL_HEADLESS_MODE == NO ]]
   then
 
     gpu=0
-    while [ $gpu -lt $GPUS ]
+    while [ $gpu -lt "$GPUS" ]
     do
       for j in $TI
       do
@@ -952,10 +944,10 @@ then
       gpu=$(($gpu+1))
     done
 
-    if [[ $MANUAL_FAN == "YES" && $MINER_TEMP_CONTROL == "NO" ]]
+    if [[ $MANUAL_FAN == YES && $MINER_TEMP_CONTROL == NO ]]
     then
       gpu=0
-      while [ $gpu -lt $GPUS ]
+      while [[ $gpu -lt $GPUS ]]
       do
         ${NVD} -a [gpu:$gpu]/GPUFanControlState=1
         ${NVD} -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}
@@ -963,7 +955,7 @@ then
       done
     fi
 
-    if [[ $MANUAL_FAN == "NO" && $MINER_TEMP_CONTROL == "NO" ]]
+    if [[ $MANUAL_FAN == NO && $MINER_TEMP_CONTROL == NO ]]
     then
       gpu=0
       while [ $gpu -lt $GPUS ]
@@ -976,14 +968,14 @@ then
 
   UPDATE="YES"
 
-  if [ $P10X_100_FULL_HEADLESS_MODE == "YES" ]
+  if [[ $P10X_100_FULL_HEADLESS_MODE == YES ]]
   then
     if grep -q "XORG_UPDATED" /home/m1/xorg_flag;
     then
       sleep 2
       UPDATE="NO"
     fi
-    if [ $UPDATE == "YES" ]
+    if [[ $UPDATE == YES ]]
     then
       sudo nvidia-xconfig --enable-all-gpus --cool-bits=12
       cd /home/m1
@@ -998,29 +990,29 @@ then
       sudo reboot
     fi
     sleep 4
-    ${NVD} -a GPUGraphicsClockOffset[2]=${__CORE_OVERCLOCK}
-    ${NVD} -a GPUMemoryTransferRateOffset[2]=${MEMORY_OVERCLOCK}
+    ${NVD} -a GPUGraphicsClockOffset[2]="${__CORE_OVERCLOCK}"
+    ${NVD} -a GPUMemoryTransferRateOffset[2]="${MEMORY_OVERCLOCK}"
   fi
 
-  if [ $GPUPowerMizerMode_Adjust == "YES" ]
+  if [[ $GPUPowerMizerMode_Adjust == YES ]]
   then
     gpu=0
-    while [ $gpu -lt $GPUS ]
+    while [ $gpu -lt "$GPUS" ]
     do
-      sudo ${NVD} -a [gpu:$gpu]/GPUPowerMizerMode=${GPUPowerMizerMode}
+      sudo ${NVD} -a [gpu:$gpu]/GPUPowerMizerMode="${GPUPowerMizerMode}"
       gpu=$(($gpu+1))
     done
   fi
 
-  if [ $SLOW_USB_KEY_MODE == "YES" ]
+  if [[ $SLOW_USB_KEY_MODE == YES ]]
   then
     sleep 6
   fi
 
-  if [ $AUTO_START_MINER == "YES" ]
+  if [[ $AUTO_START_MINER == YES ]]
   then
     echo "Auto Start Miner Set to YES"
-    if [ $MINER_WATCHDOG == "YES" ]
+    if [[ $MINER_WATCHDOG == YES ]]
     then
       HCD='/home/m1/5watchdog'
       echo ""
@@ -1029,7 +1021,7 @@ then
       running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
       if [ "$running" == "" ]
       then
-        if [ $LOCALorREMOTE == "LOCAL" ]
+        if [[ $LOCALorREMOTE == LOCAL ]]
         then
           echo "LAUNCHING:  MINER WATCHDOG"
           echo ""
@@ -1037,12 +1029,12 @@ then
           screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
           #guake -n $HCD -r MINER_WATCHDOG -e "bash /home/m1/5watchdog"
           #if guake tab is already showing watchdog output dont open a new one
-          if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
+          if [[ ! $(ps ax | grep "tail -f /home/m1/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
             guake -n /home/m1/5watchdog -r MINER_WATCHDOG -e "tail -f  /home/m1/nvoc_logs/watchdog-screenlog.0 "
           fi
           echo ""
           running=""
-        elif [ $LOCALorREMOTE == "REMOTE" ]
+        elif [[ $LOCALorREMOTE == REMOTE ]]
         then
           screen -c /home/m1/screenrc-watchdog -dmSL wdog bash /home/m1/5watchdog
           echo "LAUNCHING:  MINER WATCHDOG"
@@ -1053,7 +1045,7 @@ then
       fi
     fi
 
-    if [ $WTM_AUTO_SWITCH == "YES" ]
+    if [[ $WTM_AUTO_SWITCH == YES ]]
     then
       echo ""
       echo "LAUNCHING:  WTM AUTO SWITCH "
@@ -1073,12 +1065,12 @@ EOF
         screen -c /home/m1/screenrc-wtm -dmSL wtm bash /home/m1/8wtm_auto_switch
         #guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
         running=""
-        if [ $LOCALorREMOTE == "LOCAL" ];        then
+        if [[ $LOCALorREMOTE == LOCAL ]];        then
           echo ""
           echo "process in screen wtm, guake terminal Tab (f12)"
-          if [[ -z $(ps ax | grep "tail -f /home/m1/nvoc_logs/8_wtmautoswitchlog" |grep -v grep) ]];then
+          if [[ ! $(ps ax | grep "tail -f /home/m1/nvoc_logs/8_wtmautoswitchlog" | grep -v grep) ]];then
             guake -n /home/m1/8wtm_auto_switch -r WTM_AUTO_SWITCH -e "tail -f  /home/m1/nvoc_logs/8_wtmautoswitchlog"
-          elif [ $LOCALorREMOTE == "REMOTE" ];          then
+          elif [[ $LOCALorREMOTE == REMOTE ]];          then
             echo "process in screen wtm, ~/nvOC wtm-log"
             echo "    "
           fi
@@ -1086,14 +1078,11 @@ EOF
       fi
     fi
 
-    reup=0
     running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-
     if [ "$running" != "" ]
     then
       target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-      kill $target
-      reup=1
+      kill "$target"
     fi
     sleep 2
     echo ""
@@ -1104,17 +1093,17 @@ EOF
     then
       bash /home/m1/0miner
       echo "    "
-      echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
+      echo "    " $(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
       echo "    "
       running=""
-      if [ $LOCALorREMOTE == "REMOTE" ]
+      if [[ $LOCALorREMOTE == REMOTE ]]
       then
         echo "Miner output: ~/nvOC miner-log"
         echo "    "
         echo "    "
-      elif [ $LOCALorREMOTE == "LOCAL" ]
+      elif [[ $LOCALorREMOTE == LOCAL ]]
       then
-        if [ $WTM_AUTO_SWITCH == "YES" ]
+        if [[ $WTM_AUTO_SWITCH == YES ]]
         then
           echo "Miner output: ~/nvOC miner-log"
           echo "    "
@@ -1126,7 +1115,7 @@ EOF
       fi
     fi
 
-  elif [ $AUTO_START_MINER == "NO" ]
+  elif [[ $AUTO_START_MINER == NO ]]
   then
     echo "    "
     echo "    "
