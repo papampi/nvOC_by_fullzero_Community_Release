@@ -113,13 +113,19 @@ then
   ___1050_or_1050ti="YES"
 fi
 
-if grep -q "P106-100" /tmp/tempa;
+if grep -q "P106" /tmp/tempa;
 then
   ___1050_or_1050ti="YES"
   P10X_100="YES"
 fi
 
-if grep -q "P104-100" /tmp/tempa;
+if grep -q "P104" /tmp/tempa;
+then
+  ___1050_or_1050ti="YES"
+  P10X_100="YES"
+fi
+
+if grep -q "P102" /tmp/tempa;
 then
   ___1050_or_1050ti="YES"
   P10X_100="YES"
