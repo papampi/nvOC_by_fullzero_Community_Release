@@ -42,11 +42,13 @@
 #          Added RavenCoin (RVN)
 # v=0015 : papampi
 #          Temp Control Maximum fan speed 
+# v=0016 : papampi
+#          Some fix in claymore_dual
 
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0015"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0016"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -469,6 +471,9 @@ ZM_OPTS=""
 # EWBF ZEC Miner version
 EWBF_VERSION="3_4" # choose 3_3  or  3_4
 
+# change EWBF_PERCENT to alter donation percent for EWBF Miner
+EWBF_PERCENT="0"
+
 # EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
 EWBF_OPTS=""
 
@@ -477,9 +482,6 @@ BMINER_OPTS=""
 
 #ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 CCMINER_OPTS=""
-
-# change EWBF_PERCENT to alter donation percent for EWBF Miner
-EWBF_PERCENT="0"
 
 ETHASH_MINER="ETHMINER"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
@@ -884,16 +886,16 @@ SMART_INTENSITY="25"
 
 DUAL_ECOIN="MAIN COIN"                      #Main Coin, Ethereum or any Ethash Coin
 DUAL_EPOOL="MAIN COIN POOL ADDREES"         #Main Coin pool address, no need to add stratum+tcp://
-DUAL_EPORT="MAIN COIN POOOL PORT"           #Main Coin Port Number
+DUAL_EPORT="MAIN COIN POOL PORT"           #Main Coin Port Number
 DUAL_EWAL="MAIN COIN WALLET ADDRESS"        #Main Coin Wallet address or pool username
 DUAL_EPSW="$MINER_PWD"                      #Main Coin worker password on pool
 DUAL_EWORKER"$WORKER"                       #Main Coin Worker Name
 
-DUAL_DCOIN="DUAL COIN"                      #select second coin to mine in dual mode. Possible options are "-dcoin dcr", "-dcoin sc", "-dcoin lbc", "-dcoin pasc", "-dcoin blake2s", "-dcoin keccak". Default value is "dcr".
+DUAL_DCOIN="DUAL COIN"                      #select second coin to mine in dual mode. Possible options are "dcr", "sc", "lbc", "pasc", "blake2s", "keccak". Default value is "dcr".
 DUAL_DPOOL="DUAL COIN POOL ADDRESS"         #2nd coin pool address
 DUAL_DPORT="DUAL COIN POOL PORT"            #2nd coin pool address
 DUAL_DWAL="DUAL COIN WALLET ADDRESS"        #2nd coin wallet address or worker name, it depends on pool.
-DUAL_DPSW="$MINER_PWD"                       #Password for 2nd coin .
+DUAL_DPSW="$MINER_PWD"                      #Password for 2nd coin .
 DUAL_DWORKER="$WORKER"                      #Worker name for 2nd coin
 
 DCRI="40"                                   #2nd coin intensity.
