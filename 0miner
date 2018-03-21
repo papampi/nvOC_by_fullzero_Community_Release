@@ -51,7 +51,7 @@ then
   MINER_PWD="x"
 fi
 
-if [ $COIN == "CLAYMOIRE_DUAL" ]
+if [ $COIN == "CLAYMORE_DUAL" ]
 then
   HCD=/home/m1/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64  
   E_ADDR="$DUAL_EWAL$WALLET_ADDRESS_FORMAT$DUAL_EWORKER"
