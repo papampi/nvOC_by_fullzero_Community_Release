@@ -39,9 +39,11 @@
 #          Added BTCP
 # v=0012 : Falcon
 #          Added CCMINER_OPTS, added RavenCoin (RVN)
+# v=0013 : papampi
+#          Changed EWBF HCD
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0012"   # Do not edit this
+nvOC_0miner_ver="v0019-2.0.0013"   # Do not edit this
 
 source /home/m1/1bash
 
@@ -53,11 +55,11 @@ fi
 
 if [ $COIN == "CLAYMORE_DUAL" ]
 then
-  HCD=/home/m1/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64  
+  HCD=/home/m1/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64
   E_ADDR="$DUAL_EWAL$WALLET_ADDRESS_FORMAT$DUAL_EWORKER"
   D_ADDR="$DUAL_DWAL$WALLET_ADDRESS_FORMAT$DUAL_DWORKER"
   screen -dmSL miner $HCD -epool $DUAL_EPOOL:$DUAL_EPORT -ewal $E_ADDR -epsw  $DUAL_EPSW -dpool stratum+tcp://$DUAL_DPOOL:$DUAL_DPORT -dwal $D_ADDR -dpsw $DUAL_DPSW -dcoin $DUAL_DCOIN -allpools $ALL_POOLS -dbg -1 -mport $MPORT -mpsw $MPSW $DUAL_ADDITIONAL_ARGUMENTS
-fi	
+fi
 
 if [ $COIN == "RVN" ]
 then
@@ -84,14 +86,7 @@ fi
 if [ $COIN == "BTG" ]
 then
   BTGADDR="$BTG_ADDRESS$WALLET_ADDRESS_FORMAT$BTG_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
+
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -99,6 +94,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $BTG_POOL --user $BTGADDR --pass $MINER_PWD --port $BTG_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -116,14 +112,6 @@ fi
 if [ $COIN == "ZEC" ]
 then
   ZECADDR="$ZEC_ADDRESS$WALLET_ADDRESS_FORMAT$ZEC_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -131,6 +119,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZEC_POOL --user $ZECADDR --pass $MINER_PWD --port $ZEC_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -148,14 +137,6 @@ fi
 if [ $COIN == "ZCL" ]
 then
   ZCLADDR="$ZCL_ADDRESS$WALLET_ADDRESS_FORMAT$ZCL_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -163,6 +144,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZCL_POOL --user $ZCLADDR --pass $MINER_PWD --port $ZCL_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -180,14 +162,6 @@ fi
 if [ $COIN == "BTCZ" ]
 then
   BTCZADDR="$BTCZ_ADDRESS$WALLET_ADDRESS_FORMAT$BTCZ_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -195,6 +169,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmS miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $BTCZ_POOL --user $BTCZADDR --pass $MINER_PWD --port $BTCZ_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -212,14 +187,6 @@ fi
 if [ $COIN == "KMD" ]
 then
   KMDADDR="$KMD_ADDRESS$WALLET_ADDRESS_FORMAT$KMD_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -227,6 +194,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $KMD_POOL --user $KMDADDR --pass $MINER_PWD --port $KMD_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -244,14 +212,6 @@ fi
 if [ $COIN == "ZEN" ]
 then
   ZENADDR="$ZEN_ADDRESS$WALLET_ADDRESS_FORMAT$ZEN_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -259,6 +219,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZEN_POOL --user $ZENADDR --pass $MINER_PWD --port $ZEN_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -276,14 +237,6 @@ fi
 if [ $COIN == "HUSH" ]
 then
   HUSHADDR="$HUSH_ADDRESS$WALLET_ADDRESS_FORMAT$HUSH_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -291,6 +244,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $HUSH_POOL --user $HUSHADDR --pass $MINER_PWD --port $HUSH_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -308,14 +262,6 @@ fi
 if [ $COIN == "MPH_EQUIHASH" ]
 then
   MPHADDR="$MPH_ADDRESS$WALLET_ADDRESS_FORMAT$MPH_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -323,6 +269,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $MPH_EQUIHASH_POOL --user $MPHADDR --pass $MINER_PWD --port $MPH_EQUIHASH_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -339,14 +286,6 @@ fi
 
 if [ $COIN == "ZPOOL_EQUIHASH" ]
 then
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -354,6 +293,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $ZPOOL_EQUIHASH_POOL --user $BTC_ADDRESS --pass $MINER_PWD --port $ZPOOL_EQUIHASH_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -371,14 +311,6 @@ fi
 if [ $COIN == "BTCP" ]
 then
   BTCPADDR="$BTCP_ADDRESS$WALLET_ADDRESS_FORMAT$BTCP_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -386,6 +318,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $BTCP_POOL --user $BTCPADDR --pass $MINER_PWD --port $BTCP_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
@@ -895,14 +828,7 @@ fi
 if [ $COIN == "NICE-EQUIHASH" ]
 then
   ADDR="$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  if [ $EWBF_VERSION == "3_3" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_3/miner'
-  fi
-  if [ $EWBF_VERSION == "3_4" ]
-  then
-    HCD='/home/m1/miners/ewbf/v3_4/miner'
-  fi
+
   if [ $EQUIHASH_MINER == "ZM" ]
   then
     HCD='/home/m1/miners/dstm/latest/zm_miner'
@@ -910,6 +836,7 @@ then
   fi
   if [ $EQUIHASH_MINER == "EWBF" ]
   then
+    HCD=/home/m1/miners/ewbf/v$EWBF_VERSION/miner
     screen -dmSL miner $HCD --eexit 3 --fee $EWBF_PERCENT --pec --server $NICE_EQUIHASH_POOL --user $ADDR --pass $MINER_PWD --port $NICE_EQUIHASH_PORT  $EWBF_OPTS ;
   fi
   if [ $EQUIHASH_MINER == "BMINER" ]
