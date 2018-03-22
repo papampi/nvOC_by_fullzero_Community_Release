@@ -445,55 +445,55 @@ if [[ $COIN == FTC ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$FTC_ADDRESS$WALLET_ADDRESS_FORMAT$FTC_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$FTC_POOL:$FTC_PORT -u $ADDR -p $MINER_PWD -i $FTC_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$FTC_POOL:$FTC_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == TZC ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$TZC_ADDRESS$WALLET_ADDRESS_FORMAT$TZC_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$TZC_POOL:$TZC_PORT -u $ADDR -p $MINER_PWD -i $TZC_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$TZC_POOL:$TZC_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == VIVO ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$VIVO_ADDRESS$WALLET_ADDRESS_FORMAT$VIVO_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$VIVO_POOL:$VIVO_PORT -u $ADDR -p $MINER_PWD -i $VIVO_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$VIVO_POOL:$VIVO_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == ORB ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$ORB_ADDRESS$WALLET_ADDRESS_FORMAT$ORB_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$ORB_POOL:$ORB_PORT -u $ADDR -p $MINER_PWD -i $ORB_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$ORB_POOL:$ORB_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == PXC ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$PXC_ADDRESS$WALLET_ADDRESS_FORMAT$PXC_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$PXC_POOL:$PXC_PORT  -u $ADDR -p $MINER_PWD -i $PXC_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$PXC_POOL:$PXC_PORT  -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 if [[ $COIN == CRC ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$CRC_ADDRESS$WALLET_ADDRESS_FORMAT$CRC_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$CRC_POOL:$CRC_PORT -u $ADDR -p $MINER_PWD -i $CRC_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$CRC_POOL:$CRC_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == GBX ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$GBX_ADDRESS$WALLET_ADDRESS_FORMAT$GBX_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$GBX_POOL:$GBX_PORT -u $ADDR -p $MINER_PWD -i $GBX_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$GBX_POOL:$GBX_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == DSR ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$DSR_ADDRESS"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$DSR_POOL:$DSR_PORT -u $ADDR -p c=$MINER_PWD -i $DSR_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$DSR_POOL:$DSR_PORT -u $ADDR -p c=$MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == SIGT ]]
