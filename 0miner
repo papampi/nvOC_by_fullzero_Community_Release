@@ -351,7 +351,7 @@ fi
 
 if [[ $COIN == ZPOOL_LYRA2V2 ]]
 then
-  HCD=/home/m1/miners/SPccminer/ccminer
+  HCD=/home/m1/miners/"$LYRA2V2_MINER"/ccminer
   screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$ZPOOL_LYRA2V2_POOL:$ZPOOL_LYRA2V2_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $ZPOOL_LYRA2V2_INTENSITY $CCMINER_OPTS
 fi
 
@@ -364,7 +364,7 @@ fi
 if [[ $COIN == ZPOOL_NEOSCRYPT ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$ZPOOL_NEOSCRYPT_POOL:$ZPOOL_NEOSCRYPT_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $ZPOOL_NEOSCRYPT_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$ZPOOL_NEOSCRYPT_POOL:$ZPOOL_NEOSCRYPT_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == ZPOOL_SKEIN ]]
