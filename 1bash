@@ -488,6 +488,7 @@ WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-
 # user account based pools), please put the above variable and worker name for that coins as empty 
 
 NEOSCRYPT_MINER="TPccminer"                     #choose miner for NeoScrypt algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+NEOSCRYPT_INTENSITY=""                          #set intensity for all NeoScrypt miners
 
 LYRA2V2_MINER="KTccminer"                       #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
 
@@ -599,7 +600,6 @@ PXC_WORKER="$WORKERNAME"
 PXC_ADDRESS="replace_with_your_address"
 PXC_POOL="atlas.phoenixcoin.org:"
 PXC_PORT="10554"
-PXC_INTENSITY="23"
 
 # ZPOOL_SKUNK ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_SKUNK_POOL="skunk.mine.zpool.ca"
@@ -628,7 +628,6 @@ ZPOOL_LBRY_INTENSITY="23"
 # ZPOOL_NEOSCRYPT ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_NEOSCRYPT_POOL="neoscrypt.mine.zpool.ca"
 ZPOOL_NEOSCRYPT_PORT="4233"
-ZPOOL_NEOSCRYPT_INTENSITY="22"
 
 # ZPOOL_SKEIN ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_SKEIN_POOL="skein.mine.zpool.ca"
@@ -664,21 +663,18 @@ MONA_WORKER="$WORKERNAME"
 MONA_ADDRESS="replace_with_your_address"
 MONA_POOL="mona.suprnova.cc"
 MONA_PORT="2995"
-MONA_INTENSITY="21"
 
 # VTC ## No Need to add stratum+tcp:// to server address
 VTC_WORKER="$WORKERNAME"
 VTC_ADDRESS="replace_with_your_address"
 VTC_POOL="hub.miningpoolhub.com"
 VTC_PORT="20507"
-VTC_INTENSITY="21"
 
 # TZC ## No Need to add stratum+tcp:// to server address
 TZC_WORKER="$WORKERNAME"
 TZC_ADDRESS="TZC ADDRESS"
 TZC_POOL="TZC POOL"
 TZC_PORT="TZC PORT"
-TZC_INTENSITY="21"
 
 # DGB ## No Need to add stratum+tcp:// to server address
 DGB_INTENSITY="24"
@@ -699,21 +695,18 @@ FTC_WORKER="$WORKERNAME"
 FTC_ADDRESS="replace_with_your_address"
 FTC_POOL="hub.miningpoolhub.com"
 FTC_PORT="20510"
-FTC_INTENSITY="23"
 
 # ORB ## No Need to add stratum+tcp:// to server address
 ORB_WORKER="$WORKERNAME"
 ORB_ADDRESS="Your DNB Account Name"
 ORB_POOL="strat.dnb.io"
 ORB_PORT="3031"
-ORB_INTENSITY="23"
 
 # VIVO ## No Need to add stratum+tcp:// to server address
 VIVO_WORKER="$WORKERNAME"
 VIVO_ADDRESS="VIVO ADDRESS"
 VIVO_POOL="VIVO POOL"
 VIVO_PORT="VIVO PORT"
-VIVO_INTENSITY="21"
 
 # ONION ## No Need to add stratum+tcp:// to server address
 ONION_ADDRESS="replace_with_your_ONION_address"
@@ -732,14 +725,12 @@ GBX_WORKER="$WORKERNAME"
 GBX_ADDRESS="replace_with_your_address"
 GBX_POOL="replace_with_pool_address"
 GBX_PORT="replace_with_pool_port"
-GBX_INTENSITY="17"
 
 #CrowdCoin (CRC) ##No Need to add add stratum+tcp:// to server address
 CRC_WORKER="$WORKERNAME"
 CRC_ADDRESS="replace_with_your_address"
 CRC_POOL="replace_with_pool_address"
 CRC_PORT="replace_with_pool_port"
-CRC_INTENSITY="17"
 
 #Verge-Lyra2REv2(XVG) ##No Need to add stratum+tcp:// to server address
 XVG_WORKER="$WORKERNAME"
@@ -766,7 +757,6 @@ DSR_WORKER="$WORKERNAME"
 DSR_ADDRESS="replace_with_your_address"
 DSR_POOL="DSR_POOL"
 DSR_PORT="DSR_PORT"
-DSR_INTENSITY="21"
 
 # ETH
 ETH_WORKER="$WORKERNAME"
