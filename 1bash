@@ -461,7 +461,7 @@ NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"             # Your internal Nicehash BTC ad
 MPH_ADDRESS="replace_with_your_MPH_username"     #You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
 
 MINER_PWD="x"                                    # Set the miner password. Default: x
-# For zpool use MINER_PWD="$WORKERNAME,c=btc"
+                                                 # For zpool use MINER_PWD="$WORKERNAME,c=btc"
 
 EQUIHASH_MINER="ZM"                              # choose "ZM" for dstm or "EWBF" or "BMINER" or "BMINER_SSL"
 
@@ -491,6 +491,7 @@ NEOSCRYPT_MINER="TPccminer"                     #choose miner for NeoScrypt algo
 NEOSCRYPT_INTENSITY=""                          #set intensity for all NeoScrypt miners
 
 LYRA2V2_MINER="KTccminer"                       #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
+LYRA2V2_INTENSITY=""                            #set intensity for all Lyra2v2 miners
 
 
 ################################################################
