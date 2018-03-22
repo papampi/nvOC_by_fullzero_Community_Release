@@ -495,9 +495,9 @@ WALLET_ADDRESS_FORMAT="."      # Choose between "." , "/" , "-" or any other sep
 # For most of the cryptonight pools (except Miningpoolhub and suprnova type of- 
 # user account based pools), please put the above variable and worker name for that coins as empty 
 
-NEOSCRYPT_MINER="KTcminer"         #choose miner for NeoScrypt algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
+NEOSCRYPT_MINER="TPccminer"         #choose miner for NeoScrypt algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
 
-LYRA2V2_MINER="KTcminer"         #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
+LYRA2V2_MINER="KTccminer"         #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
