@@ -42,7 +42,7 @@
 # v=0013 : papampi
 #          Changed EWBF HCD
 # v=0014 : papampi
-#          Code cleanup, NEOSCRYPT_MINER and LYRA2V2_MINER
+#          Code cleanup, NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
 nvOC_0miner_ver="v0019-2.0.0014"   # Do not edit this
@@ -369,15 +369,15 @@ fi
 
 if [[ $COIN == ZPOOL_SKEIN ]]
 then
-  HCD=/home/m1/miners/ASccminer/ccminer
-  screen -dmSL miner $HCD -a skein -o stratum+tcp://$ZPOOL_SKEIN_POOL:$ZPOOL_SKEIN_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $ZPOOL_SKEIN_INTENSITY $CCMINER_OPTS
+  HCD=/home/m1/miners/"$SKEIN_MINER"/ccminer
+  screen -dmSL miner $HCD -a skein -o stratum+tcp://$ZPOOL_SKEIN_POOL:$ZPOOL_SKEIN_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $SKEIN_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == DGB ]]
 then
-  HCD=/home/m1/miners/TPccminer/ccminer
+  HCD=/home/m1/miners/"$SKEIN_MINER"/ccminer
   ADDR="$DGB_ADDRESS"
-  screen -dmSL miner $HCD -a skein -o stratum+tcp://$DGB_POOL:$DGB_PORT -u $ADDR -p $MINER_PWD -i $DGB_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a skein -o stratum+tcp://$DGB_POOL:$DGB_PORT -u $ADDR -p $MINER_PWD -i $SKEIN_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == ZPOOL_BLAKE2S ]]
@@ -388,7 +388,7 @@ fi
 
 if [[ $COIN == ZPOOL_SKUNK ]]
 then
-  HCD=/home/m1/miners/TPccminer/ccminer
+  HCD=/home/m1/miners/"$SKUNK_MINER"/ccminer
   screen -dmSL miner $HCD -a skunk -o stratum+tcp://$SKUNK_POOL:$SKUNK_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $SKUNK_INTENSITY $CCMINER_OPTS
 fi
 
@@ -498,16 +498,16 @@ fi
 
 if [[ $COIN == SIGT ]]
 then
-  HCD=/home/m1/miners/TPccminer/ccminer
+  HCD=/home/m1/miners/"$SKUNK_MINER"/ccminer
   ADDR="$SIGT_ADDRESS$WALLET_ADDRESS_FORMAT$SIGT_WORKER"
-  screen -dmSL miner $HCD -a skunk -o stratum+tcp://$SIGT_POOL:$SIGT_PORT -u $ADDR -p $MINER_PWD -i $SIGT_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a skunk -o stratum+tcp://$SIGT_POOL:$SIGT_PORT -u $ADDR -p $MINER_PWD -i $SKUNK_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == ALTCOM ]]
 then
-  HCD=/home/m1/miners/TPccminer/ccminer
+  HCD=/home/m1/miners/"$SKUNK_MINER"/ccminer
   ADDR="$ALTCOM_ADDRESS$WALLET_ADDRESS_FORMAT$ALTCOM_WORKER"
-  screen -dmSL miner $HCD -a skunk -o stratum+tcp://$ALTCOM_POOL:$ALTCOM_PORT -u $ADDR -p $MINER_PWD -i $ALTCOM_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a skunk -o stratum+tcp://$ALTCOM_POOL:$ALTCOM_PORT -u $ADDR -p $MINER_PWD -i $SKUNK_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == KRB ]]
@@ -879,9 +879,9 @@ fi
 
 if [[ $COIN == NICE-SKUNKHASH ]]
 then
-  HCD=/home/m1/miners/TPccminer/ccminer
+  HCD=/home/m1/miners/"$SKUNK_MINER"/ccminer
   ADDR="$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  screen -dmSL miner $HCD -a skunk -o stratum+tcp://$NICE_SKUNKHASH_POOL:$NICE_SKUNKHASH_PORT -u $ADDR -p x -i $NICE_SKUNKHASH_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a skunk -o stratum+tcp://$NICE_SKUNKHASH_POOL:$NICE_SKUNKHASH_PORT -u $ADDR -p x -i $SKUNK_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == NICE-CRYPTONIGHT ]]
