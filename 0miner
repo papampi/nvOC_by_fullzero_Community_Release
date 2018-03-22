@@ -376,7 +376,7 @@ fi
 if [[ $COIN == DGB ]]
 then
   HCD=/home/m1/miners/"$SKEIN_MINER"/ccminer
-  ADDR="$DGB_ADDRESS"
+  ADDR="$DGB_ADDRESS$WALLET_ADDRESS_FORMAT$DGB_WORKER"
   screen -dmSL miner $HCD -a skein -o stratum+tcp://$DGB_POOL:$DGB_PORT -u $ADDR -p $MINER_PWD -i $SKEIN_INTENSITY $CCMINER_OPTS
 fi
 
