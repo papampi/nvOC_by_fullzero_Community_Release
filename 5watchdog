@@ -152,7 +152,7 @@ do
   sleep 30
 done
 
-## Before starting to check GPU utilization in main loop check if miner start was succefull or not
+## Before starting to check GPU utilization in main loop check if miner start was successful or not
 ## in case there is problem in miner variables or other problems, dont start main loop to restart 3main and eventually reboot.
 echo "Giving miner 10 seconds to stabilize"
 sleep 10
