@@ -45,7 +45,7 @@
 # v=0016 : papampi
 #          Some fix in claymore_dual
 # v=0017 : papampi
-#          Introducing NEOSCRYPT_MINER and LYRA2V2_MINER
+#          NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
 
 
 
@@ -488,11 +488,16 @@ WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-
 # user account based pools), please put the above variable and worker name for that coins as empty 
 
 NEOSCRYPT_MINER="TPccminer"                     #choose miner for NeoScrypt algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
-NEOSCRYPT_INTENSITY=""                          #set intensity for all NeoScrypt miners
+NEOSCRYPT_INTENSITY="22"                          #set intensity for all NeoScrypt miners
 
 LYRA2V2_MINER="KTccminer"                       #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
-LYRA2V2_INTENSITY=""                            #set intensity for all Lyra2v2 miners
+LYRA2V2_INTENSITY="17"                            #set intensity for all Lyra2v2 miners
 
+SKUNK_MINER="TPccminer"                       #choose miner for Skunkhash algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+SKUNK_INTENSITY="22"                            #set intensity for all Skunkhash miners
+
+SKEIN_MINER="TPccminer"                       #choose miner for Skein algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+SKEIN_INTENSITY="22"                            #set intensity for all Skein miners
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
@@ -580,14 +585,12 @@ SIGT_WORKER="$WORKERNAME"
 SIGT_ADDRESS="replace_with_your_address"
 SIGT_POOL="us.hashbag.cc"
 SIGT_PORT="8644"
-SIGT_INTENSITY="25"
 
 # Altcommunity(ALTCOM) ## No Need to add stratum+tcp:// to server address
 ALTCOM_WORKER="$WORKERNAME"
 ALTCOM_ADDRESS="replace_with_your_address"
 ALTCOM_POOL="ALTCOM POOL"
 ALTCOM_PORT="ALTCOM PORT"
-ALTCOM_INTENSITY="25"
 
 # SIB ## No Need to add stratum+tcp:// to server address
 SIB_WORKER="$WORKERNAME"
@@ -605,7 +608,6 @@ PXC_PORT="10554"
 # ZPOOL_SKUNK ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_SKUNK_POOL="skunk.mine.zpool.ca"
 ZPOOL_SKUNK_PORT="8433"
-ZPOOL_SKUNK_INTENSITY="22"
 
 # ZPOOL_LYRA2V2 ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_LYRA2V2_POOL="lyra2v2.mine.zpool.ca"
@@ -678,7 +680,6 @@ TZC_POOL="TZC POOL"
 TZC_PORT="TZC PORT"
 
 # DGB ## No Need to add stratum+tcp:// to server address
-DGB_INTENSITY="24"
 DGB_WORKER="$WORKERNAME"
 DGB_ADDRESS="replace_with_your_address"
 DGB_POOL="hub.miningpoolhub.com"
