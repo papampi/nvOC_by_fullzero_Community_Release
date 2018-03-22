@@ -44,11 +44,13 @@
 #          Temp Control Maximum fan speed 
 # v=0016 : papampi
 #          Some fix in claymore_dual
+# v=0017 : papampi
+#          Introducing NEOSCRYPT_MINER and LYRA2V2_MINER
 
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0016"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0017"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -492,6 +494,10 @@ WALLET_ADDRESS_FORMAT="."      # Choose between "." , "/" , "-" or any other sep
 # Depending on the pool you use, set this appropriately:
 # For most of the cryptonight pools (except Miningpoolhub and suprnova type of- 
 # user account based pools), please put the above variable and worker name for that coins as empty 
+
+NEOSCRYPT_MINER="KTcminer"         #choose miner for NeoScrypt algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
+
+LYRA2V2_MINER="KTcminer"         #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
