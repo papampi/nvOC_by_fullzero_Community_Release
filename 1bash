@@ -46,11 +46,13 @@
 #          Some fix in claymore_dual
 # v=0017 : papampi
 #          NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
+# v=0018 : papampi
+#          Alternate Pool Switch
 
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0017"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0018"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -303,6 +305,21 @@ LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OF
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
+ALT_POOL="NO"               #YES or NO, Set to YES if you want to enable  poolswitch. 
+                            #Switch to alternate pool if main pool goes down.
+                            #Dual mining and salfter auto switch not supported.
+                            #If pool goes down, poolswitch will stop/disable wtm auto switch and will enable/start it after pool comes up to prevent coin data mixed up.
+						                #If main pool use username, alternate pool should use same username and workername. 
+						                #If anonymous mining with coin address alternate pool should use same. 
+                            #If ALT_POOL="YES" add as follow to your coins data (order should be the same).
+
+###alternate pool setup example: 
+#ZCL_POOL_1="europe.equihash-hub.miningpoolhub.com"
+#ZCL_PORT_1="20575"
+#ZCL_POOL_2="zcl.suprnova.cc"
+#ZCL_PORT_2="4042"
+#ZCL_POOL=$ZCL_POOL_1  #Dont edit this
+#ZCL_PORT=$ZCL_PORT_1  #Dont edit this
 
 
 MANUAL_FAN="NO"             # YES or NO # Manually set the fans, no auto adjustment. Set this to NO if using the auto MINER_TEMP_CONTROL
