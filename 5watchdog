@@ -383,7 +383,7 @@ while true; do
 
 
     # Look for no miner screen and get right to miner restart
-    if [[ $(screen -ls |grep miner |wc -l) -eq 0 ]]
+    if [[ $(screen -ls | grep -c miner ) -eq 0 ]]
     then
       COUNT=0
       echo "WARNING: $(date) - Found no miner, jumping to 3main restart"
