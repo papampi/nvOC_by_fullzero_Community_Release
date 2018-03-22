@@ -352,7 +352,7 @@ fi
 if [[ $COIN == ZPOOL_LYRA2V2 ]]
 then
   HCD=/home/m1/miners/"$LYRA2V2_MINER"/ccminer
-  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$ZPOOL_LYRA2V2_POOL:$ZPOOL_LYRA2V2_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $ZPOOL_LYRA2V2_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$ZPOOL_LYRA2V2_POOL:$ZPOOL_LYRA2V2_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $LYRA2V2_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == ZPOOL_LBRY ]]
@@ -396,21 +396,21 @@ if [[ $COIN == MONA ]]
 then
   HCD=/home/m1/miners/"$LYRA2V2_MINER"/ccminer
   ADDR="$MONA_ADDRESS$WALLET_ADDRESS_FORMAT$MONA_WORKER"
-  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$MONA_POOL:$MONA_PORT -u $ADDR -p $MINER_PWD -i $MONA_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$MONA_POOL:$MONA_PORT -u $ADDR -p $MINER_PWD -i $LYRA2V2_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == VTC ]]
 then
   HCD=/home/m1/miners/"$LYRA2V2_MINER"/ccminer
   ADDR="$VTC_ADDRESS$WALLET_ADDRESS_FORMAT$VTC_WORKER"
-  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$VTC_POOL:$VTC_PORT -u $ADDR -p $MINER_PWD -i $VTC_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$VTC_POOL:$VTC_PORT -u $ADDR -p $MINER_PWD -i $LYRA2V2_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == XVG ]]
 then
   HCD=/home/m1/miners/"$LYRA2V2_MINER"/ccminer
   ADDR="$XVG_ADDRESS$WALLET_ADDRESS_FORMAT$XVG_WORKER"
-  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$XVG_POOL:$XVG_PORT -u $ADDR -p $MINER_PWD -i $XVG_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$XVG_POOL:$XVG_PORT -u $ADDR -p $MINER_PWD -i $LYRA2V2_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == DMD ]]
