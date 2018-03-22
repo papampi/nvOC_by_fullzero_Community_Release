@@ -446,8 +446,6 @@ fi
 ########################################################################################
 
 
-
-
 ########################################################
 #                                                      #
 # Addresses, pools, ports, intensity, miner settings   #
@@ -458,7 +456,7 @@ USE_ENVIRONMENTAL_VARIBLES="NO"                  # YES or NO # Not needed for nv
 
 BTC_ADDRESS="replace_with_your_BTC_address"      # Your BTC addrees to use with zpool
 
-NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"            # Your internal Nicehash BTC addrees to use with nicehash		
+NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"             # Your internal Nicehash BTC addrees to use with nicehash		
 
 MPH_ADDRESS="replace_with_your_MPH_username"     #You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
 
@@ -467,37 +465,32 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 
 EQUIHASH_MINER="ZM"                              # choose "ZM" for dstm or "EWBF" or "BMINER" or "BMINER_SSL"
 
-# DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
-ZM_OPTS=""
+ZM_OPTS=""                                       # DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 
-# EWBF ZEC Miner version
-EWBF_VERSION="3_4" # choose 3_3  or  3_4
+EWBF_VERSION="3_4"                               # choose 3_3  or  3_4 # EWBF ZEC Miner version
 
-# change EWBF_PERCENT to alter donation percent for EWBF Miner
-EWBF_PERCENT="0"
+EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
 
-# EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_OPTS=""
+EWBF_OPTS=""                                     # EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
 
-# Bminer optional arguments. add "--api $IPW:42000" if you want web info
-BMINER_OPTS=""
+BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 
-#ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
-CCMINER_OPTS=""
+CCMINER_OPTS=""                                  #ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
-ETHASH_MINER="ETHMINER"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
+ETHASH_MINER="ETHMINER"                          # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
-CLAYMORE_VERSION="latest"    # choose: latest or any version you add its folder  (type latest to use 10_2)
+CLAYMORE_VERSION="latest"                        # choose: latest or any version you add its folder  (type latest to use 10_2)
 
-WALLET_ADDRESS_FORMAT="."      # Choose between "." , "/" , "-" or any other separators your pool uses.
+WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-" or any other separators your pool uses.
 # Some pools require dot (address.worker), some require slash (address/worker) format.
 # Depending on the pool you use, set this appropriately:
 # For most of the cryptonight pools (except Miningpoolhub and suprnova type of- 
 # user account based pools), please put the above variable and worker name for that coins as empty 
 
-NEOSCRYPT_MINER="TPccminer"         #choose miner for NeoScrypt algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+NEOSCRYPT_MINER="TPccminer"                     #choose miner for NeoScrypt algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
 
-LYRA2V2_MINER="KTccminer"         #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
+LYRA2V2_MINER="KTccminer"                       #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
+
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
