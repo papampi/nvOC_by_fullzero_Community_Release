@@ -860,14 +860,14 @@ if [[ $COIN == NICE-NEOSCRYPT ]]
 then
   HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
   ADDR="$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$NICE_NEOSCRYPT_POOL:$NICE_NEOSCRYPT_PORT -u $ADDR -p x -i $NICE_NEOSCRYPT_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$NICE_NEOSCRYPT_POOL:$NICE_NEOSCRYPT_PORT -u $ADDR -p x -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == NICE-LYRA2REV2 ]]
 then
-  HCD=/home/m1/miners/ASccminer/ccminer
+  HCD=/home/m1/miners/"$LYRA2V2_MINER"/ccminer
   ADDR="$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$NICE_LYRA2REV2_POOL:$NICE_LYRA2REV2_PORT -u $ADDR -p x -i $NICE_LYRA2REV2_INTENSITY $CCMINER_OPTS
+  screen -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$NICE_LYRA2REV2_POOL:$NICE_LYRA2REV2_PORT -u $ADDR -p x -i $LYRA2V2_INTENSITY $CCMINER_OPTS
 fi
 
 if [[ $COIN == NICE-X11GOST ]]
