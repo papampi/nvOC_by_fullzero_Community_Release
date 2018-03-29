@@ -343,7 +343,7 @@ ALLOWED_TEMP_DIFF=2         # If current temp is 2C below the target temp reduce
 
 MINIMAL_FAN_SPEED=50        # Lowest fan speed that will be used. Recommended ranges: 40 - 60
 
-MAXIMUM_FAN_SPEED=95        # Maximum fan speed before temp control drops power limit to reach TARGET_TEMP. Recommended ranges: 90 - 100
+MAXIMAL_FAN_SPEED=95        # HIghest fan speed before temp control drops power limit to reach TARGET_TEMP. Recommended ranges: 90 - 100
 
 __FAN_ADJUST=5              # Fan adjustment size in percent
 
