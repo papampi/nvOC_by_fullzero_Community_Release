@@ -28,7 +28,7 @@
 #          queried from nvidia-smi (a.k.a. bleed issue of power.draw)
 # v=0003 : Papampi: Telegram alerts
 #
-# v=0004 : Papampi: MAXIMUM_FAN_SPEED
+# v=0004 : Papampi: MAXIMAL_FAN_SPEED
 
 
 
@@ -287,10 +287,10 @@ while true; do
         FAN_ADJUST_CALCULATED=$FAN_ADJUST
       fi
       NEW_FAN_SPEED=$(($CURRENT_FAN + $FAN_ADJUST_CALCULATED))
-      if [ $NEW_FAN_SPEED -gt $MAXIMUM_FAN_SPEED ]; then
-        NEW_FAN_SPEED=$MAXIMUM_FAN_SPEED
-        # Fan speed reached MAXIMUM_FAN_SPEED, we have to drop the power limit
-        echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Fan speed reached $MAXIMUM_FAN_SPEED, dropping Power Limit in order to maintain the desired temp${N}" | tee -a ${LOG_FILE}
+      if [ $NEW_FAN_SPEED -gt $MAXIMAL_FAN_SPEED ]; then
+        NEW_FAN_SPEED=$MAXIMAL_FAN_SPEED
+        # Fan speed reached MAXIMAL_FAN_SPEED, we have to drop the power limit
+        echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Fan speed reached $MAXIMAL_FAN_SPEED, dropping Power Limit in order to maintain the desired temp${N}" | tee -a ${LOG_FILE}
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
           bash '/home/m1/telegram'
         fi
