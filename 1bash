@@ -127,7 +127,7 @@ nvOC_1bash_ver="v0019-2.1.0007"   # Do not edit this
 ######### ZEC  ZEN  HUSH  ZCL  KMD BTG BTCZ
 
 #ALGO - NiceHash
-######### DUAL_NICEHASH (Ethash + Decred)  NICE-EQUIHASH  NICE-ETHASH
+######### DUAL_NICEHASH (Ethash + Decred)  NICE_EQUIHASH  NICE_ETHASH
 
 #ALGO - X13
 ######### ONION
@@ -651,7 +651,7 @@ DSR_POOL="DSR_POOL"
 DSR_PORT="DSR_PORT"
 DSR_INTENSITY="21"
 
-# NICE-ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
+# NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
 NICE_ETHASH_WORKER="$WORKERNAME"
 NICE_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
 GENOIL_NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com:3353"
@@ -1101,7 +1101,7 @@ if [ $ALGO_SPECIFIC_OC == "YES" ]
 then
 
   # Neoscrypt
-  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC"  -o $COIN == "NICE-NEOSCRYPT" -o $COIN == "DSR" -o $COIN == "CRC" -o $COIN == "GBX" ]
+  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC"  -o $COIN == "NICE_NEOSCRYPT" -o $COIN == "DSR" -o $COIN == "CRC" -o $COIN == "GBX" ]
   then
     ALGORITHM="NEOSCRYPT"
     POWERLIMIT_WATTS=80
@@ -1110,7 +1110,7 @@ then
   fi
 
   # Ethash
-  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE-ETHASH" -o $COIN == "PIRL" -o $COIN == "NICE-ETHASH" ]
+  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH" -o $COIN == "PIRL" -o $COIN == "NICE_ETHASH" ]
   then
     ALGORITHM="ETHASH"
     POWERLIMIT_WATTS=76
@@ -1119,7 +1119,7 @@ then
   fi
 
   # Equihash
-  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE" ]
+  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE_EQUIHASH" -o $COIN == "VOTE" ]
   then
     ALGORITHM="EQUIHASH"
     POWERLIMIT_WATTS=76
@@ -1128,7 +1128,7 @@ then
   fi
 
   # Skunk
-  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN == "ALTCOM" -o $COIN == "NICE-SKUNKHASH" ]
+  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN == "ALTCOM" -o $COIN == "NICE_SKUNKHASH" ]
   then
     ALGORITHM="SKUNK"
     POWERLIMIT_WATTS=78
@@ -1137,7 +1137,7 @@ then
   fi
 
   # Cryptonight
-  if [ $COIN == "XMR" -o $COIN == "KRB" -o $COIN == "ETN" -o $COIN == "NICE-CRYPTONIGHT" ]
+  if [ $COIN == "XMR" -o $COIN == "KRB" -o $COIN == "ETN" -o $COIN == "NICE_CRYPTONIGHT" ]
   then
     ALGORITHM="CRYPTONIGHT"
     POWERLIMIT_WATTS=62
@@ -1146,7 +1146,7 @@ then
   fi
 
   # lyra2vRev2
-  if [ $COIN == "MONA" -o $COIN == "VTC" -o $COIN == "NICE-LYRA2REV2" -o $COIN == "XVG" ]
+  if [ $COIN == "MONA" -o $COIN == "VTC" -o $COIN == "NICE_LYRA2REV2" -o $COIN == "XVG" ]
   then
     ALGORITHM="LYRA2REV2"
     POWERLIMIT_WATTS=65
