@@ -48,11 +48,12 @@
 #          NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
 # v=0018 : papampi
 #          Alternate Pool Switch
-
+# v=0019 : papampi
+#          WTM 2nd lower minimum difference to switch
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0018"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0019"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -424,11 +425,13 @@ WTM_AUTO_SWITCH_SYNC_INTERVAL="3"            # Time to sync with WTM for best co
 
 WTM_PROFIT_CHECK_INTERVAL="30"               # interval between checking profit for web info
 
-WTM_MIN_DIFFERENCE="5"                       # Minimum difference in percent when switch to new coin, to prevent too many switches.
+WTM_MIN_DIFFERENCE="6"                        # Mininumum difference in percent when switch to new coin, to prevent too many switches.
 
-WTM_MINIMUM_MINING_TIME="900"                # Minimum mining time (sec) before checking and switching to prevent fast switch.
+WTM_MINIMUM_MINING_TIME="1800"                # Minimum mining time before checking and switching to prevent fast switches.
 
-WTM_FORCE_SWITCH="10"                        # If profit gain is more than this value make the switch and don't wait for minimum mining time.
+WTM_LOWER_MIN_DIFFERENCE="3"                  # When Minimum Mining time passed, next top coin will switch with lower difference
+
+WTM_FORCE_SWITCH="8"                          # If profit gain is more than this value make the switch and dont wait for minimum mining time.
 
 WTM_CURRENCY="USD"                           # USD, AUD, BRL, CAD, CHF, CLP, CNY, DKK, EUR, GBP, HKD, INR, ISK, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD
 
