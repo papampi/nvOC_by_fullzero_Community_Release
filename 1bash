@@ -390,16 +390,13 @@ TELEGRAM_APIKEY="Your Telegram API"  # Enter your API Key here
 #          overrides or variations by individual settings
 #        - algo-specific and individual settings are some sections below in this file
 
-POWERLIMIT_MODE="GLOBAL"    # NO, GLOBAL, OFFSET, OVERRIDE
+POWERLIMIT_MODE="GLOBAL"    # NO, GLOBAL, OVERRIDE
 #        - GLOBAL mode means no individual gpu-specific settings are used
-#        - OFFSET mode means individual gpu specific settings are interpreted
-#          as relative offsets from global settings, either algo-specific or not
-#        - OVERRIDE mode emulates the old nvOC functionality where any
-#          individual setting is interpreted as an absolute override
+#        - OVERRIDE any individual setting is interpreted as an absolute override
 
 POWERLIMIT_WATTS=75         # Global base Power Limit in watts for all GPU's
 
-OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, OFFSET, OVERRIDE
+OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, OVERRIDE
 #        Same behavior as POWERLIMT_MODE, see above
 
 __CORE_OVERCLOCK=100        # Global base Core overclock for all algos
@@ -409,7 +406,7 @@ MEMORY_OVERCLOCK=100        # Global base Memory overclock for all algos
 ALGO_SPECIFIC_OC="NO"       # YES or NO
 #        SET OC and POWERLIMIT base values depending on what mining ALGO is used, does not apply to SALFTER autoswitchers
 #        Please note that algo specific settings always override global base values,
-#        than also individual overrides or offsets apply according to the previously
+#        than also individual overrides apply according to the previously
 #        selected OVERCLOCK_MODE policy.
 #        For optimal use of PAPAMPI_WTM_AUTO_SWITCH use ALGO_SPECIFIC_OC !!
 #        Default values set at the end of 1bash are for 1060, remember to set yours accordingly.
@@ -954,7 +951,7 @@ PROFIT_CHECK_TIMEOUT=600
 # ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed
 
 # Please note that algo specific settings always override global base values,
-# than also individual overrides or offsets apply according to the previously
+# than also individual overrides apply according to the previously
 # selected OVERCLOCK_MODE policy.
 
 daggerhashimoto_POWERLIMIT_WATTS=120
@@ -1027,11 +1024,11 @@ X11_MEMORY_OVERCLOCK=100
 
 # Settings below are for rigs using INDIVIDUAL powerlimit / target temps / clocks
 
-# Please note that individual clocks and powerlimit settings will be apply to
-# global base (eventually algo-specific) values as overrides or offsets according
+# Please note that individual clocks and powerlimit settings will be applied to
+# global base (eventually algo-specific) values as overrides according
 # to the previously selected OVERCLOCK_MODE / POWERLIMIT_MODE policy.
 
-# Set individual powerlimits here if POWERLIMIT_MODE is OVERRIDE or OFFSET
+# Set individual powerlimits here if POWERLIMIT_MODE is OVERRIDE
 INDIVIDUAL_POWERLIMIT_0=100
 INDIVIDUAL_POWERLIMIT_1=100
 INDIVIDUAL_POWERLIMIT_2=100
@@ -1073,7 +1070,7 @@ TARGET_TEMP_16=75
 TARGET_TEMP_17=75
 TARGET_TEMP_18=75
 
-# Set individual clocks here if OVERCLOCK_MODE is OVERRIDE or OFFSET
+# Set individual clocks here if OVERCLOCK_MODE is OVERRIDE
 __CORE_OVERCLOCK_0=100
 MEMORY_OVERCLOCK_0=100
 
