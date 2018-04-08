@@ -1061,6 +1061,7 @@ then
  "currency":"$WTM_CURRENCY"
 }
 EOF
+      cat <<EOF >/home/m1/WTM_1.json
 {
  "WTM_URL": "$WTM_AUTO_SWITCH_URL",
  "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
