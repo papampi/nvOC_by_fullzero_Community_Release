@@ -109,10 +109,10 @@ do
     if [[ $MINER_TIME -ge $WTM_MINIMUM_MINING_TIME ]]
     then
       echo "Minimum mining time passed, checking for new coins with $WTM_LOWER_MIN_DIFFERENCE% more profit"
-      python2.7 '/home/m1/WTM_SWITCHER_1'
+      python2.7 '/home/m1/WTM_SWITCHER /home/m1/WTM_1.json'
     else
       echo "Minimum mining time not reached, checking for new coins with $WTM_MIN_DIFFERENCE% more profit"
-      python2.7 '/home/m1/WTM_SWITCHER'
+      python2.7 '/home/m1/WTM_SWITCHER /home/m1/WTM.json'
     fi
 
     sleep 5
