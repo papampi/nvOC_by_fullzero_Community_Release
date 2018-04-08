@@ -12,6 +12,11 @@
       "bin": "/home/m1/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
       "power_limit": 130, "gpu_oc": 130, "mem_oc": 500, "fan": 0
     },
+    "Cryptonight-Heavy":
+    {
+      "bin": "/home/m1/xmr/xmrig-nvidia/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
+     "power_limit": 130, "gpu_oc": 130, "mem_oc": 500, "fan": 0
+    },
     "Equihash":
     {
       "bin": "/home/m1/zec/v3_4/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",

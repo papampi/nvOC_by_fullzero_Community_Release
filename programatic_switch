@@ -30,7 +30,7 @@ def fetch(url):
 
 # main
 
-data=json.loads(fetch("https://pastebin.com/dl/eLU4B8rK"))
+data=json.loads(fetch(os.environ["PROGRAMATIC_SWITCH_CONFIG_JSON_URL"]))
 
 current_miner=data[miner_name]["current_miner"]
 

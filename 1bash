@@ -768,10 +768,12 @@ SMART_INTENSITY="25"
 ########################################################
 #                                                      #
 # SALFTER_NICEHASH_PROFIT_SWITCHING &                  #
-# SALFTER_MPH_PROFIT_SWITCHING Settings                #
+# SALFTER_MPH_PROFIT_SWITCHING &                       #
+# SALFTER_PROGRAMATIC_SWITCHING Settings               #
 #                                                      #
 ########################################################
 
+PROGRAMATIC_SWITCH_CONFIG_JSON_URL="https://pastebin.com/dl/eLU4B8rK"
 
 CURRENCY=USD
 
