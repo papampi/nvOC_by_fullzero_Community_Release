@@ -20,11 +20,12 @@ import requests
 import sys
 import urllib
 import urllib2
-configFile = "./WTM.json"
+#configFile = "./WTM.json"
 topCoinLogFile = "./WTM_top_coin"
 
 # load config
-cfg = json.loads(open(configFile).read())
+cfg=json.loads(open(sys.argv[1]).read())
+#cfg = json.loads(open(configFile).read())
 requestUrl = urllib.unquote(urllib.unquote(cfg["WTM_URL"]))
 minimumDifference = float(cfg["WTM_MIN_DIFFERENCE"])
 includedCoins = cfg["WTM_COINS"].upper()
