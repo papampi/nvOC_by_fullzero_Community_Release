@@ -41,10 +41,13 @@
 #          Added P104 and changed P106 to P10X
 # v=0010 : papampi
 #          Download and Restore default xorg.conf
+# v=0011 : papampi
+#          WTM 2nd lower minimum difference to switch
+
 
 source /home/m1/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.0010"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.0011"                  # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -1055,6 +1058,13 @@ then
  "WTM_URL": "$WTM_AUTO_SWITCH_URL",
  "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
  "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
+ "currency":"$WTM_CURRENCY"
+}
+EOF
+{
+ "WTM_URL": "$WTM_AUTO_SWITCH_URL",
+ "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+ "WTM_MIN_DIFFERENCE": "$WTM_LOWER_MIN_DIFFERENCE",
  "currency":"$WTM_CURRENCY"
 }
 EOF
