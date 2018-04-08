@@ -32,10 +32,27 @@
 #          Added P104 and changed P106 to P10X
 # v=0010 : papampi
 #          WTM minimum mining time and force switch
+# v=0011 : papampi
+#          Pool Wallet Address Format
+# v=0012 : papampi
+#          New claymore dual mining 
+# v=0013 : damNmad
+#          Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable
+# v=0014 : Falcon
+#          Added RavenCoin (RVN)
+# v=0015 : papampi
+#          Temp Control Maximum fan speed 
+# v=0016 : papampi
+#          Some fix in claymore_dual
+# v=0017 : papampi
+#          NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
+# v=0018 : papampi
+#          Alternate Pool Switch
+
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0009"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0018"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -190,7 +207,7 @@ nvOC_1bash_ver="v0019-2.1.0009"   # Do not edit this
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 
-### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC
+### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC, BTCP
 
 
 
@@ -288,6 +305,21 @@ LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OF
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
+ALT_POOL="NO"               #YES or NO, Set to YES if you want to enable  poolswitch. 
+                            #Switch to alternate pool if main pool goes down.
+                            #Dual mining and salfter auto switch not supported.
+                            #If pool goes down, poolswitch will stop/disable wtm auto switch and will enable/start it after pool comes up to prevent coin data mixed up.
+						                #If main pool use username, alternate pool should use same username and workername. 
+						                #If anonymous mining with coin address alternate pool should use same. 
+                            #If ALT_POOL="YES" add as follow to your coins data (order should be the same).
+
+###alternate pool setup example: 
+#ZCL_POOL_1="europe.equihash-hub.miningpoolhub.com"
+#ZCL_PORT_1="20575"
+#ZCL_POOL_2="zcl.suprnova.cc"
+#ZCL_PORT_2="4042"
+#ZCL_POOL=$ZCL_POOL_1  #Dont edit this
+#ZCL_PORT=$ZCL_PORT_1  #Dont edit this
 
 
 MANUAL_FAN="NO"             # YES or NO # Manually set the fans, no auto adjustment. Set this to NO if using the auto MINER_TEMP_CONTROL
@@ -313,11 +345,13 @@ ALLOWED_TEMP_DIFF=2         # If current temp is 2C below the target temp reduce
 
 MINIMAL_FAN_SPEED=50        # Lowest fan speed that will be used. Recommended ranges: 40 - 60
 
+MAXIMAL_FAN_SPEED=95        # HIghest fan speed before temp control drops power limit to reach TARGET_TEMP. Recommended ranges: 90 - 100
+
 __FAN_ADJUST=5              # Fan adjustment size in percent
 
 POWER_ADJUST=5              # Adjustment size in watts. If the target temp can not be achieved and fan is already at 100%, reduce Power Limit
 
-RESTORE_POWER_LIMIT=90      # Restore original Power Limit if fan speed is lower than this percentage. Recommended: 90
+RESTORE_POWER_LIMIT=85      # Restore original Power Limit if fan speed is lower than this percentage. Recommended: 10% less than Maximum fan speed
 
 
 ########################################################
@@ -445,8 +479,6 @@ fi
 ########################################################################################
 
 
-
-
 ########################################################
 #                                                      #
 # Addresses, pools, ports, intensity, miner settings   #
@@ -457,38 +489,48 @@ USE_ENVIRONMENTAL_VARIBLES="NO"                  # YES or NO # Not needed for nv
 
 BTC_ADDRESS="replace_with_your_BTC_address"      # Your BTC addrees to use with zpool
 
-NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"            # Your internal Nicehash BTC addrees to use with nicehash		
+NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"             # Your internal Nicehash BTC addrees to use with nicehash		
 
 MPH_ADDRESS="replace_with_your_MPH_username"     #You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
 
 MINER_PWD="x"                                    # Set the miner password. Default: x
-# For zpool use MINER_PWD="$WORKERNAME,c=btc"
+                                                 # For zpool use MINER_PWD="$WORKERNAME,c=btc"
 
 EQUIHASH_MINER="ZM"                              # choose "ZM" for dstm or "EWBF" or "BMINER" or "BMINER_SSL"
 
-# DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
-ZM_OPTS=""
+ZM_OPTS=""                                       # DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 
-# EWBF ZEC Miner version
-EWBF_VERSION="3_4" # choose 3_3  or  3_4
+EWBF_VERSION="3_4"                               # choose 3_3  or  3_4 # EWBF ZEC Miner version
 
-# EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_OPTS=""
+EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
 
-# Bminer optional arguments. add "--api $IPW:42000" if you want web info
-BMINER_OPTS=""
+EWBF_OPTS=""                                     # EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
 
-# change EWBF_PERCENT to alter donation percent for EWBF Miner
-EWBF_PERCENT="0"
+BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 
-ETHASH_MINER="CLAYMORE"  # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
+CCMINER_OPTS=""                                  #ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
-DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"   # DOT or SLASH
+ETHASH_MINER="ETHMINER"                          # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
+
+CLAYMORE_VERSION="latest"                        # choose: latest or any version you add its folder  (type latest to use 10_2)
+
+WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-" or any other separators your pool uses.
 # Some pools require dot (address.worker), some require slash (address/worker) format.
-# Depending on the pool you use, set this approprietly:
+# Depending on the pool you use, set this appropriately:
+# For most of the cryptonight pools (except Miningpoolhub and suprnova type of- 
+# user account based pools), please put the above variable and worker name for that coins as empty 
 
-CLAYMORE_VERSION="latest"    # choose: latest or any version you add its folder  (type latest to use 10_2)
+NEOSCRYPT_MINER="TPccminer"                     #choose miner for NeoScrypt algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+NEOSCRYPT_INTENSITY="22"                          #set intensity for all NeoScrypt miners
 
+LYRA2V2_MINER="KTccminer"                       #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
+LYRA2V2_INTENSITY="17"                            #set intensity for all Lyra2v2 miners
+
+SKUNK_MINER="TPccminer"                       #choose miner for Skunkhash algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+SKUNK_INTENSITY="22"                            #set intensity for all Skunkhash miners
+
+SKEIN_MINER="TPccminer"                       #choose miner for Skein algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+SKEIN_INTENSITY="22"                            #set intensity for all Skein miners
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
@@ -533,6 +575,19 @@ KMD_ADDRESS="replace_with_your_address"
 KMD_POOL="luckpool.org"
 KMD_PORT="3857"
 
+# RVN ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
+RVN_WORKER="$WORKERNAME"
+RVN_ADDRESS="replace_with_your_address"
+RVN_POOL="RVN_POOL_ADDRESS"
+RVN_PORT="RVN_POOL_PORT"
+RVN_INTENSITY="19"
+
+# BTCP
+BTCP_WORKER="$WORKERNAME"
+BTCP_ADDRESS="replace_with_your_address"
+BTCP_POOL="BTCP_POOL_ADDRESS"
+BTCP_PORT="BTCP_POOL_PORT"
+
 # BTX ## No Need to add stratum+tcp:// to server address
 BTX_WORKER="$WORKERNAME"
 BTX_ADDRESS="replace_with_your_address"
@@ -563,14 +618,12 @@ SIGT_WORKER="$WORKERNAME"
 SIGT_ADDRESS="replace_with_your_address"
 SIGT_POOL="us.hashbag.cc"
 SIGT_PORT="8644"
-SIGT_INTENSITY="25"
 
 # Altcommunity(ALTCOM) ## No Need to add stratum+tcp:// to server address
 ALTCOM_WORKER="$WORKERNAME"
 ALTCOM_ADDRESS="replace_with_your_address"
 ALTCOM_POOL="ALTCOM POOL"
 ALTCOM_PORT="ALTCOM PORT"
-ALTCOM_INTENSITY="25"
 
 # SIB ## No Need to add stratum+tcp:// to server address
 SIB_WORKER="$WORKERNAME"
@@ -584,12 +637,10 @@ PXC_WORKER="$WORKERNAME"
 PXC_ADDRESS="replace_with_your_address"
 PXC_POOL="atlas.phoenixcoin.org:"
 PXC_PORT="10554"
-PXC_INTENSITY="23"
 
 # ZPOOL_SKUNK ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_SKUNK_POOL="skunk.mine.zpool.ca"
 ZPOOL_SKUNK_PORT="8433"
-ZPOOL_SKUNK_INTENSITY="22"
 
 # ZPOOL_LYRA2V2 ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_LYRA2V2_POOL="lyra2v2.mine.zpool.ca"
@@ -613,7 +664,6 @@ ZPOOL_LBRY_INTENSITY="23"
 # ZPOOL_NEOSCRYPT ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_NEOSCRYPT_POOL="neoscrypt.mine.zpool.ca"
 ZPOOL_NEOSCRYPT_PORT="4233"
-ZPOOL_NEOSCRYPT_INTENSITY="22"
 
 # ZPOOL_SKEIN ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_SKEIN_POOL="skein.mine.zpool.ca"
@@ -649,24 +699,20 @@ MONA_WORKER="$WORKERNAME"
 MONA_ADDRESS="replace_with_your_address"
 MONA_POOL="mona.suprnova.cc"
 MONA_PORT="2995"
-MONA_INTENSITY="21"
 
 # VTC ## No Need to add stratum+tcp:// to server address
 VTC_WORKER="$WORKERNAME"
 VTC_ADDRESS="replace_with_your_address"
 VTC_POOL="hub.miningpoolhub.com"
 VTC_PORT="20507"
-VTC_INTENSITY="21"
 
 # TZC ## No Need to add stratum+tcp:// to server address
 TZC_WORKER="$WORKERNAME"
 TZC_ADDRESS="TZC ADDRESS"
 TZC_POOL="TZC POOL"
 TZC_PORT="TZC PORT"
-TZC_INTENSITY="21"
 
 # DGB ## No Need to add stratum+tcp:// to server address
-DGB_INTENSITY="24"
 DGB_WORKER="$WORKERNAME"
 DGB_ADDRESS="replace_with_your_address"
 DGB_POOL="hub.miningpoolhub.com"
@@ -684,21 +730,18 @@ FTC_WORKER="$WORKERNAME"
 FTC_ADDRESS="replace_with_your_address"
 FTC_POOL="hub.miningpoolhub.com"
 FTC_PORT="20510"
-FTC_INTENSITY="23"
 
 # ORB ## No Need to add stratum+tcp:// to server address
 ORB_WORKER="$WORKERNAME"
 ORB_ADDRESS="Your DNB Account Name"
 ORB_POOL="strat.dnb.io"
 ORB_PORT="3031"
-ORB_INTENSITY="23"
 
 # VIVO ## No Need to add stratum+tcp:// to server address
 VIVO_WORKER="$WORKERNAME"
 VIVO_ADDRESS="VIVO ADDRESS"
 VIVO_POOL="VIVO POOL"
 VIVO_PORT="VIVO PORT"
-VIVO_INTENSITY="21"
 
 # ONION ## No Need to add stratum+tcp:// to server address
 ONION_ADDRESS="replace_with_your_ONION_address"
@@ -717,14 +760,12 @@ GBX_WORKER="$WORKERNAME"
 GBX_ADDRESS="replace_with_your_address"
 GBX_POOL="replace_with_pool_address"
 GBX_PORT="replace_with_pool_port"
-GBX_INTENSITY="17"
 
 #CrowdCoin (CRC) ##No Need to add add stratum+tcp:// to server address
 CRC_WORKER="$WORKERNAME"
 CRC_ADDRESS="replace_with_your_address"
 CRC_POOL="replace_with_pool_address"
 CRC_PORT="replace_with_pool_port"
-CRC_INTENSITY="17"
 
 #Verge-Lyra2REv2(XVG) ##No Need to add stratum+tcp:// to server address
 XVG_WORKER="$WORKERNAME"
@@ -751,7 +792,6 @@ DSR_WORKER="$WORKERNAME"
 DSR_ADDRESS="replace_with_your_address"
 DSR_POOL="DSR_POOL"
 DSR_PORT="DSR_PORT"
-DSR_INTENSITY="21"
 
 # ETH
 ETH_WORKER="$WORKERNAME"
@@ -854,6 +894,40 @@ SMART_ADDRESS="yourPoolLoginName"
 SMART_POOL="pool-eu.smartcash.cc"
 SMART_PORT="3333"
 SMART_INTENSITY="25"
+
+###################################################
+# Claymore_Dual Mining                            #
+# Set COIN="Claymore_Dual"                        #  
+###################################################
+
+###You can use variables like this:
+#DUAL_ECOIN="ETH"
+#DUAL_EPOOL="$ETH_POOL"        
+#DUAL_EPORT="$ETH_PORT"            
+#DUAL_EWAL="$ETH_ADDRESS"       
+#DUAL_EPSW="$MINER_PWD"                       
+#DUAL_EWORKER="$ETH_WORKER"  
+
+DUAL_ECOIN="MAIN COIN"                      #Main Coin, Ethereum or any Ethash Coin
+DUAL_EPOOL="MAIN COIN POOL ADDREES"         #Main Coin pool address, no need to add stratum+tcp://
+DUAL_EPORT="MAIN COIN POOL PORT"           #Main Coin Port Number
+DUAL_EWAL="MAIN COIN WALLET ADDRESS"        #Main Coin Wallet address or pool username
+DUAL_EPSW="$MINER_PWD"                      #Main Coin worker password on pool
+DUAL_EWORKER"$WORKER"                       #Main Coin Worker Name
+
+DUAL_DCOIN="DUAL COIN"                      #select second coin to mine in dual mode. Possible options are "dcr", "sc", "lbc", "pasc", "blake2s", "keccak". Default value is "dcr".
+DUAL_DPOOL="DUAL COIN POOL ADDRESS"         #2nd coin pool address
+DUAL_DPORT="DUAL COIN POOL PORT"            #2nd coin pool address
+DUAL_DWAL="DUAL COIN WALLET ADDRESS"        #2nd coin wallet address or worker name, it depends on pool.
+DUAL_DPSW="$MINER_PWD"                      #Password for 2nd coin .
+DUAL_DWORKER="$WORKER"                      #Worker name for 2nd coin
+
+DCRI="40"                                   #2nd coin intensity.
+ALL_POOLS="1"                               #Specify "-allpools 1" if miner does not want to mine on specified pool (because it cannot mine devfee on that pool), but you agree to use some default pools for devfee mining. 
+MPORT="-3333"                               #remote monitoring/management port. Default value is -3333 (read-only mode), specify "-mport 0" to disable remote monitoring/management feature. 
+MPSW=""                                     #remote monitoring/management password.
+DUAL_ADDITIONAL_ARGUMENTS=""                #add "-allcoins 1" if you mine Ethereum forks or other Ethash coins
+
 
 ########################################################
 #                                                      #
@@ -1079,12 +1153,10 @@ NICE_EQUIHASH_PORT="3357"
 #NICE_LYRA2REV2 stratum+tcp://
 NICE_LYRA2REV2_POOL="lyra2rev2.eu.nicehash.com"
 NICE_LYRA2REV2_PORT="3347"
-NICE_LYRA2REV2_INTENSITY="21"
 
 #NICE_NEOSCRYPT  stratum+tcp://
 NICE_NEOSCRYPT_POOL="neoscrypt.eu.nicehash.com"
 NICE_NEOSCRYPT_PORT="3341"
-NICE_NEOSCRYPT_INTENSITY="17"		# 17 because using KTccminer latest version that give best hashrate in Neoscrypt but more intensity crash ccminer
 
 #NICE_CRYPTONIGHT stratum+tcp://
 NICE_CRYPTONIGHT_POOL="cryptonight.eu.nicehash.com:3355"
@@ -1099,7 +1171,6 @@ NICE_X11GOST_INTENSITY="21"
 #NICE_SKUNKHASH stratum+tcp://
 NICE_SKUNKHASH_POOL="skunk.eu.nicehash.com:"
 NICE_SKUNKHASH_PORT="3362"
-NICE_SKUNKHASH_INTENSITY="21"
 
 ########################################################
 #                                                      #
@@ -1133,7 +1204,7 @@ then
   fi
 
   # Equihash
-  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE" ]
+  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "BTCP" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE"  ]
   then
     ALGORITHM="EQUIHASH"
     POWERLIMIT_WATTS=76

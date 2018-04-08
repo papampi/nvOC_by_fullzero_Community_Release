@@ -27,16 +27,19 @@
 # v=0002 : Stubo: Added secondary fix for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is
 #          queried from nvidia-smi (a.k.a. bleed issue of power.draw)
 # v=0003 : Papampi: Telegram alerts
+#
+# v=0004 : Papampi: MAXIMAL_FAN_SPEED
+
 
 
 # TODO:
 # Telegram implementation # Done
 # Further code optimization
 #
-# DEV_VERSION=0003
+# DEV_VERSION=0004
 
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-nvOC_temp_ver="v0019-2.0.003"   # Do not edit this
+nvOC_Ver="nvOC v0019-2.1 - Community Release"
+nvOC_temp_ver="v0019-2.1.0004"   # Do not edit this
 
 
 export DISPLAY=:0
@@ -286,10 +289,10 @@ while true; do
         FAN_ADJUST_CALCULATED=$FAN_ADJUST
       fi
       NEW_FAN_SPEED=$(($CURRENT_FAN + $FAN_ADJUST_CALCULATED))
-      if [ $NEW_FAN_SPEED -gt 100 ]; then
-        NEW_FAN_SPEED=100
-        # Fan speed was already (very close to) 100, we have to drop the power limit a bit
-        echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Fan speed was already close to max, dropping Power Limit in order to maintain the desired temp${N}" | tee -a ${LOG_FILE}
+      if [ $NEW_FAN_SPEED -gt $MAXIMAL_FAN_SPEED ]; then
+        NEW_FAN_SPEED=$MAXIMAL_FAN_SPEED
+        # Fan speed reached MAXIMAL_FAN_SPEED, we have to drop the power limit
+        echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Fan speed reached $MAXIMAL_FAN_SPEED, dropping Power Limit in order to maintain the desired temp${N}" | tee -a ${LOG_FILE}
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
           bash '/home/m1/telegram'
         fi

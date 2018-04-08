@@ -45,6 +45,8 @@
 # v=0015 : Papampi: Changed top coin resolve
 #
 # v=0016 : Papampi: New miner time based on last switch
+#
+# v=0017 : Papampi: Kill miner before restart 3main to prevent GPU lockup
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
@@ -141,7 +143,7 @@ do
       #If miner running time is more than given time or profit is more than given value switch the coin
       FORCE_SWITCH=0
       CURRENT_COIN_PROFIT=$(cat WTM_current_profit | grep $COIN | sed 's/.*://')
-      TOP_COIN_PROFIT=$( cat WTM_top_coin | sed 's/[A-Z]*://')
+      TOP_COIN_PROFIT=$( cat WTM_top_coin | sed 's/.*://')
 
       if [[ $(($TOP_COIN_PROFIT - $CURRENT_COIN_PROFIT)) -ge $WTM_FORCE_SWITCH ]]
       then
@@ -158,15 +160,17 @@ do
         echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > /home/m1/WTM_24H_REV
         sed -i '/^$/d' /home/m1/WTM_24H_REV
         sleep 1
-        echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"
+          echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"
+          echo "Top Coin Algo: $TOP_COIN_ALGORITHM"
         echo "Current Coin: $CURRENT_COIN"
-        echo "Top Coin Algo: $TOP_COIN_ALGORITHM"
         echo "Top Coin: $TOP_COIN"
 
         if  [[ $ALGO_SPECIFIC_OC == "NO" ]] || [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM == $TOP_COIN_ALGORITHM ]]; then
-          echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner"
+        echo "Current Coin: $CURRENT_COIN"
+        echo "Top Coin: $TOP_COIN"
+        echo "Switching Coin with same Algo or ALGO_SPECIFIC_OC=No, Restarting miner"
           echo ""
-          if [[ -n  $(ps ax | grep -i screen | grep miner) ]]; then
+          if [[ -n  $(ps ax | grep SCREEN | grep miner) ]]; then
             echo "Miner is running, lets make the switch"
             if [[ $MINER_WATCHDOG == "YES" ]]; then
               pkill -f 5watchdog
@@ -176,20 +180,26 @@ do
               echo "watchdog restarted in screen wdog; ~/nvOC wdog-log"
               echo ""
             fi
-            target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
+            target=$(ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}')
             kill $target
             sleep 1
             echo "Commencing Miner Start Command..."
             bash /home/m1/0miner
-            echo $( ps ax | grep miner | grep -o 'SCREEN.*' )
+            ps ax | grep miner | grep -o 'SCREEN.*'
             echo "process in screen miner; ~/nvOC miner-log"
             echo ""
           fi
 
         elif [[ $ALGO_SPECIFIC_OC == "YES"  &&  $CURRENT_COIN_ALGORITHM != $TOP_COIN_ALGORITHM ]]; then
+          echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"
+          echo "Top Coin Algo: $TOP_COIN_ALGORITHM"
+          echo "Current Coin: $CURRENT_COIN"
+          echo "Top Coin: $TOP_COIN"
           echo "Switching Coin with ALGO_SPECIFIC_OC=YES and different Algo, Restarting 3main"
           pkill -f 5watchdog
           echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
+          target=$(ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}')
+          kill $target
           sleep 1
           pkill -f 3main
         fi

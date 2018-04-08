@@ -6,16 +6,13 @@
 ##########################################################################
 
 
-################################### Do not edit bellow this line ########################################
 #                              POOL SWITCH for nvOC v0019-2.1 by papampi                                #
-#                       This script is written only for nvOC Community Release.                         #
 # Changelog:                                                                                            #
 # v=0001 : papampi                                                                                      #
 #        : Initial Release                                                                              #
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
 nvOC_poolswitch_ver="v0019-2.1.0001"
 echo "Pool Switch for nvOC $nvOC_poolswitch_ver by papampi"
-################################### Do not edit above this line #########################################
 
 WDOG_LOG="/home/m1//5_watchdoglog"
 MINER_LOG="/home/m1/nvoc_logs/screenlog.0"
