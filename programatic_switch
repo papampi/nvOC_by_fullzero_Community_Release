@@ -56,9 +56,6 @@ if (current==0):
   algo_log.write(str(datetime.datetime.now())+": "+coin+"\n")
   algo_log.close()
 
-
-  #subprocess.call(["/home/prospector/telegram"])
-  #time.sleep(3)
   # kill existing miners
   subprocess.call(["pkill", "-f","miner"])
   time.sleep(3)
