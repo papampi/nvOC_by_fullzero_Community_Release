@@ -14,7 +14,7 @@
     },
     "Cryptonight-Heavy":
     {
-      "bin": "/home/m1/xmr/xmrig-nvidia-miner/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
+      "bin": "/home/m1/xmr/xmrig-nvidia/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
     },
     "Equihash":

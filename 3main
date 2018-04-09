@@ -924,7 +924,7 @@ then
     },
     "Cryptonight-Heavy":
     {
-      "bin": "/home/m1/xmr/xmrig-nvidia-miner/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
+      "bin": "/home/m1/xmr/xmrig-nvidia/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
       "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0
     },
     "Equihash":
