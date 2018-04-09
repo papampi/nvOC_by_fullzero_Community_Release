@@ -229,7 +229,7 @@ nvOC_1bash_ver="v0019-2.1.0019"   # Do not edit this
 #                                                      #
 ########################################################
 
-COIN="SALFTER_PROGRAMATIC_SWITCHING"
+COIN="ZEC"
 
 AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
@@ -924,6 +924,7 @@ DUAL_ADDITIONAL_ARGUMENTS=""                #add "-allcoins 1" if you mine Ether
 #                                                      #
 ########################################################
 
+# Change this url to one you use for your own
 PROGRAMATIC_SWITCH_CONFIG_JSON_URL="https://pastebin.com/dl/eLU4B8rK"
 
 CURRENCY=USD
