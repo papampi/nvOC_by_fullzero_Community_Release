@@ -910,6 +910,7 @@ then
   cat <<EOF >/home/m1/programatic_conf.json
 {
   "card_type": "nvidia",
+  "config_json_url": "$PROGRAMATIC_SWITCH_CONFIG_JSON_URL",
   "miners":
   {
     "Blake-Vanilla":
