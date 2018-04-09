@@ -1,0 +1,81 @@
+{
+  "card_type": "nvidia",
+  "miners":
+  {
+    "Blake-Vanilla":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Cryptonight":
+    {
+      "bin": "/home/m1/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Cryptonight-Heavy":
+    {
+      "bin": "/home/m1/xmr/xmrig-nvidia-miner/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
+     "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Equihash":
+    {
+      "bin": "/home/m1/zec/zm/latest/zm_miner --server {HOST} --port {PORT} --user {NAME}.{MINER} --pass x --telemetry=0.0.0.0:2222 --time --color",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Ethash":
+    {
+      "bin": "/home/m1/eth/ethminer_12dev2/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Groestl":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Keccak":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Lyra2RE2":
+    {
+      "bin": "/home/m1/ASccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY} -i 21",
+      "power_limit": 125, "gpu_oc": 110, "mem_oc": 300, "fan": 0
+    },
+    "Myriad-Groestl":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "NeoScrypt":
+    {
+      "bin": "/home/m1/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Qubit":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Scrypt":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Sia":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "Skein":
+    {
+      "bin": "/home/m1/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    },
+    "X11":
+    {
+      "bin": "/home/m1/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": 120, "gpu_oc": 100, "mem_oc": 100, "fan": 0
+    }
+  }
+}
