@@ -160,7 +160,7 @@ sleep 10
 REUP_MINER=0
 while [[ -z $(ps ax | grep SCREEN | grep miner) ]] ;do
   echo "WARNING: $(date) - Miner not running, commencing miner start command again" 
-  bash /home/m1/0miner
+  bash ${NVOC}/0miner
   ps ax | grep miner | grep -o 'SCREEN.*'
   REUP_MINER=$(($REUP_MINER + 1))
   sleep 10
@@ -403,7 +403,7 @@ while true; do
       echo "WARNING: $(date) - Problem found: See diagnostics below: " | tee -a ${LOG_FILE}
       echo "Percent of GPUs bellow threshold: $PCT_GPU_BAD %"  | tee -a ${LOG_FILE}
       echo "$(nvidia-smi --query-gpu=name,pstate,temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv)" | tee -a ${LOG_FILE}
-      echo "$(tail -15 /home/m1/nvoc_logs/screenlog.0)" | tee -a ${LOG_FILE}
+      echo "$(tail -15 ${NVOC}/nvoc_logs/screenlog.0)" | tee -a ${LOG_FILE}
 
 
       # If we have had 4 miner restarts and still have low utilization

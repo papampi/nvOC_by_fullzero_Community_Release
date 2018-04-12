@@ -436,7 +436,7 @@ fi
 
 if [[ $COIN == LBC ]]
 then
-  HCD='${NVOC}/miners/SPccminer/ccminer'
+  HCD=${NVOC}/miners/SPccminer/ccminer
   ADDR="$LBC_ADDRESS$WALLET_ADDRESS_FORMAT$LBC_WORKER"
   screen -dmSL miner $HCD -a lbry -o stratum+tcp://$LBC_POOL:$LBC_PORT -u $ADDR -p $MINER_PWD -i $LBC_INTENSITY $CCMINER_OPTS
 fi

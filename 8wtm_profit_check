@@ -22,7 +22,7 @@ echo ""
 source ${NVOC}/1bash
 
 # Creating a log file to record coin switch
-LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
+LOG_FILE="${NVOC}/nvoc_logs/8_wtmautoswitchlog"
 
 if [ -e "$LOG_FILE" ] ; then
   #Limit the logfile, just keep the last 2K

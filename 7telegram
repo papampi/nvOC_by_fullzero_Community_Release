@@ -11,7 +11,7 @@
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
 nvOC_telegram_ver="v0019-2.0.001"   # Do not edit this
 
-source ~/1bash
+source ${NVOC}/1bash
 
 echo "Telegram Messages for $nvOC_Ver"
 echo "Version: :$nvOC_telegram_ver"

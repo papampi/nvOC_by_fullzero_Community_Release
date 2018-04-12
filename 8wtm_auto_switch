@@ -181,7 +181,7 @@ do
               echo "WTM Auto Switch Restarted watchdog" | tee -a $WDOG_LOG
               sleep 1
               screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
-              echo "watchdog restarted in screen wdog; ~/nvOC wdog-log"
+              echo "watchdog restarted in screen wdog; 'nvOC wdog-log'"
               echo ""
             fi
             target=$(ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}')
@@ -190,7 +190,7 @@ do
             echo "Commencing Miner Start Command..."
             bash ${NVOC}/0miner
             ps ax | grep miner | grep -o 'SCREEN.*'
-            echo "process in screen miner; ~/nvOC miner-log"
+            echo "process in screen miner; 'nvOC miner-log'"
             echo ""
             sleep 10
             if [[ ! $(ps ax | grep SCREEN | grep -v cpuminer | grep miner ) ]] ;then

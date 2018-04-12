@@ -73,7 +73,7 @@ fi
 
 if [[ $CLEAR_LOGS_ON_BOOT == YES ]]
 then
-  sudo bash '${NVOC}/clear_logs'
+  sudo bash "${NVOC}/clear_logs"
 fi
 
 if [[ $LOG_ROTATE == YES ]]
@@ -360,7 +360,7 @@ then
     then
       #guake -n $HCD -r MINER_TEMP_CONTROL -e "bash ${NVOC}/6tempcontrol"
       echo ""
-      echo "process in screen temp, guake terminal Tab (f12), ~/nvOC temp-log"
+      echo "process in screen temp, guake terminal Tab (f12), 'nvOC temp-log'"
       screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
       #if guake tab is already showing temp control output dont open a new one
       if [[ -z $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" |grep -v grep) ]];then
@@ -372,7 +372,7 @@ then
     then
       screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
       echo ""
-      echo "process in screen temp; ~/nvOC temp-log"
+      echo "process in screen temp; 'nvOC temp-log'"
       echo ""
       running=""
     fi
@@ -391,7 +391,7 @@ then
     if [[ $LOCALorREMOTE == LOCAL ]]
     then
       echo ""
-      echo "process in screen wdog, guake terminal Tab (f12), ~/nvOC wdog-log"
+      echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
       screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
       #guake -n $HCD -r MINER_WATCHDOG -e "bash ${NVOC}/5watchdog"
       #if guake tab is already showing watchdog output dont open a new one
@@ -404,7 +404,7 @@ then
     then
       screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
       echo ""
-      echo "process in screen wdog; ~/nvOC wdog-log"
+      echo "process in screen wdog; 'nvOC wdog-log'"
       echo ""
       running=""
     fi
@@ -1041,7 +1041,7 @@ then
           screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
           echo "LAUNCHING:  MINER WATCHDOG"
           echo ""
-          echo "process in screen wdog; ~/nvOC wdog-log"
+          echo "process in screen wdog; 'nvOC wdog-log'"
           running=""
         fi
       fi
@@ -1081,7 +1081,7 @@ EOF
           if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" | grep -v grep) ]];then
             guake -n ${NVOC}/8wtm_auto_switch -r WTM_AUTO_SWITCH -e "tail -f  ${NVOC}/nvoc_logs/8_wtmautoswitchlog"
           elif [[ $LOCALorREMOTE == REMOTE ]];          then
-            echo "process in screen wtm, ~/nvOC wtm-log"
+            echo "process in screen wtm, 'nvOC wtm-log'"
             echo "    "
           fi
         fi
@@ -1108,14 +1108,14 @@ EOF
       running=""
       if [[ $LOCALorREMOTE == REMOTE ]]
       then
-        echo "Miner output: ~/nvOC miner-log"
+        echo "Miner output: 'nvOC miner-log'"
         echo "    "
         echo "    "
       elif [[ $LOCALorREMOTE == LOCAL ]]
       then
         if [[ $WTM_AUTO_SWITCH == YES ]]
         then
-          echo "Miner output: ~/nvOC miner-log"
+          echo "Miner output: 'nvOC miner-log'"
           echo "    "
           echo "    "
           tail -f ${NVOC}/nvoc_logs/screenlog.0
