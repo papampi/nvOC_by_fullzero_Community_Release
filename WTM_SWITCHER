@@ -14,16 +14,18 @@
 # v=0006 : papampi    : Comment out some output logs to prevent conflicts with 8wtm_auto_switch
 
 
+from collections import OrderedDict
 import json
 import requests
 import sys
 import urllib
 import urllib2
-configFile = "./WTM.json"
+#configFile = "./WTM.json"
 topCoinLogFile = "./WTM_top_coin"
 
 # load config
-cfg = json.loads(open(configFile).read())
+cfg=json.loads(open(sys.argv[1]).read())
+#cfg = json.loads(open(configFile).read())
 requestUrl = urllib.unquote(urllib.unquote(cfg["WTM_URL"]))
 minimumDifference = float(cfg["WTM_MIN_DIFFERENCE"])
 includedCoins = cfg["WTM_COINS"].upper()
@@ -78,73 +80,53 @@ except:
     raise
 
 try:
-    data = httpResponse.json()['coins']
-    data = data.values()
+    data = httpResponse.json(object_pairs_hook=OrderedDict)['coins']
 except:
     print "Invalid JSON"
     sys.exit()
     raise
 
 # filter WTM coins by user selection only
-for i in reversed(data):
-    if i["tag"] == "NICEHASH":
-       i["tag"] = "NICE-" + i["algorithm"].upper()
-
-for i in reversed(data):
-    if i["tag"] not in includedCoins:
-       data.remove(i)
-
-# calculate coin revenue
-#print currency + " Revenue"
-newRev = {}
 for i in data:
-    newRev[i["tag"]] = float(i["btc_revenue"])
-newRev = sorted(newRev.items(), key=lambda x: x[1], reverse=True)
+    if data[i]["tag"] == "NICEHASH":
+       data[i]["tag"] = "NICE-" + data[i]["algorithm"].upper()
+
+for i in filter(lambda x: data[x]["tag"] not in includedCoins, data):
+    data.pop(i)
+
 #save current revenue
 RevLog = open("WTM_current_revenue", "w")
-for i, j in newRev:
-    RevLog.write("%s:%s\n" % (i, '%02.2f' %(j*exchrate) ))
-    print  i, '%02.2f' %(j*exchrate) +" " + currency
+for i in data:
+    RevLog.write("%s:%02.2f\n" % (data[i]["tag"], float(data[i]["btc_revenue"])*exchrate) )
+    print  '%s %02.2f %s' % (data[i]["tag"], float(data[i]["btc_revenue"])*exchrate, currency)
 RevLog.close()
-
-# sort by coin profitability
-updatedTopCoins = sorted(data, key=lambda x: x["profitability"], reverse=True)
 
 # save current profit
 print "New profits"
 profitLog = open("WTM_current_profit", "w")
-for i in updatedTopCoins:
-    profitLog.write("%s:%s\n" % (i["tag"], i["profitability"]))
-    print "%s: %s %%" % (i["tag"], i["profitability"])
+for i in data:
+    profitLog.write("%s:%s\n" % (data[i]["tag"], data[i]["profitability"]))
+    print "%s: %s %%" % (data[i]["tag"], data[i]["profitability"])
 profitLog.close()
-
-# is currently mining coin the same as most profitable coin at the moment?
-if miningCoin[0] == updatedTopCoins[0]["tag"]:
-    #print "Same coin, no switch"
-    saveTopCoin(str(updatedTopCoins[0]["tag"]) + ":" + str(updatedTopCoins[0]["profitability"]))
-    sys.exit()
-
-# corrently mining coin is no more the top one
 
 oldTopCoin = { "tag": "-", "profitability": 0 }
 try:
-    oldTopCoin = filter(lambda x: x["tag"] == miningCoin[0], data)[0]
+    oldTopCoin = filter(lambda x: x["tag"] == miningCoin[0], data.values())[0]
 except:
     print "Currently mining coin was not found in inclusion list, will switch to the new best one"
+    minimumDifference = 0
 
-# try parse new top coins and compare their profit with current mining coin profit
+newTopCoin = oldTopCoin
+# try searching for a new top coin comparing its profit with current mining coin profit
 try:
-    if (float(updatedTopCoins[0]["profitability"]) - minimumDifference) >= float(oldTopCoin["profitability"]):
-        print "Currently mining %s coin is no longer more profitabile with %s" % (miningCoin[0], miningCoin[1])
-        #print "Switching to new %s coin %s" % (updatedTopCoins[0]["tag"], updatedTopCoins[0]["profitability"])
-    else:
-        #print "Currently mining coin is still enaugh profitabile w.r.t. the new top coin"
-        #print "Keep mining %s " % miningCoin[0]
-        saveTopCoin(miningCoin[0] + ":" + oldTopCoin["profitability"])
-        sys.exit()
+    for coin in data:
+      # is this the currently mining coin or a better one?
+      if miningCoin[0] == data[coin]["tag"] or (float(data[coin]["profitability"]) - minimumDifference) >= float(oldTopCoin["profitability"]):
+         # Switch / update profitability
+         newTopCoin = data[coin]
+         break
+    saveTopCoin(str(newTopCoin["tag"]) + ":" + str(newTopCoin["profitability"]))
 except:
 # Some errors
     print ""
     sys.exit()
-
-saveTopCoin(str(updatedTopCoins[0]["tag"]) + ":" + str(updatedTopCoins[0]["profitability"]))

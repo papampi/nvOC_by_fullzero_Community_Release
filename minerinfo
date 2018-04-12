@@ -2,6 +2,7 @@
 # minerinfo written by papampi for nvOC
 # Rev 0002
 # Rev 0003 :Some clean up and additions
+# Rev 0004 :Average Hash rate for zm and ethminer
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -191,6 +192,20 @@ else
 fi
 
 ##################################################################
+########################### Average Hash Rate ####################
+
+if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
+  hash_total=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "==========" | wc | awk '{print $1}')
+  HASH_AVERAGE=$((hash_total / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
+  hash_total=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}' |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}'|  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((hash_total / hash_count))
+fi
+
+##################################################################
 ########################### Miner Logs ###########################
 
 if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
@@ -256,6 +271,8 @@ echo "Gpu Count: " "<tt style=\"text-align:left; color:white\">" "$GPU_COUNT <br
 echo "GPU Utilization: "  "<tt style=\"text-align:left; color:white\">" "$GPU_UTILIZATIONS <br> </tt>"
 
 echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
+
+echo "Average Hashrate: " "<tt style=\"text-align:left; color:white\">" "$HASH_AVERAGE <br> </tt>"
 
 echo "Mining Pool: " "<tt style=\"text-align:left; color:white\">" "${!COIN_POOL} <br> </tt>"
 
