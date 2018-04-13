@@ -732,14 +732,14 @@ echo
 ################################# miner-log ######################################
 miner-log()
 {
-tail -f /home/m1/nvoc_logs/screenlog.0
+tail -f ${NVOC}/nvoc_logs/screenlog.0
 }
 
 ################################# wdog-log ######################################
 wdog-log()
 {
 if [ $LOCALorREMOTE == "REMOTE" ];then
-tail -f /home/m1/nvoc_logs/watchdog-screenlog.0
+tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0
 else
 echo "Only for REMOTE"
 fi
@@ -749,7 +749,7 @@ fi
 temp-log()
 {
 if [ $LOCALorREMOTE == "REMOTE" ];then
-tail -f /home/m1/nvoc_logs/tempcontrol-screenlog.0
+tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0
 else
 echo "Only for REMOTE"
 fi
@@ -759,13 +759,13 @@ fi
 ################################# wtm-log ######################################
 wtm-log()
 {
-tail -f /home/m1/nvoc_logs/8_wtmautoswitchlog
+tail -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog
 }
 
 ################################# master-log ######################################
 master-log()
 {
-tail -f /home/m1/nvoc_logs/screenlog.0 /home/m1/nvoc_logs/tempcontrol-screenlog.0 /home/m1/nvoc_logs/watchdog-screenlog.0 /home/m1/nvoc_logs/8_wtmautoswitchlog
+tail -f ${NVOC}/nvoc_logs/screenlog.0 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 ${NVOC}/nvoc_logs/watchdog-screenlog.0 ${NVOC}/nvoc_logs/8_wtmautoswitchlog
 }
 
 
