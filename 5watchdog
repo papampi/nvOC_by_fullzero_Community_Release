@@ -300,8 +300,8 @@ while true; do
 
     if [[ $COIN == *DUAL* ]] ;   then
       COIN=$(echo $COIN| sed 's/DUAL_//' | cut -d _ -f 1)
-      eval 'COIN_POOL=${COIN}_POOL'
-      eval 'COIN_PORT=${COIN}_PORT'
+      COIN_POOL=${COIN}_POOL
+      COIN_PORT=${COIN}_PORT
       echo "Dual Mining, Check main pool, ${!COIN_POOL}:${!COIN_PORT}"
       if ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
         echo "WARNING: $(date) - ${!COIN_POOL}:${!COIN_PORT} is Down" # | tee -a $LOG_FILE
@@ -340,10 +340,10 @@ while true; do
 
     else
       source ${NVOC}/1bash
-      eval 'COIN_POOL=${COIN}_POOL'
-      eval 'COIN_PORT=${COIN}_PORT'
-      eval 'COIN_POOL_2=${COIN}_POOL_2'
-      eval 'COIN_PORT_2=${COIN}_PORT_2'
+      COIN_POOL=${COIN}_POOL
+      COIN_PORT=${COIN}_PORT
+      COIN_POOL_2=${COIN}_POOL_2
+      COIN_PORT_2=${COIN}_PORT_2
       echo "Check mining pool, ${!COIN_POOL}:${!COIN_PORT}"
       if  !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
         echo "WARNING: $(date) - ${!COIN_POOL}:${!COIN_PORT} is Down"  | tee -a $LOG_FILE

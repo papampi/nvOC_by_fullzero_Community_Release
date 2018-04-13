@@ -76,6 +76,11 @@ then
   sudo bash "${NVOC}/clear_logs"
 fi
 
+if [[ $LOCALorREMOTE == REMOTE ]]
+then
+  export DISPLAY=:0
+fi
+
 if [[ $LOG_ROTATE == YES ]]
 then
   HCD="${NVOC}/log_rotate"
@@ -90,11 +95,6 @@ fi
 if [[ $SALFTER == NO ]]
 then
   pkill -e miner
-fi
-
-if [[ $LOCALorREMOTE == REMOTE ]]
-then
-  export DISPLAY=:0
 fi
 
 ___1050_or_1050ti="NO"
@@ -155,12 +155,12 @@ then
   if [ -e /etc/X11/xorg.conf.default ]
   then
     echo "Restore default xorg.conf"
-    sudo cp '/etc/X11/xorg.conf.default' '/etc/X11/xorg.conf'
+    sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   else
     echo "Downloading default xorg.conf"
     sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf -O /etc/X11/xorg.conf.default
     echo "Restore default xorg.conf"
-    sudo cp '/etc/X11/xorg.conf.default' '/etc/X11/xorg.conf'
+    sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   fi
   echo "Rebooting in 5 seconds"
   sleep 5
@@ -182,7 +182,7 @@ then
 fi
 
 echo ""
-echo ''
+echo ""
 lspci | grep VGA
 
 if [[ $SLOW_USB_KEY_MODE == YES ]]
@@ -191,7 +191,7 @@ then
 fi
 
 echo ""
-echo ''
+echo ""
 nvidia-smi
 echo ""
 
@@ -268,18 +268,18 @@ fi
 
 if [[ $SSH == YES ]]
 then
-  sudo cp '/etc/init/ssh.conf-on' '/etc/init/ssh.conf'
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
 fi
 
 if [[ $SSH == NO ]]
 then
-  sudo cp '/etc/init/ssh.conf-off' '/etc/init/ssh.conf'
+  sudo cp /etc/init/ssh.conf-off /etc/init/ssh.conf
 fi
 
 if [[ $SRR == YES ]]
 then
   sleep 2
-  HCD='SRR'
+  HCD=${NVOC}/SRR
   running=$(ps -ef | awk '$NF~"SRR" {print $2}')
   if [ "$running" == "" ]
   then
@@ -288,7 +288,7 @@ then
   fi
 fi
 
-if [[ $plusCPU == "YES" && $AUTO_START_MINER == "YES" ]]
+if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
 then
   HCD="${NVOC}/cpuOPT/cpuminer"
   XMRADDR="$XMR_ADDRESS.$XMR_WORKER"
@@ -379,7 +379,7 @@ then
   fi
 fi
 
-if [[ $MINER_WATCHDOG == "YES" && $AUTO_START_MINER == "YES" && $SALFTER == "YES" ]]
+if [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == YES && $SALFTER == YES ]]
 then
   HCD="${NVOC}/5watchdog"
   echo ""
@@ -409,7 +409,7 @@ then
       running=""
     fi
   fi
-elif [[ $MINER_WATCHDOG == "YES" && $AUTO_START_MINER == "NO" && $SALFTER == "YES" ]]
+elif [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == NO && $SALFTER == YES ]]
 then
   echo "  "
   echo "  "
@@ -458,7 +458,7 @@ EOF
 fi
 
 
-if [[ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" && $AUTO_START_MINER == "YES" ]]
+if [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING && $AUTO_START_MINER == YES ]]
 then
   HOSTEDIT="YES"
   if grep -q "api.nicehash.com" /etc/hosts;
@@ -475,9 +475,9 @@ then
   fi
 
   sleep 2
-  cd ${NVOC}
+  cd "${NVOC}"
 
-  if [[ "$INDIVIDUAL_CLOCKS" == YES ]]
+  if [[ $INDIVIDUAL_CLOCKS == YES ]]
   then
     gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
 
@@ -504,7 +504,7 @@ then
     mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
   fi
 
-  if [[ "$INDIVIDUAL_POWERLIMIT" == YES ]]
+  if [[ $INDIVIDUAL_POWERLIMIT == YES ]]
   then
     pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13,$INDIVIDUAL_POWERLIMIT_14,$INDIVIDUAL_POWERLIMIT_15,$INDIVIDUAL_POWERLIMIT_16,$INDIVIDUAL_POWERLIMIT_17,$INDIVIDUAL_POWERLIMIT_18]"
     pwr_lim_equihash=$pwr_lim_daggerhashimoto
@@ -595,7 +595,7 @@ EOF
     fi
   done
 
-elif [[ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" && $AUTO_START_MINER == "NO" ]]
+elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING && $AUTO_START_MINER == NO ]]
 then
   echo "    "
   echo "    "
@@ -607,10 +607,10 @@ then
 fi
 
 
-if [[ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" && $AUTO_START_MINER == "YES" ]]
+if [[ $COIN == SALFTER_MPH_PROFIT_SWITCHING && $AUTO_START_MINER == YES ]]
 then
-  cd ${NVOC}
-  if [[ "$INDIVIDUAL_CLOCKS" == YES ]]
+  cd "${NVOC}"
+  if [[ $INDIVIDUAL_CLOCKS == YES ]]
   then
     gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
 
@@ -815,7 +815,7 @@ EOF
       python2.7 "${NVOC}/mph_switch" ${NVOC}/mph_conf.json
     fi
   done
-elif [[ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" && $AUTO_START_MINER == "NO" ]]
+elif [[ $COIN == SALFTER_MPH_PROFIT_SWITCHING && $AUTO_START_MINER == NO ]]
 then
   echo "    "
   echo "    "
@@ -943,7 +943,7 @@ then
         ${NVD} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE
         ${NVD} -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM
       done
-      gpu=$(($gpu+1))
+      gpu=$((gpu+1))
     done
 
     if [[ $MANUAL_FAN == YES && $MINER_TEMP_CONTROL == NO ]]
@@ -953,7 +953,7 @@ then
       do
         ${NVD} -a [gpu:$gpu]/GPUFanControlState=1
         ${NVD} -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}
-        gpu=$(($gpu+1))
+        gpu=$((gpu+1))
       done
     fi
 
@@ -963,7 +963,7 @@ then
       while [ $gpu -lt $GPUS ]
       do
         ${NVD} -a [gpu:$gpu]/GPUFanControlState=0
-        gpu=$(($gpu+1))
+        gpu=$((gpu+1))
       done
     fi
   fi
@@ -984,9 +984,9 @@ then
       echo XORG_UPDATED > "${NVOC}/xorg_flag"
       sleep 4
       echo "XORG UPDATED"
-      echo ''
+      echo ""
       echo "Rebooting in 5"
-      echo ''
+      echo ""
       echo "disconnect monitor if connected"
       sleep 5
       sudo reboot
@@ -1002,7 +1002,7 @@ then
     while [ $gpu -lt "$GPUS" ]
     do
       sudo ${NVD} -a [gpu:$gpu]/GPUPowerMizerMode="${GPUPowerMizerMode}"
-      gpu=$(($gpu+1))
+      gpu=$((gpu+1))
     done
   fi
 
@@ -1025,7 +1025,7 @@ then
       then
         if [[ $LOCALorREMOTE == LOCAL ]]
         then
-          echo "LAUNCHING:  MINER WATCHDOG"
+          echo "LAUNCHING:  MINER WATCHDOG (LOCAL)"
           echo ""
           echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
           screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
@@ -1039,7 +1039,7 @@ then
         elif [[ $LOCALorREMOTE == REMOTE ]]
         then
           screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
-          echo "LAUNCHING:  MINER WATCHDOG"
+          echo "LAUNCHING:  MINER WATCHDOG (REMOTE)"
           echo ""
           echo "process in screen wdog; 'nvOC wdog-log'"
           running=""
