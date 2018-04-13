@@ -71,6 +71,9 @@ then
   SALFTER="YES"
 fi
 
+# make log folder if not exist
+mkdir -p "${NVOC}/nvoc_logs"
+
 if [[ $CLEAR_LOGS_ON_BOOT == YES ]]
 then
   sudo bash "${NVOC}/clear_logs"
