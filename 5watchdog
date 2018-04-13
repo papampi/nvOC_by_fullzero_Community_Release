@@ -227,8 +227,8 @@ while true; do
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - GPU$GPU under threshold found - GPU UTILIZATION:  " $UTIL  | tee -a ${LOG_FILE}
-        COUNT=$(($COUNT - 1))
-        NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
+        COUNT=$((COUNT - 1))
+        NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
     else
       if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
@@ -247,8 +247,8 @@ while true; do
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - GPU$GPU under threshold found - GPU UTILIZATION:  " $UTIL | tee -a ${LOG_FILE}
-        COUNT=$(($COUNT - 1))
-        NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
+        COUNT=$((COUNT - 1))
+        NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
     fi
 
@@ -442,7 +442,7 @@ while true; do
     # No below threshold GPUs detected for this pass
   else
     # All is good, reset the counter
-    COUNT=$((6 * $GPU_COUNT))
+    COUNT=$((6 * GPU_COUNT))
     echo "$(date) - No mining issues detected."
     echo " "
     # No need for a reboot after 5 times through the main loop with no issues
