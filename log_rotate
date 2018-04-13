@@ -34,28 +34,28 @@ if [ -e "$TEMP_LOG_FILE" ] ; then
 fi
   
   # Rotating watchdog screenlog
-  WDOG_SCREEN_LOG_FILE="/home/m1/nvoc_logs/watchdog-screenlog.0"
+  WDOG_SCREEN_LOG_FILE="${NVOC}/nvoc_logs/watchdog-screenlog.0"
   if [ -e "$WDOG_SCREEN_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$(tail -n 2k $WDOG_SCREEN_LOG_FILE)" > $WDOG_SCREEN_LOG_FILE
   fi
   
     # Rotating temp control screenlog
-  TEMP_SCREEN_LOG_FILE="/home/m1/nvoc_logs/tempcontrol-screenlog.0"
+  TEMP_SCREEN_LOG_FILE="${NVOC}/nvoc_logs/tempcontrol-screenlog.0"
   if [ -e "$TEMP_SCREEN_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$(tail -n 2k $TEMP_SCREEN_LOG_FILE)" > $TEMP_SCREEN_LOG_FILE
   fi
 
   # Rotating screenlog
-  MINER_LOG_FILE="/home/m1/nvoc_logs/screenlog.0"
+  MINER_LOG_FILE="${NVOC}/nvoc_logs/screenlog.0"
   if [ -e "$MINER_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$(tail -n 2k $MINER_LOG_FILE)" > $MINER_LOG_FILE
   fi
 
   # Rotating wtm auto switch logs
-  WTM_LOG_FILE="/home/m1/nvoc_logs/8_wtmautoswitchlog"
+  WTM_LOG_FILE="${NVOC}/nvoc_logs/8_wtmautoswitchlog"
   if [ -e "$WTM_LOG_FILE" ] ; then
     #Limit the logfile, just keep the last 2k
     echo "$(tail -n 2k $WTM_LOG_FILE)" > $WTM_LOG_FILE
