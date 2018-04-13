@@ -301,7 +301,7 @@ then
     then
       guake -n $HCD -r plusCPU -e "$HCD -a cryptonight -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT"
     else
-      screen -dmS plusCPU $HCD -a cryptonight -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT
+      screen -c ${NVOC}/screenrc-miner -dmS plusCPU $HCD -a cryptonight -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT
     fi
     echo ""
     echo "plusCPU process in guake terminal Tab (f12)"
