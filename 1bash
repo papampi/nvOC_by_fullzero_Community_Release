@@ -207,6 +207,7 @@ nvOC_1bash_ver="v0019-2.1.0019"   # Do not edit this
 #TYPE - Profit Switchers
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
+######### SALFTER_PROGRAMATIC_SWITCHING       # - change what coin/algo you mine through an external JSON configuration file 
 
 ### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC, BTCP
 
