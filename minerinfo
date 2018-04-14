@@ -29,7 +29,7 @@ REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-al
 MINER_PID=$(pgrep -f -o  miner)
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
-TEMP_FAN_POWER=$(tail  -50 /home/m1/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
+TEMP_FAN_POWER=$(tail  -50 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
 TEMP_ALERT_LOG=$(cat ${NVOC}/6_autotemplog | awk '{print $0,"<br>"}')
 WDOG_ALERT_LOG=$(cat ${NVOC}/5_watchdoglog | awk '{print $0,"<br>"}')
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
@@ -195,13 +195,13 @@ fi
 ########################### Average Hash Rate ####################
 
 if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
-  hash_total=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "==========" | wc | awk '{print $1}')
+  hash_total=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | wc | awk '{print $1}')
   HASH_AVERAGE=$((hash_total / hash_count))
 
 elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
-  hash_total=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}' |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}'|  wc -l | awk '{print $1}')
+  hash_total=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}' |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}'|  wc -l | awk '{print $1}')
   HASH_AVERAGE=$((hash_total / hash_count))
 fi
 
@@ -209,34 +209,34 @@ fi
 ########################### Miner Logs ###########################
 
 if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "zec/v3_" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "bminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e Total |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -e GPU -e Total |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "SPccminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "TPccminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "KTccminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "ASccminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "S/A/T" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "S/A/T" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "ethminer" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "ethminer" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "claymore" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 else
-  MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 fi
 
 ###################################################################
