@@ -67,10 +67,11 @@ NVD=nvidia-settings
 
 SALFTER="NO"
 
-if [[ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" || $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]]
+if [[ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" || $COIN == "SALFTER_MPH_PROFIT_SWITCHING" || $COIN == "SALFTER_PROGRAMATIC_SWITCHING" ]]
 then
   SALFTER="YES"
 fi
+
 
 if [[ $CLEAR_LOGS_ON_BOOT == YES ]]
 then
@@ -827,6 +828,219 @@ then
   echo "    "
 fi
 
+#################################
+# SALFTER_PROGRAMATIC_SWITCHING #
+#################################
+
+if [[ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" && $AUTO_START_MINER == "YES" ]]
+then
+  cd /home/m1
+  if [[ "$INDIVIDUAL_CLOCKS" == YES ]]
+  then
+    gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
+
+    mem_clks_daggerhashimoto="[$MEMORY_OVERCLOCK_0,$MEMORY_OVERCLOCK_1,$MEMORY_OVERCLOCK_2,$MEMORY_OVERCLOCK_3,$MEMORY_OVERCLOCK_4,$MEMORY_OVERCLOCK_5,$MEMORY_OVERCLOCK_6,$MEMORY_OVERCLOCK_7,$MEMORY_OVERCLOCK_8,$MEMORY_OVERCLOCK_9,$MEMORY_OVERCLOCK_10,$MEMORY_OVERCLOCK_11,$MEMORY_OVERCLOCK_12,$MEMORY_OVERCLOCK_13,$MEMORY_OVERCLOCK_14,$MEMORY_OVERCLOCK_15,$MEMORY_OVERCLOCK_16,$MEMORY_OVERCLOCK_17,$MEMORY_OVERCLOCK_18]"
+
+    gpu_clks_equihash=$gpu_clks_daggerhashimoto
+    mem_clks_equihash=$mem_clks_daggerhashimoto
+    gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
+    mem_clks_neoscrypt=$mem_clks_daggerhashimoto
+    gpu_clks_lyra2rev2=$gpu_clks_daggerhashimoto
+    mem_clks_lyra2rev2=$mem_clks_daggerhashimoto
+    gpu_clks_lbry=$gpu_clks_daggerhashimoto
+    mem_clks_lbry=$mem_clks_daggerhashimoto
+    __Blake_Vanilla_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Blake_Vanilla_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Cryptonight_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Cryptonight_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Keccak_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Keccak_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Myriad_Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Myriad_Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Qubit_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Qubit_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Scrypt_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Scrypt_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Sia_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Sia_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __Skein_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    Skein_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+    __X11_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+    X11_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+  else
+    gpu_clks_daggerhashimoto="$__daggerhashimoto_CORE_OVERCLOCK"
+    mem_clks_daggerhashimoto="$daggerhashimoto_MEMORY_OVERCLOCK"
+    gpu_clks_equihash="$__equihash_CORE_OVERCLOCK"
+    mem_clks_equihash="$equihash_MEMORY_OVERCLOCK"
+    gpu_clks_neoscrypt="$__neoscrypt_CORE_OVERCLOCK"
+    mem_clks_neoscrypt="$neoscrypt_MEMORY_OVERCLOCK"
+    gpu_clks_lyra2rev2="$__lyra2rev2_CORE_OVERCLOCK"
+    mem_clks_lyra2rev2="$lyra2rev2_MEMORY_OVERCLOCK"
+    gpu_clks_lbry="$__lbry_CORE_OVERCLOCK"
+    mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
+  fi
+
+  if [[ "$INDIVIDUAL_POWERLIMIT" == YES ]]
+  then
+    pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13,$INDIVIDUAL_POWERLIMIT_14,$INDIVIDUAL_POWERLIMIT_15,$INDIVIDUAL_POWERLIMIT_16,$INDIVIDUAL_POWERLIMIT_17,$INDIVIDUAL_POWERLIMIT_18]"
+    pwr_lim_equihash=$pwr_lim_daggerhashimoto
+    pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
+    pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
+    pwr_lim_lbry=$pwr_lim_daggerhashimoto
+    Blake_Vanilla_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Cryptonight_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Keccak_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Myriad_Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Qubit_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Scrypt_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Sia_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    Skein_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+    X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+  else
+    pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
+    pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
+    pwr_lim_neoscrypt=$neoscrypt_POWERLIMIT_WATTS
+    pwr_lim_lyra2rev2=$lyra2rev2_POWERLIMIT_WATTS
+    pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
+  fi
+
+  cat <<EOF >/home/m1/programatic_conf.json
+{
+  "card_type": "nvidia",
+  "config_json_url": "$PROGRAMATIC_SWITCH_CONFIG_JSON_URL",
+  "miners":
+  {
+    "Blake-Vanilla":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $Blake_Vanilla_POWERLIMIT_WATTS, "gpu_oc": $__Blake_Vanilla_CORE_OVERCLOCK, "mem_oc": $Blake_Vanilla_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "Cryptonight":
+    {
+      "bin": "/home/m1/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
+      "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "Cryptonight-Heavy":
+    {
+      "bin": "/home/m1/xmr/xmrig-nvidia/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
+      "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "Equihash":
+    {
+      "bin": "/home/m1/zec/zm/latest/zm_miner --server {HOST} --port {PORT} --user {NAME}.{MINER} --pass x --telemetry=0.0.0.0:2222 --time --color",
+      "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0
+    },
+    "Ethash":
+    {
+      "bin": "/home/m1/eth/ethminer_12dev2/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0
+    },
+    "Groestl":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Groestl_CORE_OVERCLOCK, "mem_oc": $Groestl_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "Keccak":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $Keccak_POWERLIMIT_WATTS, "gpu_oc": $__Keccak_CORE_OVERCLOCK, "mem_oc": $Keccak_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "Lyra2RE2":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0
+    },
+    "Myriad-Groestl":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $Myriad_Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Myriad_Groestl_CORE_OVERCLOCK, "mem_oc": $Myriad_Groestl_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "NeoScrypt":
+    {
+      "bin": "/home/m1/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0
+    },
+    "Qubit":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $Qubit_POWERLIMIT_WATTS, "gpu_oc": $__Qubit_CORE_OVERCLOCK, "mem_oc": $Qubit_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "Scrypt":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $Scrypt_POWERLIMIT_WATTS, "gpu_oc": $__Scrypt_CORE_OVERCLOCK, "mem_oc": $Scrypt_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "Sia":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $Sia_POWERLIMIT_WATTS, "gpu_oc": $__Sia_CORE_OVERCLOCK, "mem_oc": $Sia_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "Skein":
+    {
+      "bin": "/home/m1/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $Skein_POWERLIMIT_WATTS, "gpu_oc": $__Skein_CORE_OVERCLOCK, "mem_oc": $Skein_MEMORY_OVERCLOCK, "fan": 0
+    },
+    "X11":
+    {
+      "bin": "/home/m1/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "power_limit": $X11_POWERLIMIT_WATTS, "gpu_oc": $__X11_CORE_OVERCLOCK, "mem_oc": $X11_MEMORY_OVERCLOCK, "fan": 0
+    }
+  }
+}
+EOF
+
+  echo "LAUNCHING:  SALFTER_PROGRAMATIC_SWITCHING "
+  echo ""
+
+  python2.7 '/home/m1/programatic_switch' /home/m1/programatic_conf.json
+
+  if [[ $LOCALorREMOTE == LOCAL ]]
+  then
+    guake -n 1 -r SALFTER_PROGRAMATIC_SWITCHING -e "screen -r miner"
+  fi
+
+  while true
+  do
+    echo ""
+    cat current-profit
+    echo ""
+    if [[ $LOCALorREMOTE == LOCAL ]]
+    then
+      guake -r SALFTER_PROGRAMATIC_SWITCHING -e "screen -r miner"
+      echo ""
+      echo "mining process in Guake Tab"
+      echo ""
+      sleep "$PROFIT_CHECK_TIMEOUT"
+      python2.7 '/home/m1/programatic_switch' /home/m1/programatic_conf.json
+    fi
+    if [[ $LOCALorREMOTE == REMOTE ]]
+    then
+      echo "ENTER:"
+      echo ""
+      echo "screen -r miner"
+      echo ""
+      echo "in a terminal to view mining process"
+      sleep "$PROFIT_CHECK_TIMEOUT"
+      python2.7 '/home/m1/programatic_switch' /home/m1/programatic_conf.json
+    fi
+  done
+elif [[ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" && $AUTO_START_MINER == "NO" ]]
+then
+  echo "    "
+  echo "    "
+  echo "Auto Start Miner is set to NO"
+  echo "    "
+  echo "Miner is not starting"
+  echo "    "
+  echo "    "
+fi
+
+#####################################
+# END SALFTER_PROGRAMATIC_SWITCHING #
+#####################################
 
 if [[ $SALFTER == NO ]]
 then
