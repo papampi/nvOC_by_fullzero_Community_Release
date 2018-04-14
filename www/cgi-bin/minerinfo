@@ -290,7 +290,7 @@ echo "Average Hashrate: " "<tt style=\"text-align:left; color:white\">" "$HASH_A
 
 echo "Mining Pool: " "<tt style=\"text-align:left; color:white\">" "${!COIN_POOL} <br> </tt>"
 
-echo "Miner Command: " "<tt style=\"text-align:left; color:white\">" "$ <br> </tt>"
+echo "Miner Command: " "<tt style=\"text-align:left; color:white\">" "$MINER_CMD <br> </tt>"
 
 echo "Distro: " "<tt style=\"text-align:left; color:white; \">" "$LSB_RELEASE $UNAME <br> </tt>"
 

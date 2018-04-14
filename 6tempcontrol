@@ -99,8 +99,9 @@ else
   echo ""
 fi
 
-WD_LOG_FILE="${NVOC}/5_watchdoglog"
+chmod a+w "${LOG_FILE}"             # allow clearing by www
 
+WD_LOG_FILE="${NVOC}/5_watchdoglog"
 
 # Display version info
 echo ""

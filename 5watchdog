@@ -91,6 +91,7 @@ sleep 1
 # Log file handling (check existence, size limitation or creation)
 # Log file to record restarts, status, errors, utilization issues
 LOG_FILE="${NVOC}/5_watchdoglog"
+
 if [ -e "$LOG_FILE" ] ; then
   # Limit the logfile, just keep the last 500 lines
   echo "$(tail -500 $LOG_FILE)" > $LOG_FILE
@@ -108,6 +109,8 @@ else
   echo -e "New ${B}LOG FILE${N} created."
   echo ""; echo ""
 fi
+
+chmod a+w "${LOG_FILE}"             # allow clearing by www
 
 # Provide feedback
 echo "$(date) - Watchdog is starting" # | tee -a ${LOG_FILE}
