@@ -1,0 +1,137 @@
+#!/usr/bin/env python2.7
+
+import pprint
+import json
+import urllib2
+import sys
+import datetime
+import time
+import subprocess
+import os
+
+# load config
+
+cfg=json.loads(open(sys.argv[1]).read())
+
+outputDir=cfg["output_dir"]
+card_type=cfg["card_type"]
+miners=cfg["miners"]
+user_name=cfg["user_name"]
+miner_name=cfg["miner_name"]
+currency=cfg["currency"]
+pwrcost=cfg["pwrcost"]
+min_profit=cfg["min_profit"]
+
+os.environ["DISPLAY"]=":0"
+
+# grab something from a website
+
+def fetch(url):
+  r=urllib2.Request(url)
+  r.add_header("User-Agent", "Lynx/2.8.8dev.3 libwww-FM/2.14 SSL-MM/1.4.1")
+  r.add_header("Pragma", "no-cache")
+  return urllib2.build_opener().open(r).read()
+
+# main
+
+exchrate=float(json.loads(urllib2.urlopen("https://api.coinbase.com/v2/exchange-rates?currency=BTC").read())["data"]["rates"][currency])
+data=json.loads(fetch("http://miningpoolhub.com/?page=api&action=getminingandprofitsstatistics"))["return"]
+
+coins={}
+for i in reversed(data): # weed out unconfigured algos, do string substitutions
+  try:
+    miner=miners[i["algo"]]
+    coins[i["coin_name"]]=miner["bin"].format(HOST=i["host"], PORT=str(i["port"]), NAME=user_name, MINER=miner_name)
+  except:
+    data.remove(i)
+
+sort={}
+for i in data:
+  sort[i["coin_name"]+" ("+i["algo"]+")"]=i["normalized_profit"]*miners[i["algo"]]["speed"]-24.0*miners[i["algo"]]["power"]*pwrcost/exchrate
+sort=sorted(sort.items(), key=lambda x:x[1], reverse=True)
+log=open(outputDir + "current-profit", "w")
+for i in sort:
+  log.write(i[0]+": "+format(i[1], ".8f")+" BTC/day ("+format(i[1]*exchrate, ".2f")+" "+currency+"/day)\n")
+log.close()
+
+max_profit_val=0 # find the most profitable coin
+for i in data:
+  if i["normalized_profit"]*miners[i["algo"]]["speed"]-24.0*miners[i["algo"]]["power"]*pwrcost/exchrate>max_profit_val:
+    max_profit=i
+    max_profit_val=i["normalized_profit"]*miners[i["algo"]]["speed"]-24.0*miners[i["algo"]]["power"]*pwrcost/exchrate
+
+miner=miners[max_profit["algo"]]
+coin=coins[max_profit["coin_name"]]
+
+# exit if maximum is below minimum
+if (max_profit<min_profit):
+  algo_log=open(outputDir + "algo-log", "a")
+  algo_log.write(str(datetime.datetime.now())+": **NONE**\n")
+  algo_log.close()
+  for algo in coins:
+    subprocess.call(["pkill", "-f", "^"+coins[algo].replace("+", "\\+")])
+  sys.exit()
+
+# see if miner's already running
+
+try:
+  subprocess.check_output(["pgrep", "-f", "^"+coin.replace("+", "\\+")])
+  current=1
+except:
+  current=0
+if (current==0):
+  other=0
+  for algo in coins:
+    try:
+      subprocess.check_output(["pgrep", "-f", "^"+coins[algo].replace("+", "\\+")])
+      other=1
+    except:
+      pass
+
+if (current==0):
+  # log a change
+  algo_log=open(outputDir + "algo-log", "a")
+  algo_log.write(str(datetime.datetime.now())+": "+max_profit["coin_name"]+" ("+max_profit["algo"]+")\n")
+  algo_log.close()
+  if (other==1):
+    # kill existing miners
+    for algo in coins:
+      subprocess.call(["pkill", "-f", "^"+coins[algo].replace("+", "\\+")])
+    time.sleep(3)
+  if card_type=="nvidia": # update card settings
+    cards=int(subprocess.check_output("nvidia-smi --query-gpu=count --format=csv,noheader,nounits".split(" ")).split("\n")[-2])
+    for i in range(0, cards):
+      # power limit
+      if type(miner["power_limit"]) is int:
+        subprocess.call(("sudo nvidia-smi -i "+str(i)+" -pl "+str(miner["power_limit"])).split(" "))
+      else:
+        subprocess.call(("sudo nvidia-smi -i "+str(i)+" -pl "+str(miner["power_limit"][i])).split(" "))
+      # core overclock
+      if type(miner["gpu_oc"]) is int:
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[2]="+str(miner["gpu_oc"])).split(" "))
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[3]="+str(miner["gpu_oc"])).split(" "))
+      else:
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[2]="+str(miner["gpu_oc"][i])).split(" "))
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[3]="+str(miner["gpu_oc"][i])).split(" "))
+      # memory overclock
+      if type(miner["mem_oc"]) is int:
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[2]="+str(miner["mem_oc"])).split(" "))
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[3]="+str(miner["mem_oc"])).split(" "))
+      else:
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[2]="+str(miner["mem_oc"][i])).split(" "))
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[3]="+str(miner["mem_oc"][i])).split(" "))
+      # fan speed
+      if type(miner["fan"]) is int:
+        if (miner["fan"]==0):
+          subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0").split(" "))
+        else:
+          subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1").split(" "))
+          subprocess.call(("nvidia-settings -a [fan:"+str(i)+"]/GPUTargetFanSpeed="+str(miner["fan"])).split(" "))
+      else:
+        if (miner["fan"][i]==0):
+          subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0").split(" "))
+        else:
+          subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1").split(" "))
+          subprocess.call(("nvidia-settings -a [fan:"+str(i)+"]/GPUTargetFanSpeed="+str(miner["fan"][i])).split(" "))
+  # launch new miner
+  subprocess.call(("screen -dmS miner "+coin).split(" "))

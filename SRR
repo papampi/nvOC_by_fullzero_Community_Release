@@ -1,0 +1,46 @@
+#!/bin/bash
+
+source ${NVOC}/1bash
+
+srrSerial=$SRR_SERIAL
+srrSlot=$__SRR_SLOT
+
+echo ""
+echo "SSR_SERIAL: $srrSerial"
+echo ""
+echo "SSR_SLOT: $srrSlot"
+echo ""
+
+## REQUIRED packages: socat (apt-get install socat)
+#sudo dpkg --configure -a
+#sleep 2
+#sudo apt-get install socat
+#sleep 2
+
+srrEnabled="1"
+
+if [ "$srrEnabled" -eq 1  ]; then
+    echo "SRR is Enabled"
+else
+    echo "SRR Not configured. SRR Agent will exit in 120 seconds"
+    sleep 120
+    exit
+fi
+
+################################
+## Dont touch anything below :)
+srrSlot=`printf %02X $(( ${srrSlot} - 1 ))`
+firstByte="FF"
+byteCount="0008"
+action="55"
+mac="485053$srrSerial"
+
+checksum=`printf %02X $(( (0x${byteCount:0:2} + 0x${byteCount:2:2} + 0x$action + 0x${mac:0:2} + 0x${mac:2:2} + 0x${mac:4:2} + 0x${mac:6:2} + 0x${mac:8:2} + 0x${mac:10:2} + 0x$srrSlot)%0x100  ))`
+packet="$firstByte$byteCount$action$mac$srrSlot$checksum"
+
+while true
+do
+    echo "SRR, please dont kill me, i will ask again in 2 seconds $packet"
+    echo -n "$packet" | xxd -r -p |socat - UDP-DATAGRAM:255.255.255.255:1051,broadcast > /dev/null
+    sleep 2
+done

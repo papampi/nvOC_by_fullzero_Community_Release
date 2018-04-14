@@ -26,12 +26,12 @@
 ## Keep this block of code at the begining of script or it will complain about name of the log file
 #
 
-NVOC_VERSION=$(cat ~/1bash | grep "nvOC_1bash_ver=" | cut -d"=" -f2 | cut -d" " -f1  | sed 's/"//g')
+NVOC_VERSION=$(cat ${NVOC}/1bash | grep "nvOC_1bash_ver=" | cut -d"=" -f2 | cut -d" " -f1  | sed 's/"//g')
 
 if [[ "$NVOC_VERSION" != "v0019-2.0.002" ]]; then
-    KK003_WORKBENCH=~/kk003_telegram_data
+    KK003_WORKBENCH=${NVOC}/kk003_telegram_data
 else
-    KK003_WORKBENCH=~/nvoc_logs/kk003_telegram_data
+    KK003_WORKBENCH=${NVOC}/nvoc_logs/kk003_telegram_data
 fi
 
 # Log file location
@@ -215,12 +215,12 @@ KEY_CLAYMORE="ethdcrminer64"				# String I search for to check if CLAYMORE is ru
 							# system to get the script runnin correctly (OK for versions 8 to 10 at 2017/09/23 )
 
 USE_GENOIL_STATICS="YES" 				# YES or NO, if Genoil is running use the provided data?
-KEY_GENOIL=~/eth/Genoil-U/ethminer			# String I search for to check if GENOIL is running
+KEY_GENOIL=${NVOC}/miners/Genoil-U/ethminer			# String I search for to check if GENOIL is running
 							# Different vesions may have different name.
 
 USE_ETHMINER_STATICS="YES"				# YES or NO, if Ethminer is running use the provided data?
-KEY_ETHMINER_1=~/eth/ethminer_11/ethminer		# Strings I search for to check if ETHMINER is running
-KEY_ETHMINER_2=~/eth/ethminer_12dev2/ethminer		# Different vesions may have different name.
+KEY_ETHMINER_1=${NVOC}/miners/ethmienr/0.11.0/ethminer		# Strings I search for to check if ETHMINER is running
+KEY_ETHMINER_2=${NVOC}/miners/ethminer/0.12.0-dev2/ethminer		# Different vesions may have different name.
 
 # Error exit codes (or RETURN VALUE as nvidia call them) for nvidia-smi
 # I'll treat them as an array so in couples; firt value is the code number and second value is the text that explains it
@@ -633,11 +633,11 @@ if [[ "$ETHMINER_or_GENOIL_or_CLAYMORE" == "ETHMINER" ]]; then
         echo "-- Ethminer mining  Information :" >> $KK003_WORKBENCH/files/miner_statics_log_file.txt
 
 	# Start log file for a few seconds and collect miner's statics
-        if [[ -f ~/kk003_screenlog.log ]]; then
-            > ~/kk003_screenlog.log                             # Clear my log file
+        if [[ -f ${NVOC}/kk003_screenlog.log ]]; then
+            > ${NVOC}/kk003_screenlog.log                             # Clear my log file
         fi
 
-        screen -dr miner -X logfile ~/kk003_screenlog.log                                                               # Don't want to overwrite the user's screen log file (screenlog.0 usually)
+        screen -dr miner -X logfile ${NVOC}/kk003_screenlog.log                                                               # Don't want to overwrite the user's screen log file (screenlog.0 usually)
         screen -dr miner -X log                                                                                         # Start login miner
         echo "Collecting statics from $ETHMINER_or_GENOIL_or_CLAYMORE for $SLEEP_TIME_MODIFICATION_FILE seconds..."
         sleep $SLEEP_TIME_MODIFICATION_FILE                                                                             # Sleep while colleting data fron miner
@@ -645,7 +645,7 @@ if [[ "$ETHMINER_or_GENOIL_or_CLAYMORE" == "ETHMINER" ]]; then
 
         # I don't see any valuable information than the total hashrate (at least I show a few)
         # Surprise!!!, sed 's/ /\n/g' does not replace spaces for line breaks, but it does when executed from command line
-        TOTAL_HASHRATE=$(tail -60 ~/kk003_screenlog.log | grep "Mining on PoWhash" | cut -d":" -f4 |  cut -d" " -f2 | sed 's/ /\n/g' | tail -$GENOIL_NUMBER_OF_HASHRATES_TO_SHOW)
+        TOTAL_HASHRATE=$(tail -60 ${NVOC}/kk003_screenlog.log | grep "Mining on PoWhash" | cut -d":" -f4 |  cut -d" " -f2 | sed 's/ /\n/g' | tail -$GENOIL_NUMBER_OF_HASHRATES_TO_SHOW)
 
 
         if [[ -z $TOTAL_HASHRATE ]]; then
@@ -956,15 +956,15 @@ fi
 if [[ "$COIN" == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]]; then
     AUTO_SWITCH_ON="YES"
     AUTO_SWITCH_NAME="Salfter Nicehash Auto Switch"
-    CURRENT_COIN=$(head -n 1 ~/current-profit)
-    MINING_HISTORY=$(tail -n 5 ~/algo_log | awk '{print $0}')
+    CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+    MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log | awk '{print $0}')
 fi
 
 if  [[ "$COIN" == "SALFTER_MPH_PROFIT_SWITCHING" ]]; then
     AUTO_SWITCH_ON="YES"
     AUTO_SWITCH_NAME="Salfter MPH Auto Switch"    
-    CURRENT_COIN=$(head -n 1 ~/current-profit)
-    MINING_HISTORY=$(tail -n 5 ~/algo_log | awk '{print $0}')
+    CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+    MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log | awk '{print $0}')
 fi
 
 if [[ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]]; then 				# If user has selected "YES" here does not means WTM is running, so lets check 
@@ -974,9 +974,9 @@ if [[ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]]; then 				# If user has selected "YES
 	AUTO_SWITCH_ON="YES"
 	AUTO_SWITCH_NAME="Papampi WTM Auto Switch"
 	CURRENT_COIN=$COIN
-	MINING_HISTORY=$(cat ~/8_wtmautoswitchlog | grep 'Mining switched' | tail -n 10 | awk '{print $0}')
-	WTM_PROFIT=$(cat ~/WTM_current_profit | awk '{print $0,"%"}')
-	WTM_REV=$(cat ~/WTM_current_revenue | awk '{print $0}')
+	MINING_HISTORY=$(cat ${NVOC}/8_wtmautoswitchlog | grep 'Mining switched' | tail -n 10 | awk '{print $0}')
+	WTM_PROFIT=$(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')
+	WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0}')
     fi
 fi
 
@@ -1660,8 +1660,8 @@ function source_1bash ()
 {
 # Get some vars from 1bash if exists
 ONE_BASH=0	# 0=Assume 1bash exists and its in place, 1=1bash is missing
-if [[ -f ~/1bash ]]; then
-    source ~/1bash
+if [[ -f ${NVOC}/1bash ]]; then
+    source ${NVOC}/1bash
 
     # If TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is not seted up I must leave the script
     TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY=0
@@ -2000,9 +2000,9 @@ send_telegram
 # If kk003_TELEGRAM_ALERTS exits I should be on Nvoc 19 stable
 # If BaliMiner_TELEGRAM_ALERTS exists but kk003_TELEGRAM_ALERTS does not I should be on Nvoc 19+ or highest
 
-MAIN_TELEGRAM_TIME_COUNTER_1=~/kk003_TELEGRAM_ALERTS
-MAIN_TELEGRAM_TIME_COUNTER_2=~/BaliMiner_TELEGRAM_ALERTS
-MAIN_TELEGRAM_TIME_COUNTER_3=~/7telegram
+MAIN_TELEGRAM_TIME_COUNTER_1=${NVOC}/kk003_TELEGRAM_ALERTS
+MAIN_TELEGRAM_TIME_COUNTER_2=${NVOC}/BaliMiner_TELEGRAM_ALERTS
+MAIN_TELEGRAM_TIME_COUNTER_3=${NVOC}/7telegram
 
 if [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_1" ]]; then					# In this case running Nvoc 19 stable
     MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_1

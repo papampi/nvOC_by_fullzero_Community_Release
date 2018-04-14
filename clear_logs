@@ -1,0 +1,27 @@
+#!/bin/bash
+
+cd /var/log
+
+ > /var/log/auth.log
+
+ > /var/log/dpkg.log
+
+ > /var/log/syslog
+
+ > /var/log/Xorg.0.log
+
+ > /var/log/kern.log
+
+cd ${NVOC}
+
+ > ${NVOC}/5_watchdoglog
+
+ > ${NVOC}/6_autotemplog
+
+ > ${NVOC}/current-profit
+
+ > ${NVOC}/algo-log
+
+rm -r ${NVOC}/kk003_telegram_data
+
+

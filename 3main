@@ -538,6 +538,7 @@ then
 
   cat <<EOF >${NVOC}/conf.json
 {
+ "output_dir": "${NVOC}",
  "currency": "$CURRENCY",
  "pwrcost": $POWER_COST,
  "min_profit": $MINIMUM_PROFIT,
@@ -701,6 +702,7 @@ then
 
   cat <<EOF >${NVOC}/mph_conf.json
 {
+  "output_dir": "${NVOC}",
   "user_name": "$MPH_USERNAME",
   "miner_name": "$WORKER_NAME",
   "card_type": "nvidia",
@@ -924,6 +926,7 @@ then
 
   cat <<EOF >${NVOC}/programatic_conf.json
 {
+  "output_dir": "${NVOC}",
   "card_type": "nvidia",
   "config_json_url": "$PROGRAMATIC_SWITCH_CONFIG_JSON_URL",
   "miners":
@@ -1293,6 +1296,7 @@ then
 EOF
       cat <<EOF >${NVOC}/WTM_1.json
 {
+ "output_dir": "${NVOC}",
  "WTM_URL": "$WTM_AUTO_SWITCH_URL",
  "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
  "WTM_MIN_DIFFERENCE": "$WTM_LOWER_MIN_DIFFERENCE",
