@@ -170,6 +170,19 @@ then
   sudo reboot
 fi
 
+# install web scripts
+for webscript in clear clearalerts minerinfo
+do
+  if [[ -L "$HOME/www/cgi-bin/$webscript" ]]
+  then
+    rm "$HOME/www/cgi-bin/$webscript"
+  fi
+  if [[ ! -e "$HOME/www/cgi-bin/$webscript" ]]
+  then
+    ln -s "${NVOC}/www/cgi-bin/$webscript" "${HOME}/www/cgi-bin/$webscript"
+  fi
+done
+
 IP=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
 
 echo ""
