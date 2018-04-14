@@ -5,6 +5,7 @@
 # Rev 0004 :Average Hash rate for zm and ethminer
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+export NVOC=/home/m1/nvOC-git
 
 echo "Content-type: text/html"
 echo ""

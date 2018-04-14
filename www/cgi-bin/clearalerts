@@ -1,0 +1,16 @@
+#!/bin/sh
+#clearalerts written by papampi to clear web alerts
+echo "Content-type: text/html"
+echo ""
+echo '<html>'
+echo '<head>'
+echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8\n\n">'
+echo '<body style="background-color:black; color:#ffff66;\ ">'
+ 
+echo "<button>"
+echo '<a href="minerinfo" class="button">Miner Info</a>'
+echo "</button>"
+ 
+#printf "Content-Type: text/plain\n\n"
+ > ${NVOC}/5_watchdoglog
+ > ${NVOC}/6_autotemplog

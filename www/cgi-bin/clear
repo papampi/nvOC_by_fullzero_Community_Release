@@ -1,0 +1,4 @@
+#!/bin/sh
+
+ > ${NVOC}/7_temp_alertlog
+ > ${NVOC}/7_wdog_alertlog
