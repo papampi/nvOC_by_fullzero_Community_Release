@@ -112,7 +112,7 @@ do
       python2.7 ${NVOC}/WTM_SWITCHER ${NVOC}/WTM_1.json
     else
       echo "Minimum mining time not reached, checking for new coins with $WTM_MIN_DIFFERENCE% more profit"
-      python2.7 ${NVOC}/WTM_SWITCHER ${NVOC}/m1/WTM.json
+      python2.7 ${NVOC}/WTM_SWITCHER ${NVOC}/WTM.json
     fi
 
     sleep 5
