@@ -171,7 +171,7 @@ then
 fi
 
 # install web scripts
-for webscript in clear clearalerts minerinfo
+for webscript in clear minerinfo
 do
   if [[ -L "$HOME/www/cgi-bin/$webscript" ]]
   then

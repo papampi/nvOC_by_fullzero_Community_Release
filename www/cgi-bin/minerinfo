@@ -7,6 +7,12 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 export NVOC=/home/m1
 
+if [[ $1 == clearalerts ]]
+then
+ > ${NVOC}/5_watchdoglog
+ > ${NVOC}/6_autotemplog
+fi
+
 echo "Content-type: text/html"
 echo ""
 echo '<html>'
@@ -254,7 +260,7 @@ echo '<br></br>'
 echo '<body style="background-color:black; color:#ffff66;font-size: 16px ">'
 echo "<strong>"
 echo "<button>"
-echo '<a href="minerinfo" class="button">Miner Info</a>'
+echo '<a href="minerinfo" class="button">Refresh Miner Info</a>'
 echo "</button>"
 echo '<title>Worker: '$WORKERNAME'</title>'
 echo '</head>'
@@ -332,16 +338,17 @@ echo "GPU Temp, Fan and Power Alerts: <br>"  "<tt style=\"text-align:left; color
 
 echo "Watch Dog Alerts: <br>"  "<tt style=\"text-align:left; color:red\">" "$WDOG_ALERT_LOG <br> </tt>"
 
-echo '<br></br>'
+echo '<br/>'
 
 echo "<button>"
-echo '<a href="clearalerts" class="button">Clear Alerts</a>'
-
-#echo '<a onclick="clearalerts.sh" href="#">Execute the script</a>'
-#echo '<button onclick="clearalerts.sh">Clear Alerts ick me</button>'
-
+echo '<a href="minerinfo?clearalerts" class="button">Clear Alerts</a>'
 echo "</button>"
 
+echo '<br/>'
+if [[ $1 == clearalerts ]]
+then
+ echo "<tt style=\"text-align:left; color:green\">Alert history cleared <br/> </tt>"
+fi
 echo "</strong>"
 echo '</body>'
 
