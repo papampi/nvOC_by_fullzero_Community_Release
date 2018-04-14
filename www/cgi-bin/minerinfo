@@ -5,7 +5,7 @@
 # Rev 0004 :Average Hash rate for zm and ethminer
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-export NVOC=/home/m1/nvOC-git
+export NVOC=/home/m1
 
 echo "Content-type: text/html"
 echo ""
@@ -118,6 +118,13 @@ then
   CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
   MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0,"<br>"}')
   AUTO_SWITCH="Salfter Nicehash Auto Switch"
+
+
+elif [ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" ]
+then
+  CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo-log |  awk '{print $0,"<br>"}')
+  AUTO_SWITCH=("Salfter Programatic Switch")
 
 
 elif [ $WTM_AUTO_SWITCH == "YES" ]

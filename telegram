@@ -94,6 +94,13 @@ then
     CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
     MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0}')
     AUTO_SWITCH=("Salfter Nicehash Auto Switch")
+    
+    
+  elif [ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" ]
+  then
+    CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
+    MINING_HISTORY=$(tail -n 5 /home/m1/algo-log |  awk '{print $0,"<br>"}')
+    AUTO_SWITCH=("Salfter Programatic Switch")
 
 
   elif [ $WTM_AUTO_SWITCH == "YES" ]
@@ -1150,7 +1157,7 @@ then
       # Mining coin
       if [[ "$SEND_MINING_COIN" == "YES" ]]; then
 
-        if [[ "$COIN" == "SALFTER_NICEHASH_PROFIT_SWITCHING" || "$COIN" == "SALFTER_MPH_PROFIT_SWITCHING" ]]; then
+        if [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFIT_SWITCHING  || $COIN == SALFTER_PROGRAMATIC_SWITCHING ]]; then
           CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
         else
           CURRENT_COIN=$COIN
