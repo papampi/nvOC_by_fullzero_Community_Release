@@ -445,6 +445,7 @@ then
 
   cat <<EOF >${NVOC}/WTM.json
 {
+ "output_dir": "${NVOC}",
  "WTM_URL": "$WTM_AUTO_SWITCH_URL",
  "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
  "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
@@ -1057,6 +1058,7 @@ then
       echo ""
       cat <<EOF >${NVOC}/WTM.json
 {
+ "output_dir": "${NVOC}",
  "WTM_URL": "$WTM_AUTO_SWITCH_URL",
  "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
  "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
