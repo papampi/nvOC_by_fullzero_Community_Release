@@ -14,9 +14,9 @@ nvOC_Ver="nvOC v0019-2.1 - Community Release"
 nvOC_poolswitch_ver="v0019-2.1.0001"
 echo "Pool Switch for nvOC $nvOC_poolswitch_ver by papampi"
 
-WDOG_LOG="${NVOC}//5_watchdoglog"
-MINER_LOG="/home/m1/nvoc_logs/screenlog.0"
-WTM_LOG="/home/m1/nvoc_logs/8_wtmautoswitchlog"
+WDOG_LOG="${NVOC}/5_watchdoglog"
+MINER_LOG="${NVOC}/nvoc_logs/screenlog.0"
+WTM_LOG="${NVOC}/nvoc_logs/8_wtmautoswitchlog"
 
 source ${NVOC}/1bash
 eval 'COIN_POOL=${COIN}_POOL'
