@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export NVOC=/home/m1
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 firstBOOT="NO"
 

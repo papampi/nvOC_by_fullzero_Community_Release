@@ -5,7 +5,15 @@
 # Rev 0004 :Average Hash rate for zm and ethminer
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-export NVOC=/home/m1
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+
+export NVOC="$( cd "$( dirname "$SOURCE" )/../.." && pwd )"
 
 if [[ $1 == clearalerts ]]
 then
@@ -208,7 +216,7 @@ fi
 ##################################################################
 ########################### Average Hash Rate ####################
 
-if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
+if  ps ax | grep miner| grep -v grep | grep -q "dstm" ;then
   hash_total=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | wc | awk '{print $1}')
   HASH_AVERAGE=$((hash_total / hash_count))
@@ -222,7 +230,7 @@ fi
 ##################################################################
 ########################### Miner Logs ###########################
 
-if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
+if  ps ax | grep miner| grep -v grep | grep -q "dstm" ;then
   MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "zec/v3_" ;then
@@ -271,6 +279,8 @@ echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "</tt>"  '</h4
 echo "Boot Time: " "<tt style=\"text-align:left; color:white; \">" "$SYSTEM_BOOT_TIME <br> </tt>"
 
 echo "System Up Time: " "<tt style=\"text-align:left; color:white\">" "$SYSTEM_UP_TIME <br> </tt>"
+
+echo "NVOC root path: " "<tt style=\"text-align:left; color:white\">" "${NVOC} <br> </tt>"
 
 echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_TIME<br> </tt>"
 
