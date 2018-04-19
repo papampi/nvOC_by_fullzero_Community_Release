@@ -61,6 +61,7 @@ echo ""
 echo "WhatToMine.com Auto Switch $wtm_auto_switch_ver by papampi"
 echo ""
 
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 CURRENT_COIN=$COIN
 WDOG_LOG="${NVOC}/nvoc_logs/watchdog-screenlog.0"

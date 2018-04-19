@@ -18,7 +18,7 @@ echo "WhatToMine.com Profit Check $wtm_profit_check_ver by papampi"
 echo ""
 
 
-
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
 # Creating a log file to record coin switch

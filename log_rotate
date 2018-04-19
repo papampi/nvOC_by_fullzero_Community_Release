@@ -3,6 +3,8 @@
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
 log_rotate_ver="v0019-2.0.002"
+
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
 echo "Log Rotate for $nvOC_Ver"
