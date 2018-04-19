@@ -346,19 +346,19 @@ echo "GPU Temp, Fan and Power Info: <br>"  "<tt style=\"text-align:left; color:w
 
 echo "GPU Temp, Fan and Power Alerts: <br>"  "<tt style=\"text-align:left; color:red\">" "$TEMP_ALERT_LOG <br> $LOST_GPU <br> </tt>"
 
-echo "Watch Dog Alerts: <br>"  "<tt style=\"text-align:left; color:red\">" "$WDOG_ALERT_LOG <br> </tt>"
-
-echo '<br/>'
+echo "Watch Dog Alerts: <br>"
 
 echo "<button>"
 echo '<a href="minerinfo?clearalerts" class="button">Clear Alerts</a>'
 echo "</button>"
 
-echo '<br/>'
 if [[ $1 == clearalerts ]]
 then
  echo "<tt style=\"text-align:left; color:green\">Alert history cleared <br/> </tt>"
 fi
+echo '<br/>' "<tt style=\"text-align:left; color:red\">" "$WDOG_ALERT_LOG <br> </tt>"
+
+
 echo "</strong>"
 echo '</body>'
 
