@@ -898,10 +898,10 @@ SMART_INTENSITY="25"
 
 DUAL_ECOIN="MAIN COIN"                      #Main Coin, Ethereum or any Ethash Coin
 DUAL_EPOOL="MAIN COIN POOL ADDREES"         #Main Coin pool address, no need to add stratum+tcp://
-DUAL_EPORT="MAIN COIN POOL PORT"           #Main Coin Port Number
+DUAL_EPORT="MAIN COIN POOL PORT"            #Main Coin Port Number
 DUAL_EWAL="MAIN COIN WALLET ADDRESS"        #Main Coin Wallet address or pool username
 DUAL_EPSW="$MINER_PWD"                      #Main Coin worker password on pool
-DUAL_EWORKER"$WORKER"                       #Main Coin Worker Name
+DUAL_EWORKER="$WORKER"                      #Main Coin Worker Name
 
 DUAL_DCOIN="DUAL COIN"                      #select second coin to mine in dual mode. Possible options are "dcr", "sc", "lbc", "pasc", "blake2s", "keccak". Default value is "dcr".
 DUAL_DPOOL="DUAL COIN POOL ADDRESS"         #2nd coin pool address

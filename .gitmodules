@@ -1,0 +1,3 @@
+[submodule "miners"]
+	path = miners
+	url = https://github.com/papampi/nvOC_miners.git

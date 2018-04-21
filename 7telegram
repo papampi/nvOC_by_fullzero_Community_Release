@@ -11,7 +11,8 @@
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
 nvOC_telegram_ver="v0019-2.0.001"   # Do not edit this
 
-source ~/1bash
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${NVOC}/1bash
 
 echo "Telegram Messages for $nvOC_Ver"
 echo "Version: :$nvOC_telegram_ver"
@@ -24,7 +25,7 @@ TIMEIN=$TELEGRAM_TIMEOUT_IN_MINUTES
 
 TIMEOUT=$(($TIMEIN * 60))
 
-bash '/home/m1/telegram'
+bash "${NVOC}/telegram"
 sleep 2
 echo ""
 echo "New Telegram in $TIMEOUT seconds"
