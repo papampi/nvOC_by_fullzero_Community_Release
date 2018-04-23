@@ -9,9 +9,12 @@
 #                              POOL SWITCH for nvOC v0019-2.1 by papampi                                #
 # Changelog:                                                                                            #
 # v=0001 : papampi                                                                                      #
-#        : Initial Release                                                                              #
+#        : Initial Release            
+# v=0002 : LukePicci
+#          Relocate nvOC to arbitrary install directory
+
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_poolswitch_ver="v0019-2.1.0001"
+nvOC_poolswitch_ver="v0019-2.1.0002"
 echo "Pool Switch for nvOC $nvOC_poolswitch_ver by papampi"
 
 WDOG_LOG="${NVOC}/5_watchdoglog"
