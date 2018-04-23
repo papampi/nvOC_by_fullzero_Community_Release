@@ -51,9 +51,11 @@
 #          Alternate Pool switch with 9poolswitch
 # v=0014 : Papampi 
 #          Check internet and miner before starting main loop
+# v=0015 : LukePicci
+#          Relocate nvOC to arbitrary install directory
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.0.014"   # Do not edit this
+nvOC_wdog_ver="v0019-2.0.015"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
