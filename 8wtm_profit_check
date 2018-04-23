@@ -8,10 +8,11 @@
 # v=0001 : papampi: Initial Revision
 # v=0002 : leenoox: Read curent coin from 1bash
 # v=0003 : papampi: code cleanup
+# v=0004 : LukePicci: Relocate nvOC to arbitrary install directory
 
 
 nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_profit_check_ver="v0019-2.0.0003"   # Do not edit this
+wtm_profit_check_ver="v0019-2.0.0004"   # Do not edit this
 
 echo ""
 echo "WhatToMine.com Profit Check $wtm_profit_check_ver by papampi"
