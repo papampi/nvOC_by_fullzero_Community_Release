@@ -47,11 +47,13 @@
 #          Relocation and more
 # v=0013 : papampi
 #          wipe dead screens
+# v=0014 : LukePicci
+#          Relocate nvOC to arbitrary install directory
 
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.0011"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.0014"                  # Do not edit this
 
 #########################################################################
 #########################################################################
