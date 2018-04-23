@@ -28,7 +28,10 @@
 #          queried from nvidia-smi (a.k.a. bleed issue of power.draw)
 # v=0003 : Papampi: Telegram alerts
 #
-# v=0004 : Papampi: MAXIMAL_FAN_SPEED
+# v=0004 : Papampi: 
+#          MAXIMAL_FAN_SPEED
+# v=0005 : LukePicci
+#          Relocate nvOC to arbitrary install directory
 
 
 
@@ -36,10 +39,10 @@
 # Telegram implementation # Done
 # Further code optimization
 #
-# DEV_VERSION=0004
+# DEV_VERSION=0005
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_temp_ver="v0019-2.1.0004"   # Do not edit this
+nvOC_temp_ver="v0019-2.1.0005"   # Do not edit this
 
 
 export DISPLAY=:0
