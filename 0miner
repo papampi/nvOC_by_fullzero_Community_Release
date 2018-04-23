@@ -43,9 +43,11 @@
 #          Changed EWBF HCD
 # v=0014 : papampi
 #          Code cleanup, NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
+# v=0015 : LukePicci
+#          Relocate nvOC to arbitrary install directory
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0014"   # Do not edit this
+nvOC_0miner_ver="v0019-2.0.0015"   # Do not edit this
 
 source "${NVOC}/1bash"
 
