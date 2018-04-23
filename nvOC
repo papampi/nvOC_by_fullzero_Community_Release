@@ -138,7 +138,7 @@ GPUinfo()
    i=0
 
    echo ""
-   INFO="${B}ID,|,VENDOR,|,MODEL,|,PSTATE,|,TEMP,|,FAN,|,UTILIZATION,|,POWER,|,POWERLIMIT,|,MAXPOWER,|,GPUCLOCK,|,MEMCLOCK\n"
+   INFO+="${B}ID,|,PS,|,T°,|,FAN,|,LOAD,|,POWER / LIMIT / MAX,|,GPUCLOCK,|,MEMCLOCK,|,VENDOR - MODEL\n"   
    
    for ID in $DEVICE_IDS
    do
@@ -165,12 +165,17 @@ GPUinfo()
       POWERMAX=$(nvidia-smi -i $i -q|grep "Max Power"|cut -f 2 -d ":"|cut -f 2 -d " ")
       GPUCLOCK=$(nvidia-smi -i $i -q -d CLOCK |grep Graphics |head -1|cut -f 2 -d ":"|cut -f 2 -d " ")
       MEMCLOCK=$(nvidia-smi -i $i -q -d CLOCK |grep Memory |head -1|cut -f 2 -d ":"|cut -f 2 -d " ")
+
+      # convert power values to integer
+      POWERDRAW=$(echo "$POWERDRAW/1" | bc)
+      PWRLIMIT=$(echo "$PWRLIMIT/1" | bc)
+      POWERMAX=$(echo "$PWRLIMIT/1" | bc)
       
       # Memory clock display on Nvidia X Server Settings is doubled
       #   uncomment this line if you want it displayed that way 
 #      MEMCLOCK=$(($MEMCLOCK * 2))
 
-      INFO+="$N$i,|,$VENDOR_ID,|,$MODEL,|,$PSTATE,|,$CURRENT_TEMP,|,$CURRENT_FAN,|,$UTILIZATION,|,$POWERDRAW,|,$PWRLIMIT,|,$POWERMAX,|,$GPUCLOCK,|,$MEMCLOCK\n"
+      INFO+="$N$i,|,$PSTATE,|,$CURRENT_TEMP,|,$CURRENT_FAN,|,$UTILIZATION,|,$POWERDRAW / $PWRLIMIT / $POWERMAX,|,$GPUCLOCK,|,$MEMCLOCK,|,$VENDOR_ID - $MODEL\n"
 
       i=$(($i + 1))
    done
