@@ -51,10 +51,11 @@
 # v=0018 : Papampi: Some code cleanups
 #
 # v=0019 : Papampi: Lower difference when minimum mining time reached
+# v=0020 : LukePicci: Relocate nvOC to arbitrary install directory
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-wtm_auto_switch_ver="v0019-2.0.0019"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.0.0020"   # Do not edit this
 
 echo ""
 echo ""
