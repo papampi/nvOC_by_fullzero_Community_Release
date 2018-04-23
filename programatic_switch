@@ -13,6 +13,7 @@ import os
 
 cfg=json.loads(open(sys.argv[1]).read())
 
+outputDir=cfg["output_dir"]
 card_type=cfg["card_type"]
 miners=cfg["miners"]
 miner_name=os.uname()[1]
@@ -48,11 +49,11 @@ except:
   
 if (current==0):
   # log current coin
-  log=open("current-profit", "w")
+  log=open(outputDir + "current-profit", "w")
   log.write(current_miner["algo"] + " - " + current_miner["coin_currency"] + " @ "+ current_miner["host"] + "\n")
   log.close() 
   # log a change
-  algo_log=open("algo-log", "a")
+  algo_log=open(outputDir + "algo-log", "a")
   algo_log.write(str(datetime.datetime.now())+": "+coin+"\n")
   algo_log.close()
 

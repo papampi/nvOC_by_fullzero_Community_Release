@@ -52,7 +52,7 @@ echo ""
 sudo renice -n -15 -p $$ && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
 sleep 1
 
-source /home/m1/1bash
+source ${NVOC}/1bash
 sleep 1
 
 NVD=nvidia-settings
@@ -78,7 +78,7 @@ else
 fi
 
 # Log file handling (check existance, size limitation or creation, show 10 lines if not empty)
-LOG_FILE="/home/m1/6_autotemplog"
+LOG_FILE="${NVOC}/6_autotemplog"
 if [ -e "$LOG_FILE" ]; then
   LASTLOG=$(tail -n 100 $LOG_FILE)     # Limit the log file, just keep the last 100 entries
   echo "$LASTLOG" > $LOG_FILE
@@ -99,8 +99,9 @@ else
   echo ""
 fi
 
-WD_LOG_FILE="/home/m1/5_watchdoglog"
+chmod a+w "${LOG_FILE}"             # allow clearing by www
 
+WD_LOG_FILE="${NVOC}/5_watchdoglog"
 
 # Display version info
 echo ""
@@ -224,7 +225,7 @@ while true; do
         while [ $ERR_TIMER -gt 0 ]; do
           echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
           if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-            bash '/home/m1/telegram'
+            bash "${NVOC}/telegram"
           fi
           sleep 15
           { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit --format=csv,noheader,nounits)
@@ -237,7 +238,7 @@ while true; do
           if [ $ERR_TIMER -le 0 ]; then
             echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a ${LOG_FILE} ${WD_LOG_FILE}
             if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-              bash '/home/m1/telegram'
+              bash "${NVOC}/telegram"
             fi
             sleep 3
             sudo reboot
@@ -250,7 +251,7 @@ while true; do
         while [ $ERR_TIMER -gt 0 ]; do
           echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
           if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-            bash '/home/m1/telegram'
+            bash "${NVOC}/telegram"
           fi
           sleep 15
           { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
@@ -263,7 +264,7 @@ while true; do
           if [ $ERR_TIMER -le 0 ]; then
             echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a ${LOG_FILE} ${WD_LOG_FILE}
             if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-              bash '/home/m1/telegram'
+              bash "${NVOC}/telegram"
             fi
             sleep 3
             sudo reboot
@@ -292,7 +293,7 @@ while true; do
         # Fan speed reached MAXIMAL_FAN_SPEED, we have to drop the power limit
         echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Fan speed reached $MAXIMAL_FAN_SPEED, dropping Power Limit in order to maintain the desired temp${N}" | tee -a ${LOG_FILE}
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash '/home/m1/telegram'
+          bash "${NVOC}/telegram"
         fi
         NEW_POWER_LIMIT=$(($POWERLIMIT - $POWER_ADJUST))
         echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a ${LOG_FILE}

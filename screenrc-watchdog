@@ -106,4 +106,4 @@ defnonblock 5
 # screen -t mail 8 mutt
 # screen -t daemon 9 tail -f /var/log/daemon.log
 
-logfile  /home/m1/nvoc_logs/watchdog-screenlog.0
+logfile  ${NVOC}/nvoc_logs/watchdog-screenlog.0
