@@ -43,6 +43,11 @@
 #          Download and Restore default xorg.conf
 # v=0011 : papampi
 #          WTM 2nd lower minimum difference to switch
+# v=0012 : LukePicchi
+#          Relocation and more
+# v=0013 : papampi
+#          wipe dead screens
+
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
@@ -63,6 +68,8 @@ sudo ldconfig /usr/local/cuda/lib64
 GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
 
 NVD=nvidia-settings
+
+screen -wipe
 
 SALFTER="NO"
 
