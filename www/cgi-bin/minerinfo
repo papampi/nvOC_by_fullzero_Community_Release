@@ -1,8 +1,10 @@
 #!/bin/bash
 # minerinfo written by papampi for nvOC
 # Rev 0002
-# Rev 0003 :Some clean up and additions
-# Rev 0004 :Average Hash rate for zm and ethminer
+# Rev 0003: papampi, Some clean up and additions
+# Rev 0004: papampi, Average Hash rate for zm and ethminer
+# Rev 0005: LukePicci, Relocate nvOC to arbitrary install directory
+# Rev 0006: papampi, More average Hash rate and reported hash rate to WTM
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -158,7 +160,7 @@ then
   WTM_Current_Revenue="WTM Current Revenue: "
   Average_Revenue="24H Average Revenue: "
   LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
-
+  WTM_HASHRATE="WTM URL Hash Rate: "
 
   if ps aux | grep -v grep | grep -q 8wtm_auto_switch
   then
@@ -216,16 +218,69 @@ fi
 ##################################################################
 ########################### Average Hash Rate ####################
 
-if  ps ax | grep miner| grep -v grep | grep -q "dstm" ;then
-  hash_total=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | wc | awk '{print $1}')
-  HASH_AVERAGE=$((hash_total / hash_count))
+if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -v grep | wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
 
 elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
-  hash_total=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}' |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(cat ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}'|  wc -l | awk '{print $1}')
-  HASH_AVERAGE=$((hash_total / hash_count))
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o '[0-9]*.[0-9]* Mh/s' | awk '{print$1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v grep | wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep -q "claymore" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $5}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep "neoscrypt"| grep -q "KTccminer" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* kH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep lyra2v2 | grep -q "TPccminer" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash * 1000 / hash_count)) 
+
+elif  ps ax | grep miner| grep -v grep | grep x16r | grep -q "suprminer" ;then
+  total_hash=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep timetravel10 |grep -q "TPccminer" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+elif  ps ax | grep miner| grep -v grep | grep -q "zec/bminer" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
 fi
+
+##################################################################
+########################### WTM Hash Rate ####################
+
+if  ps ax | grep miner | grep -v grep | grep -q -E "zm_miner|ewbf|bminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Beq_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner | grep -v grep | grep -q -E "claymore|ethminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Beth_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner | grep -v grep | grep -q "neoscrypt"  ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o 'ns_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner | grep -v grep | grep -q "xmr"  ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '%5Bcn_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner | grep -v grep | grep "lyra2v2" | grep -q "TPccminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '%5Blrev2_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner| grep -v grep | grep timetravel10 |grep -q "TPccminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Btt10_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner| grep -v grep | grep x16r | grep -q "suprminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Bx16r_hr%5D=[0-9]*' | cut -f2- -d=)
 
 ##################################################################
 ########################### Miner Logs ###########################
@@ -296,8 +351,10 @@ echo "GPU Utilization: "  "<tt style=\"text-align:left; color:white\">" "$GPU_UT
 
 echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
 
-echo "Average Hashrate: " "<tt style=\"text-align:left; color:white\">" "$HASH_AVERAGE <br> </tt>"
-
+echo "Average Hash Rate: " "<tt style=\"text-align:left; color:white\">" "$HASH_AVERAGE <br> </tt>"
+if [ $WTM_AUTO_SWITCH == "YES" ] ; then
+echo "$WTM_HASHRATE" "<tt style=\"text-align:left; color:white\">" "$WTM_HASH <br> </tt>"
+fi
 echo "Mining Pool: " "<tt style=\"text-align:left; color:white\">" "${!COIN_POOL} <br> </tt>"
 
 echo "Miner Command: " "<tt style=\"text-align:left; color:white\">" "$MINER_CMD <br> </tt>"
