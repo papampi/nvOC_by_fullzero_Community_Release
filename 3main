@@ -1332,40 +1332,35 @@ EOF
       fi
     fi
 
-    running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-    if [ "$running" != "" ]
-    then
-      target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-      kill "$target"
-    fi
-    sleep 2
+    while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
+      echo "" | tee -a ${NVOC}/nvoc_logs/screenlog.0
+      echo "$(date) - Miner is running, 3main restarting miner" | tee -a ${NVOC}/nvoc_logs/screenlog.0
+      ps ax | grep SCREEN | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
+      sleep 2
+    done
+
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
-    running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-    if [ "$running" == "" ]
-    then
       bash ${NVOC}/0miner
       echo "    "
-      echo "    " $(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
+      echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
       echo "    "
-      running=""
-      if [[ $LOCALorREMOTE == REMOTE ]]
+    if [ $LOCALorREMOTE == "REMOTE" ]
+    then
+      echo "Miner output: ~/nvOC miner-log"
+      echo "    "
+      echo "    "
+    elif [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      if [ $WTM_AUTO_SWITCH == "YES" ]
       then
-        echo "Miner output: 'nvOC miner-log'"
+        echo "Miner output: ~/nvOC miner-log"
         echo "    "
         echo "    "
-      elif [[ $LOCALorREMOTE == LOCAL ]]
-      then
-        if [[ $WTM_AUTO_SWITCH == YES ]]
-        then
-          echo "Miner output: 'nvOC miner-log'"
-          echo "    "
-          echo "    "
-          tail -f ${NVOC}/nvoc_logs/screenlog.0
-        else
-          screen -r miner
-        fi
+        tail -f -n 1 ${NVOC}/nvoc_logs/screenlog.0
+      else
+        screen -r miner
       fi
     fi
 
