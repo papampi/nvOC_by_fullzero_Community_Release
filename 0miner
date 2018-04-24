@@ -45,9 +45,11 @@
 #          Code cleanup, NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
 # v=0015 : LukePicci
 #          Relocate nvOC to arbitrary install directory
+# v=0016 : papampi
+#          Prevent running 2 miners
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0015"   # Do not edit this
+nvOC_0miner_ver="v0019-2.0.0016"   # Do not edit this
 
 source "${NVOC}/1bash"
 
@@ -55,6 +57,11 @@ source "${NVOC}/1bash"
 if [ -z ${MINER_PWD+x} ]
 then
   MINER_PWD="x"
+fi
+
+# Prevent running 2 miners
+if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; then
+  ps ax | grep SCREEN | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
 fi
 
 if [[ $COIN == CLAYMORE_DUAL ]]
