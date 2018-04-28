@@ -381,12 +381,12 @@ then
   if [ "$running" == "" ]
   then
     echo "LAUNCHING:  MINER TEMPCONTROL"
+    screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
     if [[ $LOCALorREMOTE == LOCAL ]]
     then
       #guake -n $HCD -r MINER_TEMP_CONTROL -e "bash ${NVOC}/6tempcontrol"
       echo ""
       echo "process in screen temp, guake terminal Tab (f12), 'nvOC temp-log'"
-      screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
       #if guake tab is already showing temp control output dont open a new one
       if [[ -z $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" |grep -v grep) ]];then
         guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -f  ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 "
@@ -395,7 +395,6 @@ then
       running=""
     elif [[ $LOCALorREMOTE == REMOTE ]]
     then
-      screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
       echo ""
       echo "process in screen temp; 'nvOC temp-log'"
       echo ""
@@ -413,12 +412,11 @@ then
   if [ "$running" == "" ]
   then
     echo "LAUNCHING:  MINER WATCHDOG"
+    screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
     if [[ $LOCALorREMOTE == LOCAL ]]
     then
       echo ""
       echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
-      screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
-      #guake -n $HCD -r MINER_WATCHDOG -e "bash ${NVOC}/5watchdog"
       #if guake tab is already showing watchdog output dont open a new one
       if [[ -z $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
         guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  ${NVOC}/nvoc_logs/watchdog-screenlog.0 "
@@ -427,7 +425,6 @@ then
       running=""
     elif [[ $LOCALorREMOTE == REMOTE ]]
     then
-      screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
       echo ""
       echo "process in screen wdog; 'nvOC wdog-log'"
       echo ""
@@ -1260,18 +1257,16 @@ then
     then
       HCD="${NVOC}/5watchdog"
       echo ""
-
       sleep 2
       running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
       if [ "$running" == "" ]
       then
+        screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
         if [[ $LOCALorREMOTE == LOCAL ]]
         then
           echo "LAUNCHING:  MINER WATCHDOG (LOCAL)"
           echo ""
           echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
-          screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
-          #guake -n $HCD -r MINER_WATCHDOG -e "bash ${NVOC}/5watchdog"
           #if guake tab is already showing watchdog output dont open a new one
           if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
             guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  ${NVOC}/nvoc_logs/watchdog-screenlog.0 "
@@ -1280,7 +1275,6 @@ then
           running=""
         elif [[ $LOCALorREMOTE == REMOTE ]]
         then
-          screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
           echo "LAUNCHING:  MINER WATCHDOG (REMOTE)"
           echo ""
           echo "process in screen wdog; 'nvOC wdog-log'"
