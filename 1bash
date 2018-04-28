@@ -52,6 +52,8 @@
 #          WTM 2nd lower minimum difference to switch
 # v=0020 : LukePicci
 #          Relocate nvOC to arbitrary install directory
+# v=0021 : papampi
+#          More miner optional arguments
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
@@ -481,11 +483,10 @@ BTC_ADDRESS="replace_with_your_BTC_address"      # Your BTC addrees to use with 
 
 NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"             # Your internal Nicehash BTC addrees to use with nicehash		
 
-MPH_ADDRESS="replace_with_your_MPH_username"     #You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
+MPH_ADDRESS="replace_with_your_MPH_username"     # You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
 
 MINER_PWD="x"                                    # Set the miner password. Default: x
                                                  # For zpool use MINER_PWD="$WORKERNAME,c=btc"
-
 EQUIHASH_MINER="ZM"                              # choose "ZM" for dstm or "EWBF" or "BMINER" or "BMINER_SSL"
 
 ZM_OPTS=""                                       # DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
@@ -498,11 +499,15 @@ EWBF_OPTS=""                                     # EWBF ZEC Miner optional argum
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 
-CCMINER_OPTS=""                                  #ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
+CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
 ETHASH_MINER="ETHMINER"                          # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
 CLAYMORE_VERSION="latest"                        # choose: latest or any version you add its folder  (type latest to use 10_2)
+
+ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
+
+CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 
 WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-" or any other separators your pool uses.
 # Some pools require dot (address.worker), some require slash (address/worker) format.
@@ -511,15 +516,15 @@ WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-
 # user account based pools), please put the above variable and worker name for that coins as empty 
 
 NEOSCRYPT_MINER="TPccminer"                     #choose miner for NeoScrypt algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
-NEOSCRYPT_INTENSITY="22"                          #set intensity for all NeoScrypt miners
+NEOSCRYPT_INTENSITY="22"                        #set intensity for all NeoScrypt miners
 
 LYRA2V2_MINER="KTccminer"                       #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
-LYRA2V2_INTENSITY="17"                            #set intensity for all Lyra2v2 miners
+LYRA2V2_INTENSITY="17"                          #set intensity for all Lyra2v2 miners
 
-SKUNK_MINER="TPccminer"                       #choose miner for Skunkhash algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+SKUNK_MINER="TPccminer"                         #choose miner for Skunkhash algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
 SKUNK_INTENSITY="22"                            #set intensity for all Skunkhash miners
 
-SKEIN_MINER="TPccminer"                       #choose miner for Skein algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+SKEIN_MINER="TPccminer"                         #choose miner for Skein algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
 SKEIN_INTENSITY="22"                            #set intensity for all Skein miners
 
 ################################################################
