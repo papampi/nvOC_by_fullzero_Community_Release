@@ -1253,36 +1253,6 @@ then
   if [[ $AUTO_START_MINER == YES ]]
   then
     echo "Auto Start Miner Set to YES"
-    if [[ $MINER_WATCHDOG == YES ]]
-    then
-      HCD="${NVOC}/5watchdog"
-      echo ""
-      sleep 2
-      running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
-      if [ "$running" == "" ]
-      then
-        screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
-        if [[ $LOCALorREMOTE == LOCAL ]]
-        then
-          echo "LAUNCHING:  MINER WATCHDOG (LOCAL)"
-          echo ""
-          echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
-          #if guake tab is already showing watchdog output dont open a new one
-          if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
-            guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  ${NVOC}/nvoc_logs/watchdog-screenlog.0 "
-          fi
-          echo ""
-          running=""
-        elif [[ $LOCALorREMOTE == REMOTE ]]
-        then
-          echo "LAUNCHING:  MINER WATCHDOG (REMOTE)"
-          echo ""
-          echo "process in screen wdog; 'nvOC wdog-log'"
-          running=""
-        fi
-      fi
-    fi
-
     if [[ $WTM_AUTO_SWITCH == YES ]]
     then
       echo ""
@@ -1326,40 +1296,66 @@ EOF
       fi
     fi
 
-    running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-    if [ "$running" != "" ]
-    then
-      target=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-      kill "$target"
-    fi
-    sleep 2
+    while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
+      echo "" | tee -a ${NVOC}/nvoc_logs/screenlog.0
+      echo "$(date) - Miner is running, 3main restarting miner" | tee -a ${NVOC}/nvoc_logs/screenlog.0
+      ps ax | grep SCREEN | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
+      sleep 2
+    done
+
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
-    running=$(ps ax | grep -v cpuminer | grep -i screen | grep miner | awk '"miner" {print $1}')
-    if [ "$running" == "" ]
-    then
       bash ${NVOC}/0miner
       echo "    "
-      echo "    " $(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*')
+      echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
       echo "    "
-      running=""
-      if [[ $LOCALorREMOTE == REMOTE ]]
+      
+    if [[ $MINER_WATCHDOG == YES ]]
+    then
+      HCD="${NVOC}/5watchdog"
+      echo ""
+      sleep 2
+      running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
+      if [ "$running" == "" ]
       then
-        echo "Miner output: 'nvOC miner-log'"
-        echo "    "
-        echo "    "
-      elif [[ $LOCALorREMOTE == LOCAL ]]
-      then
-        if [[ $WTM_AUTO_SWITCH == YES ]]
+        screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
+        if [[ $LOCALorREMOTE == LOCAL ]]
         then
-          echo "Miner output: 'nvOC miner-log'"
-          echo "    "
-          echo "    "
-          tail -f ${NVOC}/nvoc_logs/screenlog.0
-        else
-          screen -r miner
+          echo "LAUNCHING:  MINER WATCHDOG (LOCAL)"
+          echo ""
+          echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
+          #if guake tab is already showing watchdog output dont open a new one
+          if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
+            guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  ${NVOC}/nvoc_logs/watchdog-screenlog.0 "
+          fi
+          echo ""
+          running=""
+        elif [[ $LOCALorREMOTE == REMOTE ]]
+        then
+          echo "LAUNCHING:  MINER WATCHDOG (REMOTE)"
+          echo ""
+          echo "process in screen wdog; 'nvOC wdog-log'"
+          running=""
         fi
+      fi
+    fi  
+      
+    if [ $LOCALorREMOTE == "REMOTE" ]
+    then
+      echo "Miner output: ./nvOC miner-log"
+      echo "    "
+      echo "    "
+    elif [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      if [ $WTM_AUTO_SWITCH == "YES" ]
+      then
+        echo "Miner output: ./nvOC miner-log"
+        echo "    "
+        echo "    "
+        tail -f -n 1 ${NVOC}/nvoc_logs/screenlog.0
+      else
+        screen -r miner
       fi
     fi
 
