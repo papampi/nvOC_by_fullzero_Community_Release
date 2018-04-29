@@ -49,6 +49,8 @@
 #          wipe dead screens
 # v=0014 : LukePicci
 #          Relocate nvOC to arbitrary install directory
+# v=0013 : papampi
+#          OhGodAnETHlargementPill for 1080 and 1080TI Ethahsh mining pill
 
 
 source ${NVOC}/1bash
@@ -1296,6 +1298,19 @@ EOF
       fi
     fi
 
+    if [[ OhGodAnETHlargementPill == "YES" ]] && [[ ALGORITHM == "ETHASH" ]]
+    then
+      HCD="${NVOC}/OhGodAnETHlargementPill-r2"
+      chmod a+x $HCD
+      if ! ps ax  | grep -v grep | grep -q OhGodAnETHlargementPill
+      then
+        screen -dmS eth_pill sudo $HCD 
+        guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
+      fi
+    else
+      pkill -f OhGodAnETHlargementPill-r2
+    fi
+    
     while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
       echo "" | tee -a ${NVOC}/nvoc_logs/screenlog.0
       echo "$(date) - Miner is running, 3main restarting miner" | tee -a ${NVOC}/nvoc_logs/screenlog.0
