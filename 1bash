@@ -54,6 +54,8 @@
 #          Relocate nvOC to arbitrary install directory
 # v=0021 : papampi
 #          More miner optional arguments
+# v=0021 : papampi
+#          OhGodAnETHlargementPill
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
@@ -410,7 +412,6 @@ GPUPowerMizerMode_Adjust="NO" # YES or NO # Use nvidia PowerMizerMode
 
 GPUPowerMizerMode=1           # Set PowerMizerMode
 
-
 ########################################################
 #                                                      #
 # PAPAMPI WTM_AUTO_SWITCH settings                     #
@@ -484,6 +485,8 @@ BTC_ADDRESS="replace_with_your_BTC_address"      # Your BTC addrees to use with 
 NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"             # Your internal Nicehash BTC addrees to use with nicehash		
 
 MPH_ADDRESS="replace_with_your_MPH_username"     # You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
+
+OhGodAnETHlargementPill="NO"                     # YES or NO, Set to YES for mining Ethash algos with 1080 or 1080TI cards
 
 MINER_PWD="x"                                    # Set the miner password. Default: x
                                                  # For zpool use MINER_PWD="$WORKERNAME,c=btc"
