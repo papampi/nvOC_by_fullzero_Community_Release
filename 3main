@@ -1300,12 +1300,15 @@ EOF
 
     if [[ OhGodAnETHlargementPill == "YES" ]] && [[ ALGORITHM == "ETHASH" ]]
     then
+      echo " Launching OhGodAnETHlargementPill"
       HCD="${NVOC}/OhGodAnETHlargementPill-r2"
-      chmod a+x $HCD
       if ! ps ax  | grep -v grep | grep -q OhGodAnETHlargementPill
       then
         screen -dmS eth_pill sudo $HCD 
-        guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
+        if [[ LOCAL_OR_REMOTE == "LOCAL" ]]
+        then
+          guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
+        fi      
       fi
     else
       pkill -f OhGodAnETHlargementPill-r2
