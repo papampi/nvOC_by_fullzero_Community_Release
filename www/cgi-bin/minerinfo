@@ -281,6 +281,7 @@ elif  ps ax | grep miner| grep -v grep | grep timetravel10 |grep -q "TPccminer" 
 
 elif  ps ax | grep miner| grep -v grep | grep x16r | grep -q "suprminer" ;then
   WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Bx16r_hr%5D=[0-9]*' | cut -f2- -d=)
+fi
 
 ##################################################################
 ########################### Miner Logs ###########################
