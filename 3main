@@ -49,13 +49,14 @@
 #          wipe dead screens
 # v=0014 : LukePicci
 #          Relocate nvOC to arbitrary install directory
-# v=0013 : papampi
+# v=0015 : papampi
 #          OhGodAnETHlargementPill for 1080 and 1080TI Ethahsh mining pill
-
+# v=0016 : sizzlephizzle
+#          Declaration of ALGO
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.0014"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.0016"                  # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -314,6 +315,31 @@ then
     running=""
   fi
 fi
+
+## IDENTIFY ALGORITHM START
+if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX ]]
+then
+    ALGO=NEOSCRYPT
+elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE-ETHASH ]]
+then
+    ALGO=ETHASH
+elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE-EQUIHASH || $COIN == VOTE ]]
+then
+    ALGO=EQUIHASH
+elif [[ $COIN == SIGT || $COIN == ZPOOL_SKUNK || $COIN == ALTCOM || $COIN == NICE-SKUNKHASH ]]
+  then
+    ALGO=SKUNK
+elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE-LYRA2REV2 || $COIN == XVG ]]
+then
+    ALGO=LYRA2REV2
+elif [[ $COIN == XMR || $COIN == KRB || $COIN == ETN || $COIN == NICE-CRYPTONIGHT ]]
+then
+    ALGO=CRYPTONIGHT
+elif [[ $COIN == ZCOIN ]]
+then
+    ALGO=LYRA2V2
+fi
+## IDENTIFY ALGORITHM END	
 
 if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
 then
@@ -1298,14 +1324,14 @@ EOF
       fi
     fi
 
-    if [[ OhGodAnETHlargementPill == "YES" ]] && [[ ALGORITHM == "ETHASH" ]]
+    if [[ OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
     then
       echo " Launching OhGodAnETHlargementPill"
       HCD="${NVOC}/OhGodAnETHlargementPill-r2"
       if ! ps ax  | grep -v grep | grep -q OhGodAnETHlargementPill
       then
         screen -dmS eth_pill sudo $HCD 
-        if [[ LOCAL_OR_REMOTE == "LOCAL" ]]
+        if [[ LOCAL_OR_REMOTE == LOCAL ]]
         then
           guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
         fi      
