@@ -33,6 +33,7 @@ WTM=0
 POOL=1
 while !  nc -vzw1 ${!COIN_POOL_1} ${!COIN_PORT_1}
 do
+  source ${NVOC}/1bash
   POOL=0
   if [[ ${!COIN_POOL} == ${!COIN_POOL_1} ]];  then
     echo "Switching Pool to ${!COIN_POOL_2}:${!COIN_PORT_2}" | tee -a $MINER_LOG $WDOG_LOG
