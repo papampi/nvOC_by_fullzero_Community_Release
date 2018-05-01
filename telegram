@@ -5,7 +5,7 @@
 # ref: http://bernaerts.dyndns.org/linux/75-debian/351-debian-send-telegram-notification
 # v0019-2
 
-source /home/m1/1bash
+source ${NVOC}/1bash
 
 if [ $TELEGRAM_TYPE == "BaliMiner" ]
 then
@@ -17,7 +17,7 @@ then
   PD=$(/usr/bin/nvidia-smi --query-gpu=power.draw --format=csv,noheader)
   FAN=$(/usr/bin/nvidia-smi --query-gpu=fan.speed --format=csv,noheader)
   LF=$'\n'
-  PROFIT=$(cat /home/m1/current-profit)
+  PROFIT=$(cat ${NVOC}/current-profit)
   MSG="$WORKERNAME $LF Current Hashrate: $CURRENTHASH $LF GPU_UTILIZATIONS: $GPU_UTILIZATIONS $LF TEMPS: $TEMP  $LF  POWERDRAW: $PD"
   /usr/bin/curl -s -X POST --output /dev/null https://api.telegram.org/bot${APIKEY}/sendMessage -d "text=${MSG}" -d chat_id=${CHATID}
 fi
@@ -39,7 +39,7 @@ then
   FAN=$(/usr/bin/nvidia-smi --query-gpu=fan.speed --format=csv,noheader)
   CURRENTHASH=`/usr/bin/curl -s http://localhost:3333 | sed '/Total/!d; /Speed/!d;' | awk '{print $6}' | awk 'NR == 3'`
   LF=$'\n'
-  PROFIT=$(cat /home/m1/current-profit)
+  PROFIT=$(cat ${NVOC}/current-profit)
   MSG=" Worker: $WORKERNAME
   Current Hashrate: $CURRENTHASH
   System Boot Time: $SYSTEM_BOOT_TIME
@@ -61,16 +61,16 @@ then
   CHATID=$TELEGRAM_CHATID
   APIKEY=$TELEGRAM_APIKEY
   
-  touch /home/m1/nvoc_logs/tempcontrol-screenlog.0
-  source /home/m1/1bash
+  touch ${NVOC}/nvoc_logs/tempcontrol-screenlog.0
+  source ${NVOC}/1bash
   SYSTEM_BOOT_TIME=$(uptime -s)
   SYSTEM_UP_TIME=$(uptime -p)
   GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
   REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "Yes!!!" || echo "No")
   GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | tr '\n' '   ')
-  TEMP_FAN_POWER=$(tail  -n 50 /home/m1/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g')
-  WDOG_WARNINGS=$(tail -10 /home/m1/5_watchdoglog )
-  TEMP_WARNINGS=$(tail -10 /home/m1/6_autotemplog )
+  TEMP_FAN_POWER=$(tail  -n 50 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g')
+  WDOG_WARNINGS=$(tail -10 ${NVOC}/5_watchdoglog )
+  TEMP_WARNINGS=$(tail -10 ${NVOC}/6_autotemplog )
 
   if [[ -n  $(ps ax | grep SCREEN | grep miner | awk '"miner" {print $1}') ]]
   then
@@ -84,27 +84,34 @@ then
 
   if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
   then
-    CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-    MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0}')
+    CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+    MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0}')
     AUTO_SWITCH=("Salfter MPH Auto Switch")
 
 
   elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
   then
-    CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-    MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0}')
+    CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+    MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0}')
     AUTO_SWITCH=("Salfter Nicehash Auto Switch")
+    
+    
+  elif [ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" ]
+  then
+    CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+    MINING_HISTORY=$(tail -n 5 ${NVOC}/algo-log |  awk '{print $0,"<br>"}')
+    AUTO_SWITCH=("Salfter Programatic Switch")
 
 
   elif [ $WTM_AUTO_SWITCH == "YES" ]
   then
 
     CURRENT_COIN="Mining Coin: $COIN"
-    MINING_HISTORY="Mining History: $LF$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 5 |  awk '{print $0}')"
-    WTM_PROFIT="WTM Current Profit: $(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')"
-    WTM_REV="WTM Current Revenue ($WTM_CURRENCY): $(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')"
-    WTM_AVERAGE_REV="24H Average Revenue:  $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)"
-    BTC_PRICE="BTC Price: $(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
+    MINING_HISTORY="Mining History: $LF$(cat ${NVOC}/WTM_switch_history | grep 'Mining switched'|tail -n 5 |  awk '{print $0}')"
+    WTM_PROFIT="WTM Current Profit: $(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')"
+    WTM_REV="WTM Current Revenue ($WTM_CURRENCY): $(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')"
+    WTM_AVERAGE_REV="24H Average Revenue:  $(awk '{s+=$1}END{print "",s/NR}' RS="\n"  ${NVOC}/WTM_24H_REV)"
+    BTC_PRICE="BTC Price: $(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
     if ps aux | grep -v grep | grep -q 8wtm_auto_switch
     then
       WTM_SWITCH=("Running")
@@ -117,10 +124,10 @@ then
   then
     CURRENT_COIN="Mining Coin: $COIN"
     MINING_HISTORY=""
-    WTM_PROFIT="WTM Current Profit: $(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')"
-    WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+    WTM_PROFIT="WTM Current Profit: $(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')"
+    WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')
     WTM_SWITCH=("WTM Profit Check Running. ")
-    BTC_PRICE="BTC Price: $(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
+    BTC_PRICE="BTC Price: $(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
     WTM_AVERAGE_REV=""
     AUTO_SWITCH=""
 
@@ -176,18 +183,18 @@ then
 #
 
 # Log file location
-  KK003_LOG_FILE=~/kk003_telegram_data/kk003_telegram.log
+  KK003_LOG_FILE=${NVOC}/kk003_telegram_data/kk003_telegram.log
 
 # I need to have some data over restarts like ips. I'll use a file to do so
-  DATA_FILE=~/kk003_telegram_data/data
+  DATA_FILE=${NVOC}/kk003_telegram_data/data
 
 # Create the working dirs so I keep things tidy
-  if [[ ! -d ~/kk003_telegram_data ]]; then
-    mkdir ~/kk003_telegram_data
+  if [[ ! -d ${NVOC}/kk003_telegram_data ]]; then
+    mkdir ${NVOC}/kk003_telegram_data
   fi
 
-  if [[ ! -d ~/kk003_telegram_data/files ]]; then
-    mkdir ~/kk003_telegram_data/files
+  if [[ ! -d ${NVOC}/kk003_telegram_data/files ]]; then
+    mkdir ${NVOC}/kk003_telegram_data/files
   fi
 
 # Create the log file
@@ -240,16 +247,16 @@ then
     # REMENBER: 00:00 won't work. You won't get a telegram at this time (may be i'll fix it later some time)
     # REMENBER: first time of day is 00:01 and last is 23:59
     # REMENBER: You'll never get a telegram at 00:00, set it up to 00:01 (yes, again)
-    # REMENBER: If times you ask here for a telegram are in intervals smaller than value of var "TELEGRAM_TIMEOUT_IN_MINUTES" in /home/m1/1bash
+    # REMENBER: If times you ask here for a telegram are in intervals smaller than value of var "TELEGRAM_TIMEOUT_IN_MINUTES" in ${NVOC}/1bash
     # you'll only get one of them (usually the one closest to time 00:01 of that day)
     # When this script is running it checks if time left to send a telegram is less than time left for next check. If so "sleeps" until it's time to send the msg
-    # So, you better set up var "TELEGRAM_TIMEOUT_IN_MINUTES" in /home/m1/1bash at 10, 15, 20, or 30 minutes max. That way you'll get a rich log file full of info
+    # So, you better set up var "TELEGRAM_TIMEOUT_IN_MINUTES" in ${NVOC}/1bash at 10, 15, 20, or 30 minutes max. That way you'll get a rich log file full of info
     #
     #
     USER_CUSTOM_TIMES_TO_SEND_TELEGRAM=("12:00" "18:00" "21:32")
 
     # The script supports multi-telegrams. That is it can send the telegram message to several recipients
-    # In /home/m1/1bash, as allways you still have to add your USER ID to variable "TELEGRAM_CHATID" and your API KEY to varible "TELEGRAM_APIKEY"
+    # In ${NVOC}/1bash, as allways you still have to add your USER ID to variable "TELEGRAM_CHATID" and your API KEY to varible "TELEGRAM_APIKEY"
     # Then add the additional chats that you want to send a telegram to this variable
     # Data must be added this way:
     # 1. 2 values for chat
@@ -271,7 +278,7 @@ then
 
     # The warnings file holds how many times a warning has occurred for a registered element
     #
-    WARNINGS_FILE=~/kk003_telegram_data/kk003_warnings	# The warnings file
+    WARNINGS_FILE=${NVOC}/kk003_telegram_data/kk003_warnings	# The warnings file
 
     #### Some values you may want to customize for "function my_custom_mods_for_nvidia_smi"
     #
@@ -359,12 +366,12 @@ then
     # system to get the script runnin correctly (OK for versions 8 to 10 at 2017/09/23 )
 
     USE_GENOIL_STATICS="YES" 				# YES or NO, if Genoil is running use the provided data?
-    KEY_GENOIL=~/eth/Genoil-U/ethminer			# String I search for to check if claymore is running
+    KEY_GENOIL=${NVOC}/miners/Genoil-U/ethminer			# String I search for to check if claymore is running
     # Different vesions may have different name.
 
     USE_ETHMINER_STATICS="YES"				# YES or NO, if Ethminer is running use the provided data?
-    KEY_ETHMINER_1=~/eth/ethminer_11/ethminer		# Strings I search for to check if claymore is running
-    KEY_ETHMINER_2=~/eth/ethminer_12dev2/ethminer		# Different vesions may have different name.
+    KEY_ETHMINER_1=${NVOC}/miners/ethminer/0.11.0/ethminer		# Strings I search for to check if claymore is running
+    KEY_ETHMINER_2=${NVOC}/miners/ethminer/0.12.0-dev2/ethminer		# Different vesions may have different name.
 
     # Error exit codes (or RETURN VALUE as nvidia call them) for nvidia-smi
     # I'll treat them as an array so in couples; firt value is the code number and second value is the text that explains it
@@ -399,12 +406,12 @@ then
     {
 
       # Empty the files
-      > ~/kk003_telegram_data/files/nvidia_smi_values.csv
-      > ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+      > ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+      > ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
       if [[ $MODE_NVIDIA_SMI_REPORT -eq 1 ]]; then
         # Query the values I want
-        nvidia-smi --query-gpu=index,gpu_name,utilization.gpu,power.limit,power.draw,temperature.gpu,fan.speed --format=csv,noheader > ~/kk003_telegram_data/files/nvidia_smi_values.csv
+        nvidia-smi --query-gpu=index,gpu_name,utilization.gpu,power.limit,power.draw,temperature.gpu,fan.speed --format=csv,noheader > ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
         # Mount the header for mode 1
         HEADER_MINIMAL_NVIDIA_SMI="GID GPN GUT GPL GPD GTP GFS"
@@ -420,78 +427,78 @@ then
 
         for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
         do
-          OLD_VALUE=`sed -n -e "${L}p" ~/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$COLUMN_NUMBER_TEMPERATURE_GPU`      # Extraigo el dato original
+          OLD_VALUE=$(sed -n -e "${L}p" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$COLUMN_NUMBER_TEMPERATURE_GPU)      # Extraigo el dato original
 
           NEW_VALUE=$OLD_VALUE$CENTIGRADO
-          sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($COLUMN_NUMBER_TEMPERATURE_GPU -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values.csv
+          sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($COLUMN_NUMBER_TEMPERATURE_GPU -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
         done
 
         # Copy the telegram file to the log file
-        cp ~/kk003_telegram_data/files/nvidia_smi_values.csv ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+        cp ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
         # Call function to change gpu's name for alias (modify files for telegram and log file)
         gpu_names_to_alias
 
         # Try to align columns for log file (stupid for telegram but not for the log file)
-        cat ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv | column -s, -t > ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv.temp
+        cat ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv | column -s, -t > ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv.temp
 
         # Set log file in place
-        cp ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv.temp ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+        cp ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv.temp ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
         # Insert header in log file
-        sed -i "1s/^/$HEADER_MINIMAL_NVIDIA_SMI\n/" ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+        sed -i "1s/^/$HEADER_MINIMAL_NVIDIA_SMI\n/" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
         # Change "," for " " in telegram file
-        sed -i 's/,/ /g' ~/kk003_telegram_data/files/nvidia_smi_values.csv
+        sed -i 's/,/ /g' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
         # Insert header in telegram file
-        sed -i "1s/^/$HEADER_MINIMAL_NVIDIA_SMI\n/" ~/kk003_telegram_data/files/nvidia_smi_values.csv
+        sed -i "1s/^/$HEADER_MINIMAL_NVIDIA_SMI\n/" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
       fi
 
       if [[ $MODE_NVIDIA_SMI_REPORT -eq 2 ]]; then
 
-      # nvidia-smi --query-gpu=index,gpu_name,utilization.gpu,power.limit,power.draw,temperature.gpu,fan.speed --format=csv,noheader | sed 's/ //g' | sed 's/ /\n/g' > ~/kk003_telegram_data/files/nvidia_smi_values.csv
+      # nvidia-smi --query-gpu=index,gpu_name,utilization.gpu,power.limit,power.draw,temperature.gpu,fan.speed --format=csv,noheader | sed 's/ //g' | sed 's/ /\n/g' > ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
         # utilization.gpu
-        echo "Gpu_Utilization:" >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        nvidia-smi --query-gpu=index,gpu_name,utilization.gpu --format=csv,noheader  >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        echo  >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo "Gpu_Utilization:" >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        nvidia-smi --query-gpu=index,gpu_name,utilization.gpu --format=csv,noheader  >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo  >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
         # power limt
-        echo "Gpu_power_limit:" >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        nvidia-smi --query-gpu=index,gpu_name,power.limit --format=csv,noheader >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        echo  >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo "Gpu_power_limit:" >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        nvidia-smi --query-gpu=index,gpu_name,power.limit --format=csv,noheader >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo  >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
         # power draw
-        echo "Gpu_power_draw:" >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        nvidia-smi --query-gpu=index,gpu_name,power.draw --format=csv,noheader >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        echo  >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo "Gpu_power_draw:" >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        nvidia-smi --query-gpu=index,gpu_name,power.draw --format=csv,noheader >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo  >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
         # gpu temperature
-        echo "Gpu_temperature_($CENTIGRADO):" >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        nvidia-smi --query-gpu=index,gpu_name,temperature.gpu --format=csv,noheader >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        echo  >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo "Gpu_temperature_($CENTIGRADO):" >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        nvidia-smi --query-gpu=index,gpu_name,temperature.gpu --format=csv,noheader >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo  >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
         # gpu fan speed
-        echo "Gpu_fan_speed:" >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        nvidia-smi --query-gpu=index,gpu_name,fan.speed --format=csv,noheader >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        echo  >> ~/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo "Gpu_fan_speed:" >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        nvidia-smi --query-gpu=index,gpu_name,fan.speed --format=csv,noheader >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        echo  >> ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
         # Set log file in place
-        cp ~/kk003_telegram_data/files/nvidia_smi_values.csv ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+        cp ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
         # Call function to change gpu's name for alias (modify files for telegram and log file)
         gpu_names_to_alias
 
         # Replace " " for nothing and "," for spaces
-        sed -i 's/ //g; s/,/ /g;' ~/kk003_telegram_data/files/nvidia_smi_values.csv
-        sed -i 's/ //g; s/,/ /g;' ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+        sed -i 's/ //g; s/,/ /g;' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+        sed -i 's/ //g; s/,/ /g;' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
         # Try to align columns for log file (stupid for telegram but not for the log file)
-        cat ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv | column -t  > ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv.temp
+        cat ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv | column -t  > ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv.temp
 
         # Set log file in place
-        cp ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv.temp ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+        cp ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv.temp ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
       fi
     }
@@ -517,9 +524,9 @@ then
               ALIAS_GPU_IN_ARRAY=${MODELS[$INDEX_ODD]}                                    # Get the alias of the gpu in array
 
               # Find and replace gpu name if exists
-              sed -i "s/${NAME_GPU_IN_ARRAY}/${ALIAS_GPU_IN_ARRAY}/g" ~/kk003_telegram_data/files/nvidia_smi_values.csv
+              sed -i "s/${NAME_GPU_IN_ARRAY}/${ALIAS_GPU_IN_ARRAY}/g" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
-              sed -i "s/${NAME_GPU_IN_ARRAY}/${ALIAS_GPU_IN_ARRAY}/g" ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+              sed -i "s/${NAME_GPU_IN_ARRAY}/${ALIAS_GPU_IN_ARRAY}/g" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
             done
 
           # I get this way out if number of elements in array are odd and I don't replace names for alias
@@ -550,18 +557,18 @@ then
       ###
 
       # Save header and remove it from the csv file
-      CSV_HEADER=$(cat ~/kk003_telegram_data/files/nvidia_smi_values.csv | head -n 1 | sed 's/ //g' | sed 's/,/ /g')	# Save the header of csv file
-      sed -i -e "1d" ~/kk003_telegram_data/files/nvidia_smi_values.csv						# Remove the header of telegram file (first line)
+      CSV_HEADER=$(cat ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv | head -n 1 | sed 's/ //g' | sed 's/,/ /g')	# Save the header of csv file
+      sed -i -e "1d" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv						# Remove the header of telegram file (first line)
 
-      sed -i -e "1d" ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv					# Remove the header of log file (first line)
+      sed -i -e "1d" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv					# Remove the header of log file (first line)
 
       # Call function to change gpu's name for alias
       gpu_names_to_alias
 
       # I don't want any spaces but to align thing
-      sed -i 's/ //g' ~/kk003_telegram_data/files/nvidia_smi_values.csv
+      sed -i 's/ //g' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
-      sed -i 's/ //g' ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+      sed -i 's/ //g' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
       # Get number of elements on NVIDIA_SMI_QUERY_ARGUMENTS variable
       NVIDIA_SMI_QUERY_ARGUMENTS_LENGTH=$(echo $NVIDIA_SMI_QUERY_ARGUMENTS | sed 's/[^,]//g' | wc -c)
@@ -581,11 +588,11 @@ then
           for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
           do
 
-            OLD_VALUE=`sed -n -e "${L}p" ~/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$INDEX`      # Extraigo el dato original
+            OLD_VALUE=$(sed -n -e "${L}p" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$INDEX)      # Extraigo el dato original
             NEW_VALUE=" "$OLD_VALUE
-            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values.csv
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
-            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
           done
         fi
 
@@ -600,11 +607,11 @@ then
           for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
           do
 
-            OLD_VALUE=`sed -n -e "${L}p" ~/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$INDEX`      # Extraigo el dato original
+            OLD_VALUE=$(sed -n -e "${L}p" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$INDEX)      # Extraigo el dato original
             NEW_VALUE=$(echo "$OLD_VALUE" | sed "s/00000000://")
-            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values.csv
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
-            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
           done
         fi
 
@@ -620,7 +627,7 @@ then
           for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
           do
 
-            OLD_VALUE=`sed -n -e "${L}p" ~/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$INDEX`      # Extraigo el dato original
+            OLD_VALUE=$(sed -n -e "${L}p" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$INDEX)      # Extraigo el dato original
             LEN=${#OLD_VALUE}
 
             case $LEN in
@@ -633,9 +640,9 @@ then
                 ;;
             esac
 
-            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values.csv
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
-            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
           done
         fi
 
@@ -650,7 +657,7 @@ then
 
           for ((L=1; L <= $LINES_TO_MODIFY ; L=L+1))
           do
-            OLD_VALUE=`sed -n -e "${L}p" ~/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$INDEX`      # Extraigo el dato original
+            OLD_VALUE=$(sed -n -e "${L}p" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv | cut -d, -f$INDEX)      # Extraigo el dato original
             LEN=${#OLD_VALUE}
 
             case $LEN in
@@ -663,9 +670,9 @@ then
                 ;;
             esac
 
-            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values.csv
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
-            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+            sed -i "$L"'s/^\(\([^,]*,\)\{'"$(($INDEX -1))"'\}\)[^,]*/\1'"$NEW_VALUE"'/' ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
           done
         fi
 
@@ -674,9 +681,9 @@ then
       done
 
       # Insert the whole header line as the first one
-      sed -i "1s/^/$CSV_HEADER\n/" ~/kk003_telegram_data/files/nvidia_smi_values.csv
+      sed -i "1s/^/$CSV_HEADER\n/" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
-      sed -i "1s/^/$CSV_HEADER\n/" ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+      sed -i "1s/^/$CSV_HEADER\n/" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
       ###
       # End of block with custom my mods
@@ -700,35 +707,35 @@ then
           echo "It seems that GENOIL is running!!"
 
           # Clear the files
-          > ~/kk003_telegram_data/files/miner_statics.txt
-          > ~/kk003_telegram_data/files/miner_statics_log_file.txt
+          > ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+          > ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
           # Insert Genoil's header
-          echo "" >> ~/kk003_telegram_data/files/miner_statics.txt
-          echo "-- Genoil mining  Information :" >> ~/kk003_telegram_data/files/miner_statics.txt
+          echo "" >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+          echo "-- Genoil mining  Information :" >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
 
-          echo "" >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
-          echo "-- Genoil mining  Information :" >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
+          echo "" >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
+          echo "-- Genoil mining  Information :" >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
           # Extract the output from screen ---> I have tested this method all night long and it is UNSTABLE. At any given moment it stops writing the file.
-          #	> ~/kk003_telegram_data/files/output_miner_from_screen
+          #	> ${NVOC}/kk003_telegram_data/files/output_miner_from_screen
           #	TIMEOUT_FOR_TIMEOUT_IN_SECONDS=20       # The timeout for the command timeout to wait
           #	echo "Running timeout+script+screen for $TIMEOUT_FOR_TIMEOUT_IN_SECONDS seconds"
-          #	timeout $TIMEOUT_FOR_TIMEOUT_IN_SECONDS script -q ~/kk003_telegram_data/files/output_miner_from_screen --command "screen -dr miner"
+          #	timeout $TIMEOUT_FOR_TIMEOUT_IN_SECONDS script -q ${NVOC}/kk003_telegram_data/files/output_miner_from_screen --command "screen -dr miner"
           #	sleep 2
           #	screen -d miner # does not seem to need to be Detached
 
           # Check if user is currently using option -L with screen when he started the miner and get statics from screenlog.o file
-          if [[ -f ~/screenlog.0 ]]; then
+          if [[ -f ${NVOC}/nvoc_logs/screenlog.0 ]]; then
             SLEEP_TIME_MODIFICATION_FILE=10				# Hope 10 segs is enough for screen to write new data and save the file
 
             # Get date now in seconds
-            TIME_SCREEN_LOG_FILE_NOW_IN_SECONDS=$(stat -c %Y ~/screenlog.0)	# Get modification date of file
+            TIME_SCREEN_LOG_FILE_NOW_IN_SECONDS=$(stat -c %Y ${NVOC}/nvoc_logs/screenlog.0)	# Get modification date of file
 
             sleep $SLEEP_TIME_MODIFICATION_FILE
 
             # Get date later in seconds
-            TIME_SCREEN_LOG_FILE_LATER_IN_SECONDS=$(stat -c %Y ~/screenlog.0)	# Get modification date of file
+            TIME_SCREEN_LOG_FILE_LATER_IN_SECONDS=$(stat -c %Y ${NVOC}/nvoc_logs/screenlog.0)	# Get modification date of file
 
           else
             # Set this vars to 0 in case screenlog.0 file does not exist so simulates that the file does not exist
@@ -742,7 +749,7 @@ then
             # and I'll try to collect some data
             # I don't see any valuable information than the total hashrate (I'll show a few at last)
             # Surprise!!!, sed 's/ /\n/g' no convierte espacios en saltos de linea, pero la misma linea en la consola si lo hace!!!
-            TOTAL_HASHRATE=$(tail -60 ~/screenlog.0 | grep "Mining on PoWhash" | cut -d":" -f4 |  cut -d" " -f2 | sed 's/ /\n/g' | tail -$GENOIL_NUMBER_OF_HASHRATES_TO_SHOW)
+            TOTAL_HASHRATE=$(tail -60 ${NVOC}/nvoc_logs/screenlog.0 | grep "Mining on PoWhash" | cut -d":" -f4 |  cut -d" " -f2 | sed 's/ /\n/g' | tail -$GENOIL_NUMBER_OF_HASHRATES_TO_SHOW)
 
             if [[ -z $TOTAL_HASHRATE ]]; then
               TOTAL_HASHRATE="No data available"
@@ -750,19 +757,19 @@ then
 
             # Mount the little thing Genoil gives us
             #
-            echo "Latest total hashrates : " >> ~/kk003_telegram_data/files/miner_statics.txt
-            echo $TOTAL_HASHRATE >> ~/kk003_telegram_data/files/miner_statics.txt
+            echo "Latest total hashrates : " >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+            echo $TOTAL_HASHRATE >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
 
-            echo "Latest total hashrates : " >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
-            echo $TOTAL_HASHRATE >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
+            echo "Latest total hashrates : " >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
+            echo $TOTAL_HASHRATE >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
           else
 
             if [[ "$SEND_WARNING_WHEN_NO_L_ON_SCREEN" == "YES" ]]; then
               MSG_NO_L_SCREEN="WARNING: It seems that you are not using -L with screen when starting the miner. Use -L with screen for this miner to be logged. Do this in 3main file: screen -dmSL miner <arguments>"
               echo $MSG_NO_L_SCREEN
-              echo $MSG_NO_L_SCREEN >> ~/kk003_telegram_data/files/miner_statics.txt
-              echo $MSG_NO_L_SCREEN >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
+              echo $MSG_NO_L_SCREEN >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+              echo $MSG_NO_L_SCREEN >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
               SEND_WARNING=1
             fi
 
@@ -796,35 +803,35 @@ then
           echo "It seems that ETHMINER is running!!"
 
           # Clear the files
-          > ~/kk003_telegram_data/files/miner_statics.txt
-          > ~/kk003_telegram_data/files/miner_statics_log_file.txt
+          > ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+          > ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
           # Insert ethminer's header
-          echo "" >> ~/kk003_telegram_data/files/miner_statics.txt
-          echo "-- Ethminer mining  Information :" >> ~/kk003_telegram_data/files/miner_statics.txt
+          echo "" >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+          echo "-- Ethminer mining  Information :" >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
 
-          echo "" >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
-          echo "-- Ethminer mining  Information :" >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
+          echo "" >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
+          echo "-- Ethminer mining  Information :" >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
           # Extract the output from screen ---> I have tested this method all night long and it is UNSTABLE. At any given moment it stops writing the file.
-          #       > ~/kk003_telegram_data/files/output_miner_from_screen
+          #       > ${NVOC}/kk003_telegram_data/files/output_miner_from_screen
           #       TIMEOUT_FOR_TIMEOUT_IN_SECONDS=20       # The timeout for the command timeout to wait
           #       echo "Running timeout+script+screen for $TIMEOUT_FOR_TIMEOUT_IN_SECONDS seconds"
-          #       timeout $TIMEOUT_FOR_TIMEOUT_IN_SECONDS script -q ~/kk003_telegram_data/files/output_miner_from_screen --command "screen -dr miner"
+          #       timeout $TIMEOUT_FOR_TIMEOUT_IN_SECONDS script -q ${NVOC}/kk003_telegram_data/files/output_miner_from_screen --command "screen -dr miner"
           #       sleep 2
           #       screen -d miner # does not seem to need to be Detached
 
           # Check if user is currently using option -L with screen when he started the miner and get statics from screenlog.o file
-          if [[ -f ~/screenlog.0 ]]; then
+          if [[ -f ${NVOC}/nvoc_logs/screenlog.0 ]]; then
             SLEEP_TIME_MODIFICATION_FILE=10					# Hope 10 segs is enough for screen to write new data and save the file
 
             # Get date now in seconds
-            TIME_SCREEN_LOG_FILE_NOW_IN_SECONDS=$(stat -c %Y ~/screenlog.0)     # Get modification date of file
+            TIME_SCREEN_LOG_FILE_NOW_IN_SECONDS=$(stat -c %Y ${NVOC}/nvoc_logs/screenlog.0)     # Get modification date of file
 
             sleep $SLEEP_TIME_MODIFICATION_FILE
 
             # Get date later in seconds
-            TIME_SCREEN_LOG_FILE_LATER_IN_SECONDS=$(stat -c %Y ~/screenlog.0)   # Get modification date of file
+            TIME_SCREEN_LOG_FILE_LATER_IN_SECONDS=$(stat -c %Y ${NVOC}/nvoc_logs/screenlog.0)   # Get modification date of file
 
           else
             # Set this vars to 0 in case screenlog.0 file does not exist so simulates that the file does not exist
@@ -838,7 +845,7 @@ then
             # and I'll try to collect some data
             # I don't see any valuable information than the total hashrate (I'll show a few at last)
             # Surprise!!!, sed 's/ /\n/g' no convierte espacios en saltos de linea, pero la misma linea en la consola si lo hace!!!
-            TOTAL_HASHRATE=$(tail -60 ~/screenlog.0 | grep "Mining on" | cut -d":" -f4 |  cut -d" " -f2 | sed 's/ /\n/g' | tail -$ETHMINER_NUMBER_OF_HASHRATES_TO_SHOW)
+            TOTAL_HASHRATE=$(tail -60 ${NVOC}/nvoc_logs/screenlog.0 | grep "Mining on" | cut -d":" -f4 |  cut -d" " -f2 | sed 's/ /\n/g' | tail -$ETHMINER_NUMBER_OF_HASHRATES_TO_SHOW)
 
             if [[ -z $TOTAL_HASHRATE ]]; then
               TOTAL_HASHRATE="No data available"
@@ -846,19 +853,19 @@ then
 
             # Mount the little thing ethminer gives us
             #
-            echo "Latest total hashrates : " >> ~/kk003_telegram_data/files/miner_statics.txt
-            echo $TOTAL_HASHRATE >> ~/kk003_telegram_data/files/miner_statics.txt
+            echo "Latest total hashrates : " >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+            echo $TOTAL_HASHRATE >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
 
-            echo "Latest total hashrates : " >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
-            echo $TOTAL_HASHRATE >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
+            echo "Latest total hashrates : " >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
+            echo $TOTAL_HASHRATE >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
           else
 
             if [[ "$SEND_WARNING_WHEN_NO_L_ON_SCREEN" == "YES" ]]; then
               MSG_NO_L_SCREEN="WARNING: It seems that you are not using -L with screen when starting the miner. Use -L with screen for this miner to be logged. Do this in 3main file: screen -dmSL miner <arguments>"
               echo $MSG_NO_L_SCREEN
-              echo $MSG_NO_L_SCREEN >> ~/kk003_telegram_data/files/miner_statics.txt
-              echo $MSG_NO_L_SCREEN >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
+              echo $MSG_NO_L_SCREEN >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+              echo $MSG_NO_L_SCREEN >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
               SEND_WARNING=1
             fi
 
@@ -892,30 +899,30 @@ then
           # "GPU #XX: GeForce GTX 1060 3GB, 3013 MB available, 9 compute units, capability: 6.1", one line x gpu in the system
           # Get the latest total hashrates
           LATEST_TOTAL_HASHRATES=`curl -s http://localhost:3333 | sed '/Total/!d; /Speed/!d;' | cut -d":" -f 2 | sed 's/ //g' | cut -d"," -f1 | tail -n 3`
-          echo "$LATEST_TOTAL_HASHRATES" > ~/kk003_telegram_data/files/latest_total_hashrates.txt
+          echo "$LATEST_TOTAL_HASHRATES" > ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt
 
-          echo "$LATEST_TOTAL_HASHRATES" > ~/kk003_telegram_data/files/latest_total_hashrates_log_file.txt
+          echo "$LATEST_TOTAL_HASHRATES" > ${NVOC}/kk003_telegram_data/files/latest_total_hashrates_log_file.txt
 
           # I want total hasrates on one line ("sed" cannot do this job so I use "tr" instead)
-          tr '\n' ' ' < ~/kk003_telegram_data/files/latest_total_hashrates.txt > ~/kk003_telegram_data/files/latest_total_hashrates.txt.tmp
+          tr '\n' ' ' < ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt > ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt.tmp
           # Remove last character (wich is a ",")
-          #	sed -i 's/.$//' ~/kk003_telegram_data/files/latest_total_hashrates.txt.tmp
-          echo >> ~/kk003_telegram_data/files/latest_total_hashrates.txt.tmp
-          mv ~/kk003_telegram_data/files/latest_total_hashrates.txt.tmp ~/kk003_telegram_data/files/latest_total_hashrates.txt
+          #	sed -i 's/.$//' ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt.tmp
+          echo >> ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt.tmp
+          mv ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt.tmp ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt
 
-          cp ~/kk003_telegram_data/files/latest_total_hashrates.txt ~/kk003_telegram_data/files/latest_total_hashrates_log_file.txt
+          cp ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt ${NVOC}/kk003_telegram_data/files/latest_total_hashrates_log_file.txt
 
           # Insert header on top of file
-          sed -i "1s/^/Latest Total Hashrates :\n/" ~/kk003_telegram_data/files/latest_total_hashrates.txt
+          sed -i "1s/^/Latest Total Hashrates :\n/" ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt
 
-          sed -i "1s/^/Latest Total Hashrates :\n/" ~/kk003_telegram_data/files/latest_total_hashrates_log_file.txt
+          sed -i "1s/^/Latest Total Hashrates :\n/" ${NVOC}/kk003_telegram_data/files/latest_total_hashrates_log_file.txt
 
           # Get the indivual gpus hashrates and remove some charaters and spaces I don't want
           GPUS_HASHRATES=`curl -s http://localhost:3333 | sed '/ETH: GPU/!d' | awk 'NR == 3' | sed 's/[^GPU]*\(GPU.*\)/\1/' | sed 's/ M/M/g' | sed 's/ G/G/g'`
           # Make the string with individual hashrates vertical replacing "," for new line "\n" and removing the "GPUX" part
-          echo $GPUS_HASHRATES | sed "s/,/\n/g" | sed 's/^[^ ]* //' > ~/kk003_telegram_data/files/gpus_hashrate.txt
+          echo $GPUS_HASHRATES | sed "s/,/\n/g" | sed 's/^[^ ]* //' > ${NVOC}/kk003_telegram_data/files/gpus_hashrate.txt
 
-          echo $GPUS_HASHRATES | sed "s/,/\n/g" | sed 's/^[^ ]* //' > ~/kk003_telegram_data/files/gpus_hashrate_log_file.txt
+          echo $GPUS_HASHRATES | sed "s/,/\n/g" | sed 's/^[^ ]* //' > ${NVOC}/kk003_telegram_data/files/gpus_hashrate_log_file.txt
 
           # Get total individual and rejected shares and for how long claymore is runing in one single string
           # For 13 gpus should look something like this:
@@ -928,9 +935,9 @@ then
 
           # Get the individual shares (I capture the values between the two parentheses)
           # and replace the "+" signs for new line so I set the data vertical
-          echo $SOME_GPUS_DATA_FROM_CLAYMORE | sed 's/^.*(//; s/).*$//; s/+/\n/g' > ~/kk003_telegram_data/files/individual_shares.txt
+          echo $SOME_GPUS_DATA_FROM_CLAYMORE | sed 's/^.*(//; s/).*$//; s/+/\n/g' > ${NVOC}/kk003_telegram_data/files/individual_shares.txt
 
-          echo $SOME_GPUS_DATA_FROM_CLAYMORE | sed 's/^.*(//; s/).*$//; s/+/\n/g' > ~/kk003_telegram_data/files/individual_shares_log_file.txt
+          echo $SOME_GPUS_DATA_FROM_CLAYMORE | sed 's/^.*(//; s/).*$//; s/+/\n/g' > ${NVOC}/kk003_telegram_data/files/individual_shares_log_file.txt
 
           # Get the rejected shares and remove de ","
           REJECTED_SHARES=$(echo $SOME_GPUS_DATA_FROM_CLAYMORE | cut -d" " -f 8 | sed 's/,//')
@@ -940,12 +947,12 @@ then
 
           # Creating a vertical gpux list
           # If the file exists and is not empty clear it
-          if [[ -s ~/kk003_telegram_data/files/v_gpus.txt ]]; then
-            > ~/kk003_telegram_data/files/v_gpus.txt
+          if [[ -s ${NVOC}/kk003_telegram_data/files/v_gpus.txt ]]; then
+            > ${NVOC}/kk003_telegram_data/files/v_gpus.txt
           fi
 
-          if [[ -s ~/kk003_telegram_data/files/v_gpus_log_file.txt ]]; then
-            > ~/kk003_telegram_data/files/v_gpus_log_file.txt
+          if [[ -s ${NVOC}/kk003_telegram_data/files/v_gpus_log_file.txt ]]; then
+            > ${NVOC}/kk003_telegram_data/files/v_gpus_log_file.txt
           fi
 
 
@@ -957,58 +964,58 @@ then
             case "$L" in
 
               0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 )
-                echo "GPU $L" >>~/kk003_telegram_data/files/v_gpus.txt
+                echo "GPU $L" >>${NVOC}/kk003_telegram_data/files/v_gpus.txt
 
-                echo "GPU $L" >>~/kk003_telegram_data/files/v_gpus_log_file.txt
+                echo "GPU $L" >>${NVOC}/kk003_telegram_data/files/v_gpus_log_file.txt
                 ;;
               *)
-                echo "GPU$L" >> ~/kk003_telegram_data/files/v_gpus.txt
+                echo "GPU$L" >> ${NVOC}/kk003_telegram_data/files/v_gpus.txt
 
-                echo "GPU$L" >> ~/kk003_telegram_data/files/v_gpus_log_file.txt
+                echo "GPU$L" >> ${NVOC}/kk003_telegram_data/files/v_gpus_log_file.txt
                 ;;
             esac
           done
 
           # Paste the whole vertical thing together
-          paste -d, ~/kk003_telegram_data/files/v_gpus.txt ~/kk003_telegram_data/files/individual_shares.txt ~/kk003_telegram_data/files/gpus_hashrate.txt > ~/kk003_telegram_data/files/miner_statics.tmp
+          paste -d, ${NVOC}/kk003_telegram_data/files/v_gpus.txt ${NVOC}/kk003_telegram_data/files/individual_shares.txt ${NVOC}/kk003_telegram_data/files/gpus_hashrate.txt > ${NVOC}/kk003_telegram_data/files/miner_statics.tmp
 
-          paste -d, ~/kk003_telegram_data/files/v_gpus_log_file.txt ~/kk003_telegram_data/files/individual_shares_log_file.txt ~/kk003_telegram_data/files/gpus_hashrate_log_file.txt > ~/kk003_telegram_data/files/miner_statics_log_file.tmp
+          paste -d, ${NVOC}/kk003_telegram_data/files/v_gpus_log_file.txt ${NVOC}/kk003_telegram_data/files/individual_shares_log_file.txt ${NVOC}/kk003_telegram_data/files/gpus_hashrate_log_file.txt > ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.tmp
 
           # Mount the header field for claymore statics
           CLAYMOR_STATICS_HEADER="Index, Shares, Hashrate"
 
           # Insert the whole header line as the first one
-          sed -i "1s/^/$CLAYMOR_STATICS_HEADER\n/" ~/kk003_telegram_data/files/miner_statics.tmp
+          sed -i "1s/^/$CLAYMOR_STATICS_HEADER\n/" ${NVOC}/kk003_telegram_data/files/miner_statics.tmp
 
-          sed -i "1s/^/$CLAYMOR_STATICS_HEADER\n/" ~/kk003_telegram_data/files/miner_statics_log_file.tmp
+          sed -i "1s/^/$CLAYMOR_STATICS_HEADER\n/" ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.tmp
 
           # Insert a new line on top
-          sed -i "1s/^/\n/" ~/kk003_telegram_data/files/miner_statics.tmp
+          sed -i "1s/^/\n/" ${NVOC}/kk003_telegram_data/files/miner_statics.tmp
 
-          sed -i "1s/^/\n/" ~/kk003_telegram_data/files/miner_statics_log_file.tmp
+          sed -i "1s/^/\n/" ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.tmp
 
           # Add the list of latest total hashrates and put it all togather
-          cat ~/kk003_telegram_data/files/latest_total_hashrates.txt ~/kk003_telegram_data/files/miner_statics.tmp > ~/kk003_telegram_data/files/miner_statics.txt
+          cat ${NVOC}/kk003_telegram_data/files/latest_total_hashrates.txt ${NVOC}/kk003_telegram_data/files/miner_statics.tmp > ${NVOC}/kk003_telegram_data/files/miner_statics.txt
 
-          cat ~/kk003_telegram_data/files/latest_total_hashrates_log_file.txt ~/kk003_telegram_data/files/miner_statics_log_file.tmp > ~/kk003_telegram_data/files/miner_statics_log_file.txt
+          cat ${NVOC}/kk003_telegram_data/files/latest_total_hashrates_log_file.txt ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.tmp > ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
           # Insert the Title for claymore mining information
-          sed -i "1s/^/-- Claymore mining  Information :\n/" ~/kk003_telegram_data/files/miner_statics.txt
-          sed -i "1s/^/\n/" ~/kk003_telegram_data/files/miner_statics.txt
+          sed -i "1s/^/-- Claymore mining  Information :\n/" ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+          sed -i "1s/^/\n/" ${NVOC}/kk003_telegram_data/files/miner_statics.txt
 
-          sed -i "1s/^/-- Claymore mining  Information :\n/" ~/kk003_telegram_data/files/miner_statics_log_file.txt
-          sed -i "1s/^/\n/" ~/kk003_telegram_data/files/miner_statics_log_file.txt
+          sed -i "1s/^/-- Claymore mining  Information :\n/" ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
+          sed -i "1s/^/\n/" ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
           # At the end of file add
-          echo " " >> ~/kk003_telegram_data/files/miner_statics.txt
-          echo "Total shares     :" $TOTAL_SHARES >> ~/kk003_telegram_data/files/miner_statics.txt
-          echo "Rejected shares  :" $REJECTED_SHARES >> ~/kk003_telegram_data/files/miner_statics.txt
-          echo "Claymore up time :" $TIME_CLAYMORE_IS_RUNNING >> ~/kk003_telegram_data/files/miner_statics.txt
+          echo " " >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+          echo "Total shares     :" $TOTAL_SHARES >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+          echo "Rejected shares  :" $REJECTED_SHARES >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
+          echo "Claymore up time :" $TIME_CLAYMORE_IS_RUNNING >> ${NVOC}/kk003_telegram_data/files/miner_statics.txt
 
-          echo " " >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
-          echo "Total shares     :" $TOTAL_SHARES >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
-          echo "Rejected shares  :" $REJECTED_SHARES >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
-          echo "Claymore up time :" $TIME_CLAYMORE_IS_RUNNING >> ~/kk003_telegram_data/files/miner_statics_log_file.txt
+          echo " " >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
+          echo "Total shares     :" $TOTAL_SHARES >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
+          echo "Rejected shares  :" $REJECTED_SHARES >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
+          echo "Claymore up time :" $TIME_CLAYMORE_IS_RUNNING >> ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt
 
 
         else
@@ -1026,12 +1033,12 @@ then
     {
 
       # Clear the file's content if exists and is not empty
-      if [[ -s ~/kk003_telegram_data/files/system_data.txt ]]; then
-        > ~/kk003_telegram_data/files/system_data.txt
+      if [[ -s ${NVOC}/kk003_telegram_data/files/system_data.txt ]]; then
+        > ${NVOC}/kk003_telegram_data/files/system_data.txt
       fi
 
-      if [[ -s ~/kk003_telegram_data/files/system_data_log_file.txt ]]; then
-        > ~/kk003_telegram_data/files/system_data_log_file.txt
+      if [[ -s ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt ]]; then
+        > ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Get the current public ip
@@ -1068,17 +1075,17 @@ then
         REPORTING=$CUSTOMIZE_SYSTEM_NAME
       fi
 
-      echo "$REPORTING" >> ~/kk003_telegram_data/files/system_data.txt
-      echo >> ~/kk003_telegram_data/files/system_data.txt
+      echo "$REPORTING" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+      echo >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-      echo "$REPORTING" >> ~/kk003_telegram_data/files/system_data_log_file.txt
-      echo >> ~/kk003_telegram_data/files/system_data_log_file.txt
+      echo "$REPORTING" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+      echo >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
       # Title for system information
       TITLE_SYSTEM_INFORMATION="-- System information :"
-      echo "$TITLE_SYSTEM_INFORMATION" >> ~/kk003_telegram_data/files/system_data.txt
+      echo "$TITLE_SYSTEM_INFORMATION" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-      echo "$TITLE_SYSTEM_INFORMATION" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+      echo "$TITLE_SYSTEM_INFORMATION" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
       # Warning if system restarted
       if [[ "$SEND_WARNING_SYSTEM_RESTARTED" == "YES" ]]; then
@@ -1086,9 +1093,9 @@ then
         ELEMENT="W_SYSTEM_RESTARTED="
 
         if [[ $SYSTEM_RESTARTED -eq 1 ]]; then
-          sed -i "2s/^/WARNING: System just rebooted\n/" ~/kk003_telegram_data/files/system_data.txt
+          sed -i "2s/^/WARNING: System just rebooted\n/" ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          sed -i "2s/^/WARNING: System just rebooted\n/" ~/kk003_telegram_data/files/system_data_log_file.txt
+          sed -i "2s/^/WARNING: System just rebooted\n/" ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
 
           W_SYSTEM_RESTARTED=1
@@ -1110,9 +1117,9 @@ then
         ELEMENT="W_XORG_RESTARTED="
 
         if [[ $XORG_RESTARTED -eq 1 ]]; then
-          sed -i "2s/^/WARNING: XORG just restarted\n/" ~/kk003_telegram_data/files/system_data.txt
+          sed -i "2s/^/WARNING: XORG just restarted\n/" ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          sed -i "2s/^/WARNING: XORG just restarted\n/" ~/kk003_telegram_data/files/system_data_log_file.txt
+          sed -i "2s/^/WARNING: XORG just restarted\n/" ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
           W_XORG_RESTARTED=1
 
@@ -1131,36 +1138,36 @@ then
       if [[ "$SEND_REBOOT_REQUIRED" == "YES" ]]; then
         REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "Yes!!!" || echo "No")
         if [[ ! -z "$REBOOT_REQUIRED" ]]; then
-          echo "Reboot needed : $REBOOT_REQUIRED" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "Reboot needed : $REBOOT_REQUIRED" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "Reboot needed : $REBOOT_REQUIRED" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "Reboot needed : $REBOOT_REQUIRED" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
         fi
       fi
 
       # Worker name
       if [[ "$SEND_WORKERNAME" == "YES" ]]; then
-        echo -n "Worker : " >> ~/kk003_telegram_data/files/system_data.txt
-        echo "$WORKERNAME" >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Worker : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        echo "$WORKERNAME" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Worker        : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        echo "$WORKERNAME" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Worker        : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        echo "$WORKERNAME" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Mining coin
       if [[ "$SEND_MINING_COIN" == "YES" ]]; then
 
-        if [[ "$COIN" == "SALFTER_NICEHASH_PROFIT_SWITCHING" || "$COIN" == "SALFTER_MPH_PROFIT_SWITCHING" ]]; then
-          CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
+        if [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFIT_SWITCHING  || $COIN == SALFTER_PROGRAMATIC_SWITCHING ]]; then
+          CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
         else
           CURRENT_COIN=$COIN
         fi
 
-        echo -n "Coin : " >> ~/kk003_telegram_data/files/system_data.txt
-        echo "$CURRENT_COIN" >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Coin : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        echo "$CURRENT_COIN" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Coin          : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        echo "$CURRENT_COIN" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Coin          : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        echo "$CURRENT_COIN" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Mining address
@@ -1175,60 +1182,60 @@ then
       # Other approach would be a search for "0x" but I'm not sure if that is a universal solution
       if [[ "$SEND_MINING_ADDRESS" == "YES" ]]; then
         MINING_ADDRESS=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | sed '/\home\/m1/d' | awk ' { if ( length > x ) { x = length; y = $0 } }END{ print y }' | sed 's/\..*//' | sed 's/\/.*//')
-        echo -n "Address : " >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Address : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Address       : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Address       : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
         if [[ "$MASK_MINING_ADDRESS" == "YES" ]]; then
           ADDRESS_HEAD=$(echo "$MINING_ADDRESS" | cut -c1-5) 	# Get the first 5 chars
           ADDRESS_TAIL=$(echo -n "$MINING_ADDRESS" | tail -c 5)	# Get the last 5 chars
           MASKED_ADDRESS=$ADDRESS_HEAD"*****"$ADDRESS_TAIL	# Paste the hole thing
-          echo "$MASKED_ADDRESS" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "$MASKED_ADDRESS" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "$MASKED_ADDRESS" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "$MASKED_ADDRESS" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
         else
-          echo "$MINING_ADDRESS" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "$MINING_ADDRESS" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "$MINING_ADDRESS" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "$MINING_ADDRESS" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
         fi
       fi
 
       # Miner exec name
       # There is not a unique varible in nvoc that defines path or miner so source from 1bash do not work
-      MINER_EXEC_PATH=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "/home/m1/")
-      MINER_NAME=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "/home/m1/" | grep -oE "[^/]+$")
+      MINER_EXEC_PATH=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "${NVOC}/")
+      MINER_NAME=$(ps aux | grep -v grep | grep " miner " | sed 's/ /\n/g' | grep "${NVOC}/" | grep -oE "[^/]+$")
       if [[ "$SEND_MINER_EXEC_NAME" == "YES" && "$SEND_MINER_EXEC_PATH" == "YES" ]]; then
-        echo -n "Exec : " >> ~/kk003_telegram_data/files/system_data.txt
-        echo "$MINER_EXEC_PATH" >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Exec : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        echo "$MINER_EXEC_PATH" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Exec          : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        echo "$MINER_EXEC_PATH" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Exec          : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        echo "$MINER_EXEC_PATH" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
       elif [[ "$SEND_MINER_EXEC_NAME" == "YES" ]]; then
-        echo -n "Exec : " >> ~/kk003_telegram_data/files/system_data.txt
-        echo "$MINER_NAME" >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Exec : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        echo "$MINER_NAME" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Exec          : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        echo "$MINER_NAME" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Exec          : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        echo "$MINER_NAME" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Miner up time
       if [[ "$SEND_MINER_UP_TIME" == "YES" ]]; then
         MINER_UP_TIME=$(ps -o etime= -p $(pgrep -f miner) | tail -n 1 | sed 's/ //g')
-        echo "Miner uptime : $MINER_UP_TIME" >> ~/kk003_telegram_data/files/system_data.txt
+        echo "Miner uptime : $MINER_UP_TIME" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo "Miner uptime  : $MINER_UP_TIME" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo "Miner uptime  : $MINER_UP_TIME" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Ips
       # Private ip
       if [[ "$SEND_PRIVATE_IP" == "YES" ]]; then
-        echo -n "Private Ip : " >> ~/kk003_telegram_data/files/system_data.txt
-        echo $PRIVATE_IP >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Private Ip : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        echo $PRIVATE_IP >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Private Ip    : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        echo $PRIVATE_IP >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Private Ip    : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        echo $PRIVATE_IP >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       ## Public ip
@@ -1246,9 +1253,9 @@ then
         if [[ "$LAST_PUBLIC_IP" != "" && "$LAST_PUBLIC_IP" != "$PUBLIC_IP" ]]; then			# In this case ip has changed
           sed -i "/PUBLIC_IP=/ cPUBLIC_IP=${PUBLIC_IP}" $DATA_FILE 				# Update public ip to file
 
-          sed -i "2s/^/WARNING: Public ip has changed from $LAST_PUBLIC_IP to $PUBLIC_IP\n/" ~/kk003_telegram_data/files/system_data.txt
+          sed -i "2s/^/WARNING: Public ip has changed from $LAST_PUBLIC_IP to $PUBLIC_IP\n/" ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          sed -i "2s/^/WARNING: Public ip has changed from $LAST_PUBLIC_IP to $PUBLIC_IP\n/" ~/kk003_telegram_data/files/system_data_log_file.txt
+          sed -i "2s/^/WARNING: Public ip has changed from $LAST_PUBLIC_IP to $PUBLIC_IP\n/" ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
           W_PUBLIC_IP_CHANGED=1
 
@@ -1263,29 +1270,29 @@ then
 
       else	# Probably network and/or internet connection is down
 
-        echo "WARNING: It seems that, internet connection is down." >> ~/kk003_telegram_data/files/system_data.txt
+        echo "WARNING: It seems that, internet connection is down." >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo "WARNING: It seems that, internet connection is down." >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo "WARNING: It seems that, internet connection is down." >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
       fi
 
       # Send public ip
       if [[ "$SEND_PUBLIC_IP" == "YES" ]]; then
-        echo -n "Public Ip : " >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Public Ip : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Public Ip     : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Public Ip     : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
         if [[ "$MASK_PUBLIC_IP" == "YES" ]]; then
           IP_ADDRESS_HEAD=$(echo "$PUBLIC_IP" | cut -c1-3) 		# Get the first 3 chars
           IP_ADDRESS_TAIL=$(echo -n "$PUBLIC_IP" | tail -c 3)		# Get the last 3 chars
           IP_MASKED_ADDRESS=$IP_ADDRESS_HEAD"*****"$IP_ADDRESS_TAIL	# Paste the hole thing
-          echo $IP_MASKED_ADDRESS >> ~/kk003_telegram_data/files/system_data.txt
+          echo $IP_MASKED_ADDRESS >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo $IP_MASKED_ADDRESS >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo $IP_MASKED_ADDRESS >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
         else
-          echo $PUBLIC_IP >> ~/kk003_telegram_data/files/system_data.txt
+          echo $PUBLIC_IP >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo $PUBLIC_IP >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo $PUBLIC_IP >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
         fi
       fi
 
@@ -1293,38 +1300,38 @@ then
       # Send sshd port
       if [[ "$SEND_SSHD_PORT" == "YES" ]]; then
         SSHD_PORT=$(grep "Port" /etc/ssh/sshd_config | cut -d" " -f2)
-        echo "Sshd port : $SSHD_PORT" >> ~/kk003_telegram_data/files/system_data.txt
+        echo "Sshd port : $SSHD_PORT" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo "Sshd port     : $SSHD_PORT" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo "Sshd port     : $SSHD_PORT" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Up since
       if [[ "$SEND_UP_SINCE" == "YES" ]]; then
-        echo -n "Up since : " >> ~/kk003_telegram_data/files/system_data.txt
-        uptime -s >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Up since : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        uptime -s >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Up since      : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        uptime -s >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Up since      : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        uptime -s >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Up time
       if [[ "$SEND_UP_TIME" == "YES" ]]; then
-        echo -n "Time up : " >> ~/kk003_telegram_data/files/system_data.txt
-        uptime -p | sed 's/up //' >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Time up : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        uptime -p | sed 's/up //' >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Time up       : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        uptime -p | sed 's/up //' >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Time up       : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        uptime -p | sed 's/up //' >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Ram
       if [[ "$SEND_RAM" == "YES" ]]; then
         RAM=$(grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=2; {}/1024^2" | bc )
 
-        echo -n "Ram : " >> ~/kk003_telegram_data/files/system_data.txt
-        echo "$RAM Gb"  >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Ram : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        echo "$RAM Gb"  >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Ram           : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        echo "$RAM Gb"  >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Ram           : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        echo "$RAM Gb"  >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Cpu model
@@ -1335,11 +1342,11 @@ then
       if [[ "$SEND_CPU_MODEL" == "YES" ]]; then
         CPU_SPECS="$CPU_MODEL (cores = $NUMBER_OF_CORES)"
 
-        echo -n "Cpu : " >> ~/kk003_telegram_data/files/system_data.txt
-        echo $CPU_SPECS >> ~/kk003_telegram_data/files/system_data.txt
+        echo -n "Cpu : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        echo $CPU_SPECS >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo -n "Cpu           : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        echo $CPU_SPECS >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo -n "Cpu           : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        echo $CPU_SPECS >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Load average
@@ -1347,9 +1354,9 @@ then
 
         ELEMENT="W_HIGH_CPU_LOAD_AVERAGE="
 
-        echo "Load average : " >> ~/kk003_telegram_data/files/system_data.txt
+        echo "Load average : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo "Load average  : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo "Load average  : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
         # Get cpu load average for 1, 5 and 15 minutes in a single string and remove spaces
         AVERAGES=$(uptime | sed 's/.*: //g; s/ //g')
@@ -1366,45 +1373,45 @@ then
 
         # Check if load average is to high
         if [[ $AVERAGE_1_HIGH -eq 1 ]]; then
-          echo "$AVERAGE_1 (last minute) WARNING: cpu load average too high" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "$AVERAGE_1 (last minute) WARNING: cpu load average too high" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "$AVERAGE_1 (last minute) WARNING: cpu load average too high" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "$AVERAGE_1 (last minute) WARNING: cpu load average too high" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
           W_HIGH_CPU_LOAD_AVERAGE=1
         else
-          echo "$AVERAGE_1 (last minute)" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "$AVERAGE_1 (last minute)" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "$AVERAGE_1 (last minute)" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "$AVERAGE_1 (last minute)" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
         fi
 
         if [[ $AVERAGE_5_HIGH -eq 1 ]]; then
-          echo "$AVERAGE_5 (last 5 minutes) WARNING: cpu load average too high" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "$AVERAGE_5 (last 5 minutes) WARNING: cpu load average too high" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "$AVERAGE_5 (last 5 minutes) WARNING: cpu load average too high" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "$AVERAGE_5 (last 5 minutes) WARNING: cpu load average too high" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
           W_HIGH_CPU_LOAD_AVERAGE=1
         else
-          echo "$AVERAGE_5 (last 5 minutes)" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "$AVERAGE_5 (last 5 minutes)" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "$AVERAGE_5 (last 5 minutes)" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "$AVERAGE_5 (last 5 minutes)" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
         fi
 
         if [[ $AVERAGE_15_HIGH -eq 1 ]]; then
-          echo "$AVERAGE_15 (last 15 minutes) WARNING: cpu load average too high" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "$AVERAGE_15 (last 15 minutes) WARNING: cpu load average too high" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "$AVERAGE_15 (last 15 minutes) WARNING: cpu load average too high" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "$AVERAGE_15 (last 15 minutes) WARNING: cpu load average too high" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
           W_HIGH_CPU_LOAD_AVERAGE=1
         else
-          echo "$AVERAGE_15 (last 15 minutes)" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "$AVERAGE_15 (last 15 minutes)" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "$AVERAGE_15 (last 15 minutes)" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "$AVERAGE_15 (last 15 minutes)" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
         fi
 
         if [[ $AVERAGE_1_HIGH -eq 1 || $AVERAGE_5_HIGH -eq 1 || $AVERAGE_15_HIGH -eq 1 ]]; then
-          echo "WARNING: Cpu load average too high!!!" >> ~/kk003_telegram_data/files/system_data.txt
+          echo "WARNING: Cpu load average too high!!!" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          echo "WARNING: Cpu load average too high!!!" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+          echo "WARNING: Cpu load average too high!!!" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
           # Write the warning count (+1) to warning variable
           modify_warnings_file
@@ -1420,11 +1427,11 @@ then
 
       # who is logged in the system
       if [[ "$SEND_LOGGED_USERS" == "YES" ]]; then
-        echo "Logged in users : " >> ~/kk003_telegram_data/files/system_data.txt
-        who >> ~/kk003_telegram_data/files/system_data.txt
+        echo "Logged in users : " >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+        who >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        echo "Logged in users : " >> ~/kk003_telegram_data/files/system_data_log_file.txt
-        who >> ~/kk003_telegram_data/files/system_data_log_file.txt
+        echo "Logged in users : " >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+        who >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
       fi
 
       # Check if var DISPLAY has a value
@@ -1436,9 +1443,9 @@ then
 
         if [[ -z "$DISPLAY" ]]; then
 
-          sed -i "2s/^/WARNING: Not a user logged in any Display. May be X server is NOT running\n/" ~/kk003_telegram_data/files/system_data.txt
+          sed -i "2s/^/WARNING: Not a user logged in any Display. May be X server is NOT running\n/" ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-          sed -i "2s/^/WARNING: Not a user logged in any Display. May be X server is NOT running\n/" ~/kk003_telegram_data/files/system_data_log_file.txt
+          sed -i "2s/^/WARNING: Not a user logged in any Display. May be X server is NOT running\n/" ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
           W_WARNING_DISPLAY=1
 
@@ -1453,24 +1460,24 @@ then
 
         fi
       fi
-      echo "" >> ~/kk003_telegram_data/files/system_data.txt
+      echo "" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-      echo "" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+      echo "" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
 
       # Ensure system has all gpus
-      echo "System   is  reporting : $GPU_COUNT Gpus" >> ~/kk003_telegram_data/files/system_data.txt
-      echo "System should have  : $NUMBER_GPUS_FOR_SURE Gpus" >> ~/kk003_telegram_data/files/system_data.txt
+      echo "System   is  reporting : $GPU_COUNT Gpus" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
+      echo "System should have  : $NUMBER_GPUS_FOR_SURE Gpus" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-      echo "System is reporting : $GPU_COUNT Gpus" >> ~/kk003_telegram_data/files/system_data_log_file.txt
-      echo "System should have  : $NUMBER_GPUS_FOR_SURE Gpus" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+      echo "System is reporting : $GPU_COUNT Gpus" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
+      echo "System should have  : $NUMBER_GPUS_FOR_SURE Gpus" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
       ELEMENT="W_GPU_COUNT="
 
       if [[ $GPU_COUNT -ne $NUMBER_GPUS_FOR_SURE ]]; then
-        # sed -i "2s/^/WARNING: THERE MAY BE A PROBLEM; we should have $NUMBER_GPUS_FOR_SURE GPUs but nvidia-smi reports $GPU_COUNT\n/" ~/kk003_telegram_data/files/system_data.txt
+        # sed -i "2s/^/WARNING: THERE MAY BE A PROBLEM; we should have $NUMBER_GPUS_FOR_SURE GPUs but nvidia-smi reports $GPU_COUNT\n/" ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        # sed -i "2s/^/WARNING: THERE MAY BE A PROBLEM; we should have $NUMBER_GPUS_FOR_SURE GPUs but nvidia-smi reports $GPU_COUNT\n/" ~/kk003_telegram_data/files/system_data_log_file.txt
+        # sed -i "2s/^/WARNING: THERE MAY BE A PROBLEM; we should have $NUMBER_GPUS_FOR_SURE GPUs but nvidia-smi reports $GPU_COUNT\n/" ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
         W_GPU_COUNT=1
 
@@ -1483,9 +1490,9 @@ then
         sed -i "/$ELEMENT/ c$ELEMENT${TOTAL_WARNINGS}" $WARNINGS_FILE # I write the new value to file
       fi
 
-      echo "" >> ~/kk003_telegram_data/files/system_data.txt
+      echo "" >> ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-      echo "" >> ~/kk003_telegram_data/files/system_data_log_file.txt
+      echo "" >> ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
     }
 
@@ -1615,9 +1622,9 @@ then
             # Remove last char which is a space
             WRONG_TIME_FORMAT=$(echo $WRONG_TIME_FORMAT | sed 's/ $//')
             # Insert warning in file as the first line
-            sed -i "2s/^/WARNING: Bad user custom time format in var \"USER_CUSTOM_TIMES_TO_SEND_TELEGRAM\"\nBad times: \"$WRONG_TIME_FORMAT\"\n/" ~/kk003_telegram_data/files/system_data.txt
+            sed -i "2s/^/WARNING: Bad user custom time format in var \"USER_CUSTOM_TIMES_TO_SEND_TELEGRAM\"\nBad times: \"$WRONG_TIME_FORMAT\"\n/" ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-            sed -i "2s/^/WARNING: Bad user custom time format in var \"USER_CUSTOM_TIMES_TO_SEND_TELEGRAM\"\nBad times: \"$WRONG_TIME_FORMAT\"\n/" ~/kk003_telegram_data/files/system_data_log_file.txt
+            sed -i "2s/^/WARNING: Bad user custom time format in var \"USER_CUSTOM_TIMES_TO_SEND_TELEGRAM\"\nBad times: \"$WRONG_TIME_FORMAT\"\n/" ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
             W_BAD_USER_SEND_TIME_FORMAT=1
 
@@ -1660,9 +1667,9 @@ then
       if [[ "$LAST_SEND_TELEGRAM_INTERVAL" != "" && "$LAST_SEND_TELEGRAM_INTERVAL" != "$TELEGRAM_TIMEOUT_IN_MINUTES" ]]; then		# In this case interval has changed
         sed -i "/LAST_SEND_TELEGRAM_INTERVAL=/ cLAST_SEND_TELEGRAM_INTERVAL=${TELEGRAM_TIMEOUT_IN_MINUTES}" $DATA_FILE		# Update interval to send telegram to data file
 
-        sed -i "2s/^/WARNING: Interval in minutes to send telegram has changed from $LAST_SEND_TELEGRAM_INTERVAL to $TELEGRAM_TIMEOUT_IN_MINUTES\n/" ~/kk003_telegram_data/files/system_data.txt
+        sed -i "2s/^/WARNING: Interval in minutes to send telegram has changed from $LAST_SEND_TELEGRAM_INTERVAL to $TELEGRAM_TIMEOUT_IN_MINUTES\n/" ${NVOC}/kk003_telegram_data/files/system_data.txt
 
-        sed -i "2s/^/WARNING: Interval in minutes to send telegram has changed from $LAST_SEND_TELEGRAM_INTERVAL to $TELEGRAM_TIMEOUT_IN_MINUTES\n/" ~/kk003_telegram_data/files/system_data_log_file.txt
+        sed -i "2s/^/WARNING: Interval in minutes to send telegram has changed from $LAST_SEND_TELEGRAM_INTERVAL to $TELEGRAM_TIMEOUT_IN_MINUTES\n/" ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt
 
         W_INTERVAL_SEND_TELEGRAM_CHANGED=1
 
@@ -1758,8 +1765,8 @@ then
     {
       # Get some vars from 1bash if exists
       ONE_BASH=0	# 0=Assume 1bash exists and its in place, 1=1bash is missing
-      if [[ -f ~/1bash ]]; then
-        source ~/1bash
+      if [[ -f ${NVOC}/1bash ]]; then
+        source ${NVOC}/1bash
 
         # If TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is not seted I must leave the script
         TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY=0
@@ -1806,19 +1813,19 @@ then
       if [[ $ONE_BASH -eq 1 || $TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY -eq 1 || $TELEGRAM_CHATID_EMPTY -eq 1 || $TELEGRAM_APIKEY_EMPTY -eq 1 || $MAIN_TELEGRAM_TIME_COUNTER_MISSING -eq 1 ]]; then
 
         if [[ $ONE_BASH -eq 1 ]]; then # Ensure in 1bash exists
-          echo "WARNING: 1bash file is missing (/home/m1/1bash)"
+          echo "WARNING: 1bash file is missing (${NVOC}/1bash)"
         fi
 
         if [[ $TELEGRAM_TIMEOUT_IN_MINUTES_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_TIMEOUT_IN_MINUTES in 1bash has a value
-          echo "WARNING: variable TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+          echo "WARNING: variable TELEGRAM_TIMEOUT_IN_MINUTES in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
         fi
 
         if [[ $TELEGRAM_CHATID_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_CHATID in 1bash has a value
-          echo "WARNING: variable TELEGRAM_CHATID in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+          echo "WARNING: variable TELEGRAM_CHATID in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
         fi
 
         if [[ $TELEGRAM_APIKEY_EMPTY -eq 1 ]]; then # Ensure TELEGRAM_APIKEY_EMPTY in 1bash has a value
-          echo "WARNING: variable TELEGRAM_APIKEY_EMPTY in 1bash is empty. Configure the variable before send a telegram (/home/m1/1bash)"
+          echo "WARNING: variable TELEGRAM_APIKEY_EMPTY in 1bash is empty. Configure the variable before send a telegram (${NVOC}/1bash)"
         fi
 
         if [[ $MAIN_TELEGRAM_TIME_COUNTER_MISSING -eq 1 ]]; then # Ensure main time counter file is
@@ -1968,17 +1975,17 @@ then
       nvidia_smi_minimal_report
 
       # Insert the Title for nvidia-smi report
-      sed -i "1s/^/-- Nvidia-smi Information :\n/" ~/kk003_telegram_data/files/nvidia_smi_values.csv
-      sed -i "1s/^/-- Nvidia-smi Information :\n/" ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+      sed -i "1s/^/-- Nvidia-smi Information :\n/" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+      sed -i "1s/^/-- Nvidia-smi Information :\n/" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
     else
 
       # ### block for nvidia-smi report code (do not change the order of these lines or you may not get correctly the output of section "nvidia-smi information")
       #
       # Get the gpus's info I am interested in
-      nvidia-smi --query-gpu=$NVIDIA_SMI_QUERY_ARGUMENTS --format=csv -f ~/kk003_telegram_data/files/nvidia_smi_values.csv
+      nvidia-smi --query-gpu=$NVIDIA_SMI_QUERY_ARGUMENTS --format=csv -f ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
 
-      cp ~/kk003_telegram_data/files/nvidia_smi_values.csv ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+      cp ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
 
       # I organize some things my way
       if [[ "$USE_function_my_custom_mods_for_nvidia_smi" == "YES" ]]; then
@@ -1988,8 +1995,8 @@ then
       fi
 
       # Insert the Title for nvidia-smi report
-      sed -i "1s/^/-- Nvidia-smi Information :\n/" ~/kk003_telegram_data/files/nvidia_smi_values.csv
-      sed -i "1s/^/-- Nvidia-smi Information :\n/" ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
+      sed -i "1s/^/-- Nvidia-smi Information :\n/" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv
+      sed -i "1s/^/-- Nvidia-smi Information :\n/" ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv
       #
       # ### End of block for nvidia-smi report code
     fi
@@ -2010,18 +2017,18 @@ then
 
     # Put the System info+nvidia-smi+mining info together
     if [[ "$USE_CLAYMORE_STATICS" == "YES" && "$CLAYMORE_IS_RUNNING" == "YES" || "$USE_GENOIL_STATICS" == "YES" && "$GENOIL_IS_RUNNING" == "YES" || "$USE_ETHMINER_STATICS" == "YES" && "$ETHMINER_IS_RUNNING" == "YES" ]]; then
-      cat ~/kk003_telegram_data/files/system_data.txt ~/kk003_telegram_data/files/nvidia_smi_values.csv ~/kk003_telegram_data/files/miner_statics.txt > ~/kk003_telegram_data/files/report.txt
+      cat ${NVOC}/kk003_telegram_data/files/system_data.txt ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv ${NVOC}/kk003_telegram_data/files/miner_statics.txt > ${NVOC}/kk003_telegram_data/files/report.txt
 
-      cat ~/kk003_telegram_data/files/system_data_log_file.txt ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv ~/kk003_telegram_data/files/miner_statics_log_file.txt > ~/kk003_telegram_data/files/report_log_file.txt
+      cat ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv ${NVOC}/kk003_telegram_data/files/miner_statics_log_file.txt > ${NVOC}/kk003_telegram_data/files/report_log_file.txt
     else
-      cat ~/kk003_telegram_data/files/system_data.txt ~/kk003_telegram_data/files/nvidia_smi_values.csv > ~/kk003_telegram_data/files/report.txt
+      cat ${NVOC}/kk003_telegram_data/files/system_data.txt ${NVOC}/kk003_telegram_data/files/nvidia_smi_values.csv > ${NVOC}/kk003_telegram_data/files/report.txt
 
-      cat ~/kk003_telegram_data/files/system_data_log_file.txt ~/kk003_telegram_data/files/nvidia_smi_values_log_file.csv > ~/kk003_telegram_data/files/report_log_file.txt
+      cat ${NVOC}/kk003_telegram_data/files/system_data_log_file.txt ${NVOC}/kk003_telegram_data/files/nvidia_smi_values_log_file.csv > ${NVOC}/kk003_telegram_data/files/report_log_file.txt
     fi
 
     # Before send the telegram check if length >= 4096 UTF8 characters
     # If so I just send the warning, no the full data
-    LENGTH_MSG=$(cat ~/kk003_telegram_data/files/report.txt | wc -m)
+    LENGTH_MSG=$(cat ${NVOC}/kk003_telegram_data/files/report.txt | wc -m)
 
     if [[ $LENGTH_MSG -ge $TELEGRAM_CURRENT_CHARS_LIMT ]]; then
 
@@ -2032,22 +2039,22 @@ then
       TOO_MUCH_CHARS=$(($LENGTH_MSG - $TELEGRAM_CURRENT_CHARS_LIMT))
 
       # Delete all lines in report file from the system information headers (included) to bottom
-      # Note that I keep untouched the log report file (~/kk003_telegram_data/files/report_log_file.txt) as there is not charaters limit there
-      sed -i "/$TITLE_SYSTEM_INFORMATION/Q" ~/kk003_telegram_data/files/report.txt
+      # Note that I keep untouched the log report file (${NVOC}/kk003_telegram_data/files/report_log_file.txt) as there is not charaters limit there
+      sed -i "/$TITLE_SYSTEM_INFORMATION/Q" ${NVOC}/kk003_telegram_data/files/report.txt
 
       # Insert a warning saying I don't send the msg becouse telegram server will reject it
-      sed -i "2s/^/WARNING: Telegram is $LENGTH_MSG charaters long, limit is $TELEGRAM_CURRENT_CHARS_LIMT.\nThere is $TOO_MUCH_CHARS characters left. Telegram server will reject this message so you must customize your preferences to decrease the length of the message.\n/" ~/kk003_telegram_data/files/report.txt
+      sed -i "2s/^/WARNING: Telegram is $LENGTH_MSG charaters long, limit is $TELEGRAM_CURRENT_CHARS_LIMT.\nThere is $TOO_MUCH_CHARS characters left. Telegram server will reject this message so you must customize your preferences to decrease the length of the message.\n/" ${NVOC}/kk003_telegram_data/files/report.txt
 
-      sed -i "2s/^/WARNING: Telegram is $LENGTH_MSG charaters long, limit is $TELEGRAM_CURRENT_CHARS_LIMT.\nThere is $TOO_MUCH_CHARS characters left. Telegram server will reject this message so you must customize your preferences to decrease the length of the message.\n/" ~/kk003_telegram_data/files/report_log_file.txt
+      sed -i "2s/^/WARNING: Telegram is $LENGTH_MSG charaters long, limit is $TELEGRAM_CURRENT_CHARS_LIMT.\nThere is $TOO_MUCH_CHARS characters left. Telegram server will reject this message so you must customize your preferences to decrease the length of the message.\n/" ${NVOC}/kk003_telegram_data/files/report_log_file.txt
     else
 
       # Always show number of characters in log file
       echo "Number of characters in telegram Msg :" $LENGTH_MSG
     fi
 
-    CONTENT_TELEGRAM=$(cat ~/kk003_telegram_data/files/report.txt)
+    CONTENT_TELEGRAM=$(cat ${NVOC}/kk003_telegram_data/files/report.txt)
 
-    CONTENT_LOG_FILE=$(cat ~/kk003_telegram_data/files/report_log_file.txt)
+    CONTENT_LOG_FILE=$(cat ${NVOC}/kk003_telegram_data/files/report_log_file.txt)
 
     MSG_TELEGRAM="$CONTENT_TELEGRAM"
 
@@ -2060,9 +2067,9 @@ then
     # If kk003_TELEGRAM_ALERTS exits I should be on Nvoc 19 stable
     # If BaliMiner_TELEGRAM_ALERTS exists but kk003_TELEGRAM_ALERTS does not I should be on Nvoc 19+ or highest
 
-MAIN_TELEGRAM_TIME_COUNTER_1=~/kk003_TELEGRAM_ALERTS
-MAIN_TELEGRAM_TIME_COUNTER_2=~/BaliMiner_TELEGRAM_ALERTS
-MAIN_TELEGRAM_TIME_COUNTER_3=~/7telegram
+MAIN_TELEGRAM_TIME_COUNTER_1=${NVOC}/kk003_TELEGRAM_ALERTS
+MAIN_TELEGRAM_TIME_COUNTER_2=${NVOC}/BaliMiner_TELEGRAM_ALERTS
+MAIN_TELEGRAM_TIME_COUNTER_3=${NVOC}/7telegram
 
 if [[ -f "$MAIN_TELEGRAM_TIME_COUNTER_1" ]]; then					# In this case running Nvoc 19 stable
     MAIN_TELEGRAM_TIME_COUNTER=$MAIN_TELEGRAM_TIME_COUNTER_1

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source ~/1bash
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${NVOC}/1bash
 TIMEOUT=$(($upPASTE_TIMEOUT_IN_MINUTES * 60))
 echo ""
 echo "checks for a 1bash update every $TIMEOUT seconds"
@@ -13,23 +14,23 @@ do
 
 cd /tmp
 wget $pasteBASH       # Assumes the file we are getting is called 1bash
-cp '/tmp/1bash' '/home/m1/temp1bash'
+cp '/tmp/1bash' "${NVOC}/temp1bash"
 rm '/tmp/1bash'
 
 change="NO"
 
-old=$(md5sum '/home/m1/1bash' | sed 's/[^0-9]*//g')
+old=$(md5sum "${NVOC}/1bash" | sed 's/[^0-9]*//g')
 echo $old
 echo ""
 sleep 2
-new=$(md5sum '/home/m1/temp1bash' | sed 's/[^0-9]*//g')
+new=$(md5sum "${NVOC}/temp1bash" | sed 's/[^0-9]*//g')
 echo $new
 echo ""
 
 if [ $old != $new ]
 then
   change="YES"
-  cp '/home/m1/temp1bash' '/home/m1/1bash'
+  cp "${NVOC}/temp1bash" "${NVOC}/1bash"
   echo ""
   echo "1bash updated from paste: $pasteBASH"
   echo ""
@@ -42,7 +43,7 @@ then
      pkill -f 7telegram
      pkill -e screen
      pkill -f 8wtm
-     gnome-terminal -e "bash '/home/m1/3main'"
+     gnome-terminal -e "bash ${NVOC}/3main"
      echo -e "${B}Miner Restart....${N}"; echo ""
   else
      # Kill off the nv_OC processes
@@ -53,7 +54,7 @@ then
      pkill -e screen
      pkill -f 8wtm
      export DISPLAY=:0
-     gnome-terminal -e "bash '/home/m1/3main'"
+     gnome-terminal -e "bash ${NVOC}/3main"
      echo -e "${B}Miner Restart....${N}"; echo ""
   fi
 fi

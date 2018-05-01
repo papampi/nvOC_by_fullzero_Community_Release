@@ -1,17 +1,34 @@
 #!/bin/bash
 # minerinfo written by papampi for nvOC
 # Rev 0002
-# Rev 0003 :Some clean up and additions
-# Rev 0004 :Average Hash rate for zm and ethminer
+# Rev 0003: papampi, Some clean up and additions
+# Rev 0004: papampi, Average Hash rate for zm and ethminer
+# Rev 0005: LukePicci, Relocate nvOC to arbitrary install directory
+# Rev 0006: papampi, More average Hash rate and reported hash rate to WTM
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+
+export NVOC="$( cd "$( dirname "$SOURCE" )/../.." && pwd )"
+
+if [[ $1 == clearalerts ]]
+then
+  echo "" > ${NVOC}/5_watchdoglog
+  echo "" > ${NVOC}/6_autotemplog
+fi
 
 echo "Content-type: text/html"
 echo ""
 echo '<html>'
 echo '<head>'
 echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8\n\n">'
-source /home/m1/1bash
+source ${NVOC}/1bash
 
 echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
 echo '</style>'
@@ -29,9 +46,9 @@ REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-al
 MINER_PID=$(pgrep -f -o  miner)
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
-TEMP_FAN_POWER=$(tail  -50 /home/m1/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
-TEMP_ALERT_LOG=$(cat /home/m1/6_autotemplog | awk '{print $0,"<br>"}')
-WDOG_ALERT_LOG=$(cat /home/m1/5_watchdoglog | awk '{print $0,"<br>"}')
+TEMP_FAN_POWER=$(tail  -50 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
+TEMP_ALERT_LOG=$(cat ${NVOC}/6_autotemplog | awk '{print $0,"<br>"}')
+WDOG_ALERT_LOG=$(cat ${NVOC}/5_watchdoglog | awk '{print $0,"<br>"}')
 NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
 DISK=$(df -h / | awk '{ a = $2 } END { print a }')
 DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
@@ -41,7 +58,7 @@ CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
 GPU_OC=$__CORE_OVERCLOCK
 GPU_MC=$MEMORY_OVERCLOCK
 GPU_PL=$POWERLIMIT_WATTS
-MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o '/home.*')
+MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
 eval 'COIN_POOL=${COIN}_POOL'
 
 
@@ -67,7 +84,7 @@ then
   else
     TEMP_CHECK="<tt style=\"text-align:left; color:red\"> Not Running</tt>"
   fi
-  if [[ (( $(stat -c%s "/home/m1/6_autotemplog") -gt 1 )) ]]; then
+  if [[ (( $(stat -c%s "${NVOC}/6_autotemplog") -gt 1 )) ]]; then
     TEMP_WARNING="<tt style=\"text-align:left; color:red\">, WARNING</tt>"
   else
     TEMP_WARNING=", No Warning"
@@ -85,7 +102,7 @@ then
   else
     WDOG_CHECK="<tt style=\"text-align:left; color:red\"> Not Running</tt>"
   fi
-  if [[ (( $(stat -c%s "/home/m1/5_watchdoglog") -gt 1 )) ]]; then
+  if [[ (( $(stat -c%s "${NVOC}/5_watchdoglog") -gt 1 )) ]]; then
     WATCHDOG_WARNING="<tt style=\"text-align:left; color:red\">, WARNING</tt>"
   else
     WATCHDOG_WARNING=", No Warning"
@@ -107,36 +124,43 @@ if [[ "$mbvendor" == BIOSTAR* ]]; then mbvendor="BIOSTAR"; fi
 
 if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
 then
-  CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-  MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
+  CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0,"<br>"}')
   AUTO_SWITCH="Salfter MPH Auto Switch"
 
 
 elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
 then
-  CURRENT_COIN=$(head -n 1 /home/m1/current-profit)
-  MINING_HISTORY=$(tail -n 5 /home/m1/algo_log |  awk '{print $0,"<br>"}')
+  CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0,"<br>"}')
   AUTO_SWITCH="Salfter Nicehash Auto Switch"
+
+
+elif [ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" ]
+then
+  CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
+  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo-log |  awk '{print $0,"<br>"}')
+  AUTO_SWITCH=("Salfter Programatic Switch")
 
 
 elif [ $WTM_AUTO_SWITCH == "YES" ]
 then
   CURRENT_COIN=$COIN
-  MINING_HISTORY=$(cat /home/m1/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
+  MINING_HISTORY=$(cat ${NVOC}/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
   P_MINING_HISTORY="$MINING_HISTORY <br>"
-  WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+  WTM_PROFIT=$(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')
   P_WTM_PROFIT="$WTM_PROFIT <br>"
-  WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+  WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')
   P_WTM_REV=$"$WTM_REV <br>"
-  WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/WTM_24H_REV)
+  WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  ${NVOC}/WTM_24H_REV)
   P_WTM_AVERAGE_REV="$WTM_AVERAGE_REV <br>"
-  BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
+  BTC_PRICE_VALUE=$(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
   BTC_PRICE="BTC PRICE: "
   WTM_Current_Profitabilty="WTM Current Profitability:"
   WTM_Current_Revenue="WTM Current Revenue: "
   Average_Revenue="24H Average Revenue: "
   LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
-
+  WTM_HASHRATE="WTM URL Hash Rate: "
 
   if ps aux | grep -v grep | grep -q 8wtm_auto_switch
   then
@@ -157,12 +181,12 @@ elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
 then
   CURRENT_COIN=$COIN
   MINING_HISTORY=""
-  WTM_PROFIT=$(cat /home/m1/WTM_current_profit | awk '{print $0,"%"}')
+  WTM_PROFIT=$(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')
   P_WTM_PROFIT="$WTM_PROFIT <br>"
-  WTM_REV=$(cat /home/m1/WTM_current_revenue | awk '{print $0,""}')
+  WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')
   P_WTM_REV=$"$WTM_REV <br>"
   WTM_SWITCH="WTM Profit Check Running. "
-  BTC_PRICE_VALUE=$(cat /home/m1/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
+  BTC_PRICE_VALUE=$(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
   BTC_PRICE="BTC PRICE: "
   WTM_AVERAGE_REV=""
   WTM_Current_Profitabilty="WTM Current Profitability: "
@@ -195,48 +219,102 @@ fi
 ########################### Average Hash Rate ####################
 
 if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
-  hash_total=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "==========" | wc | awk '{print $1}')
-  HASH_AVERAGE=$((hash_total / hash_count))
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -v grep | wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
 
 elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
-  hash_total=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}' |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(cat /home/m1/nvoc_logs/screenlog.0 | grep "Speed" | grep -v "0.00" |awk '{print $5}'|  wc -l | awk '{print $1}')
-  HASH_AVERAGE=$((hash_total / hash_count))
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o '[0-9]*.[0-9]* Mh/s' | awk '{print$1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v grep | wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep -q "claymore" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $5}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep "neoscrypt"| grep -q "KTccminer" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* kH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep lyra2v2 | grep -q "TPccminer" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash * 1000 / hash_count)) 
+
+elif  ps ax | grep miner| grep -v grep | grep x16r | grep -q "suprminer" ;then
+  total_hash=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+
+elif  ps ax | grep miner| grep -v grep | grep timetravel10 |grep -q "TPccminer" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+elif  ps ax | grep miner| grep -v grep | grep -q "zec/bminer" ;then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}')
+  HASH_AVERAGE=$((total_hash / hash_count))
+fi
+
+##################################################################
+########################### WTM Hash Rate ####################
+
+if  ps ax | grep miner | grep -v grep | grep -q -E "zm_miner|ewbf|bminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Beq_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner | grep -v grep | grep -q -E "claymore|ethminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Beth_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner | grep -v grep | grep -q "neoscrypt"  ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o 'ns_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner | grep -v grep | grep -q "xmr"  ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '%5Bcn_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner | grep -v grep | grep "lyra2v2" | grep -q "TPccminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '%5Blrev2_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner| grep -v grep | grep timetravel10 |grep -q "TPccminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Btt10_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif  ps ax | grep miner| grep -v grep | grep x16r | grep -q "suprminer" ;then
+  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Bx16r_hr%5D=[0-9]*' | cut -f2- -d=)
 fi
 
 ##################################################################
 ########################### Miner Logs ###########################
 
-if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+if  ps ax | grep miner| grep -v grep | grep -q "dstm" ;then
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "zec/v3_" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "bminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 | grep -e GPU -e Total |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -e GPU -e Total |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "SPccminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "TPccminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "KTccminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "ASccminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "S/A/T" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "S/A/T" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -e "ethminer" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "ethminer" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 elif  ps ax | grep miner| grep -v grep | grep -q "claymore" ;then
-  MINER_LOG=$(tail -n 150 /home/m1/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
 
 else
-  MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) /home/m1/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
+  MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 fi
 
 ###################################################################
@@ -246,7 +324,7 @@ echo '<br></br>'
 echo '<body style="background-color:black; color:#ffff66;font-size: 16px ">'
 echo "<strong>"
 echo "<button>"
-echo '<a href="minerinfo" class="button">Miner Info</a>'
+echo '<a href="minerinfo" class="button">Refresh Miner Info</a>'
 echo "</button>"
 echo '<title>Worker: '$WORKERNAME'</title>'
 echo '</head>'
@@ -257,6 +335,8 @@ echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "</tt>"  '</h4
 echo "Boot Time: " "<tt style=\"text-align:left; color:white; \">" "$SYSTEM_BOOT_TIME <br> </tt>"
 
 echo "System Up Time: " "<tt style=\"text-align:left; color:white\">" "$SYSTEM_UP_TIME <br> </tt>"
+
+echo "NVOC root path: " "<tt style=\"text-align:left; color:white\">" "${NVOC} <br> </tt>"
 
 echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_TIME<br> </tt>"
 
@@ -272,8 +352,10 @@ echo "GPU Utilization: "  "<tt style=\"text-align:left; color:white\">" "$GPU_UT
 
 echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
 
-echo "Average Hashrate: " "<tt style=\"text-align:left; color:white\">" "$HASH_AVERAGE <br> </tt>"
-
+echo "Average Hash Rate: " "<tt style=\"text-align:left; color:white\">" "$HASH_AVERAGE <br> </tt>"
+if [ $WTM_AUTO_SWITCH == "YES" ] ; then
+echo "$WTM_HASHRATE" "<tt style=\"text-align:left; color:white\">" "$WTM_HASH <br> </tt>"
+fi
 echo "Mining Pool: " "<tt style=\"text-align:left; color:white\">" "${!COIN_POOL} <br> </tt>"
 
 echo "Miner Command: " "<tt style=\"text-align:left; color:white\">" "$MINER_CMD <br> </tt>"
@@ -322,17 +404,18 @@ echo "GPU Temp, Fan and Power Info: <br>"  "<tt style=\"text-align:left; color:w
 
 echo "GPU Temp, Fan and Power Alerts: <br>"  "<tt style=\"text-align:left; color:red\">" "$TEMP_ALERT_LOG <br> $LOST_GPU <br> </tt>"
 
-echo "Watch Dog Alerts: <br>"  "<tt style=\"text-align:left; color:red\">" "$WDOG_ALERT_LOG <br> </tt>"
-
-echo '<br></br>'
+echo "Watch Dog Alerts: <br>"
 
 echo "<button>"
-echo '<a href="clearalerts" class="button">Clear Alerts</a>'
-
-#echo '<a onclick="clearalerts.sh" href="#">Execute the script</a>'
-#echo '<button onclick="clearalerts.sh">Clear Alerts ick me</button>'
-
+echo '<a href="minerinfo?clearalerts" class="button">Clear Alerts</a>'
 echo "</button>"
+
+if [[ $1 == clearalerts ]]
+then
+ echo "<tt style=\"text-align:left; color:green\">Alert history cleared <br/> </tt>"
+fi
+echo '<br/>' "<tt style=\"text-align:left; color:red\">" "$WDOG_ALERT_LOG <br> </tt>"
+
 
 echo "</strong>"
 echo '</body>'

@@ -1,0 +1,100 @@
+#!/usr/bin/env python2.7
+
+import pprint
+import json
+import urllib2
+import sys
+import datetime
+import time
+import subprocess
+import os
+
+# load config
+
+cfg=json.loads(open(sys.argv[1]).read())
+
+outputDir=cfg["output_dir"]
+card_type=cfg["card_type"]
+miners=cfg["miners"]
+miner_name=os.uname()[1]
+hostname=os.uname()[1]
+
+os.environ["DISPLAY"]=":0"
+
+# grab something from a website
+
+def fetch(url):
+  r=urllib2.Request(url)
+  r.add_header("User-Agent", "Lynx/2.8.8dev.3 libwww-FM/2.14 SSL-MM/1.4.1")
+  r.add_header("Pragma", "no-cache")
+  return urllib2.build_opener().open(r).read()
+
+# main
+
+data=json.loads(fetch(cfg["config_json_url"]))
+
+current_miner=data[miner_name]["current_miner"]
+
+miner=miners[current_miner["algo"]]
+coin=miner["bin"].format(HOST=current_miner["host"], PORT=str(current_miner["port"]), NAME=current_miner["user_name"], MINER=miner_name, COIN_CURRENCY=current_miner["coin_currency"])
+
+
+try:
+  subprocess.check_output(["pgrep", "-f", "^"+coin.replace("+", "\\+").replace("t:1","t 1").replace("0:2","0 2")])
+  current=1
+  print("no change")
+except:
+  current=0
+  print("change needed")
+  
+if (current==0):
+  # log current coin
+  log=open(outputDir + "current-profit", "w")
+  log.write(current_miner["algo"] + " - " + current_miner["coin_currency"] + " @ "+ current_miner["host"] + "\n")
+  log.close() 
+  # log a change
+  algo_log=open(outputDir + "algo-log", "a")
+  algo_log.write(str(datetime.datetime.now())+": "+coin+"\n")
+  algo_log.close()
+
+  # kill existing miners
+  subprocess.call(["pkill", "-f","miner"])
+  time.sleep(3)
+  
+  if card_type=="nvidia": # update card settings
+    cards=int(subprocess.check_output("nvidia-smi --query-gpu=count --format=csv,noheader,nounits".split(" ")).split("\n")[-2])
+    for i in range(0, cards):
+      # power limit
+      if type(miner["power_limit"]) is int:
+        subprocess.call(("sudo nvidia-smi -i "+str(i)+" -pl "+str(miner["power_limit"])).split(" "))
+      else:
+        subprocess.call(("sudo nvidia-smi -i "+str(i)+" -pl "+str(miner["power_limit"][i])).split(" "))
+      # core overclock
+      if type(miner["gpu_oc"]) is int:
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[2]="+str(miner["gpu_oc"])).split(" "))
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[3]="+str(miner["gpu_oc"])).split(" "))
+      else:
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[2]="+str(miner["gpu_oc"][i])).split(" "))
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[3]="+str(miner["gpu_oc"][i])).split(" "))
+      # memory overclock
+      if type(miner["mem_oc"]) is int:
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[2]="+str(miner["mem_oc"])).split(" "))
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[3]="+str(miner["mem_oc"])).split(" "))
+      else:
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[2]="+str(miner["mem_oc"][i])).split(" "))
+        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[3]="+str(miner["mem_oc"][i])).split(" "))
+      # fan speed
+      #if type(miner["fan"]) is int:
+      #  if (miner["fan"]==0):
+      #    subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0").split(" "))
+       # else:
+       #   subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1").split(" "))
+        #  subprocess.call(("nvidia-settings -a [fan:"+str(i)+"]/GPUTargetFanSpeed="+str(miner["fan"])).split(" "))
+      #else:
+      #  if (miner["fan"][i]==0):
+       #   subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0").split(" "))
+       # else:
+       #   subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1").split(" "))
+        #  subprocess.call(("nvidia-settings -a [fan:"+str(i)+"]/GPUTargetFanSpeed="+str(miner["fan"][i])).split(" "))
+  # launch new miner
+  subprocess.call(("screen -dmS miner "+coin).split(" "))

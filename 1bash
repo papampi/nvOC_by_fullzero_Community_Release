@@ -48,11 +48,18 @@
 #          NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
 # v=0018 : papampi
 #          Alternate Pool Switch
-
+# v=0019 : papampi
+#          WTM 2nd lower minimum difference to switch
+# v=0020 : LukePicci
+#          Relocate nvOC to arbitrary install directory
+# v=0021 : papampi
+#          More miner optional arguments
+# v=0021 : papampi
+#          OhGodAnETHlargementPill
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0018"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0020"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -206,6 +213,7 @@ nvOC_1bash_ver="v0019-2.1.0018"   # Do not edit this
 #TYPE - Profit Switchers
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
+######### SALFTER_PROGRAMATIC_SWITCHING       # - change what coin/algo you mine through an external JSON configuration file 
 
 ### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC, BTCP
 
@@ -416,7 +424,6 @@ GPUPowerMizerMode_Adjust="NO" # YES or NO # Use nvidia PowerMizerMode
 
 GPUPowerMizerMode=1           # Set PowerMizerMode
 
-
 ########################################################
 #                                                      #
 # PAPAMPI WTM_AUTO_SWITCH settings                     #
@@ -436,11 +443,13 @@ WTM_AUTO_SWITCH_SYNC_INTERVAL="3"            # Time to sync with WTM for best co
 
 WTM_PROFIT_CHECK_INTERVAL="30"               # interval between checking profit for web info
 
-WTM_MIN_DIFFERENCE="5"                       # Minimum difference in percent when switch to new coin, to prevent too many switches.
+WTM_MIN_DIFFERENCE="6"                        # Mininumum difference in percent when switch to new coin, to prevent too many switches.
 
-WTM_MINIMUM_MINING_TIME="900"                # Minimum mining time (sec) before checking and switching to prevent fast switch.
+WTM_MINIMUM_MINING_TIME="1800"                # Minimum mining time before checking and switching to prevent fast switches.
 
-WTM_FORCE_SWITCH="10"                        # If profit gain is more than this value make the switch and don't wait for minimum mining time.
+WTM_LOWER_MIN_DIFFERENCE="3"                  # When Minimum Mining time passed, next top coin will switch with lower difference
+
+WTM_FORCE_SWITCH="8"                          # If profit gain is more than this value make the switch and dont wait for minimum mining time.
 
 WTM_CURRENCY="USD"                           # USD, AUD, BRL, CAD, CHF, CLP, CNY, DKK, EUR, GBP, HKD, INR, ISK, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD
 
@@ -487,11 +496,12 @@ BTC_ADDRESS="replace_with_your_BTC_address"      # Your BTC addrees to use with 
 
 NICE_ADDRESS="$NICEHASH_BTC_ADDRESS"             # Your internal Nicehash BTC addrees to use with nicehash		
 
-MPH_ADDRESS="replace_with_your_MPH_username"     #You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
+MPH_ADDRESS="replace_with_your_MPH_username"     # You can use COIN_ADDRESS="$MPH_ADDRESS" if you mine on miningpoolhub
+
+OhGodAnETHlargementPill="NO"                     # YES or NO, Set to YES for mining Ethash algos with 1080 or 1080TI cards
 
 MINER_PWD="x"                                    # Set the miner password. Default: x
                                                  # For zpool use MINER_PWD="$WORKERNAME,c=btc"
-
 EQUIHASH_MINER="ZM"                              # choose "ZM" for dstm or "EWBF" or "BMINER" or "BMINER_SSL"
 
 ZM_OPTS=""                                       # DSTM ZM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
@@ -504,11 +514,15 @@ EWBF_OPTS=""                                     # EWBF ZEC Miner optional argum
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 
-CCMINER_OPTS=""                                  #ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
+CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
 ETHASH_MINER="ETHMINER"                          # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
 
 CLAYMORE_VERSION="latest"                        # choose: latest or any version you add its folder  (type latest to use 10_2)
+
+ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
+
+CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 
 WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-" or any other separators your pool uses.
 # Some pools require dot (address.worker), some require slash (address/worker) format.
@@ -517,15 +531,15 @@ WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-
 # user account based pools), please put the above variable and worker name for that coins as empty 
 
 NEOSCRYPT_MINER="TPccminer"                     #choose miner for NeoScrypt algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
-NEOSCRYPT_INTENSITY="22"                          #set intensity for all NeoScrypt miners
+NEOSCRYPT_INTENSITY="22"                        #set intensity for all NeoScrypt miners
 
 LYRA2V2_MINER="KTccminer"                       #choose miner for Lyra2v2 algos between "KTccminer" (recommended), "SPccminer", "TPccminer", "ASccminer" 
-LYRA2V2_INTENSITY="17"                            #set intensity for all Lyra2v2 miners
+LYRA2V2_INTENSITY="17"                          #set intensity for all Lyra2v2 miners
 
-SKUNK_MINER="TPccminer"                       #choose miner for Skunkhash algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+SKUNK_MINER="TPccminer"                         #choose miner for Skunkhash algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
 SKUNK_INTENSITY="22"                            #set intensity for all Skunkhash miners
 
-SKEIN_MINER="TPccminer"                       #choose miner for Skein algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
+SKEIN_MINER="TPccminer"                         #choose miner for Skein algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
 SKEIN_INTENSITY="22"                            #set intensity for all Skein miners
 
 ################################################################
@@ -906,10 +920,10 @@ SMART_INTENSITY="25"
 
 DUAL_ECOIN="MAIN COIN"                      #Main Coin, Ethereum or any Ethash Coin
 DUAL_EPOOL="MAIN COIN POOL ADDREES"         #Main Coin pool address, no need to add stratum+tcp://
-DUAL_EPORT="MAIN COIN POOL PORT"           #Main Coin Port Number
+DUAL_EPORT="MAIN COIN POOL PORT"            #Main Coin Port Number
 DUAL_EWAL="MAIN COIN WALLET ADDRESS"        #Main Coin Wallet address or pool username
 DUAL_EPSW="$MINER_PWD"                      #Main Coin worker password on pool
-DUAL_EWORKER"$WORKER"                       #Main Coin Worker Name
+DUAL_EWORKER="$WORKER"                      #Main Coin Worker Name
 
 DUAL_DCOIN="DUAL COIN"                      #select second coin to mine in dual mode. Possible options are "dcr", "sc", "lbc", "pasc", "blake2s", "keccak". Default value is "dcr".
 DUAL_DPOOL="DUAL COIN POOL ADDRESS"         #2nd coin pool address
@@ -928,10 +942,13 @@ DUAL_ADDITIONAL_ARGUMENTS=""                #add "-allcoins 1" if you mine Ether
 ########################################################
 #                                                      #
 # SALFTER_NICEHASH_PROFIT_SWITCHING &                  #
-# SALFTER_MPH_PROFIT_SWITCHING Settings                #
+# SALFTER_MPH_PROFIT_SWITCHING &                       #
+# SALFTER_PROGRAMATIC_SWITCHING Settings               #
 #                                                      #
 ########################################################
 
+# Change this url to one you use for your own
+PROGRAMATIC_SWITCH_CONFIG_JSON_URL="https://pastebin.com/dl/eLU4B8rK"
 
 CURRENCY=USD
 

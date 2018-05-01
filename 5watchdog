@@ -51,16 +51,18 @@
 #          Alternate Pool switch with 9poolswitch
 # v=0014 : Papampi 
 #          Check internet and miner before starting main loop
+# v=0015 : LukePicci
+#          Relocate nvOC to arbitrary install directory
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.0.014"   # Do not edit this
+nvOC_wdog_ver="v0019-2.0.015"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
 echo ""
 
 export DISPLAY=:0
-source /home/m1/1bash
+source ${NVOC}/1bash
 
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
@@ -90,7 +92,8 @@ sleep 1
 
 # Log file handling (check existence, size limitation or creation)
 # Log file to record restarts, status, errors, utilization issues
-LOG_FILE="/home/m1/5_watchdoglog"
+LOG_FILE="${NVOC}/5_watchdoglog"
+
 if [ -e "$LOG_FILE" ] ; then
   # Limit the logfile, just keep the last 500 lines
   echo "$(tail -500 $LOG_FILE)" > $LOG_FILE
@@ -109,6 +112,8 @@ else
   echo ""; echo ""
 fi
 
+chmod a+w "${LOG_FILE}"             # allow clearing by www
+
 # Provide feedback
 echo "$(date) - Watchdog is starting" # | tee -a ${LOG_FILE}
 echo ""
@@ -116,7 +121,7 @@ sleep 2
 
 # Don't send telegram alert after every WTM switch
 if [[ $TELEGRAM_ALERTS == "YES" && $WTM_AUTO_SWITCH == "NO" ]]; then
-  bash '/home/m1/telegram'
+  bash "${NVOC}/telegram"
 fi
 
 # Initialize vars
@@ -160,7 +165,7 @@ sleep 10
 REUP_MINER=0
 while [[ -z $(ps ax | grep SCREEN | grep miner) ]] ;do
   echo "WARNING: $(date) - Miner not running, commencing miner start command again" 
-  bash /home/m1/0miner
+  bash ${NVOC}/0miner
   ps ax | grep miner | grep -o 'SCREEN.*'
   REUP_MINER=$(($REUP_MINER + 1))
   sleep 10
@@ -220,15 +225,15 @@ while true; do
         echo "$(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash '/home/m1/telegram'
+          bash "${NVOC}/telegram"
         fi
         sleep 10
         sudo reboot
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - GPU$GPU under threshold found - GPU UTILIZATION:  " $UTIL  | tee -a ${LOG_FILE}
-        COUNT=$(($COUNT - 1))
-        NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
+        COUNT=$((COUNT - 1))
+        NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
     else
       if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
@@ -240,15 +245,15 @@ while true; do
         echo "$(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash '/home/m1/telegram'
+          bash "${NVOC}/telegram"
         fi
         sleep 10
         sudo reboot
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - GPU$GPU under threshold found - GPU UTILIZATION:  " $UTIL | tee -a ${LOG_FILE}
-        COUNT=$(($COUNT - 1))
-        NUM_GPU_BLW_THRSHLD=$(($NUM_GPU_BLW_THRSHLD + 1))
+        COUNT=$((COUNT - 1))
+        NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
     fi
 
@@ -285,7 +290,7 @@ while true; do
       if [[ -z $(ps ax | grep -i screen | grep miner) ]]
       then
         echo "$(date) - miner is not running, start miner"
-        bash /home/m1/0miner
+        bash ${NVOC}/0miner
         #wait for miner to start hashing
         sleep  $SLEEP_TIME
       else
@@ -296,12 +301,12 @@ while true; do
 
     ######################## Beginning Pool Check
 
-    source /home/m1/1bash
+    source ${NVOC}/1bash
 
     if [[ $COIN == *DUAL* ]] ;   then
       COIN=$(echo $COIN| sed 's/DUAL_//' | cut -d _ -f 1)
-      eval 'COIN_POOL=${COIN}_POOL'
-      eval 'COIN_PORT=${COIN}_PORT'
+      COIN_POOL=${COIN}_POOL
+      COIN_PORT=${COIN}_PORT
       echo "Dual Mining, Check main pool, ${!COIN_POOL}:${!COIN_PORT}"
       if ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
         echo "WARNING: $(date) - ${!COIN_POOL}:${!COIN_PORT} is Down" # | tee -a $LOG_FILE
@@ -325,7 +330,7 @@ while true; do
           sleep $MINER_TIME
         elif  [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
           echo "Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running, start miner"
-          bash /home/m1/0miner
+          bash ${NVOC}/0miner
           sleep $SLEEP_TIME
         fi
       fi
@@ -339,18 +344,18 @@ while true; do
       echo ""
 
     else
-      source /home/m1/1bash
-      eval 'COIN_POOL=${COIN}_POOL'
-      eval 'COIN_PORT=${COIN}_PORT'
-      eval 'COIN_POOL_2=${COIN}_POOL_2'
-      eval 'COIN_PORT_2=${COIN}_PORT_2'
+      source ${NVOC}/1bash
+      COIN_POOL=${COIN}_POOL
+      COIN_PORT=${COIN}_PORT
+      COIN_POOL_2=${COIN}_POOL_2
+      COIN_PORT_2=${COIN}_PORT_2
       echo "Check mining pool, ${!COIN_POOL}:${!COIN_PORT}"
       if  !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
         echo "WARNING: $(date) - ${!COIN_POOL}:${!COIN_PORT} is Down"  | tee -a $LOG_FILE
         POOL=0
         if [[ $ALT_POOL == "YES" ]] && [[ -n ${!COIN_POOL_2} ]] 
         then
-          guake -n 9poolswitch -r POOL_SWITCH -e "bash /home/m1/9poolswitch"
+          guake -n 9poolswitch -r POOL_SWITCH -e "bash ${NVOC}/9poolswitch"
           sleep 300
         else
           while !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   do
@@ -373,7 +378,7 @@ while true; do
           sleep $MINER_TIME
         elif [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
           echo "Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running, start miner"
-          bash /home/m1/0miner
+          bash ${NVOC}/0miner
           sleep $SLEEP_TIME
         fi
       fi
@@ -403,7 +408,7 @@ while true; do
       echo "WARNING: $(date) - Problem found: See diagnostics below: " | tee -a ${LOG_FILE}
       echo "Percent of GPUs bellow threshold: $PCT_GPU_BAD %"  | tee -a ${LOG_FILE}
       echo "$(nvidia-smi --query-gpu=name,pstate,temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv)" | tee -a ${LOG_FILE}
-      echo "$(tail -15 /home/m1/nvoc_logs/screenlog.0)" | tee -a ${LOG_FILE}
+      echo "$(tail -15 ${NVOC}/nvoc_logs/screenlog.0)" | tee -a ${LOG_FILE}
 
 
       # If we have had 4 miner restarts and still have low utilization
@@ -412,7 +417,7 @@ while true; do
         echo "CRITICAL: $(date) - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash '/home/m1/telegram'
+          bash "${NVOC}/telegram"
         fi
         sleep 10
         sudo reboot
@@ -422,7 +427,7 @@ while true; do
       pkill -e miner
       echo "CRITICAL: $(date) - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE}
       if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-        bash '/home/m1/telegram'
+        bash "${NVOC}/telegram"
       fi
       # Best to restart 1bash - settings might be adjusted already
       target=$(ps -ef | awk '$NF~"3main" {print $2}')
@@ -442,7 +447,7 @@ while true; do
     # No below threshold GPUs detected for this pass
   else
     # All is good, reset the counter
-    COUNT=$((6 * $GPU_COUNT))
+    COUNT=$((6 * GPU_COUNT))
     echo "$(date) - No mining issues detected."
     echo " "
     # No need for a reboot after 5 times through the main loop with no issues

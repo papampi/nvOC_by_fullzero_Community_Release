@@ -20,16 +20,23 @@ import requests
 import sys
 import urllib
 import urllib2
-configFile = "./WTM.json"
-topCoinLogFile = "./WTM_top_coin"
 
 # load config
+try:
+    configFile = sys.argv[1]
+except:
+    configFile = "WTM.json"
+
 cfg = json.loads(open(configFile).read())
+
+outputDir=cfg["output_dir"]
 requestUrl = urllib.unquote(urllib.unquote(cfg["WTM_URL"]))
 minimumDifference = float(cfg["WTM_MIN_DIFFERENCE"])
 includedCoins = cfg["WTM_COINS"].upper()
 delimiter = ";"
 currency=cfg["currency"]
+
+topCoinLogFile = outputDir + "/WTM_top_coin"
 
 # load included coins
 includedCoins = includedCoins.strip(delimiter)
@@ -57,7 +64,7 @@ except:
 
 #BTC Rates for web, output, ...
 print "BTC PRICE: " + str(exchrate) + " " + str(currency)
-exchrateLog = open("WTM_BTC_EXCHANGE_RATE", "w")
+exchrateLog = open(outputDir + "/WTM_BTC_EXCHANGE_RATE", "w")
 exchrateLog.write(str(exchrate) + " " + str(currency))
 exchrateLog.close()
 
@@ -94,7 +101,7 @@ for i in filter(lambda x: data[x]["tag"] not in includedCoins, data):
     data.pop(i)
 
 #save current revenue
-RevLog = open("WTM_current_revenue", "w")
+RevLog = open(outputDir + "/WTM_current_revenue", "w")
 for i in data:
     RevLog.write("%s:%02.2f\n" % (data[i]["tag"], float(data[i]["btc_revenue"])*exchrate) )
     print  '%s %02.2f %s' % (data[i]["tag"], float(data[i]["btc_revenue"])*exchrate, currency)
@@ -102,7 +109,7 @@ RevLog.close()
 
 # save current profit
 print "New profits"
-profitLog = open("WTM_current_profit", "w")
+profitLog = open(outputDir + "/WTM_current_profit", "w")
 for i in data:
     profitLog.write("%s:%s\n" % (data[i]["tag"], data[i]["profitability"]))
     print "%s: %s %%" % (data[i]["tag"], data[i]["profitability"])
