@@ -53,10 +53,12 @@
 #          OhGodAnETHlargementPill for 1080 and 1080TI Ethahsh mining pill
 # v=0016 : sizzlephizzle
 #          Declaration of ALGO
+# v=0017 : LuKePicci
+#          Flexible and simplified OC policies
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.0016"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.0017"                  # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -76,11 +78,49 @@ NVD=nvidia-settings
 
 screen -wipe
 
-SALFTER="NO"
-
-if [[ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" || $COIN == "SALFTER_MPH_PROFIT_SWITCHING" || $COIN == "SALFTER_PROGRAMATIC_SWITCHING" ]]
+if [[ $TEAMVIEWER == YES ]]
 then
-  SALFTER="YES"
+  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
+  if [ "$running" == "" ]
+  then
+    sudo teamviewer --daemon enable
+    sleep 2
+    guake -n teamviewer -r teamviewer -e "teamviewer"
+    running=""
+  fi
+fi
+
+if [[ $TEAMVIEWER == NO ]]
+then
+  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
+  if [ "$running" != "" ]
+  then
+    sudo teamviewer --daemon disable
+    sleep 2
+    running=""
+  fi
+fi
+
+if [[ $SSH == YES ]]
+then
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
+fi
+
+if [[ $SSH == NO ]]
+then
+  sudo cp /etc/init/ssh.conf-off /etc/init/ssh.conf
+fi
+
+if [[ $SRR == YES ]]
+then
+  sleep 2
+  HCD=${NVOC}/SRR
+  running=$(ps -ef | awk '$NF~"SRR" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r SRR -e "bash ${NVOC}/SRR"
+    running=""
+  fi
 fi
 
 # make log folder if not exist
@@ -105,11 +145,6 @@ then
     guake -n $HCD -r LOG_ROTATE -e "bash ${NVOC}/log_rotate"
     running=""
   fi
-fi
-
-if [[ $SALFTER == NO ]]
-then
-  pkill -e miner
 fi
 
 ___1050_or_1050ti="NO"
@@ -243,73 +278,7 @@ then
   ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
 fi
 
-if [ $POWERLIMIT_MODE == "GLOBAL" ]
-then
-  sudo nvidia-smi -pl "$POWERLIMIT_WATTS"
-fi
-
-if [ $POWERLIMIT_MODE == "OVERRIDE" ]
-then
-  for i in $(seq 0 $(($GPUS-1)))
-  do
-    sudo nvidia-smi -i $i -pl $((INDIVIDUAL_POWERLIMIT_$i))
-  done
-fi
-
-if [ $POWERLIMIT_MODE == "OFFSET" ]
-then
-  for i in $(seq 0 $(($GPUS-1)))
-  do
-    sudo nvidia-smi -i $i -pl $((POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
-  done
-fi
-
-if [ $TEAMVIEWER == "YES" ]
-then
-  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
-  if [ "$running" == "" ]
-  then
-    sudo teamviewer --daemon enable
-    sleep 2
-    guake -n teamviewer -r teamviewer -e "teamviewer"
-    running=""
-  fi
-fi
-
-if [[ $TEAMVIEWER == NO ]]
-then
-  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
-  if [ "$running" != "" ]
-  then
-    sudo teamviewer --daemon disable
-    sleep 2
-    running=""
-  fi
-fi
-
-if [[ $SSH == YES ]]
-then
-  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
-fi
-
-if [[ $SSH == NO ]]
-then
-  sudo cp /etc/init/ssh.conf-off /etc/init/ssh.conf
-fi
-
-if [[ $SRR == YES ]]
-then
-  sleep 2
-  HCD=${NVOC}/SRR
-  running=$(ps -ef | awk '$NF~"SRR" {print $2}')
-  if [ "$running" == "" ]
-  then
-    guake -n $HCD -r SRR -e "bash ${NVOC}/SRR"
-    running=""
-  fi
-fi
-
-## IDENTIFY ALGORITHM START
+## IDENTIFY MINING ALGORITHM START
 if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX ]]
 then
     ALGO=NEOSCRYPT
@@ -331,8 +300,52 @@ then
 elif [[ $COIN == ZCOIN ]]
 then
     ALGO=LYRA2V2
+elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFIT_SWITCHING || $COIN == SALFTER_PROGRAMATIC_SWITCHING ]]
+then
+    ALGO=SALFTER
 fi
-## IDENTIFY ALGORITHM END	
+## IDENTIFY ALGORITHM END
+
+if [[ $POWERLIMIT_MODE == GLOBAL ]]
+then
+  sudo nvidia-smi -pl "$_POWERLIMIT_WATTS"
+fi
+
+if [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
+then
+  for i in $(seq 0 $(($GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((INDIVIDUAL_POWERLIMIT_$i))
+  done
+fi
+
+if [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
+then
+  for i in $(seq 0 $(($GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((${ALGO}_POWERLIMIT_WATTS))
+  done
+fi
+
+if [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $(($GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
+  done
+fi
+
+if [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $(($GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((${ALGO}_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
+  done
+fi
+
+if [[ $ALGO != SALFTER ]]
+  pkill -e miner
+fi
 
 if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
 then
@@ -424,7 +437,7 @@ then
   fi
 fi
 
-if [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == YES && $SALFTER == YES ]]
+if [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == YES && $ALGO == SALFTER ]]
 then
   HCD="${NVOC}/5watchdog"
   echo ""
@@ -452,7 +465,7 @@ then
       running=""
     fi
   fi
-elif [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == NO && $SALFTER == YES ]]
+elif [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == NO && $ALGO == SALFTER ]]
 then
   echo "  "
   echo "  "
@@ -501,6 +514,54 @@ EOF
   fi
 fi
 
+if [[ $ALGO == SALFTER ]]
+then
+  for $a in daggerhashimoto equihash neoscrypt lyra2rev2 lbry blake_vanilla cryptonight groestl keccak myriad_groestl qubit scrypt sia skein x11
+  do
+    if [[ $OVERCLOCK_MODE == NO ]]
+    then
+      eval gpu_clks_$a=0
+      eval mem_clks_$a=0
+    elif [[ $OVERCLOCK_MODE == GLOBAL ]]
+    then
+      eval gpu_clks_$a=$_CORE_OVERCLOCK
+      eval mem_clks_$a=$_MEMORY_OVERCLOCK
+    elif [[ $OVERCLOCK_MODE == GLOBAL_with_GPU_OFFSET ]]
+    then
+      eval gpu_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval mem_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+    elif [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
+    then
+      eval gpu_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${__CORE_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
+      eval mem_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${MEMORY_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
+    elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
+    then
+      eval gpu_clks_$a=$((${a}_CORE_OVERCLOCK))
+      eval mem_clks_$a=$((${a}_MEMORY_OVERCLOCK))
+    elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+    then
+      eval gpu_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((${a}_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval mem_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((${a}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+    fi
+    
+    if [[ $POWERLIMIT_MODE == GLOBAL ]]
+    then
+      eval pwr_lim_$a=$_POWERLIMIT_WATTS
+    elif [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
+    then
+      eval pwr_lim_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
+    elif [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
+    then
+      eval pwr_lim_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
+    elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
+    then
+      eval pwr_lim_$a=$((${a}_POWERLIMIT_WATTS))
+    elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+    then
+      eval pwr_lim_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((${a}_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
+    fi
+  done
+fi
 
 if [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING && $AUTO_START_MINER == YES ]]
 then
@@ -520,57 +581,6 @@ then
 
   sleep 2
   cd "${NVOC}"
-
-  if [[ $OVERCLOCK_MODE == OVERRIDE || $OVERCLOCK_MODE == OFFSET ]]
-  then
-    if [[ $OVERCLOCK_MODE == OFFSET ]]
-    then
-      eval gpu_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((__CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
-      eval mem_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
-    else
-      eval gpu_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${__CORE_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
-      eval mem_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${MEMORY_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
-    fi
-    gpu_clks_equihash=$gpu_clks_daggerhashimoto
-    mem_clks_equihash=$mem_clks_daggerhashimoto
-    gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
-    mem_clks_neoscrypt=$mem_clks_daggerhashimoto
-    gpu_clks_lyra2rev2=$gpu_clks_daggerhashimoto
-    mem_clks_lyra2rev2=$mem_clks_daggerhashimoto
-    gpu_clks_lbry=$gpu_clks_daggerhashimoto
-    mem_clks_lbry=$mem_clks_daggerhashimoto
-  else
-    gpu_clks_daggerhashimoto="$__daggerhashimoto_CORE_OVERCLOCK"
-    mem_clks_daggerhashimoto="$daggerhashimoto_MEMORY_OVERCLOCK"
-    gpu_clks_equihash="$__equihash_CORE_OVERCLOCK"
-    mem_clks_equihash="$equihash_MEMORY_OVERCLOCK"
-    gpu_clks_neoscrypt="$__neoscrypt_CORE_OVERCLOCK"
-    mem_clks_neoscrypt="$neoscrypt_MEMORY_OVERCLOCK"
-    gpu_clks_lyra2rev2="$__lyra2rev2_CORE_OVERCLOCK"
-    mem_clks_lyra2rev2="$lyra2rev2_MEMORY_OVERCLOCK"
-    gpu_clks_lbry="$__lbry_CORE_OVERCLOCK"
-    mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
-  fi
-
-  if [[ $POWERLIMIT_MODE == OVERRIDE || $POWERLIMIT_MODE == OFFSET ]]
-  then
-    if [[ $POWERLIMIT_MODE == OFFSET ]]
-    then
-      eval pwr_lim_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
-    else
-      eval pwr_lim_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
-    fi
-    pwr_lim_equihash=$pwr_lim_daggerhashimoto
-    pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
-    pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
-    pwr_lim_lbry=$pwr_lim_daggerhashimoto
-  else
-    pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
-    pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
-    pwr_lim_neoscrypt=$neoscrypt_POWERLIMIT_WATTS
-    pwr_lim_lyra2rev2=$lyra2rev2_POWERLIMIT_WATTS
-    pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
-  fi
 
   cat <<EOF >${NVOC}/conf.json
 {
@@ -663,89 +673,7 @@ fi
 
 if [[ $COIN == SALFTER_MPH_PROFIT_SWITCHING && $AUTO_START_MINER == YES ]]
 then
-
-  cd /home/m1
-
-  if [[ $OVERCLOCK_MODE == OVERRIDE || $OVERCLOCK_MODE == OFFSET ]]
-  then
-    if [[ $OVERCLOCK_MODE == OFFSET ]]
-    then
-      eval gpu_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((__CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
-      eval mem_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
-    else
-      eval gpu_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${__CORE_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
-      eval mem_clks_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${MEMORY_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
-    fi
-    gpu_clks_equihash=$gpu_clks_daggerhashimoto
-    mem_clks_equihash=$mem_clks_daggerhashimoto
-    gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
-    mem_clks_neoscrypt=$mem_clks_daggerhashimoto
-    gpu_clks_lyra2rev2=$gpu_clks_daggerhashimoto
-    mem_clks_lyra2rev2=$mem_clks_daggerhashimoto
-    gpu_clks_lbry=$gpu_clks_daggerhashimoto
-    mem_clks_lbry=$mem_clks_daggerhashimoto
-    __Blake_Vanilla_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Blake_Vanilla_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Cryptonight_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Cryptonight_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Keccak_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Keccak_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Myriad_Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Myriad_Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Qubit_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Qubit_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Scrypt_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Scrypt_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Sia_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Sia_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Skein_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Skein_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __X11_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    X11_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-  else
-    gpu_clks_daggerhashimoto="$__daggerhashimoto_CORE_OVERCLOCK"
-    mem_clks_daggerhashimoto="$daggerhashimoto_MEMORY_OVERCLOCK"
-    gpu_clks_equihash="$__equihash_CORE_OVERCLOCK"
-    mem_clks_equihash="$equihash_MEMORY_OVERCLOCK"
-    gpu_clks_neoscrypt="$__neoscrypt_CORE_OVERCLOCK"
-    mem_clks_neoscrypt="$neoscrypt_MEMORY_OVERCLOCK"
-    gpu_clks_lyra2rev2="$__lyra2rev2_CORE_OVERCLOCK"
-    mem_clks_lyra2rev2="$lyra2rev2_MEMORY_OVERCLOCK"
-    gpu_clks_lbry="$__lbry_CORE_OVERCLOCK"
-    mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
-  fi
-
-  if [[ $POWERLIMIT_MODE == OVERRIDE || $POWERLIMIT_MODE == OFFSET ]]
-  then
-    if [[ $POWERLIMIT_MODE == OFFSET ]]
-    then
-      eval pwr_lim_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
-    else
-      eval pwr_lim_daggerhashimoto="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
-    fi
-    pwr_lim_equihash=$pwr_lim_daggerhashimoto
-    pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
-    pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
-    pwr_lim_lbry=$pwr_lim_daggerhashimoto
-    Blake_Vanilla_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Cryptonight_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Keccak_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Myriad_Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Qubit_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Scrypt_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Sia_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Skein_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-  else
-    pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
-    pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
-    pwr_lim_neoscrypt=$neoscrypt_POWERLIMIT_WATTS
-    pwr_lim_lyra2rev2=$lyra2rev2_POWERLIMIT_WATTS
-    pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
-  fi
+  cd "${NVOC}"
 
   cat <<EOF >${NVOC}/mph_conf.json
 {
@@ -761,13 +689,13 @@ then
     "Blake-Vanilla":
     {
       "bin": "${NVOC}/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Blake_Vanilla_POWERLIMIT_WATTS, "gpu_oc": $__Blake_Vanilla_CORE_OVERCLOCK, "mem_oc": $Blake_Vanilla_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_blake_vanilla, "gpu_oc": $gpu_clks_blake_vanilla, "mem_oc": $mem_clks_blake_vanilla, "fan": 0,
       "speed": 12.3, "power": 0.389
     },
     "Cryptonight":
     {
       "bin": "${NVOC}/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0,
       "speed": 0.000002, "power": 0.325
     },
     "Equihash":
@@ -785,13 +713,13 @@ then
     "Groestl":
     {
       "bin": "${NVOC}/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Groestl_CORE_OVERCLOCK, "mem_oc": $Groestl_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0,
       "speed": 0.0853, "power": 0.392
     },
     "Keccak":
     {
       "bin": "${NVOC}/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Keccak_POWERLIMIT_WATTS, "gpu_oc": $__Keccak_CORE_OVERCLOCK, "mem_oc": $Keccak_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0,
       "speed": 1.45, "power": 0.391
     },
     "Lyra2RE2":
@@ -803,7 +731,7 @@ then
     "Myriad-Groestl":
     {
       "bin": "${NVOC}/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Myriad_Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Myriad_Groestl_CORE_OVERCLOCK, "mem_oc": $Myriad_Groestl_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_nyriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0,
       "speed": 0.158, "power": 0.391
     },
     "NeoScrypt":
@@ -815,31 +743,31 @@ then
     "Qubit":
     {
       "bin": "${NVOC}/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Qubit_POWERLIMIT_WATTS, "gpu_oc": $__Qubit_CORE_OVERCLOCK, "mem_oc": $Qubit_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0,
       "speed": 0.0509, "power": 0.382
     },
     "Scrypt":
     {
       "bin": "${NVOC}/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Scrypt_POWERLIMIT_WATTS, "gpu_oc": $__Scrypt_CORE_OVERCLOCK, "mem_oc": $Scrypt_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0,
       "speed": 0.00224, "power": 0.403
     },
     "Sia":
     {
       "bin": "${NVOC}/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Sia_POWERLIMIT_WATTS, "gpu_oc": $__Sia_CORE_OVERCLOCK, "mem_oc": $Sia_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0,
       "speed": 3.700, "power": 0.403
     },
     "Skein":
     {
       "bin": "${NVOC}/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $Skein_POWERLIMIT_WATTS, "gpu_oc": $__Skein_CORE_OVERCLOCK, "mem_oc": $Skein_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0,
       "speed": 0.835, "power": 0.383
     },
     "X11":
     {
       "bin": "${NVOC}/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $X11_POWERLIMIT_WATTS, "gpu_oc": $__X11_CORE_OVERCLOCK, "mem_oc": $X11_MEMORY_OVERCLOCK, "fan": 0,
+      "power_limit": $pwr_lim_x11, "gpu_oc": $gpu_clks_x11, "mem_oc": $mem_clks_x11, "fan": 0,
       "speed": 0.0327, "power": 0.403
     }
   }
@@ -899,78 +827,7 @@ fi
 if [[ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" && $AUTO_START_MINER == "YES" ]]
 then
   cd "${NVOC}"
-  if [[ "$INDIVIDUAL_CLOCKS" == YES ]]
-  then
-    gpu_clks_daggerhashimoto="[$__CORE_OVERCLOCK_0,$__CORE_OVERCLOCK_1,$__CORE_OVERCLOCK_2,$__CORE_OVERCLOCK_3,$__CORE_OVERCLOCK_4,$__CORE_OVERCLOCK_5,$__CORE_OVERCLOCK_6,$__CORE_OVERCLOCK_7,$__CORE_OVERCLOCK_8,$__CORE_OVERCLOCK_9,$__CORE_OVERCLOCK_10,$__CORE_OVERCLOCK_11,$__CORE_OVERCLOCK_12,$__CORE_OVERCLOCK_13,$__CORE_OVERCLOCK_14,$__CORE_OVERCLOCK_15,$__CORE_OVERCLOCK_16,$__CORE_OVERCLOCK_17,$__CORE_OVERCLOCK_18]"
-
-    mem_clks_daggerhashimoto="[$MEMORY_OVERCLOCK_0,$MEMORY_OVERCLOCK_1,$MEMORY_OVERCLOCK_2,$MEMORY_OVERCLOCK_3,$MEMORY_OVERCLOCK_4,$MEMORY_OVERCLOCK_5,$MEMORY_OVERCLOCK_6,$MEMORY_OVERCLOCK_7,$MEMORY_OVERCLOCK_8,$MEMORY_OVERCLOCK_9,$MEMORY_OVERCLOCK_10,$MEMORY_OVERCLOCK_11,$MEMORY_OVERCLOCK_12,$MEMORY_OVERCLOCK_13,$MEMORY_OVERCLOCK_14,$MEMORY_OVERCLOCK_15,$MEMORY_OVERCLOCK_16,$MEMORY_OVERCLOCK_17,$MEMORY_OVERCLOCK_18]"
-
-    gpu_clks_equihash=$gpu_clks_daggerhashimoto
-    mem_clks_equihash=$mem_clks_daggerhashimoto
-    gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
-    mem_clks_neoscrypt=$mem_clks_daggerhashimoto
-    gpu_clks_lyra2rev2=$gpu_clks_daggerhashimoto
-    mem_clks_lyra2rev2=$mem_clks_daggerhashimoto
-    gpu_clks_lbry=$gpu_clks_daggerhashimoto
-    mem_clks_lbry=$mem_clks_daggerhashimoto
-    __Blake_Vanilla_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Blake_Vanilla_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Cryptonight_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Cryptonight_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Keccak_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Keccak_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Myriad_Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Myriad_Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Qubit_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Qubit_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Scrypt_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Scrypt_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Sia_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Sia_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __Skein_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    Skein_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-    __X11_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
-    X11_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
-  else
-    gpu_clks_daggerhashimoto="$__daggerhashimoto_CORE_OVERCLOCK"
-    mem_clks_daggerhashimoto="$daggerhashimoto_MEMORY_OVERCLOCK"
-    gpu_clks_equihash="$__equihash_CORE_OVERCLOCK"
-    mem_clks_equihash="$equihash_MEMORY_OVERCLOCK"
-    gpu_clks_neoscrypt="$__neoscrypt_CORE_OVERCLOCK"
-    mem_clks_neoscrypt="$neoscrypt_MEMORY_OVERCLOCK"
-    gpu_clks_lyra2rev2="$__lyra2rev2_CORE_OVERCLOCK"
-    mem_clks_lyra2rev2="$lyra2rev2_MEMORY_OVERCLOCK"
-    gpu_clks_lbry="$__lbry_CORE_OVERCLOCK"
-    mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
-  fi
-
-  if [[ "$INDIVIDUAL_POWERLIMIT" == YES ]]
-  then
-    pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13,$INDIVIDUAL_POWERLIMIT_14,$INDIVIDUAL_POWERLIMIT_15,$INDIVIDUAL_POWERLIMIT_16,$INDIVIDUAL_POWERLIMIT_17,$INDIVIDUAL_POWERLIMIT_18]"
-    pwr_lim_equihash=$pwr_lim_daggerhashimoto
-    pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
-    pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
-    pwr_lim_lbry=$pwr_lim_daggerhashimoto
-    Blake_Vanilla_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Cryptonight_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Keccak_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Myriad_Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Qubit_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Scrypt_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Sia_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    Skein_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-    X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
-  else
-    pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
-    pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
-    pwr_lim_neoscrypt=$neoscrypt_POWERLIMIT_WATTS
-    pwr_lim_lyra2rev2=$lyra2rev2_POWERLIMIT_WATTS
-    pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
-  fi
-
+      
   cat <<EOF >${NVOC}/programatic_conf.json
 {
   "output_dir": "${NVOC}",
@@ -981,17 +838,17 @@ then
     "Blake-Vanilla":
     {
       "bin": "${NVOC}/miners/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $Blake_Vanilla_POWERLIMIT_WATTS, "gpu_oc": $__Blake_Vanilla_CORE_OVERCLOCK, "mem_oc": $Blake_Vanilla_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_blake_vanilla, "gpu_oc": $gpu_clks_blake_vanilla, "mem_oc": $mem_clks_blake_vanilla, "fan": 0
     },
     "Cryptonight":
     {
       "bin": "${NVOC}/miners/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
-      "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0
     },
     "Cryptonight-Heavy":
     {
       "bin": "${NVOC}/miners/xmr/xmrig-nvidia/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
-      "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0
     },
     "Equihash":
     {
@@ -1006,12 +863,12 @@ then
     "Groestl":
     {
       "bin": "${NVOC}/miners/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Groestl_CORE_OVERCLOCK, "mem_oc": $Groestl_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0
     },
     "Keccak":
     {
       "bin": "${NVOC}/miners/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $Keccak_POWERLIMIT_WATTS, "gpu_oc": $__Keccak_CORE_OVERCLOCK, "mem_oc": $Keccak_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0
     },
     "Lyra2RE2":
     {
@@ -1021,7 +878,7 @@ then
     "Myriad-Groestl":
     {
       "bin": "${NVOC}/miners/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $Myriad_Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Myriad_Groestl_CORE_OVERCLOCK, "mem_oc": $Myriad_Groestl_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0
     },
     "NeoScrypt":
     {
@@ -1031,27 +888,27 @@ then
     "Qubit":
     {
       "bin": "${NVOC}/miners/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $Qubit_POWERLIMIT_WATTS, "gpu_oc": $__Qubit_CORE_OVERCLOCK, "mem_oc": $Qubit_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0
     },
     "Scrypt":
     {
       "bin": "${NVOC}/miners/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $Scrypt_POWERLIMIT_WATTS, "gpu_oc": $__Scrypt_CORE_OVERCLOCK, "mem_oc": $Scrypt_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0
     },
     "Sia":
     {
       "bin": "${NVOC}/miners/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $Sia_POWERLIMIT_WATTS, "gpu_oc": $__Sia_CORE_OVERCLOCK, "mem_oc": $Sia_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0
     },
     "Skein":
     {
       "bin": "${NVOC}/miners/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $Skein_POWERLIMIT_WATTS, "gpu_oc": $__Skein_CORE_OVERCLOCK, "mem_oc": $Skein_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0
     },
     "X11":
     {
       "bin": "${NVOC}/miners/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $X11_POWERLIMIT_WATTS, "gpu_oc": $__X11_CORE_OVERCLOCK, "mem_oc": $X11_MEMORY_OVERCLOCK, "fan": 0
+      "power_limit": $pwr_lim_x11, "gpu_oc": $gpu_clks_x11, "mem_oc": $mem_clks_x11, "fan": 0
     }
   }
 }
@@ -1107,7 +964,7 @@ fi
 # END SALFTER_PROGRAMATIC_SWITCHING #
 #####################################
 
-if [[ $SALFTER == NO ]]
+if [[ $ALGO != SALFTER ]]
 then
   if [[ $OVERCLOCK_MODE == NO ]]
   then
@@ -1120,29 +977,46 @@ then
 
   if [[ $OVERCLOCK_MODE == GLOBAL ]]
   then
-    # WARNING *_OVERCLOCK[0] already set from 1bash, not overwriting
-    for i in $(seq 1 $(($GPUS-1)))
+    for i in $(seq 0 $(($GPUS-1)))
     do
-      __CORE_OVERCLOCK[$i]=$__CORE_OVERCLOCK
-      MEMORY_OVERCLOCK[$i]=$MEMORY_OVERCLOCK
+      __CORE_OVERCLOCK[$i]=$_CORE_OVERCLOCK
+      MEMORY_OVERCLOCK[$i]=$_MEMORY_OVERCLOCK
     done
   fi
 
-  if [[ $OVERCLOCK_MODE == OFFSET ]]
+  if [[ $OVERCLOCK_MODE == GLOBAL_with_GPU_OFFSET ]]
   then
     for i in $(seq 0 $(($GPUS-1)))
     do
-      __CORE_OVERCLOCK[$i]=$(( __CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
-      MEMORY_OVERCLOCK[$i]=$(( MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
+      __CORE_OVERCLOCK[$i]=$(( _CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
+      MEMORY_OVERCLOCK[$i]=$(( _MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
     done
   fi
 
-  if [[ $OVERCLOCK_MODE == OVERRIDE ]]
+  if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+  then
+    for i in $(seq 0 $(($GPUS-1)))
+    do
+      __CORE_OVERCLOCK[$i]=$(( ${ALGO}_CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
+      MEMORY_OVERCLOCK[$i]=$(( ${ALGO}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
+    done
+  fi
+
+  if [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
   then
     for i in $(seq 0 $(($GPUS-1)))
     do
       __CORE_OVERCLOCK[$i]=$((__CORE_OVERCLOCK_$i))
       MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
+    done
+  fi
+  
+  if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
+  then
+    for i in $(seq 0 $(($GPUS-1)))
+    do
+      __CORE_OVERCLOCK[$i]=$((${ALGO}_CORE_OVERCLOCK))
+      MEMORY_OVERCLOCK[$i]=$((${ALGO}_MEMORY_OVERCLOCK))
     done
   fi
 
@@ -1224,8 +1098,8 @@ then
       sudo reboot
     fi
     sleep 4
-    ${NVD} -a GPUGraphicsClockOffset[2]="${__CORE_OVERCLOCK}"
-    ${NVD} -a GPUMemoryTransferRateOffset[2]="${MEMORY_OVERCLOCK}"
+    ${NVD} -a GPUGraphicsClockOffset[2]="${_CORE_OVERCLOCK}"
+    ${NVD} -a GPUMemoryTransferRateOffset[2]="${_MEMORY_OVERCLOCK}"
   fi
 
   if [[ $GPUPowerMizerMode_Adjust == YES ]]

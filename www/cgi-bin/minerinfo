@@ -55,9 +55,9 @@ DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
 MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
 FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
 CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
-GPU_OC=$__CORE_OVERCLOCK
-GPU_MC=$MEMORY_OVERCLOCK
-GPU_PL=$POWERLIMIT_WATTS
+GPU_OC=$_CORE_OVERCLOCK
+GPU_MC=$_MEMORY_OVERCLOCK
+GPU_PL=$_POWERLIMIT_WATTS
 MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
 eval 'COIN_POOL=${COIN}_POOL'
 

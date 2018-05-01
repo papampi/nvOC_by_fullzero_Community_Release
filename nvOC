@@ -663,10 +663,10 @@ echo "GPUPowerMizerMode .........: $GPUPowerMizerMode"
 fi
 echo "POWERLIMIT (global) .......: $POWERLIMIT"
 if [[ $POWERLIMIT == "YES" ]]; then
-echo "POWERLIMIT_WATTS ..........: $POWERLIMIT_WATTS"
+echo "POWERLIMIT_WATTS ..........: $_POWERLIMIT_WATTS"
 fi
-echo "CORE_OVERCLOCK (global)....: $__CORE_OVERCLOCK"
-echo "MEMORY_OVERCLOCK (global) .: $MEMORY_OVERCLOCK"
+echo "CORE_OVERCLOCK (global)....: $_CORE_OVERCLOCK"
+echo "MEMORY_OVERCLOCK (global) .: $_MEMORY_OVERCLOCK"
 echo "MANUAL_FAN ................: $MANUAL_FAN"
 if [[ $MANUAL_FAN == "YES" ]]; then
 echo "MANUAL FAN_SPEED ..........: $FAN_SPEED"
