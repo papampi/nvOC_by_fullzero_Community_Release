@@ -39,7 +39,10 @@
 #          added wtm_auto_switch version   
 #
 # v=0007 : papampi
-#          Changed ~/1bash to /home/m1/1bash for known reasons ... 
+#          Changed ~/1bash to /home/m1/1bash for known reasons ...
+#
+# v=0008 : LukePicci
+#          Relocate nvOC to arbitrary install directory
 
 # DEV_VERSION=0007
 
@@ -49,6 +52,7 @@ nvOC_nvOC_ver="v0019-2.0.007"                   # Do not edit this
 
 export DISPLAY=:0
 
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
 # Text output beautifier, use bold text and colors

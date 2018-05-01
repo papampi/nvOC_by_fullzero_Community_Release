@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 TIMEOUT=$(($upPASTE_TIMEOUT_IN_MINUTES * 60))
 echo ""
