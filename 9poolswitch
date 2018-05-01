@@ -54,7 +54,7 @@ do
 done
 
 
-if [[ nc -vzw1 ${!COIN_POOL_1} ${!COIN_PORT_1} ]] && [[ $POOL == 0 ]]; then
+if nc -vzw1 ${!COIN_POOL_1} ${!COIN_PORT_1} && [[ $POOL == 0 ]]; then
   echo "Main Pool ${!COIN_POOL_1}:${!COIN_PORT_1} is reachable now" | tee -a $MINER_LOG $WDOG_LOG
   echo "Switch back to main pool" 
   sed -i 's/'"$COIN_POOL"'=$'"$COIN_POOL_2"'/'"$COIN_POOL"'=$'"$COIN_POOL_1"'/g' ${NVOC}/1bash
