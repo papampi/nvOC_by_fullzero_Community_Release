@@ -199,9 +199,11 @@ fi
 # Allowed value between 15 and 30 seconds (IMO, 20 seconds works well)
 LOOP_TIMER_SLEEP=20
 
-if [[ $LOOP_TIMER_SLEEP < 15 ]; then
+if (( LOOP_TIMER_SLEEP < 15 ))
+then
   LOOP_TIMER_SLEEP=15
-elif [[ $LOOP_TIMER_SLEEP > 30 ]]; then
+elif (( LOOP_TIMER_SLEEP > 30 ))
+then
   LOOP_TIMER_SLEEP=30
 fi
 

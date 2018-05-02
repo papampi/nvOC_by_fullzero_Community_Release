@@ -304,6 +304,7 @@ elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFI
 then
     ALGO=SALFTER
 fi
+export ALGO
 ## IDENTIFY ALGORITHM END
 
 if [[ $POWERLIMIT_MODE == GLOBAL ]]
@@ -344,6 +345,7 @@ then
 fi
 
 if [[ $ALGO != SALFTER ]]
+then
   pkill -e miner
 fi
 
@@ -485,7 +487,7 @@ then
   fi
 fi
 
-if [[ $FAN_SPEED < 40 ]]
+if (( FAN_SPEED < 40 ))
 then
   FAN_SPEED=40
 fi
@@ -516,7 +518,7 @@ fi
 
 if [[ $ALGO == SALFTER ]]
 then
-  for $a in daggerhashimoto equihash neoscrypt lyra2rev2 lbry blake_vanilla cryptonight groestl keccak myriad_groestl qubit scrypt sia skein x11
+  for a in daggerhashimoto equihash neoscrypt lyra2rev2 lbry blake_vanilla cryptonight groestl keccak myriad_groestl qubit scrypt sia skein x11
   do
     if [[ $OVERCLOCK_MODE == NO ]]
     then
@@ -543,7 +545,7 @@ then
       eval gpu_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((${a}_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
       eval mem_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((${a}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
     fi
-    
+
     if [[ $POWERLIMIT_MODE == GLOBAL ]]
     then
       eval pwr_lim_$a=$_POWERLIMIT_WATTS
