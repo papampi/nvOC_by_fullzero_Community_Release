@@ -1174,9 +1174,53 @@ NICE_X11GOST_INTENSITY="21"
 NICE_SKUNKHASH_POOL="skunk.eu.nicehash.com:"
 NICE_SKUNKHASH_PORT="3362"
 
+# Algorithm identifier
+
+# Neoscrypt
+if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC" ]
+then
+  ALGORITHM="NEOSCRYPT"
+fi
+
+# Ethash
+if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "NICE_ETHASH" -o $COIN == "PIRL" ]
+then
+  ALGORITHM="ETHASH"
+fi
+
+# Equihash
+if [ $COIN == "BTG" -o $COIN == "BTCP" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE_EQUIHASH" -o $COIN == "VOTE" ]
+then
+  ALGORITHM="EQUIHASH"
+fi
+
+# Skunk
+if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN == "ALTCOM" ]
+then
+  ALGORITHM="SKUNK"
+fi
+
+# Cryptonight
+if [ $COIN == "XMR" -o $COIN == "KRB" -o $COIN == "ETN" ]
+then
+  ALGORITHM="CRYPTONIGHT"
+fi
+
+# lyra2vRev2
+if [ $COIN == "MONA" -o $COIN == "VTC" ]
+then
+  ALGORITHM="LYRA2REV2"
+fi
+
+# ZCOIN lyra2v2
+if [ $COIN == "ZCOIN" ]
+then
+  ALGORITHM="LYRA2V2"
+fi
+
 ########################################################
 #                                                      #
-# damNmad ALGO_SPECIFIC_OC settings                    #
+# damNmad ALGO_SPECIFIC_OC settings                            #
 #                                                      #
 ########################################################
 
@@ -1184,69 +1228,64 @@ NICE_SKUNKHASH_PORT="3362"
 # OC settings you can use based on COIN or ALGO (how ever you want to categorize them)
 # Deafault values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
 
+
 if [ $ALGO_SPECIFIC_OC == "YES" ]
 then
 
-  # Neoscrypt
-  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC"  -o $COIN == "NICE-NEOSCRYPT" -o $COIN == "DSR" -o $COIN == "CRC" -o $COIN == "GBX" ]
+# Neoscrypt
+  if [ $ALGORITHM == "NEOSCRYPT" ]
   then
-    ALGORITHM="NEOSCRYPT"
     POWERLIMIT_WATTS=80
     __CORE_OVERCLOCK=150
     MEMORY_OVERCLOCK=800
   fi
 
-  # Ethash
-  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "PIRL" -o $COIN == "NICE-ETHASH" ]
+# Ethash
+  if [ $ALGORITHM == "ETHASH" ]
   then
-    ALGORITHM="ETHASH"
     POWERLIMIT_WATTS=76
     __CORE_OVERCLOCK=100
     MEMORY_OVERCLOCK=1600
   fi
 
-  # Equihash
-  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "BTCP" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE"  ]
+# Equihash
+  if [ $ALGORITHM == "EQUIHASH" ]
   then
-    ALGORITHM="EQUIHASH"
     POWERLIMIT_WATTS=76
     __CORE_OVERCLOCK=150
     MEMORY_OVERCLOCK=800
   fi
 
-  # Skunk
-  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN == "ALTCOM" -o $COIN == "NICE-SKUNKHASH" ]
+# Skunk
+  if [ $ALGORITHM == "SKUNK" ]
   then
-    ALGORITHM="SKUNK"
     POWERLIMIT_WATTS=78
     __CORE_OVERCLOCK=150
     MEMORY_OVERCLOCK=1000
   fi
 
-  # Cryptonight
-  if [ $COIN == "XMR" -o $COIN == "KRB" -o $COIN == "ETN" -o $COIN == "NICE-CRYPTONIGHT" ]
+# Cryptonight
+  if [ $ALGORITHM == "CRYPTONIGHT" ]
   then
-    ALGORITHM="CRYPTONIGHT"
     POWERLIMIT_WATTS=62
     __CORE_OVERCLOCK=155
     MEMORY_OVERCLOCK=-300
   fi
 
-  # lyra2vRev2
-  if [ $COIN == "MONA" -o $COIN == "VTC" -o $COIN == "NICE-LYRA2REV2" -o $COIN == "XVG" ]
+# lyra2vRev2
+  if [ $ALGORITHM == "LYRA2REV2" ]
   then
-    ALGORITHM="LYRA2REV2"
     POWERLIMIT_WATTS=65
     __CORE_OVERCLOCK=135
     MEMORY_OVERCLOCK=-1200
   fi
 
-  # ZCOIN lyra2v2
-  if [ $COIN == "ZCOIN" ]
+# ZCOIN lyra2v2
+  if [ $ALGORITHM == "LYRA2V2" ]
   then
-    ALGORITHM="LYRA2V2"
     POWERLIMIT_WATTS=65
     __CORE_OVERCLOCK=160
     MEMORY_OVERCLOCK=-1000
   fi
+
 fi
