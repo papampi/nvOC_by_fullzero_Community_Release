@@ -1228,10 +1228,6 @@ fi
 # OC settings you can use based on COIN or ALGO (how ever you want to categorize them)
 # Deafault values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
 
-# ALGO_SPECIFIC_OC settings
-# OC settings you can use based on COIN or ALGO (how ever you want to categorize them)
-# Deafault values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
-
 
 if [ $ALGO_SPECIFIC_OC == "YES" ]
 then
