@@ -1298,7 +1298,7 @@ EOF
       fi
     fi
 
-    if [[ OhGodAnETHlargementPill == "YES" ]] && [[ ALGORITHM == "ETHASH" ]]
+    if [[ $OhGodAnETHlargementPill == "YES" ]] && [[ $ALGORITHM == "ETHASH" ]]
     then
       echo " Launching OhGodAnETHlargementPill"
       HCD="${NVOC}/OhGodAnETHlargementPill-r2"
