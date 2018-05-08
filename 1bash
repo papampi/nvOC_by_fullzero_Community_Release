@@ -54,12 +54,13 @@
 #          Relocate nvOC to arbitrary install directory
 # v=0021 : papampi
 #          More miner optional arguments
-# v=0021 : papampi
+# v=0022 : papampi
 #          OhGodAnETHlargementPill
-
+# v=0023 : LukePicci
+#          Simplified ALGO specific settings
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0020"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0023"   # Do not edit this
 
 
 # 1bash for v0019-2.1 (1bash subversion 001)
@@ -226,10 +227,6 @@ nvOC_1bash_ver="v0019-2.1.0020"   # Do not edit this
 #                                                                             #
 ###############################################################################
 
-
-
-
-
 ########################################################
 #                                                      #
 # General settings                                     #
@@ -330,6 +327,40 @@ ALT_POOL="NO"               #YES or NO, Set to YES if you want to enable  poolsw
 #ZCL_PORT=$ZCL_PORT_1  #Dont edit this
 
 
+########################################################
+#                                                      #
+# General OC (overclock) and Power Limit settings      #
+#                                                      #
+########################################################
+
+POWERLIMIT_MODE="GLOBAL"    # GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC
+
+OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC
+
+# Modes: - NO disables overclock
+#        - GLOBAL mode means no individual gpu- or algo-specific settings are used
+#        - GPU_SPECIFIC let global setting be overridden by individual gpu-specific setting
+#        - ALGO_SPECIFIC let global setting be dynamically overridden by algo-specific setting
+#
+#        For optimal use of any mining switcher use ALGO_SPECIFIC modes !!
+#        Default values set later on in 1bash are for 1060, remember to set yours accordingly.
+
+_POWERLIMIT_WATTS=75         # Global base Power Limit in watts for each GPU
+
+_CORE_OVERCLOCK=100         # Global base Core overclock offset
+
+_MEMORY_OVERCLOCK=100       # Global base Memory overclock offset
+
+# Notes: - the above global settings are for all GPU's and algos, may be subject to
+#          overrides or variations according to selected OC and Power Limit modes
+#        - algo-specific and individual gpu-specific settings are some sections below in this file
+
+P10X_100_FULL_HEADLESS_MODE="NO"  # YES or NO # If using P106_100, P104-100 GPU's in a full headless (no monitor) rig, set this to YES
+
+GPUPowerMizerMode_Adjust="NO" # YES or NO # Use nvidia PowerMizerMode
+
+GPUPowerMizerMode=1           # Set PowerMizerMode
+
 MANUAL_FAN="NO"             # YES or NO # Manually set the fans, no auto adjustment. Set this to NO if using the auto MINER_TEMP_CONTROL
 
 FAN_SPEED=75                # Set fan speed percentage if MANUAL_FAN="YES" (Do not write the % sign)
@@ -345,7 +376,9 @@ MINER_TEMP_CONTROL="YES"    # YES or NO # Automatically adjusts the fan speed to
 
 # Automatically adjusts the fan speed to keep the desired target temp. If the actual temp is above the target temp this script will increase the fan speed. If the actual temp is 2C below the target temp this script will reduce the fan speed. If the target temperature can't be reached with fan adjustments it will decrease the Power Limit. If actual temp is above the desired target temp and fan speed is already at 100%, the script will lower the Power Limit. Once the target temp is reached, Power Limit will be restored.
 
-TARGET_TEMP=65              # Set the desired target temperature in Celsius. Recommended ranges: 55 - 75
+INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO, if YES global target temperature is overridden by individual per-GPU setting found later in this file
+
+TARGET_TEMP=65              # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
 
 ALLOWED_TEMP_DIFF=2         # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
 
@@ -383,74 +416,6 @@ TELEGRAM_CHATID="CHATID"             # Enter your Chat ID here
 
 TELEGRAM_APIKEY="Your Telegram API"  # Enter your API Key here
 
-
-########################################################
-#                                                      #
-# OC (overclock) and Power Limit settings              #
-#                                                      #
-########################################################
-
-POWERLIMIT="YES"            # YES or NO # Choose YES to set Global Power Limit for all GPU's
-
-POWERLIMIT_WATTS=75         # Global Power Limit in watts for all GPU's. If enabled, INDIVIDUAL settings will override this.
-
-__CORE_OVERCLOCK=100        # Global Core overclock for all GPU's if not using INDIVIDUAL settings
-
-MEMORY_OVERCLOCK=100        # Global Memory overclock for all GPU's if not using INDIVIDUAL settings
-
-
-# SET OC and POWERLIMIT dependant on what mining ALGO is used (see end of 1bash for damNmad ALGO OC settings)
-# Please note that this works for Global settings only, can not use INDIVIDUAL settings with this.
-# For OPT use of PAPAMPI_WTM_AUTO_SWITCH use damNmad ALGO_SPECIFIC_OC!!
-# Default values set at the end of 1bash are for 1060, remember to set yours accordingly.
-
-ALGO_SPECIFIC_OC="NO"       # YES or NO # damNmad ALGO_SPECIFIC_OC settings, See the description above
-
-P10X_100_FULL_HEADLESS_MODE="NO"  # YES or NO # If using P106_100, P104-100 GPU's in a full headless (no monitor) rig, set this to YES
-
-GPUPowerMizerMode_Adjust="NO" # YES or NO # Use nvidia PowerMizerMode
-
-GPUPowerMizerMode=1           # Set PowerMizerMode
-
-########################################################
-#                                                      #
-# PAPAMPI WTM_AUTO_SWITCH settings                     #
-#                                                      #
-########################################################
-
-WTM_AUTO_SWITCH="NO"        # ( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
-
-WTM_PROFIT_CHECK="NO"      # whattomine.com Profit check for webinfo, only use if WTM_AUTO_SWITCH=NO
-
-# note!! all selected COINS must HAVE ADDRESSES in the coin section below (no need for address if switch=no and profit=yes )
-# select which coins you want to mine or check profit (profit switch only using this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
-
-WTM_AUTO_SWITCH_COINS="ZEC;ZEN;ETH;BTG;FTC"  # Coins to check profit or make the switch with format "ZEC;ETH;ETC;XMR"
-
-WTM_AUTO_SWITCH_SYNC_INTERVAL="3"            # Time to sync with WTM for best coin, minimum 3 minutes.
-
-WTM_PROFIT_CHECK_INTERVAL="30"               # interval between checking profit for web info
-
-WTM_MIN_DIFFERENCE="6"                        # Mininumum difference in percent when switch to new coin, to prevent too many switches.
-
-WTM_MINIMUM_MINING_TIME="1800"                # Minimum mining time before checking and switching to prevent fast switches.
-
-WTM_LOWER_MIN_DIFFERENCE="3"                  # When Minimum Mining time passed, next top coin will switch with lower difference
-
-WTM_FORCE_SWITCH="8"                          # If profit gain is more than this value make the switch and dont wait for minimum mining time.
-
-WTM_CURRENCY="USD"                           # USD, AUD, BRL, CAD, CHF, CLP, CNY, DKK, EUR, GBP, HKD, INR, ISK, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD
-
-#Read below for how to change the url
-WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_280x=0&adapt_q_380=0&adapt_q_fury=0&adapt_q_470=1&adapt_q_480=3&adapt_q_570=0&adapt_q_580=0&adapt_q_750Ti=0&adapt_q_1050Ti=1&adapt_q_10606=6&adapt_10606=true&adapt_q_1070=1&adapt_q_1080=1&adapt_q_1080Ti=1&eth=true&factor%5Beth_hr%5D=135.0&factor%5Beth_p%5D=540.0&grof=true&factor%5Bgro_hr%5D=123.0&factor%5Bgro_p%5D=540.0&x11gf=true&factor%5Bx11g_hr%5D=43.2&factor%5Bx11g_p%5D=540.0&cn=true&factor%5Bcn_hr%5D=2580.0&factor%5Bcn_p%5D=420.0&eq=true&factor%5Beq_hr%5D=1620.0&factor%5Beq_p%5D=540.0&lre=true&factor%5Blrev2_hr%5D=121800.0&factor%5Blrev2_p%5D=540.0&ns=true&factor%5Bns_hr%5D=3000.0&factor%5Bns_p%5D=540.0&lbry=true&factor%5Blbry_hr%5D=1020.0&factor%5Blbry_p%5D=540.0&bk2bf=true&factor%5Bbk2b_hr%5D=5940.0&factor%5Bbk2b_p%5D=480.0&bk14=true&factor%5Bbk14_hr%5D=9300.0&factor%5Bbk14_p%5D=540.0&pas=true&factor%5Bpas_hr%5D=3480.0&factor%5Bpas_p%5D=540.0&skh=true&factor%5Bskh_hr%5D=108.0&factor%5Bskh_p%5D=540.0&factor%5Bl2z_hr%5D=420.0&factor%5Bl2z_p%5D=300.0&factor%5Bcost%5D=0.0&sort=Profit&volume=0&revenue=current&factor%5Bexchanges%5D%5B%5D=&factor%5Bexchanges%5D%5B%5D=abucoins&factor%5Bexchanges%5D%5B%5D=bitfinex&factor%5Bexchanges%5D%5B%5D=bittrex&factor%5Bexchanges%5D%5B%5D=bleutrade&factor%5Bexchanges%5D%5B%5D=c_cex&factor%5Bexchanges%5D%5B%5D=cryptopia&factor%5Bexchanges%5D%5B%5D=hitbtc&factor%5Bexchanges%5D%5B%5D=poloniex&factor%5Bexchanges%5D%5B%5D=yobit&dataset=Main&commit=Calculate"
-
-## Go to [ https://whattomine.com/coins ] select your cards, hash rate, power, algos, exchanges, ...
-# Set "Sort by" and "Difficulty for Revenue" to "Current profit" and "Current dificulty" ... "last 24, 3 days,...  " are not good for auto switch.
-# Click calculate, and wait for page to load, copy the new url and add .json to /coins at the begining of the url.
-# like this " https://whattomine.com/coins.json?utf8=✓&adapt....."
-# Above url is for 6x1060
-
-
 ########################################################################################
 # GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section                    #
 ########################################################################################
@@ -470,7 +435,6 @@ fi
 ########################################################################################
 # GLOBAL_WORKERNAME implementation End - DO NOT EDIT this section                      #
 ########################################################################################
-
 
 ########################################################
 #                                                      #
@@ -840,7 +804,7 @@ SOIL_POOL="soil.pool.sexy"
 SOIL_PORT="9009"
 SOIL_EXTENSION_ARGUMENTS=""   # add any additional Claymore miner arguments here
 
-#
+# DUAL_NICEHASH
 DUAL_WORKER="$WORKERNAME"
 DUAL_BTC_ADDRESS="$BTC_ADDRESS"
 DUAL_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
@@ -929,127 +893,50 @@ DUAL_ADDITIONAL_ARGUMENTS=""                #add "-allcoins 1" if you mine Ether
 
 ########################################################
 #                                                      #
-# SALFTER_NICEHASH_PROFIT_SWITCHING &                  #
-# SALFTER_MPH_PROFIT_SWITCHING &                       #
-# SALFTER_PROGRAMATIC_SWITCHING Settings               #
+###############    NiceHash Info       #################
 #                                                      #
 ########################################################
 
-# Change this url to one you use for your own
-PROGRAMATIC_SWITCH_CONFIG_JSON_URL="https://pastebin.com/dl/eLU4B8rK"
 
-CURRENCY=USD
+NICE_WORKER="$WORKERNAME"
 
-POWER_COST=0.20
+# NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
+NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
+NICE_ETHASH_PORT="3353"
+NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
 
-MINIMUM_PROFIT=0.0
+# Nice Equihash
+NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
+NICE_EQUIHASH_PORT="3357"
 
-MPH_USERNAME="replace_with_your_MPH_username"
+#NICE_LYRA2REV2 stratum+tcp://
+NICE_LYRA2REV2_POOL="lyra2rev2.eu.nicehash.com"
+NICE_LYRA2REV2_PORT="3347"
 
-PAYMENT_ADDRESS="$BTC_ADDRESS"
+#NICE_NEOSCRYPT  stratum+tcp://
+NICE_NEOSCRYPT_POOL="neoscrypt.eu.nicehash.com"
+NICE_NEOSCRYPT_PORT="3341"
 
-WORKER_NAME="$WORKERNAME"
+#NICE_CRYPTONIGHT stratum+tcp://
+NICE_CRYPTONIGHT_POOL="cryptonight.eu.nicehash.com:3355"
+NICE_CRYPTONIGHT_PORT="3355"
+NICE_CRYPTONIGHT_INTENSITY="21"
 
-PROFIT_CHECK_TIMEOUT=600
+#NICE_X11GOST stratum+tcp://
+NICE_X11GOST_POOL="x11gost.eu.nicehash.com"
+NICE_X11GOST_PORT="3359"
+NICE_X11GOST_INTENSITY="21"
 
-# ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed
-
-daggerhashimoto_POWERLIMIT_WATTS=120
-__daggerhashimoto_CORE_OVERCLOCK=100
-daggerhashimoto_MEMORY_OVERCLOCK=100
-
-equihash_POWERLIMIT_WATTS=120
-__equihash_CORE_OVERCLOCK=100
-equihash_MEMORY_OVERCLOCK=100
-
-neoscrypt_POWERLIMIT_WATTS=120
-__neoscrypt_CORE_OVERCLOCK=100
-neoscrypt_MEMORY_OVERCLOCK=100
-
-lyra2rev2_POWERLIMIT_WATTS=120
-__lyra2rev2_CORE_OVERCLOCK=100
-lyra2rev2_MEMORY_OVERCLOCK=100
-
-lbry_POWERLIMIT_WATTS=120
-__lbry_CORE_OVERCLOCK=100
-lbry_MEMORY_OVERCLOCK=100
-
-Blake_Vanilla_POWERLIMIT_WATTS=120
-__Blake_Vanilla_CORE_OVERCLOCK=100
-Blake_Vanilla_MEMORY_OVERCLOCK=100
-
-Cryptonight_POWERLIMIT_WATTS=120
-__Cryptonight_CORE_OVERCLOCK=100
-Cryptonight_MEMORY_OVERCLOCK=100
-
-Groestl_POWERLIMIT_WATTS=120
-__Groestl_CORE_OVERCLOCK=100
-Groestl_MEMORY_OVERCLOCK=100
-
-Keccak_POWERLIMIT_WATTS=120
-__Keccak_CORE_OVERCLOCK=100
-Keccak_MEMORY_OVERCLOCK=100
-
-Myriad_Groestl_POWERLIMIT_WATTS=120
-__Myriad_Groestl_CORE_OVERCLOCK=100
-Myriad_Groestl_MEMORY_OVERCLOCK=100
-
-Qubit_POWERLIMIT_WATTS=120
-__Qubit_CORE_OVERCLOCK=100
-Qubit_MEMORY_OVERCLOCK=100
-
-Scrypt_POWERLIMIT_WATTS=120
-__Scrypt_CORE_OVERCLOCK=100
-Scrypt_MEMORY_OVERCLOCK=100
-
-Sia_POWERLIMIT_WATTS=120
-__Sia_CORE_OVERCLOCK=100
-Sia_MEMORY_OVERCLOCK=100
-
-Skein_POWERLIMIT_WATTS=120
-__Skein_CORE_OVERCLOCK=100
-Skein_MEMORY_OVERCLOCK=100
-
-X11_POWERLIMIT_WATTS=120
-__X11_CORE_OVERCLOCK=100
-X11_MEMORY_OVERCLOCK=100
+#NICE_SKUNKHASH stratum+tcp://
+NICE_SKUNKHASH_POOL="skunk.eu.nicehash.com:"
+NICE_SKUNKHASH_PORT="3362"
 
 
-
-########################################################
-#                                                      #
-# INDIVIDUAL Power Limit, Temp and Clock settings      #
-#                                                      #
-########################################################
-
-# Settings below are for rigs using INDIVIDUAL powerlimit / target temps / clocks only
-# If set to YES, the INDIVIDUAL settings will override the GLOBAL settings
-
-INDIVIDUAL_POWERLIMIT="NO"    # YES or NO
-
-# Set individual powerlimits here if INDIVIDUAL_POWERLIMIT="YES"
-INDIVIDUAL_POWERLIMIT_0=100
-INDIVIDUAL_POWERLIMIT_1=100
-INDIVIDUAL_POWERLIMIT_2=100
-INDIVIDUAL_POWERLIMIT_3=100
-INDIVIDUAL_POWERLIMIT_4=100
-INDIVIDUAL_POWERLIMIT_5=100
-INDIVIDUAL_POWERLIMIT_6=100
-INDIVIDUAL_POWERLIMIT_7=100
-INDIVIDUAL_POWERLIMIT_8=100
-INDIVIDUAL_POWERLIMIT_9=100
-INDIVIDUAL_POWERLIMIT_10=100
-INDIVIDUAL_POWERLIMIT_11=100
-INDIVIDUAL_POWERLIMIT_12=100
-INDIVIDUAL_POWERLIMIT_13=100
-INDIVIDUAL_POWERLIMIT_14=100
-INDIVIDUAL_POWERLIMIT_15=100
-INDIVIDUAL_POWERLIMIT_16=100
-INDIVIDUAL_POWERLIMIT_17=100
-INDIVIDUAL_POWERLIMIT_18=100
-
-
-INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO
+#####################################################################
+#                                                                   #
+# Individual GPU_SPECIFIC Power Limit, Temp and Clock settings      #
+#                                                                   #
+#####################################################################
 
 # Set individual target temps here if INDIVIDUAL_TARGET_TEMPS="YES"
 TARGET_TEMP_0=75
@@ -1072,10 +959,32 @@ TARGET_TEMP_16=75
 TARGET_TEMP_17=75
 TARGET_TEMP_18=75
 
+# Please note that individual clocks and powerlimit settings will be applied to
+# global base (eventually algo-specific) values as overrides according
+# to the previously selected OVERCLOCK_MODE / POWERLIMIT_MODE policy.
 
-INDIVIDUAL_CLOCKS="NO"        # YES NO
+# Set individual powerlimits here if POWERLIMIT_MODE is GPU_SPECIFIC
+INDIVIDUAL_POWERLIMIT_0=100
+INDIVIDUAL_POWERLIMIT_1=100
+INDIVIDUAL_POWERLIMIT_2=100
+INDIVIDUAL_POWERLIMIT_3=100
+INDIVIDUAL_POWERLIMIT_4=100
+INDIVIDUAL_POWERLIMIT_5=100
+INDIVIDUAL_POWERLIMIT_6=100
+INDIVIDUAL_POWERLIMIT_7=100
+INDIVIDUAL_POWERLIMIT_8=100
+INDIVIDUAL_POWERLIMIT_9=100
+INDIVIDUAL_POWERLIMIT_10=100
+INDIVIDUAL_POWERLIMIT_11=100
+INDIVIDUAL_POWERLIMIT_12=100
+INDIVIDUAL_POWERLIMIT_13=100
+INDIVIDUAL_POWERLIMIT_14=100
+INDIVIDUAL_POWERLIMIT_15=100
+INDIVIDUAL_POWERLIMIT_16=100
+INDIVIDUAL_POWERLIMIT_17=100
+INDIVIDUAL_POWERLIMIT_18=100
 
-# Set individual clocks here if INDIVIDUAL_CLOCKS="YES"
+# Set individual clocks here if OVERCLOCK_MODE is GPU_SPECIFIC
 __CORE_OVERCLOCK_0=100
 MEMORY_OVERCLOCK_0=100
 
@@ -1136,117 +1045,172 @@ MEMORY_OVERCLOCK_18=100
 
 ########################################################
 #                                                      #
-###############    NiceHash Info       #################
+# ALGO_SPECIFIC Power Limit and Clock settings         #
 #                                                      #
 ########################################################
 
-
-NICE_WORKER="$WORKERNAME"
-
-# NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
-NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
-NICE_ETHASH_PORT="3353"
-NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
-
-# Nice Equihash
-NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
-NICE_EQUIHASH_PORT="3357"
-
-#NICE_LYRA2REV2 stratum+tcp://
-NICE_LYRA2REV2_POOL="lyra2rev2.eu.nicehash.com"
-NICE_LYRA2REV2_PORT="3347"
-
-#NICE_NEOSCRYPT  stratum+tcp://
-NICE_NEOSCRYPT_POOL="neoscrypt.eu.nicehash.com"
-NICE_NEOSCRYPT_PORT="3341"
-
-#NICE_CRYPTONIGHT stratum+tcp://
-NICE_CRYPTONIGHT_POOL="cryptonight.eu.nicehash.com:3355"
-NICE_CRYPTONIGHT_PORT="3355"
-NICE_CRYPTONIGHT_INTENSITY="21"
-
-#NICE_X11GOST stratum+tcp://
-NICE_X11GOST_POOL="x11gost.eu.nicehash.com"
-NICE_X11GOST_PORT="3359"
-NICE_X11GOST_INTENSITY="21"
-
-#NICE_SKUNKHASH stratum+tcp://
-NICE_SKUNKHASH_POOL="skunk.eu.nicehash.com:"
-NICE_SKUNKHASH_PORT="3362"
-
-########################################################
-#                                                      #
-# damNmad ALGO_SPECIFIC_OC settings                    #
-#                                                      #
-########################################################
-
-# ALGO_SPECIFIC_OC settings
-# OC settings you can use based on COIN or ALGO (how ever you want to categorize them)
+# OC settings used according to current mining ALGO
 # Deafault values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
+# Lowercase algos are those used by all salfter-based switchers
+# Uppercase algos are those used for single coin mining and by WTM switcher
 
-if [ $ALGO_SPECIFIC_OC == "YES" ]
-then
+# Neoscrypt
+NEOSCRYPT_POWERLIMIT_WATTS=80
+NEOSCRYPT_CORE_OVERCLOCK=150
+NEOSCRYPT_MEMORY_OVERCLOCK=800
 
-  # Neoscrypt
-  if [ $COIN == "FTC" -o $COIN == "ORB" -o $COIN == "PXC" -o $COIN == "VIVO" -o $COIN == "TZC"  -o $COIN == "NICE-NEOSCRYPT" -o $COIN == "DSR" -o $COIN == "CRC" -o $COIN == "GBX" ]
-  then
-    ALGORITHM="NEOSCRYPT"
-    POWERLIMIT_WATTS=80
-    __CORE_OVERCLOCK=150
-    MEMORY_OVERCLOCK=800
-  fi
+# Ethash
+ETHASH_POWERLIMIT_WATTS=76
+ETHASH_CORE_OVERCLOCK=100
+ETHASH_MEMORY_OVERCLOCK=1600
 
-  # Ethash
-  if [ $COIN == "ETH" -o $COIN == "ETC" -o $COIN == "EXP" -o $COIN == "UBQ" -o $COIN == "MUSIC" -o $COIN == "SOIL" -o $COIN == "MPH_ETHASH" -o $COIN == "PIRL" -o $COIN == "NICE-ETHASH" ]
-  then
-    ALGORITHM="ETHASH"
-    POWERLIMIT_WATTS=76
-    __CORE_OVERCLOCK=100
-    MEMORY_OVERCLOCK=1600
-  fi
+# Equihash
+EQUIHASH_POWERLIMIT_WATTS=76
+EQUIHASH_CORE_OVERCLOCK=150
+EQUIHASH_MEMORY_OVERCLOCK=800
 
-  # Equihash
-  if [ $COIN == "BTG" -o $COIN == "ZEC" -o $COIN == "ZEN" -o $COIN == "HUSH" -o $COIN == "ZCL" -o $COIN == "BTCP" -o $COIN == "KMD" -o $COIN == "ZPOOL_EQUIHASH" -o $COIN == "MPH_EQUIHASH" -o $COIN == "NICE-EQUIHASH" -o $COIN == "VOTE"  ]
-  then
-    ALGORITHM="EQUIHASH"
-    POWERLIMIT_WATTS=76
-    __CORE_OVERCLOCK=150
-    MEMORY_OVERCLOCK=800
-  fi
+# Skunk
+SKUNK_POWERLIMIT_WATTS=78
+SKUNK_CORE_OVERCLOCK=150
+SKUNK_MEMORY_OVERCLOCK=1000
 
-  # Skunk
-  if [ $COIN == "SIGT" -o $COIN == "ZPOOL_SKUNK" -o $COIN == "ALTCOM" -o $COIN == "NICE-SKUNKHASH" ]
-  then
-    ALGORITHM="SKUNK"
-    POWERLIMIT_WATTS=78
-    __CORE_OVERCLOCK=150
-    MEMORY_OVERCLOCK=1000
-  fi
+# Cryptonight
+CRYPTONIGHT_POWERLIMIT_WATTS=62
+CRYPTONIGHT_CORE_OVERCLOCK=155
+CRYPTONIGHT_MEMORY_OVERCLOCK=-300
 
-  # Cryptonight
-  if [ $COIN == "XMR" -o $COIN == "KRB" -o $COIN == "ETN" -o $COIN == "NICE-CRYPTONIGHT" ]
-  then
-    ALGORITHM="CRYPTONIGHT"
-    POWERLIMIT_WATTS=62
-    __CORE_OVERCLOCK=155
-    MEMORY_OVERCLOCK=-300
-  fi
+# lyra2vRev2
+LYRA2REV2_POWERLIMIT_WATTS=65
+LYRA2REV2_CORE_OVERCLOCK=135
+LYRA2REV2_MEMORY_OVERCLOCK=-1200
 
-  # lyra2vRev2
-  if [ $COIN == "MONA" -o $COIN == "VTC" -o $COIN == "NICE-LYRA2REV2" -o $COIN == "XVG" ]
-  then
-    ALGORITHM="LYRA2REV2"
-    POWERLIMIT_WATTS=65
-    __CORE_OVERCLOCK=135
-    MEMORY_OVERCLOCK=-1200
-  fi
+# lyra2v2
+LYRA2V2_POWERLIMIT_WATTS=65
+LYRA2V2_CORE_OVERCLOCK=160
+LYRA2V2_MEMORY_OVERCLOCK=-1000
 
-  # ZCOIN lyra2v2
-  if [ $COIN == "ZCOIN" ]
-  then
-    ALGORITHM="LYRA2V2"
-    POWERLIMIT_WATTS=65
-    __CORE_OVERCLOCK=160
-    MEMORY_OVERCLOCK=-1000
-  fi
-fi
+daggerhashimoto_POWERLIMIT_WATTS=120
+daggerhashimoto_CORE_OVERCLOCK=100
+daggerhashimoto_MEMORY_OVERCLOCK=100
+
+equihash_POWERLIMIT_WATTS=120
+equihash_CORE_OVERCLOCK=100
+equihash_MEMORY_OVERCLOCK=100
+
+neoscrypt_POWERLIMIT_WATTS=120
+neoscrypt_CORE_OVERCLOCK=100
+neoscrypt_MEMORY_OVERCLOCK=100
+
+lyra2rev2_POWERLIMIT_WATTS=120
+lyra2rev2_CORE_OVERCLOCK=100
+lyra2rev2_MEMORY_OVERCLOCK=100
+
+lbry_POWERLIMIT_WATTS=120
+lbry_CORE_OVERCLOCK=100
+lbry_MEMORY_OVERCLOCK=100
+
+blake_vanilla_POWERLIMIT_WATTS=120
+blake_vanilla_CORE_OVERCLOCK=100
+blake_vanilla_MEMORY_OVERCLOCK=100
+
+cryptonight_POWERLIMIT_WATTS=120
+cryptonight_CORE_OVERCLOCK=100
+cryptonight_MEMORY_OVERCLOCK=100
+
+groestl_POWERLIMIT_WATTS=120
+groestl_CORE_OVERCLOCK=100
+groestl_MEMORY_OVERCLOCK=100
+
+keccak_POWERLIMIT_WATTS=120
+keccak_CORE_OVERCLOCK=100
+keccak_MEMORY_OVERCLOCK=100
+
+myriad_groestl_POWERLIMIT_WATTS=120
+myriad_groestl_CORE_OVERCLOCK=100
+myriad_groestl_MEMORY_OVERCLOCK=100
+
+qubit_POWERLIMIT_WATTS=120
+qubit_CORE_OVERCLOCK=100
+qubit_MEMORY_OVERCLOCK=100
+
+scrypt_POWERLIMIT_WATTS=120
+scrypt_CORE_OVERCLOCK=100
+scrypt_MEMORY_OVERCLOCK=100
+
+sia_POWERLIMIT_WATTS=120
+sia_CORE_OVERCLOCK=100
+sia_MEMORY_OVERCLOCK=100
+
+skein_POWERLIMIT_WATTS=120
+skein_CORE_OVERCLOCK=100
+skein_MEMORY_OVERCLOCK=100
+
+x11_POWERLIMIT_WATTS=120
+x11_CORE_OVERCLOCK=100
+x11_MEMORY_OVERCLOCK=100
+
+########################################################
+#                                                      #
+# PAPAMPI WTM_AUTO_SWITCH settings                     #
+#                                                      #
+########################################################
+
+WTM_AUTO_SWITCH="NO"        # ( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
+
+WTM_PROFIT_CHECK="NO"      # whattomine.com Profit check for webinfo, only use if WTM_AUTO_SWITCH=NO
+
+# note!! all selected COINS must HAVE ADDRESSES in the coin section below (no need for address if switch=no and profit=yes )
+# select which coins you want to mine or check profit (profit switch only using this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
+
+WTM_AUTO_SWITCH_COINS="ZEC;ZEN;ETH;BTG;FTC"  # Coins to check profit or make the switch with format "ZEC;ETH;ETC;XMR"
+
+WTM_AUTO_SWITCH_SYNC_INTERVAL="3"            # Time to sync with WTM for best coin, minimum 3 minutes.
+
+WTM_PROFIT_CHECK_INTERVAL="30"               # interval between checking profit for web info
+
+WTM_MIN_DIFFERENCE="6"                        # Mininumum difference in percent when switch to new coin, to prevent too many switches.
+
+WTM_MINIMUM_MINING_TIME="1800"                # Minimum mining time before checking and switching to prevent fast switches.
+
+WTM_LOWER_MIN_DIFFERENCE="3"                  # When Minimum Mining time passed, next top coin will switch with lower difference
+
+WTM_FORCE_SWITCH="8"                          # If profit gain is more than this value make the switch and dont wait for minimum mining time.
+
+WTM_CURRENCY="USD"                           # USD, AUD, BRL, CAD, CHF, CLP, CNY, DKK, EUR, GBP, HKD, INR, ISK, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD
+
+#Read below for how to change the url
+WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_280x=0&adapt_q_380=0&adapt_q_fury=0&adapt_q_470=1&adapt_q_480=3&adapt_q_570=0&adapt_q_580=0&adapt_q_750Ti=0&adapt_q_1050Ti=1&adapt_q_10606=6&adapt_10606=true&adapt_q_1070=1&adapt_q_1080=1&adapt_q_1080Ti=1&eth=true&factor%5Beth_hr%5D=135.0&factor%5Beth_p%5D=540.0&grof=true&factor%5Bgro_hr%5D=123.0&factor%5Bgro_p%5D=540.0&x11gf=true&factor%5Bx11g_hr%5D=43.2&factor%5Bx11g_p%5D=540.0&cn=true&factor%5Bcn_hr%5D=2580.0&factor%5Bcn_p%5D=420.0&eq=true&factor%5Beq_hr%5D=1620.0&factor%5Beq_p%5D=540.0&lre=true&factor%5Blrev2_hr%5D=121800.0&factor%5Blrev2_p%5D=540.0&ns=true&factor%5Bns_hr%5D=3000.0&factor%5Bns_p%5D=540.0&lbry=true&factor%5Blbry_hr%5D=1020.0&factor%5Blbry_p%5D=540.0&bk2bf=true&factor%5Bbk2b_hr%5D=5940.0&factor%5Bbk2b_p%5D=480.0&bk14=true&factor%5Bbk14_hr%5D=9300.0&factor%5Bbk14_p%5D=540.0&pas=true&factor%5Bpas_hr%5D=3480.0&factor%5Bpas_p%5D=540.0&skh=true&factor%5Bskh_hr%5D=108.0&factor%5Bskh_p%5D=540.0&factor%5Bl2z_hr%5D=420.0&factor%5Bl2z_p%5D=300.0&factor%5Bcost%5D=0.0&sort=Profit&volume=0&revenue=current&factor%5Bexchanges%5D%5B%5D=&factor%5Bexchanges%5D%5B%5D=abucoins&factor%5Bexchanges%5D%5B%5D=bitfinex&factor%5Bexchanges%5D%5B%5D=bittrex&factor%5Bexchanges%5D%5B%5D=bleutrade&factor%5Bexchanges%5D%5B%5D=c_cex&factor%5Bexchanges%5D%5B%5D=cryptopia&factor%5Bexchanges%5D%5B%5D=hitbtc&factor%5Bexchanges%5D%5B%5D=poloniex&factor%5Bexchanges%5D%5B%5D=yobit&dataset=Main&commit=Calculate"
+
+## Go to [ https://whattomine.com/coins ] select your cards, hash rate, power, algos, exchanges, ...
+# Set "Sort by" and "Difficulty for Revenue" to "Current profit" and "Current dificulty" ... "last 24, 3 days,...  " are not good for auto switch.
+# Click calculate, and wait for page to load, copy the new url and add .json to /coins at the begining of the url.
+# like this " https://whattomine.com/coins.json?utf8=✓&adapt....."
+# Above url is for 6x1060
+
+
+########################################################
+#                                                      #
+# SALFTER_NICEHASH_PROFIT_SWITCHING &                  #
+# SALFTER_MPH_PROFIT_SWITCHING &                       #
+# SALFTER_PROGRAMATIC_SWITCHING Settings               #
+#                                                      #
+########################################################
+
+# Change this url to one you use for your own
+PROGRAMATIC_SWITCH_CONFIG_JSON_URL="https://pastebin.com/dl/eLU4B8rK"
+
+CURRENCY=USD
+
+POWER_COST=0.20
+
+MINIMUM_PROFIT=0.0
+
+MPH_USERNAME="replace_with_your_MPH_username"
+
+PAYMENT_ADDRESS="$BTC_ADDRESS"
+
+WORKER_NAME="$WORKERNAME"
+
+PROFIT_CHECK_TIMEOUT=600
+
+# ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed

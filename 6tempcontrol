@@ -130,12 +130,20 @@ count=0
 
 # Dynamic variables creation - assign variables for the available GPU's only
 # Set variables for Temp and Power Limit; Enable fan control; Display info
-while [ $count -lt $GPUS ]; do
-
-  if [ $INDIVIDUAL_POWERLIMIT == "YES" ]; then
+while (( count < GPUS ))
+do
+  if [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
+  then
     POWER_LIMIT[$count]=$(( INDIVIDUAL_POWERLIMIT_$count ))
-  elif [ $INDIVIDUAL_POWERLIMIT == "NO" ]; then
-    POWER_LIMIT[$count]=$POWERLIMIT_WATTS
+  elif [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET || $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+  then
+    POWER_LIMIT[$count]=$(( ${ALGO}_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$count ))
+  elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
+  then
+    POWER_LIMIT[$count]=$(( ${ALGO}_POWERLIMIT_WATTS ))
+  elif [[ $POWERLIMIT_MODE == GLOBAL ]]
+  then
+    POWER_LIMIT[$count]=$_POWERLIMIT_WATTS
   fi
 
   if [ $INDIVIDUAL_TARGET_TEMPS == "YES" ]; then
@@ -191,9 +199,11 @@ fi
 # Allowed value between 15 and 30 seconds (IMO, 20 seconds works well)
 LOOP_TIMER_SLEEP=20
 
-if [ "$LOOP_TIMER_SLEEP" -lt "15" ]; then
+if (( LOOP_TIMER_SLEEP < 15 ))
+then
   LOOP_TIMER_SLEEP=15
-elif [ "$LOOP_TIMER_SLEEP" -gt "30" ]; then
+elif (( LOOP_TIMER_SLEEP > 30 ))
+then
   LOOP_TIMER_SLEEP=30
 fi
 
@@ -216,7 +226,8 @@ ERR_TIMER_BRK=$ERR_TIMER
 # The Main Loop
 while true; do
   GPU=0
-  while [ $GPU -lt $GPUS ]; do
+  while (( GPU < GPUS ))
+  do
     { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
