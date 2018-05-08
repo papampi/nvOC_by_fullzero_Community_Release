@@ -1045,8 +1045,6 @@ then
   if [ $___1050_or_1050ti == "YES" ]
   then
     TI="2"
-    # Line 165 we have NORMAL=YES if cards are 1060|1070|1080
-    # I think the NORMAL=YES statement should be separated
     if [ $NORMAL == "YES" ]
     then
       TI="2 3"
