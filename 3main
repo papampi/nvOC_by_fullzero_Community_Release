@@ -966,6 +966,22 @@ fi
 # END SALFTER_PROGRAMATIC_SWITCHING #
 #####################################
 
+if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
+then
+  echo " Launching OhGodAnETHlargementPill"
+  HCD="${NVOC}/OhGodAnETHlargementPill-r2"
+  if ! ps ax  | grep -v grep | grep -q OhGodAnETHlargementPill
+  then
+    screen -dmS eth_pill sudo $HCD 
+    if [[ LOCAL_OR_REMOTE == LOCAL ]]
+    then
+      guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
+    fi      
+  fi
+else
+  pkill -f OhGodAnETHlargementPill-r2
+fi
+
 if [[ $ALGO != SALFTER ]]
 then
   if [[ $OVERCLOCK_MODE == NO ]]
@@ -1044,7 +1060,7 @@ then
     if [[ $MANUAL_FAN == YES && $MINER_TEMP_CONTROL == NO ]]
     then
       gpu=0
-      while [[ $gpu < $GPUS ]]
+      while (( gpu < GPUS ))
       do
         NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=1 -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}"
         gpu=$((gpu+1))
@@ -1054,7 +1070,7 @@ then
     if [[ $MANUAL_FAN == NO && $MINER_TEMP_CONTROL == NO ]]
     then
       gpu=0
-      while [[ $gpu < $GPUS ]]
+      while (( gpu < GPUS ))
       do
         NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=0"
         gpu=$((gpu+1))
@@ -1063,7 +1079,7 @@ then
   fi
   
   gpu=0
-  while [[ $gpu < $GPUS ]]
+  while (( gpu < GPUS ))
   do
     for j in $TI
     do
@@ -1104,7 +1120,7 @@ then
   if [[ $GPUPowerMizerMode_Adjust == YES ]]
   then
     gpu=0
-    while [[ $gpu < $GPUS ]]
+    while (( gpu < GPUS ))
     do
       NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=\"${GPUPowerMizerMode}\""
       gpu=$((gpu+1))
@@ -1152,33 +1168,17 @@ EOF
         screen -c ${NVOC}/screenrc-wtm -dmSL wtm bash ${NVOC}/8wtm_auto_switch
         #guake -n $HCD -r WTM_AUTO_SWITCH -e "bash ${NVOC}/8wtm_auto_switch"
         running=""
-        if [[ $LOCALorREMOTE == LOCAL ]];        then
+        if [[ $LOCALorREMOTE == LOCAL ]]; then
           echo ""
           echo "process in screen wtm, guake terminal Tab (f12)"
           if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" | grep -v grep) ]];then
             guake -n ${NVOC}/8wtm_auto_switch -r WTM_AUTO_SWITCH -e "tail -f  ${NVOC}/nvoc_logs/8_wtmautoswitchlog"
-          elif [[ $LOCALorREMOTE == REMOTE ]];          then
+          elif [[ $LOCALorREMOTE == REMOTE ]]; then
             echo "process in screen wtm, 'nvOC wtm-log'"
             echo "    "
           fi
         fi
       fi
-    fi
-
-    if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
-    then
-      echo " Launching OhGodAnETHlargementPill"
-      HCD="${NVOC}/OhGodAnETHlargementPill-r2"
-      if ! ps ax  | grep -v grep | grep -q OhGodAnETHlargementPill
-      then
-        screen -dmS eth_pill sudo $HCD 
-        if [[ LOCAL_OR_REMOTE == LOCAL ]]
-        then
-          guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
-        fi      
-      fi
-    else
-      pkill -f OhGodAnETHlargementPill-r2
     fi
     
     while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do

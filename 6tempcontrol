@@ -130,8 +130,8 @@ count=0
 
 # Dynamic variables creation - assign variables for the available GPU's only
 # Set variables for Temp and Power Limit; Enable fan control; Display info
-while [[ $count < $GPUS ]]; do
-
+while (( count < GPUS ))
+do
   if [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
   then
     POWER_LIMIT[$count]=$(( INDIVIDUAL_POWERLIMIT_$count ))
@@ -226,7 +226,8 @@ ERR_TIMER_BRK=$ERR_TIMER
 # The Main Loop
 while true; do
   GPU=0
-  while [[ $GPU < $GPUS ]]; do
+  while (( GPU < GPUS ))
+  do
     { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
