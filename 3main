@@ -1045,10 +1045,10 @@ then
   if [ $___1050_or_1050ti == "YES" ]
   then
     TI="2"
-    if [ $NORMAL == "YES" ]
-    then
-      TI="2 3"
-    fi
+  if  
+  if [ $NORMAL == "YES" ]
+  then
+    TI="2 3"
   fi
 
   if [[ $SLOW_USB_KEY_MODE == YES ]]
