@@ -1041,26 +1041,12 @@ then
   if [[ $P10X_100_FULL_HEADLESS_MODE == NO ]]
   then
 
-    gpu=0
-    while [[ $gpu < $GPUS ]]
-    do
-      for j in $TI
-      do
-        CORE=${__CORE_OVERCLOCK[${gpu}]}
-        MEM=${MEMORY_OVERCLOCK[${gpu}]}
-        ${NVD} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE
-        ${NVD} -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM
-      done
-      gpu=$((gpu+1))
-    done
-
     if [[ $MANUAL_FAN == YES && $MINER_TEMP_CONTROL == NO ]]
     then
       gpu=0
       while [[ $gpu < $GPUS ]]
       do
-        ${NVD} -a [gpu:$gpu]/GPUFanControlState=1
-        ${NVD} -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}
+        NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=1 -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}"
         gpu=$((gpu+1))
       done
     fi
@@ -1070,11 +1056,23 @@ then
       gpu=0
       while [[ $gpu < $GPUS ]]
       do
-        ${NVD} -a [gpu:$gpu]/GPUFanControlState=0
+        NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=0"
         gpu=$((gpu+1))
       done
     fi
   fi
+  
+  gpu=0
+  while [[ $gpu < $GPUS ]]
+  do
+    for j in $TI
+    do
+      CORE=${__CORE_OVERCLOCK[${gpu}]}
+      MEM=${MEMORY_OVERCLOCK[${gpu}]}
+      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
+    done
+    gpu=$((gpu+1))
+  done
 
   UPDATE="YES"
 
@@ -1100,8 +1098,7 @@ then
       sudo reboot
     fi
     sleep 4
-    ${NVD} -a GPUGraphicsClockOffset[2]="${_CORE_OVERCLOCK}"
-    ${NVD} -a GPUMemoryTransferRateOffset[2]="${_MEMORY_OVERCLOCK}"
+    NVD_SETTINGS="${NVD_SETTINGS} -a GPUGraphicsClockOffset[2]=\"${_CORE_OVERCLOCK}\" -a GPUMemoryTransferRateOffset[2]=\"${_MEMORY_OVERCLOCK}\""
   fi
 
   if [[ $GPUPowerMizerMode_Adjust == YES ]]
@@ -1109,10 +1106,13 @@ then
     gpu=0
     while [[ $gpu < $GPUS ]]
     do
-      sudo ${NVD} -a [gpu:$gpu]/GPUPowerMizerMode="${GPUPowerMizerMode}"
+      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=\"${GPUPowerMizerMode}\""
       gpu=$((gpu+1))
     done
   fi
+
+  # Apply GPU settings
+  sudo ${NVD} $NVD_SETTINGS
 
   if [[ $SLOW_USB_KEY_MODE == YES ]]
   then
