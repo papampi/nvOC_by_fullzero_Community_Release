@@ -139,11 +139,9 @@ fi
 if [[ $LOG_ROTATE == YES ]]
 then
   HCD="${NVOC}/log_rotate"
-  running=$(ps -ef | awk '$NF~"log_rotate" {print $2}')
-  if [ "$running" == "" ]
+  if ! ps ax | grep -q '[l]og_rotate'
   then
     guake -n $HCD -r LOG_ROTATE -e "bash ${NVOC}/log_rotate"
-    running=""
   fi
 fi
 
@@ -155,25 +153,41 @@ P10X_100="NO"
 
 nvidia-smi -L > /tmp/tempa
 
-if grep -q "1050" /tmp/tempa;
-then
+if grep -q "1050" /tmp/tempa; then
   ___1050_or_1050ti="YES"
 fi
 
-if grep -q -E 'P106|P104|P102' /tmp/tempa;
-then
+if grep -q -E 'P106|P104|P102' /tmp/tempa; then
   ___1050_or_1050ti="YES"
   P10X_100="YES"
 fi
 
-if grep -q -E '1060|1070|1080' /tmp/tempa;
-then
+if grep -q -E '1060|1070|1080' /tmp/tempa; then
   NORMAL="YES"
 fi
 
 rm /tmp/tempa
 
 XORG="FAIL"
+
+if [[ $HEADLESS_MODE == YES ]]
+then
+  if ! grep -q "XORG_UPDATED" ${NVOC}/xorg_flag;
+  then
+    sudo nvidia-xconfig -a --enable-all-gpus --allow-empty-initial-configuration --cool-bits=28
+    cd ${NVOC}
+    echo XORG_UPDATED > "${NVOC}/xorg_flag"
+    sleep 4
+    echo "XORG UPDATED"
+    echo ""
+    echo "Rebooting in 5"
+    echo ""
+    echo "disconnect monitor if connected"
+    sleep 5
+    sudo reboot
+  fi
+  XORG="OK"
+fi
 
 if grep -q "28800" /etc/X11/xorg.conf;
 then
@@ -281,28 +295,28 @@ fi
 ## IDENTIFY MINING ALGORITHM START
 if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX ]]
 then
-    ALGO=NEOSCRYPT
+  ALGO=NEOSCRYPT
 elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE-ETHASH ]]
 then
-    ALGO=ETHASH
+  ALGO=ETHASH
 elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE-EQUIHASH || $COIN == VOTE ]]
 then
-    ALGO=EQUIHASH
+  ALGO=EQUIHASH
 elif [[ $COIN == SIGT || $COIN == ZPOOL_SKUNK || $COIN == ALTCOM || $COIN == NICE-SKUNKHASH ]]
-  then
-    ALGO=SKUNK
+then
+  ALGO=SKUNK
 elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE-LYRA2REV2 || $COIN == XVG ]]
 then
-    ALGO=LYRA2REV2
+  ALGO=LYRA2REV2
 elif [[ $COIN == XMR || $COIN == KRB || $COIN == ETN || $COIN == NICE-CRYPTONIGHT ]]
 then
-    ALGO=CRYPTONIGHT
+  ALGO=CRYPTONIGHT
 elif [[ $COIN == ZCOIN ]]
 then
-    ALGO=LYRA2V2
+  ALGO=LYRA2V2
 elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFIT_SWITCHING || $COIN == SALFTER_PROGRAMATIC_SWITCHING ]]
 then
-    ALGO=SALFTER
+  ALGO=SALFTER
 fi
 export ALGO
 ## IDENTIFY ALGORITHM END
@@ -356,7 +370,7 @@ then
   echo ""
   echo ""
   echo "LAUNCHING:  plusCPU"
-  if [[ $(ps -ef | grep -v grep | grep -c cpuminer ) -eq 0 ]]
+  if ! ps ax | grep -q '[c]puminer'
   then
     if [[ $LOCALorREMOTE == LOCAL ]]
     then
@@ -386,8 +400,7 @@ fi
 if [[ $_Parallax_MODE == YES ]]
 then
   HCD="${NVOC}/upPASTE"
-  running=$(ps -ef | awk '$NF~"upPASTE" {print $2}')
-  if [ "$running" == "" ]
+  if ! ps ax | grep -q '[u]pPASTE'
   then
     echo ""
     echo ""
@@ -396,7 +409,6 @@ then
     echo "process in guake terminal Tab (f12)"
     echo ""
     guake -n $HCD -r PX_LP_upPASTE -e "bash ${NVOC}/upPASTE"
-    running=""
   fi
 fi
 
@@ -404,23 +416,17 @@ sleep 2
 
 if [[ $MINER_TEMP_CONTROL == YES ]]
 then
-  running=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
-  if [ "$running" != "" ]
-  then
-    target=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
-    kill "$target"
+  if ps ax | grep -q '[6]tempcontrol'; then
+    if [[ $WTM_AUTO_SWITCH == NO ]]; then
+      ps -ef | awk '$NF~"6tempcontrol" {print $2}' | xargs kill
+    fi
   fi
   sleep 2
   echo ""
-  HCD="${NVOC}/6tempcontrol"
-  running=$(ps -ef | awk '$NF~"6tempcontrol" {print $2}')
-  if [ "$running" == "" ]
-  then
+  if ! ps ax | grep -q '[6]tempcontrol'; then
     echo "LAUNCHING:  MINER TEMPCONTROL"
     screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      #guake -n $HCD -r MINER_TEMP_CONTROL -e "bash ${NVOC}/6tempcontrol"
+    if [[ $LOCALorREMOTE == LOCAL ]]; then
       echo ""
       echo "process in screen temp, guake terminal Tab (f12), 'nvOC temp-log'"
       #if guake tab is already showing temp control output dont open a new one
@@ -428,20 +434,16 @@ then
         guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -f  ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 "
       fi
       echo ""
-      running=""
-    elif [[ $LOCALorREMOTE == REMOTE ]]
-    then
+    elif [[ $LOCALorREMOTE == REMOTE ]]; then
       echo ""
       echo "process in screen temp; 'nvOC temp-log'"
       echo ""
-      running=""
     fi
   fi
 fi
 
 if [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == YES && $ALGO == SALFTER ]]
 then
-  HCD="${NVOC}/5watchdog"
   echo ""
   sleep 2
   running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
@@ -829,7 +831,7 @@ fi
 if [[ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" && $AUTO_START_MINER == "YES" ]]
 then
   cd "${NVOC}"
-      
+
   cat <<EOF >${NVOC}/programatic_conf.json
 {
   "output_dir": "${NVOC}",
@@ -972,11 +974,11 @@ then
   HCD="${NVOC}/OhGodAnETHlargementPill-r2"
   if ! ps ax  | grep -v grep | grep -q OhGodAnETHlargementPill
   then
-    screen -dmS eth_pill sudo $HCD 
+    screen -dmS eth_pill sudo $HCD
     if [[ LOCAL_OR_REMOTE == LOCAL ]]
     then
       guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
-    fi      
+    fi
   fi
 else
   pkill -f OhGodAnETHlargementPill-r2
@@ -1028,7 +1030,7 @@ then
       MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
     done
   fi
-  
+
   if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
   then
     for i in $(seq 0 $(($GPUS-1)))
@@ -1040,10 +1042,12 @@ then
 
   TI="3"
 
-  if [[ $___1050_or_1050ti == YES ]]
+  if [ $___1050_or_1050ti == "YES" ]
   then
     TI="2"
-    if [[ $NORMAL == YES ]]
+    # Line 165 we have NORMAL=YES if cards are 1060|1070|1080
+    # I think the NORMAL=YES statement should be separated
+    if [ $NORMAL == "YES" ]
     then
       TI="2 3"
     fi
@@ -1054,66 +1058,43 @@ then
     sleep 6
   fi
 
-  if [[ $P10X_100_FULL_HEADLESS_MODE == NO ]]
+  if [[ $MANUAL_FAN == YES && $MINER_TEMP_CONTROL == NO ]]
   then
-
-    if [[ $MANUAL_FAN == YES && $MINER_TEMP_CONTROL == NO ]]
-    then
-      gpu=0
-      while (( gpu < GPUS ))
-      do
-        NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=1 -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}"
-        gpu=$((gpu+1))
-      done
-    fi
-
-    if [[ $MANUAL_FAN == NO && $MINER_TEMP_CONTROL == NO ]]
-    then
-      gpu=0
-      while (( gpu < GPUS ))
-      do
-        NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=0"
-        gpu=$((gpu+1))
-      done
-    fi
-  fi
-  
-  gpu=0
-  while (( gpu < GPUS ))
-  do
-    for j in $TI
+    gpu=0
+    while (( gpu < GPUS ))
     do
-      CORE=${__CORE_OVERCLOCK[${gpu}]}
-      MEM=${MEMORY_OVERCLOCK[${gpu}]}
-      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
+      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=1 -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}"
+      gpu=$((gpu+1))
     done
-    gpu=$((gpu+1))
-  done
+  fi
 
-  UPDATE="YES"
-
-  if [[ $P10X_100_FULL_HEADLESS_MODE == YES ]]
+  if [[ $MANUAL_FAN == NO && $MINER_TEMP_CONTROL == NO ]]
   then
-    if grep -q "XORG_UPDATED" ${NVOC}/xorg_flag;
-    then
-      sleep 2
-      UPDATE="NO"
-    fi
-    if [[ $UPDATE == YES ]]
-    then
-      sudo nvidia-xconfig --enable-all-gpus --cool-bits=12
-      cd ${NVOC}
-      echo XORG_UPDATED > "${NVOC}/xorg_flag"
-      sleep 4
-      echo "XORG UPDATED"
-      echo ""
-      echo "Rebooting in 5"
-      echo ""
-      echo "disconnect monitor if connected"
-      sleep 5
-      sudo reboot
-    fi
-    sleep 4
+    gpu=0
+    while (( gpu < GPUS ))
+    do
+      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=0"
+      gpu=$((gpu+1))
+    done
+  fi
+
+  if [[ $HEADLESS_MODE == NO ]]
+  then
+    gpu=0
+    while (( gpu < GPUS ))
+    do
+      for j in $TI
+      do
+        CORE=${__CORE_OVERCLOCK[${gpu}]}
+        MEM=${MEMORY_OVERCLOCK[${gpu}]}
+        NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
+      done
+      gpu=$((gpu+1))
+    done
+  fi
+
+  if [[ $HEADLESS_MODE == YES ]]
+  then
     NVD_SETTINGS="${NVD_SETTINGS} -a GPUGraphicsClockOffset[2]=\"${_CORE_OVERCLOCK}\" -a GPUMemoryTransferRateOffset[2]=\"${_MEMORY_OVERCLOCK}\""
   fi
 
@@ -1161,13 +1142,9 @@ EOF
  "currency":"$WTM_CURRENCY"
 }
 EOF
-      HCD="${NVOC}/8wtm_auto_switch"
-      running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
-      if [ "$running" == "" ]
+      if ps ! ax | grep -q '[8]wtm_auto_switch'
       then
         screen -c ${NVOC}/screenrc-wtm -dmSL wtm bash ${NVOC}/8wtm_auto_switch
-        #guake -n $HCD -r WTM_AUTO_SWITCH -e "bash ${NVOC}/8wtm_auto_switch"
-        running=""
         if [[ $LOCALorREMOTE == LOCAL ]]; then
           echo ""
           echo "process in screen wtm, guake terminal Tab (f12)"
@@ -1180,7 +1157,7 @@ EOF
         fi
       fi
     fi
-    
+
     while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
       echo "" | tee -a ${NVOC}/nvoc_logs/screenlog.0
       echo "$(date) - Miner is running, 3main restarting miner" | tee -a ${NVOC}/nvoc_logs/screenlog.0
@@ -1191,18 +1168,16 @@ EOF
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
-      bash ${NVOC}/0miner
-      echo "    "
-      echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
-      echo "    "
-      
+    bash ${NVOC}/0miner
+    echo "    "
+    echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
+    echo "    "
+
     if [[ $MINER_WATCHDOG == YES ]]
     then
-      HCD="${NVOC}/5watchdog"
       echo ""
       sleep 2
-      running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
-      if [ "$running" == "" ]
+      if ! ps ax | grep -q '[5]watchdog'
       then
         screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
         if [[ $LOCALorREMOTE == LOCAL ]]
@@ -1215,17 +1190,15 @@ EOF
             guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  ${NVOC}/nvoc_logs/watchdog-screenlog.0 "
           fi
           echo ""
-          running=""
         elif [[ $LOCALorREMOTE == REMOTE ]]
         then
           echo "LAUNCHING:  MINER WATCHDOG (REMOTE)"
           echo ""
           echo "process in screen wdog; 'nvOC wdog-log'"
-          running=""
         fi
       fi
-    fi  
-      
+    fi
+
     if [ $LOCALorREMOTE == "REMOTE" ]
     then
       echo "Miner output: ./nvOC miner-log"
