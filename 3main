@@ -115,11 +115,8 @@ if [[ $SRR == YES ]]
 then
   sleep 2
   HCD=${NVOC}/SRR
-  running=$(ps -ef | awk '$NF~"SRR" {print $2}')
-  if [ "$running" == "" ]
-  then
+  if ! ps ax | grep -q '[S]RR';  then
     guake -n $HCD -r SRR -e "bash ${NVOC}/SRR"
-    running=""
   fi
 fi
 
@@ -446,9 +443,7 @@ if [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == YES && $ALGO == SALFTER ]]
 then
   echo ""
   sleep 2
-  running=$(ps -ef | awk '$NF~"5watchdog" {print $2}')
-  if [ "$running" == "" ]
-  then
+  if ! ps -ef | grep -q '[5]watchdog'; then
     echo "LAUNCHING:  MINER WATCHDOG"
     screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
     if [[ $LOCALorREMOTE == LOCAL ]]
@@ -481,8 +476,7 @@ fi
 if [[ $TELEGRAM_MESSAGES == YES ]]
 then
   HCD="${NVOC}/7telegram"
-  running=$(ps -ef | awk '$NF~"7telegram" {print $2}')
-  if [ "$running" == "" ]
+  if ! ps ax | grep -q '[7]telegram'
   then
     guake -n $HCD -r TELEGRAM_MESSAGES -e "bash ${NVOC}/7telegram"
     running=""
@@ -510,8 +504,7 @@ then
 }
 EOF
   HCD="${NVOC}/8wtm_profit_check"
-  running=$(ps -ef | awk '$NF~"8wtm_profit_check" {print $2}')
-  if [ "$running" == "" ]
+  if ! ps ax | grep -q '[8wtm_profit_check'
   then
     guake -n $HCD -r WTM_PROFIT_CHECK -e "bash ${NVOC}/8wtm_profit_check"
     running=""
@@ -972,7 +965,7 @@ if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
 then
   echo " Launching OhGodAnETHlargementPill"
   HCD="${NVOC}/OhGodAnETHlargementPill-r2"
-  if ! ps ax  | grep -v grep | grep -q OhGodAnETHlargementPill
+  if ! ps ax | grep -q '[O]hGodAnETHlargementPill'
   then
     screen -dmS eth_pill sudo $HCD
     if [[ LOCAL_OR_REMOTE == LOCAL ]]
