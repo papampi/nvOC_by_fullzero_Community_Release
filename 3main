@@ -386,15 +386,12 @@ fi
 
 if [[ $AUTO_REBOOT == YES ]]
 then
-  HCD="${NVOC}/reboot"
-  running=$(ps -ef | awk '$NF~"reboot" {print $2}')
-  if [ "$running" == "" ]
+  HCD="${NVOC}/7reboot"
+  if ! ps ax | grep -q '[7]reboot'
   then
-    guake -n $HCD -r AUTO_REBOOT -e "bash ${NVOC}/reboot"
-    running=""
+    guake -n $HCD -r AUTO_REBOOT -e "bash ${NVOC}/7reboot"
   fi
 fi
-
 
 if [[ $_Parallax_MODE == YES ]]
 then
