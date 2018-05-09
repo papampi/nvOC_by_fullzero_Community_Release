@@ -1,0 +1,21 @@
+#!/bin/bash
+
+source ~/1bash
+
+TIMEIN=$REBOOT_TIMEOUT_IN_MINUTES
+
+TIMEOUT=$(($TIMEIN * 60))
+
+sleep 2
+
+echo ""
+echo "Reboot in $(($TIMEIN / 60 )) Hours"
+
+sleep $TIMEOUT
+pkill -e gnome-terminal
+pkill -f 3main
+pkill -e screen
+echo ""
+echo "reboot in 10 seconds by reboot timer" | tee -a /home/m1/5_watchdoglog
+sleep 10
+sudo reboot
