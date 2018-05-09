@@ -355,7 +355,7 @@ _MEMORY_OVERCLOCK=100       # Global base Memory overclock offset
 #          overrides or variations according to selected OC and Power Limit modes
 #        - algo-specific and individual gpu-specific settings are some sections below in this file
 
-P10X_100_FULL_HEADLESS_MODE="NO"  # YES or NO # If using P106_100, P104-100 GPU's in a full headless (no monitor) rig, set this to YES
+HEADLESS_MODE="NO"            # YES or NO # If using P106_100, P104-100 GPU's in a full headless (no monitor) rig, set this to YES
 
 GPUPowerMizerMode_Adjust="NO" # YES or NO # Use nvidia PowerMizerMode
 
