@@ -1069,25 +1069,17 @@ then
     done
   fi
 
-  if [[ $HEADLESS_MODE == NO ]]
-  then
-    gpu=0
-    while (( gpu < GPUS ))
+  gpu=0
+  while (( gpu < GPUS ))
+  do
+    for j in $TI
     do
-      for j in $TI
-      do
-        CORE=${__CORE_OVERCLOCK[${gpu}]}
-        MEM=${MEMORY_OVERCLOCK[${gpu}]}
-        NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
-      done
-      gpu=$((gpu+1))
+      CORE=${__CORE_OVERCLOCK[${gpu}]}
+      MEM=${MEMORY_OVERCLOCK[${gpu}]}
+      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
     done
-  fi
-
-  if [[ $HEADLESS_MODE == YES ]]
-  then
-    NVD_SETTINGS="${NVD_SETTINGS} -a GPUGraphicsClockOffset[2]=\"${_CORE_OVERCLOCK}\" -a GPUMemoryTransferRateOffset[2]=\"${_MEMORY_OVERCLOCK}\""
-  fi
+    gpu=$((gpu+1))
+  done
 
   if [[ $GPUPowerMizerMode_Adjust == YES ]]
   then
