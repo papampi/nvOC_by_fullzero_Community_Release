@@ -61,6 +61,7 @@ echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
 echo ""
 
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export DISPLAY=:0
 source ${NVOC}/1bash
 
