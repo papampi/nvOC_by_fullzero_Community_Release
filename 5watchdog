@@ -426,7 +426,7 @@ while true; do
         bash "${NVOC}/telegram"
       fi
       # Kill the miner to be sure it's gone
-      ps -ef | grep SCREEN | grep -v cpuminer | grep miner | xargs kill
+      ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}' | xargs kill
       # Best to restart 3main - settings might be adjusted already
       ps -ef | awk '$NF~"3main" {print $2}' | xargs kill
 
