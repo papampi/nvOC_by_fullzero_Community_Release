@@ -182,12 +182,6 @@ sleep $SLEEP_TIME
 ### Watchdog Main Loop [infinite]
 while true; do
 
-  # Echo status
-  UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
-  echo "GPU UTILIZATION: " $UTILIZATIONS
-  echo "      GPU_COUNT: " $GPU_COUNT
-
-
   #If WTM auto switch python cant sync, kill it
   if [[  $WTM_AUTO_SWITCH  ==  "YES"  ]] || [[ $WTM_PROFIT_CHECK == "YES" ]]
   then
@@ -211,6 +205,8 @@ while true; do
   # Loop over each GPU and check utilization
   for ((GPU=0;GPU < $GPU_COUNT;GPU++)); do
     { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+    # echo utilization 
+    echo "[INFO] - GPU$GPU Utilization: $UTIL%"
 
     # Numeric check: if any are not numeric, we have a mining problem
 
@@ -251,13 +247,13 @@ while true; do
         sudo reboot
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
-        echo "$(date) - GPU$GPU under threshold found - GPU UTILIZATION:  " $UTIL | tee -a ${LOG_FILE}
+        echo "$(date) - GPU$GPU under threshold found - GPU$GPU UTILIZATION: $UTIL%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
     fi
 
-    sleep 0.2    # 0.2 seconds delay until querying the next GPU
+    sleep 0.5    # raise to 0.5 seconds delay until querying the next GPU to lower nvidia-smi impact
   done
 
   # If we found at least one GPU below the utilization threshold
@@ -401,7 +397,7 @@ while true; do
     #     we have ALL GPUs below threshold AND had at least (#GPUs + 1)
     #        occurrences of below threshold (2nd run through the loop
     #        to allow miner to fix itself)
-    if [[ $COUNT -le 0 || ($PCT_GPU_BAD -eq 100 && $COUNT -lt $((5 * $GPU_COUNT))) ]]
+    if [[ $COUNT -le 0 || ($PCT_GPU_BAD -eq 100 && $COUNT -lt $((2 * $GPU_COUNT))) ]]
     then
       # Get some some diagnostics to the logs before restarting or rebooting
       echo "" | tee -a ${LOG_FILE}; echo "" | tee -a ${LOG_FILE}
@@ -441,14 +437,14 @@ while true; do
       sleep $SLEEP_TIME
       echo "$(date) - Back 'on watch' after miner restart"
     else
-      echo "$(date) - Low Utilization Detected: 3main will reinit if there are $COUNT consecutive failures"
+      echo "[WARN} $(date) - Low Utilization Detected: 3main will reinit if there are $COUNT consecutive failures"
       echo ""
     fi
     # No below threshold GPUs detected for this pass
   else
     # All is good, reset the counter
     COUNT=$((6 * GPU_COUNT))
-    echo "$(date) - No mining issues detected."
+    echo "[INFO] $(date) - No mining issues detected."
     echo " "
     # No need for a reboot after 5 times through the main loop with no issues
     if [ $REBOOTRESET -gt 5 ]
@@ -458,5 +454,5 @@ while true; do
     fi
   fi
 # Delay until next cycle
-  sleep 10
+  sleep 15
 done
