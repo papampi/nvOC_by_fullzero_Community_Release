@@ -116,7 +116,7 @@ fi
 chmod a+w "${LOG_FILE}"             # allow clearing by www
 
 # Provide feedback
-echo "[INFO] $(date) - Watchdog is starting" # | tee -a ${LOG_FILE}
+echo "$(date) - [INFO] - Watchdog is starting" # | tee -a ${LOG_FILE}
 echo ""
 sleep 2
 
@@ -141,11 +141,11 @@ then
   if [[ $GPU_COUNT -ne $NUMBER_GPUS_INSTALLED ]]
   then
     echo ""
-    echo "[WARNING] $(date) - We should have $NUMBER_GPUS_INSTALLED GPUs but nvidia-smi reports $GPU_COUNT" #| tee -a $LOG_FILE
+    echo "$(date) - [WARNING] - We should have $NUMBER_GPUS_INSTALLED GPUs but nvidia-smi reports $GPU_COUNT" #| tee -a $LOG_FILE
     echo ""
   else
     echo ""
-    echo "[INFO] Installed GPUs: $NUMBER_GPUS_INSTALLED, Connected GPUs: $GPU_COUNT"
+    echo "$(date) - [INFO] - Installed GPUs: $NUMBER_GPUS_INSTALLED, Connected GPUs: $GPU_COUNT"
     echo ""
   fi
 fi
@@ -154,7 +154,7 @@ fi
 ## Check internet before starting main loop
 while ! nc -vzw1 google.com 443;
 do
-  echo "[WARNING] $(date) - Internet is down, checking again in 10 seconds..."
+  echo "$(date) - [WARNING] - Internet is down, checking again in 10 seconds..."
   sleep 10
 done
 
@@ -165,18 +165,18 @@ sleep 10
 
 REUP_MINER=0
 while ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner; do
-  echo "[WARNING] $(date) - Miner not running, commencing miner start command again" 
+  echo "$(date) - [WARNING] - Miner not running, commencing miner start command again" 
   bash ${NVOC}/0miner
   ps ax | grep miner | grep -o 'SCREEN.*'
   REUP_MINER=$(($REUP_MINER + 1))
   sleep 10
-  echo "[WARNING] Miner restarted $REUP_MINER time(s), check your settings"
+  echo "$(date) - [WARNING] - Miner restarted $REUP_MINER time(s), check your settings"
 done
 
 if [[ $REUP_MINER -gt 0 ]] ; then
-  echo "[WARNING] Miner is running after restarting $REUP_MINER time(s), waiting $SLEEP_TIME sec before going on watch" | tee -a ${LOG_FILE}
+  echo "$(date) - [WARNING] - Miner is running after restarting $REUP_MINER time(s), waiting $SLEEP_TIME sec before going on watch" | tee -a ${LOG_FILE}
 else
-  echo "[INFO] Miner is running, waiting $SLEEP_TIME sec before going on watch" | tee -a ${LOG_FILE}
+  echo "$(date) - [INFO] - Miner is running, waiting $SLEEP_TIME sec before going on watch" | tee -a ${LOG_FILE}
 fi
 sleep $SLEEP_TIME
 
@@ -193,7 +193,7 @@ while true; do
       echo "WTM Switcher Syncing"
       if  [[ -n "$WTM_S_PID_TIME" ]]
       then
-        echo "[WARNING] $(date) - WTM switcher can't sync, kill it"
+        echo "$(date) - [WARNING] - WTM switcher can't sync, kill it"
         ps -eo pid,etimes | grep $(pgrep -f WTM_SWITCHER) | awk  '$2> 30 { print $1}'  | xargs kill -9
       fi
     fi
@@ -207,7 +207,7 @@ while true; do
   for ((GPU=0;GPU < $GPU_COUNT;GPU++)); do
     { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
     # echo utilization 
-    echo "[INFO] - GPU$GPU Utilization: $UTIL%"
+    echo "$(date) - [INFO] - GPU$GPU Utilization: $UTIL%"
 
     # Numeric check: if any are not numeric, we have a mining problem
 
@@ -215,11 +215,11 @@ while true; do
     if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]; then
       if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
         # Not numeric so: Help we've lost a GPU, so reboot
-        echo "[CRITICAL] $(date) - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
+        echo "$(date) - [CRITICAL] - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
         echo ""
         # Hope PCI BUS info will help find the faulty GPU
         nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
-        echo "[CRITICAL] $(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
+        echo "$(date) - [CRITICAL] - reboot in 10 seconds"  | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
           bash "${NVOC}/telegram"
@@ -228,18 +228,18 @@ while true; do
         sudo reboot
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
-        echo "[WARNING] $(date) - GPU$GPU under threshold - GPU$GPU UTILIZATION: $UTIL%" | tee -a ${LOG_FILE}
+        echo "$(date) - [WARNING] - GPU$GPU under threshold - GPU$GPU UTILIZATION: $UTIL%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
     else
       if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
         # Not numeric so: Help we've lost a GPU, so reboot
-        echo "[CRITICAL] $(date) - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
+        echo "$(date) - [CRITICAL] - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
         echo ""
         # Hope PCI BUS info will help find the faulty GPU
         nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
-        echo "[CRITICAL] $(date) - reboot in 10 seconds"  | tee -a ${LOG_FILE}
+        echo "$(date) - [CRITICAL] - reboot in 10 seconds"  | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
           bash "${NVOC}/telegram"
@@ -248,7 +248,7 @@ while true; do
         sudo reboot
       elif [ $UTIL -lt $THRESHOLD ] # If utilization is lower than threshold, decrement counter
       then
-        echo "[WARNING] $(date) - GPU$GPU under threshold - GPU$GPU UTILIZATION: $UTIL%" | tee -a ${LOG_FILE}
+        echo "$(date) - [WARNING] - GPU$GPU under threshold - GPU$GPU UTILIZATION: $UTIL%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
@@ -263,14 +263,14 @@ while true; do
     #echo "$(date) - Debug: NUM_GPU_BLW_THRSHLD=$NUM_GPU_BLW_THRSHLD, COUNT=$COUNT, RESTART=$RESTART, REBOOTRESET=$REBOOTRESET" | tee -a ${LOG_FILE}
 
     #Check for Internet and wait if down
-    echo "[WARNING] GPU under threshold, Checking Internet"
+    echo "$(date) - [WARNING] - GPU under threshold, Checking Internet"
     if ! nc -vzw1 google.com 443;
     then
-      echo "[WARNING] $(date) - Internet is down, checking..." | tee -a ${LOG_FILE}
+      echo "$(date) - [WARNING] - Internet is down, checking..." | tee -a ${LOG_FILE}
       INTERNET=0
       while ! nc -vzw1 google.com 443;
       do
-        echo "[WARNING] $(date) - Internet is down, checking again in 30 seconds..."
+        echo "$(date) - [WARNING] - Internet is down, checking again in 30 seconds..."
         sleep 30
       done
     else
@@ -281,17 +281,17 @@ while true; do
     #When internet comes up, reset to skip additional checks until the next time through the loop
     if  nc -vzw1 google.com 443  && [[ $INTERNET == 0 ]]
     then
-      echo "[INFO] $(date) - Internet was down, Now it's ok" | tee -a ${LOG_FILE}
+      echo "$(date) - [INFO] - Internet was down, Now it's ok" | tee -a ${LOG_FILE}
       REBOOTRESET=0; RESTART=0; COUNT=$((6 * $GPU_COUNT)); INTERNET=1
       #### Now that internet comes up check and restart miner if needed, no need to restart 3main, problem was the internet.
       if [[ -z $(ps ax | grep -i screen | grep miner) ]]
       then
-        echo "[INFO] $(date) - miner is not running, start miner"
+        echo "$(date) - [INFO] - miner is not running, start miner"
         bash ${NVOC}/0miner
         #wait for miner to start hashing
         sleep  $SLEEP_TIME
       else
-        echo "[INFO] $(date) - miner is running, waiting $SLEEP_TIME seconds before going 'on watch'"
+        echo "$(date) - [INFO] - miner is running, waiting $SLEEP_TIME seconds before going 'on watch'"
         sleep $SLEEP_TIME
       fi
     fi
@@ -304,29 +304,29 @@ while true; do
       COIN=$(echo $COIN| sed 's/DUAL_//' | cut -d _ -f 1)
       COIN_POOL=${COIN}_POOL
       COIN_PORT=${COIN}_PORT
-      echo "[INFO] Dual Mining, Check main pool, ${!COIN_POOL}:${!COIN_PORT}"
+      echo "$(date) - [INFO] - Dual Mining, Check main pool, ${!COIN_POOL}:${!COIN_PORT}"
       if ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
-        echo "[WARNING] $(date) - ${!COIN_POOL}:${!COIN_PORT} is Down" # | tee -a $LOG_FILE
+        echo "$(date) - [WARNING] - ${!COIN_POOL}:${!COIN_PORT} is Down" # | tee -a $LOG_FILE
         POOL=0
         while ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;    do
-          echo "[WARNING] Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
+          echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
           sleep 30
         done
       else
-        echo "[INFO] Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up"
+        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up"
         POOL=1
       fi
       #If pool is up but was down before check if miner is running and give time out or start if not
       if  nc -vzw1 ${!COIN_POOL}t2 ${!COIN_PORT} && [[ $POOL == 0 ]] ;  then
-        echo "[INFO] $(date) - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  # | tee -a $LOG_FILE
+        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  # | tee -a $LOG_FILE
         #When pool comes up, reset counters to skip additional checks until the next time through the loop
         REBOOTRESET=0; RESTART=0; COUNT=$((6 * $GPU_COUNT)); POOL=1
         if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]] ;    then
-          echo "[INFO] Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
-          echo "[INFO] Wait $MINER_TIME before going on watch"
+          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
+          echo "$(date) - [INFO] - Wait $MINER_TIME before going on watch"
           sleep $MINER_TIME
         elif  [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
-          echo "[INFO] Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running, start miner"
+          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running, start miner"
           bash ${NVOC}/0miner
           sleep $SLEEP_TIME
         fi
@@ -346,9 +346,9 @@ while true; do
       COIN_PORT=${COIN}_PORT
       COIN_POOL_2=${COIN}_POOL_2
       COIN_PORT_2=${COIN}_PORT_2
-      echo "[INFO] Check mining pool, ${!COIN_POOL}:${!COIN_PORT}"
+      echo "$(date) - [INFO] - Check mining pool, ${!COIN_POOL}:${!COIN_PORT}"
       if  !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
-        echo "[WARNING] $(date) - ${!COIN_POOL}:${!COIN_PORT} is Down"  | tee -a $LOG_FILE
+        echo "$(date) - [WARNING] - ${!COIN_POOL}:${!COIN_PORT} is Down"  | tee -a $LOG_FILE
         POOL=0
         if [[ $ALT_POOL == "YES" ]] && [[ -n ${!COIN_POOL_2} ]] 
         then
@@ -356,25 +356,25 @@ while true; do
           sleep 300
         else
           while !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   do
-            echo "[WARNING] Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
+            echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
             sleep 30
           done
         fi
       else
-        echo "[INFO] Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up"
+        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up"
         POOL=1
       fi
       #If pool is up but was down before, check if miner is running and give time out or start if not
       if nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} && [[ $POOL == 0 ]] ;   then
-        echo "[INFO] $(date) - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  | tee -a $LOG_FILE
+        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  | tee -a $LOG_FILE
         #When pool comes up, reset counters to skip additional checks until the next time through the loop
         REBOOTRESET=0; RESTART=0; COUNT=$((6 * $GPU_COUNT)); POOL=1
         if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]] ;   then
-          echo "[INFO] Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
-          echo "[INFO] Wait $MINER_TIME before going on watch"
+          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
+          echo "$(date) - [INFO] - Wait $MINER_TIME before going on watch"
           sleep $MINER_TIME
         elif [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
-          echo "[WARNING] Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running, start miner"
+          echo "$(date) - [WARNING] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running, start miner"
           bash ${NVOC}/0miner
           sleep $SLEEP_TIME
         fi
@@ -388,7 +388,7 @@ while true; do
     if ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
     then
       COUNT=0
-      echo "[WARNING] $(date) - Found no miner, Restarting 3main"
+      echo "$(date) - [WARNING] - Found no miner, Restarting 3main"
     fi
 
     # Percent of GPUs below threshold
@@ -402,17 +402,17 @@ while true; do
     then
       # Get some some diagnostics to the logs before restarting or rebooting
       echo "" | tee -a ${LOG_FILE}; echo "" | tee -a ${LOG_FILE}
-      echo "[WARNING] $(date) - Problem found, See diagnostics below: " | tee -a ${LOG_FILE}
-      echo "[WARNING] Percent of GPUs bellow threshold: $PCT_GPU_BAD %"  | tee -a ${LOG_FILE}
+      echo "$(date) - [WARNING] - Problem found, See diagnostics below: " | tee -a ${LOG_FILE}
+      echo "$(date) - [WARNING] - Percent of GPUs bellow threshold: $PCT_GPU_BAD %"  | tee -a ${LOG_FILE}
       echo "$(nvidia-smi --query-gpu=name,pstate,temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv)" | tee -a ${LOG_FILE}
-      echo "[INFO] Miner last 15 logs:" | tee -a ${LOG_FILE}
+      echo "$(date) - [INFO] - Miner last 15 logs:" | tee -a ${LOG_FILE}
       echo "$(tail -15 ${NVOC}/nvoc_logs/screenlog.0)" | tee -a ${LOG_FILE}
 
 
       # If we have had 4 miner restarts and still have low utilization
       if [[ $RESTART -gt 4 ]]
       then
-        echo "[CRITICAL] $(date) - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a ${LOG_FILE}
+        echo "$(date) - [CRITICAL] - Utilization is too low: reviving did not work so restarting system in 10 seconds" | tee -a ${LOG_FILE}
         echo ""
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
           bash "${NVOC}/telegram"
@@ -421,7 +421,7 @@ while true; do
         sudo reboot
       fi
 
-      echo "[CRITICAL] $(date) - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE}
+      echo "$(date) - [CRITICAL] - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE}
       if [[ $TELEGRAM_ALERTS == "YES" ]]; then
         bash "${NVOC}/telegram"
       fi
@@ -436,16 +436,16 @@ while true; do
 
       # Give 3main time to restart to prevent reboot
       sleep $SLEEP_TIME
-      echo "[INFO] $(date) - Back 'on watch' after miner restart"
+      echo "$(date) - [INFO] - Back 'on watch' after miner restart"
     else
-      echo "[WARNING] $(date) - Low Utilization Detected: 3main will reinit if there are $COUNT consecutive failures"
+      echo "$(date) - [WARNING] - Low Utilization Detected: 3main will reinit if there are $COUNT consecutive failures"
       echo ""
     fi
     # No below threshold GPUs detected for this pass
   else
     # All is good, reset the counter
     COUNT=$((6 * GPU_COUNT))
-    echo "[INFO] $(date) - No mining issues detected, Check again in $WATCHDOG_CYCLE"
+    echo "$(date) - [INFO] - No mining issues detected, Check again in $WATCHDOG_CYCLE"
     echo " "
     # No need for a reboot after 5 times through the main loop with no issues
     if [ $REBOOTRESET -gt 5 ]
