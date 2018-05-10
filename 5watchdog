@@ -454,5 +454,5 @@ while true; do
     fi
   fi
 # Delay until next cycle
-  sleep 15
+  sleep $WATCHDOG_CYCLE
 done
