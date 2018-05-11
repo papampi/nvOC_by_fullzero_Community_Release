@@ -496,6 +496,17 @@ SKUNK_INTENSITY="22"                            #set intensity for all Skunkhash
 SKEIN_MINER="TPccminer"                         #choose miner for Skein algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
 SKEIN_INTENSITY="22"                            #set intensity for all Skein miners
 
+TIMETRAVEL10_MINER="TPccminer"
+TIMETRAVEL10_INTENSITY="19"
+
+
+X16R_MINER="ENEMY"
+X16R_INTENSITY="19"
+
+XEVAN_MINER="ENEMY"
+XEVAN_INTENSITY="19"
+
+
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
 ################################################################
@@ -858,14 +869,6 @@ SMART_ADDRESS="replace_with_your_address"
 SMART_POOL="pool-eu.smartcash.cc"
 SMART_PORT="3333"
 SMART_INTENSITY="25"
-
-
-# RVN ## No Need to add stratum+tcp:// to server address
-RVN_WORKER="$WORKERNAME"
-RVN_ADDRESS="replace_with_your_address"
-RVN_POOL="rvn.suprnova.cc"
-RVN_PORT="6667"
-RVN_INTENSITY="19"
 
 #BSD
 BSD_WORKER="$WORKERNAME"
