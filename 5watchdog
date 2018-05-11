@@ -53,15 +53,17 @@
 #          Check internet and miner before starting main loop
 # v=0015 : LukePicci
 #          Relocate nvOC to arbitrary install directory
+# v=0016 : Papampi 
+#          Code cleanup, lower nvidia-smi queries, cycle and threshold variables in 1bash 
+#          Added tags to logs 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.0.015"   # Do not edit this
+nvOC_wdog_ver="v0019-2.0.016"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
 echo ""
 
-export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export DISPLAY=:0
 source ${NVOC}/1bash
 
@@ -383,7 +385,6 @@ while true; do
 
     ######################## End of Pool Check
 
-
     # Look for no miner screen and get right to miner restart
     if ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
     then
@@ -407,7 +408,6 @@ while true; do
       echo "$(nvidia-smi --query-gpu=name,pstate,temperature.gpu,fan.speed,utilization.gpu,power.draw,power.limit --format=csv)" | tee -a ${LOG_FILE}
       echo "$(date) - [INFO] - Miner last 15 logs:" | tee -a ${LOG_FILE}
       echo "$(tail -15 ${NVOC}/nvoc_logs/screenlog.0)" | tee -a ${LOG_FILE}
-
 
       # If we have had 4 miner restarts and still have low utilization
       if [[ $RESTART -gt 4 ]]
