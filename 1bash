@@ -312,6 +312,10 @@ LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OF
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
+WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU utilization
+
+GPU_UTIL_THRESHOLD="80"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recomended values 70-90) 
+
 ALT_POOL="NO"               #YES or NO, Set to YES if you want to enable  poolswitch. 
                             #Switch to alternate pool if main pool goes down.
                             #Dual mining and salfter auto switch not supported.
