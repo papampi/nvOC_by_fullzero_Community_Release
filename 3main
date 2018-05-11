@@ -1132,7 +1132,7 @@ EOF
  "currency":"$WTM_CURRENCY"
 }
 EOF
-      if ps ! ax | grep -q '[8]wtm_auto_switch'
+      if ! ps ax | grep -q '[8]wtm_auto_switch'
       then
         screen -c ${NVOC}/screenrc-wtm -dmSL wtm bash ${NVOC}/8wtm_auto_switch
         if [[ $LOCALorREMOTE == LOCAL ]]; then
