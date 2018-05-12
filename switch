@@ -60,7 +60,7 @@ for algo in profit:
 
 # exit if maximum is below minimum
 if (max_profit<=min_profit):
-  algo_log=open(outputDir + "algo-log", "a")
+  algo_log=open(outputDir + "/algo-log", "a")
   algo_log.write(str(datetime.datetime.now())+": **NONE**\n")
   algo_log.close()
   for algo in performance:
@@ -83,7 +83,7 @@ if (current==0):
 
 if (current==0):
   # log a change
-  algo_log=open(outputDir + "algo-log", "a")
+  algo_log=open(outputDir + "/algo-log", "a")
   algo_log.write(str(datetime.datetime.now())+": "+max_profit_algo+"\n")
   algo_log.close()
   if (other==1):
