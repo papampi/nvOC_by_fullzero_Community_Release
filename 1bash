@@ -499,12 +499,8 @@ SKEIN_INTENSITY="22"                            #set intensity for all Skein min
 TIMETRAVEL10_MINER="TPccminer"
 TIMETRAVEL10_INTENSITY="19"
 
-
-X16R_MINER="ENEMY"
+X16R_MINER="Z-ENEMY"
 X16R_INTENSITY="19"
-
-XEVAN_MINER="ENEMY"
-XEVAN_INTENSITY="19"
 
 
 ################################################################
