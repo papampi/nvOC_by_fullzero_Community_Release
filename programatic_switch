@@ -49,11 +49,11 @@ except:
   
 if (current==0):
   # log current coin
-  log=open(outputDir + "current-profit", "w")
+  log=open(outputDir + "/current-profit", "w")
   log.write(current_miner["algo"] + " - " + current_miner["coin_currency"] + " @ "+ current_miner["host"] + "\n")
   log.close() 
   # log a change
-  algo_log=open(outputDir + "algo-log", "a")
+  algo_log=open(outputDir + "/algo-log", "a")
   algo_log.write(str(datetime.datetime.now())+": "+coin+"\n")
   algo_log.close()
 
