@@ -826,7 +826,7 @@ then
 
   cat <<EOF >${NVOC}/programatic_conf.json
 {
-  "output_dir": "${NVOC}",
+  "output_dir": "${NVOC}/",
   "card_type": "nvidia",
   "config_json_url": "$PROGRAMATIC_SWITCH_CONFIG_JSON_URL",
   "miners":
