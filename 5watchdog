@@ -123,7 +123,7 @@ echo ""
 sleep 2
 
 # Don't send telegram alert after every WTM switch
-if [[ $TELEGRAM_ALERTS == "YES" && $WTM_AUTO_SWITCH == "NO" ]]; then
+if [[ $TELEGRAM_ALERTS == "YES" && $AUTO_SWITCH == "NO" ]]; then
   bash "${NVOC}/telegram"
 fi
 
@@ -186,7 +186,7 @@ sleep $SLEEP_TIME
 while true; do
 
   #If WTM auto switch python cant sync, kill it
-  if [[  $WTM_AUTO_SWITCH  ==  "YES"  ]] || [[ $WTM_PROFIT_CHECK == "YES" ]]
+  if [[ $AUTO_SWITCH  ==  WTM_SWITCHING || $WTM_PROFIT_CHECK == YES ]]
   then
     WTM_S_PID=$(ps -ef | grep WTM_SWITCHER | grep -v grep |awk '{print $2}')
     if  [[ -n $WTM_S_PID ]]

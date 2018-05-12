@@ -806,7 +806,7 @@ EOF
       echo ""
       echo "process in screen wtm, guake terminal Tab (f12)"
       if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" | grep -v grep) ]];then
-        guake -n ${NVOC}/8wtm_auto_switch -r WTM_AUTO_SWITCH -e "tail -f  ${NVOC}/nvoc_logs/8_wtmautoswitchlog"
+        guake -n ${NVOC}/8wtm_auto_switch -r WTM_SWITCHING -e "tail -f  ${NVOC}/nvoc_logs/8_wtmautoswitchlog"
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
       echo "process in screen wtm, 'nvOC wtm-log'"

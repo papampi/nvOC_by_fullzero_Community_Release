@@ -103,7 +103,7 @@ then
     AUTO_SWITCH=("Salfter Programatic Switch")
 
 
-  elif [ $WTM_AUTO_SWITCH == "YES" ]
+  elif [ $AUTO_SWITCH == "WTM_SWITCHING" ]
   then
 
     CURRENT_COIN="Mining Coin: $COIN"
@@ -120,7 +120,7 @@ then
     fi
     AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH  $WTM_A_S")
 
-  elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
+  elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $AUTO_SWITCH == "WTM_SWITCHING" ]
   then
     CURRENT_COIN="Mining Coin: $COIN"
     MINING_HISTORY=""

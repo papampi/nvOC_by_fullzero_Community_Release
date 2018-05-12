@@ -967,7 +967,7 @@ if  [[ "$COIN" == "SALFTER_MPH_PROFIT_SWITCHING" ]]; then
     MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log | awk '{print $0}')
 fi
 
-if [[ $PAPAMPI_WTM_AUTO_SWITCH == "YES" ]]; then 				# If user has selected "YES" here does not means WTM is running, so lets check 
+if [[ $AUTO_SWITCH == WTM_SWITCHING ]]; then 				# If user has selected "YES" here does not means WTM is running, so lets check 
     # Check if WTM is running
     ps aux | grep -v grep | grep -q PAPAMPI_WTM
     if [[ $? -eq 0 ]]; then							# WTM is running and I take the opportunity to collect some data

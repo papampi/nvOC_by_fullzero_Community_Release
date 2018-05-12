@@ -143,7 +143,7 @@ then
   AUTO_SWITCH=("Salfter Programatic Switch")
 
 
-elif [ $WTM_AUTO_SWITCH == "YES" ]
+elif [ $AUTO_SWITCH == "WTM_SWITCHING" ]
 then
   CURRENT_COIN=$COIN
   MINING_HISTORY=$(cat ${NVOC}/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
@@ -177,7 +177,7 @@ then
   AUTO_SWITCH="WTM Auto Switch $WTM_SWITCH $WTM_A_S"
 
 
-elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
+elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $AUTO_SWITCH == "WTM_SWITCHING" ]
 then
   CURRENT_COIN=$COIN
   MINING_HISTORY=""
@@ -353,7 +353,7 @@ echo "GPU Utilization: "  "<tt style=\"text-align:left; color:white\">" "$GPU_UT
 echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
 
 echo "Average Hash Rate: " "<tt style=\"text-align:left; color:white\">" "$HASH_AVERAGE <br> </tt>"
-if [ $WTM_AUTO_SWITCH == "YES" ] ; then
+if [ $AUTO_SWITCH == "WTM_SWITCHING" ] ; then
 echo "$WTM_HASHRATE" "<tt style=\"text-align:left; color:white\">" "$WTM_HASH <br> </tt>"
 fi
 echo "Mining Pool: " "<tt style=\"text-align:left; color:white\">" "${!COIN_POOL} <br> </tt>"
