@@ -457,7 +457,7 @@ then
 }
 EOF
   HCD="${NVOC}/8wtm_profit_check"
-  if ! ps ax | grep -q '[8wtm_profit_check'
+  if ! ps ax | grep -q '[8]wtm_profit_check'
   then
     guake -n $HCD -r WTM_PROFIT_CHECK -e "bash ${NVOC}/8wtm_profit_check"
     running=""
