@@ -727,7 +727,7 @@ then
     "Myriad-Groestl":
     {
       "bin": "${NVOC}/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $pwr_lim_nyriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0,
+      "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0,
       "speed": 0.158, "power": 0.391
     },
     "NeoScrypt":
