@@ -123,15 +123,13 @@ then
   elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $AUTO_SWITCH == "NO" ]
   then
     CURRENT_COIN="Mining Coin: $COIN"
-	AUTO_SWITCH="No Auto Switch"
+    AUTO_SWITCH="No Auto Switch"
     MINING_HISTORY=""
     WTM_PROFIT="WTM Current Profit: $(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')"
     WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')
     WTM_SWITCH=("WTM Profit Check Running. ")
     BTC_PRICE="BTC Price: $(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
     WTM_AVERAGE_REV=""
-    AUTO_SWITCH=""
-
 
   else
     CURRENT_COIN="Mining Coin: $COIN"
