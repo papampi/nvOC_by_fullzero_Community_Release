@@ -953,14 +953,14 @@ if [[ "$SEND_WORKERNAME" == "YES" ]]; then
 fi
 
 # Mining coin and auto-switch running check
-if [[ "$COIN" == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]]; then
+if [[ $AUTO_SWITCH == SALFTER_NICEHASH_SWITCHING ]]; then
     AUTO_SWITCH_ON="YES"
     AUTO_SWITCH_NAME="Salfter Nicehash Auto Switch"
     CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
     MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log | awk '{print $0}')
 fi
 
-if  [[ "$COIN" == "SALFTER_MPH_PROFIT_SWITCHING" ]]; then
+if  [[ $AUTO_SWITCH == SALFTER_MPH_SWITCHING ]]; then
     AUTO_SWITCH_ON="YES"
     AUTO_SWITCH_NAME="Salfter MPH Auto Switch"    
     CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
