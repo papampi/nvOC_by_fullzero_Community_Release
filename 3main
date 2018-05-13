@@ -934,7 +934,7 @@ then
 fi
 
 # Apply GPU settings
-sudo ${NVD} $NVD_SETTINGS
+sudo ${NVD} $NVD_SETTINGS &
 
 
 if [[ $SLOW_USB_KEY_MODE == YES ]]
@@ -946,7 +946,6 @@ if [[ $AUTO_START_MINER == YES ]]
 then
   echo "Auto Start Miner Set to YES"
 
-
   while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
     echo "" | tee -a ${NVOC}/nvoc_logs/screenlog.0
     echo "$(date) - Miner is running, 3main killing miner" | tee -a ${NVOC}/nvoc_logs/screenlog.0
@@ -954,12 +953,38 @@ then
     sleep 2
   done
 
+  if [[ $MINER_WATCHDOG == YES ]]
+  then
+    echo ""
+    sleep 2
+    if ! ps ax | grep -q '[5]watchdog'
+    then
+      screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
+      if [[ $LOCALorREMOTE == LOCAL ]]
+      then
+        echo "LAUNCHING:  MINER WATCHDOG (LOCAL)"
+        echo ""
+        echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
+        #if guake tab is already showing watchdog output dont open a new one
+        if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
+          guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  ${NVOC}/nvoc_logs/watchdog-screenlog.0 "
+        fi
+        echo ""
+      elif [[ $LOCALorREMOTE == REMOTE ]]
+      then
+        echo "LAUNCHING:  MINER WATCHDOG (REMOTE)"
+        echo ""
+        echo "process in screen wdog; 'nvOC wdog-log'"
+      fi
+    fi
+  fi
+
   if [[ $AUTO_SWITCH == NO || $AUTO_SWITCH == WTM_SWITCHING ]]
   then
     if [[ $ALGO == UNDEFINED ]]
     then
       echo ""
-      echo "WARNING: Attempting to launch miner for an undefined algo"
+      echo "[WARNING] - Attempting to launch miner for an undefined algo"
     fi
     
     echo ""
@@ -1011,32 +1036,6 @@ then
       fi
       sleep "$PROFIT_CHECK_TIMEOUT"
     done
-  fi
-
-  if [[ $MINER_WATCHDOG == YES ]]
-  then
-    echo ""
-    sleep 2
-    if ! ps ax | grep -q '[5]watchdog'
-    then
-      screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
-      if [[ $LOCALorREMOTE == LOCAL ]]
-      then
-        echo "LAUNCHING:  MINER WATCHDOG (LOCAL)"
-        echo ""
-        echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
-        #if guake tab is already showing watchdog output dont open a new one
-        if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
-          guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  ${NVOC}/nvoc_logs/watchdog-screenlog.0 "
-        fi
-        echo ""
-      elif [[ $LOCALorREMOTE == REMOTE ]]
-      then
-        echo "LAUNCHING:  MINER WATCHDOG (REMOTE)"
-        echo ""
-        echo "process in screen wdog; 'nvOC wdog-log'"
-      fi
-    fi
   fi
 
 elif [[ $AUTO_START_MINER == NO ]]
