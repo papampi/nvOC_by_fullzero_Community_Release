@@ -69,10 +69,7 @@ echo ""
 export DISPLAY=:0
 source ${NVOC}/1bash
 
-# Text output beautifier, use bold text and colors
-USE_COLOR="YES"    # YES/NO
-
-if [ $USE_COLOR == "YES" ]; then
+if [ $WATCHDOG_USE_COLOR == "YES" ]; then
   N='\e[0m'     # Normal
   B='\e[1m'     # Bold
   R='\e[31m'    # Red
@@ -163,7 +160,7 @@ done
 ## Before starting to check GPU utilization in main loop check if miner start was successful or not
 ## in case there is problem in miner variables or other problems, dont start main loop to restart 3main and eventually reboot.
 echo "Giving miner enough to stabilize"
-sleep $SLEEP_TIME
+sleep $WATCHDOG_CYCLE
 
 if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
 then
@@ -173,6 +170,8 @@ else
   pkill -f 3main
   exit
 fi
+
+sleep $SLEEP_TIME
 
 ### Watchdog Main Loop [infinite]
 while true

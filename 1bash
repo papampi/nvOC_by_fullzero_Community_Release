@@ -323,6 +323,8 @@ MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically cor
 
 WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU utilization
 
+WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
+
 GPU_UTIL_THRESHOLD="80"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recomended values 70-90) 
 
 ALT_POOL="NO"               #YES or NO, Set to YES if you want to enable  poolswitch. 
