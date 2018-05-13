@@ -58,17 +58,13 @@
 #          OhGodAnETHlargementPill
 # v=0023 : LukePicci
 #          Simplified ALGO specific settings
-# v=0022 : papampi
+# v=0024 : papampi
 #          HEADLEASS_MODE
-# v=0023 : LuKePicci
+# v=0025 : LuKePicci
 #          AUTO_SWITCH generalized implementetion
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0023"   # Do not edit this
-
-
-# 1bash for v0019-2.1 (1bash subversion 001)
-
+nvOC_1bash_ver="v0019-2.1.0025"   # Do not edit this
 
 # fullzero:     nvOC creator
 
