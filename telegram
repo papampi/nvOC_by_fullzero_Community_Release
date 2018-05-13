@@ -123,6 +123,7 @@ then
   elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $AUTO_SWITCH == "NO" ]
   then
     CURRENT_COIN="Mining Coin: $COIN"
+	AUTO_SWITCH="No Auto Switch"
     MINING_HISTORY=""
     WTM_PROFIT="WTM Current Profit: $(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')"
     WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')

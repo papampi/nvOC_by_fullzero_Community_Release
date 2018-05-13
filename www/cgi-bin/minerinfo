@@ -177,7 +177,7 @@ then
   AUTO_SWITCH="WTM Auto Switch $WTM_SWITCH $WTM_A_S"
 
 
-elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $AUTO_SWITCH == "WTM_SWITCHING" ]
+elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $AUTO_SWITCH == "NO" ]
 then
   CURRENT_COIN=$COIN
   MINING_HISTORY=""
