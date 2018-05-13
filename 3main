@@ -416,7 +416,8 @@ then
     if [[ $LOCALorREMOTE == LOCAL ]]; then
       echo "process in screen temp, guake terminal Tab (f12), 'nvOC temp-log'"
       #if guake tab is already showing temp control output dont open a new one
-      if [[ -z $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" |grep -v grep) ]];then
+      #if [[ -z $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" |grep -v grep) ]];then
+      if ! ps ax | grep "tail -f ${NVOC}/nvoc_logs/[t]empcontrol-screenlog.0"; then
         guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -f  ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 "
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
