@@ -511,6 +511,13 @@ SKUNK_INTENSITY="22"                            #set intensity for all Skunkhash
 SKEIN_MINER="TPccminer"                         #choose miner for Skein algos between "KTccminer", "SPccminer", "TPccminer" (recommended), "ASccminer" 
 SKEIN_INTENSITY="22"                            #set intensity for all Skein miners
 
+TIMETRAVEL10_MINER="TPccminer"
+TIMETRAVEL10_INTENSITY="19"
+
+X16R_MINER="Z-ENEMY"
+X16R_INTENSITY="19"
+
+
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
 ################################################################
@@ -869,10 +876,18 @@ BTCZ_PORT="5586"
 
 # SMART ## No Need to add stratum+tcp:// to server address
 SMART_WORKER="$WORKERNAME"
-SMART_ADDRESS="yourPoolLoginName"
+SMART_ADDRESS="replace_with_your_address"
 SMART_POOL="pool-eu.smartcash.cc"
 SMART_PORT="3333"
 SMART_INTENSITY="25"
+
+#BSD
+BSD_WORKER="$WORKERNAME"
+BSD_ADDRESS="replace_with_your_address"
+BSD_POOL="bsd.suprnova.cc"
+BSD_PORT="8686"
+BSD_INTENSITY="20"
+
 
 ###################################################
 # Claymore_Dual Mining                            #
@@ -1105,6 +1120,22 @@ LYRA2REV2_MEMORY_OVERCLOCK=-1200
 LYRA2V2_POWERLIMIT_WATTS=65
 LYRA2V2_CORE_OVERCLOCK=160
 LYRA2V2_MEMORY_OVERCLOCK=-1000
+
+# Xevan
+XEVAN_POWERLIMIT_WATTS=65
+XEVAN_CORE_OVERCLOCK=100
+XEVAN_MEMORY_OVERCLOCK=600
+
+# X16R
+X16R_POWERLIMIT_WATTS=65
+X16R_CORE_OVERCLOCK=100
+X16R_MEMORY_OVERCLOCK=100
+
+# TIMETRAVEL10
+TIMETRAVEL10_POWERLIMIT_WATTS=65
+TIMETRAVEL10_CORE_OVERCLOCK=150
+TIMETRAVEL10_MEMORY_OVERCLOCK=1000
+
 
 daggerhashimoto_POWERLIMIT_WATTS=120
 daggerhashimoto_CORE_OVERCLOCK=100
