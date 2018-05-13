@@ -169,10 +169,9 @@ REUP_MINER=0
 while ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner; do
   echo "$(date) - [WARNING] - Miner not running, reinit nvOC from scratch" 
   pkill -f 3main
-  ps ax | grep miner | grep -o 'SCREEN.*'
-  REUP_MINER=$(($REUP_MINER + 1))
-  sleep 10
+  REUP_MINER=$((REUP_MINER + 1))
   echo "$(date) - [WARNING] - nvOC restarted $REUP_MINER time(s), check your settings"
+  sleep 10
 done
 
 if [[ $REUP_MINER -gt 0 ]] ; then
