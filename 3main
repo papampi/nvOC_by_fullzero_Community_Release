@@ -58,11 +58,13 @@
 # v=0018 : papampi
 #          HEADLEAS_MODE and some code cleanups
 # v=0019 : LuKePicci,papampi
-#          ${NVOC}/nvoc_logs tmpfs mount 
+#          ${NVOC}/nvoc_logs tmpfs mount
+# v=0020 : LuKePicci,papampi
+#          AUTO_SWITCH generalized implementetion
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.0019"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.0020"                  # Do not edit this
 
 #########################################################################
 #########################################################################
