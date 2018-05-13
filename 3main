@@ -416,9 +416,8 @@ then
     if [[ $LOCALorREMOTE == LOCAL ]]; then
       echo "process in screen temp, guake terminal Tab (f12), 'nvOC temp-log'"
       #if guake tab is already showing temp control output dont open a new one
-      #if [[ -z $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" |grep -v grep) ]];then
-      if ! ps ax | grep "tail -f ${NVOC}/nvoc_logs/[t]empcontrol-screenlog.0"; then
-        guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -f  ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 "
+      if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[t]empcontrol-screenlog.0"; then
+        guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -n 0 -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0"
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
       echo "process in screen temp; 'nvOC temp-log'"
@@ -516,15 +515,10 @@ fi
 
 if [[ $AUTO_SWITCH == SALFTER_NICEHASH_SWITCHING ]]
 then
-  HOSTEDIT="YES"
-  if grep -q "api.nicehash.com" /etc/hosts;
+  if ! grep -q "api.nicehash.com" /etc/hosts
   then
-    HOSTEDIT="NO"
-  fi
-  if [[ $HOSTEDIT == YES ]]
-  then
-    sudo -- sh -c -e "echo '' >> /etc/hosts";
-    sudo -- sh -c -e "echo '104.20.158.21 api.nicehash.com' >> /etc/hosts";
+    sudo -- sh -c -e "echo '' >> /etc/hosts"
+    sudo -- sh -c -e "echo '104.20.158.21 api.nicehash.com' >> /etc/hosts"
     echo UPDATED HOSTS FILE WITH IPv6 FIX
     echo ""
     echo ""
@@ -533,7 +527,7 @@ then
   sleep 2
   cd "${NVOC}"
 
-  cat <<EOF >${NVOC}/conf.json
+  cat <<EOF >${NVOC}/nice_conf.json
 {
  "output_dir": "${NVOC}",
  "currency": "$CURRENCY",
@@ -572,7 +566,7 @@ then
 }
 EOF
 
-  AUTO_SWITCH_CMD="python2.7 \"${NVOC}/switch\" \"${NVOC}/conf.json\""
+  AUTO_SWITCH_CMD="python2.7 \"${NVOC}/nice_switch\" \"${NVOC}/nice_conf.json\""
 fi
 # END SALFTER_NICEHASH_SWITCHING #
 
@@ -806,8 +800,8 @@ EOF
     if [[ $LOCALorREMOTE == LOCAL ]]; then
       echo ""
       echo "process in screen wtm, guake terminal Tab (f12)"
-      if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" | grep -v grep) ]];then
-        guake -n ${NVOC}/8wtm_auto_switch -r WTM_SWITCHING -e "tail -f  ${NVOC}/nvoc_logs/8_wtmautoswitchlog"
+      if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[8]_wtmautoswitchlog"; then
+        guake -n ${NVOC}/8wtm_auto_switch -r WTM_SWITCHING -e "tail -n 0 -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog"
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
       echo "process in screen wtm, 'nvOC wtm-log'"
@@ -816,51 +810,53 @@ EOF
   fi
 fi
 
-if [[ $ALGO != UNDEFINED ]]
+if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
 then
-
-  if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
+  echo " Launching OhGodAnETHlargementPill"
+  HCD="${NVOC}/OhGodAnETHlargementPill-r2"
+  if ! ps ax | grep -q '[O]hGodAnETHlargementPill'
   then
-    echo " Launching OhGodAnETHlargementPill"
-    HCD="${NVOC}/OhGodAnETHlargementPill-r2"
-    if ! ps ax | grep -q '[O]hGodAnETHlargementPill'
+    screen -dmS eth_pill sudo $HCD
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
-      screen -dmS eth_pill sudo $HCD
-      if [[ $LOCALorREMOTE == LOCAL ]]
-      then
-        guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
-      fi
+      guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
     fi
-  else
-    pkill -f OhGodAnETHlargementPill-r2
   fi
+else
+  pkill -f OhGodAnETHlargementPill-r2
+fi
 
-  if [[ $OVERCLOCK_MODE == NO ]]
-  then
-    for i in $(seq 0 $((GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=0
-      MEMORY_OVERCLOCK[$i]=0
-    done
-  fi
-  
-  if [[ $OVERCLOCK_MODE == GLOBAL ]]
-  then
-    for i in $(seq 0 $((GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=$_CORE_OVERCLOCK
-      MEMORY_OVERCLOCK[$i]=$_MEMORY_OVERCLOCK
-    done
-  fi
-  
-  if [[ $OVERCLOCK_MODE == GLOBAL_with_GPU_OFFSET ]]
-  then
-    for i in $(seq 0 $((GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=$(( _CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
-      MEMORY_OVERCLOCK[$i]=$(( _MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
-    done
-  fi
+if [[ $OVERCLOCK_MODE == NO ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=0
+    MEMORY_OVERCLOCK[$i]=0
+  done
+elif [[ $OVERCLOCK_MODE == GLOBAL ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=$_CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[$i]=$_MEMORY_OVERCLOCK
+  done
+elif [[ $OVERCLOCK_MODE == GLOBAL_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=$(( _CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
+    MEMORY_OVERCLOCK[$i]=$(( _MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
+  done
+elif [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=$((__CORE_OVERCLOCK_$i))
+    MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
+  done
+else
+  UNDEFINED_CORE_OVERCLOCK=$_CORE_OVERCLOCK
+  UNDEFINED_MEMORY_OVERCLOCK=$_MEMORY_OVERCLOCK
   
   if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
   then
@@ -869,18 +865,7 @@ then
       __CORE_OVERCLOCK[$i]=$(( ${ALGO}_CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
       MEMORY_OVERCLOCK[$i]=$(( ${ALGO}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
     done
-  fi
-  
-  if [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
-  then
-    for i in $(seq 0 $((GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=$((__CORE_OVERCLOCK_$i))
-      MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
-    done
-  fi
-  
-  if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
+  elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
@@ -888,24 +873,27 @@ then
       MEMORY_OVERCLOCK[$i]=$((${ALGO}_MEMORY_OVERCLOCK))
     done
   fi
+fi
   
-  TI="3"
-  
-  if [[ $___1050_or_1050ti == YES ]]
+TI="3"
+
+if [[ $___1050_or_1050ti == YES ]]
+then
+  TI="2"
+  if [[ $NORMAL == YES ]]
   then
-    TI="2"
-    if [[ $NORMAL == YES ]]
-    then
-      TI="2 3"
-    fi
+    TI="2 3"
   fi
+fi
+
+if [[ $SLOW_USB_KEY_MODE == YES ]]
+then
+  sleep 6
+fi
   
-  if [[ $SLOW_USB_KEY_MODE == YES ]]
-  then
-    sleep 6
-  fi
-  
-  if [[ $MANUAL_FAN == YES && $MINER_TEMP_CONTROL == NO ]]
+if [[ $MINER_TEMP_CONTROL == NO ]]
+then
+  if [[ $MANUAL_FAN == YES ]]
   then
     gpu=0
     while (( gpu < GPUS ))
@@ -913,10 +901,7 @@ then
       NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=1 -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}"
       gpu=$((gpu+1))
     done
-  fi
-  
-  if [[ $MANUAL_FAN == NO && $MINER_TEMP_CONTROL == NO ]]
-  then
+  else
     gpu=0
     while (( gpu < GPUS ))
     do
@@ -924,32 +909,33 @@ then
       gpu=$((gpu+1))
     done
   fi
+fi
+
+gpu=0
+while (( gpu < GPUS ))
+do
+  for j in $TI
+  do
+    CORE=${__CORE_OVERCLOCK[${gpu}]}
+    MEM=${MEMORY_OVERCLOCK[${gpu}]}
+    NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
+  done
+  gpu=$((gpu+1))
+done
   
+if [[ $GPUPowerMizerMode_Adjust == YES ]]
+then
   gpu=0
   while (( gpu < GPUS ))
   do
-    for j in $TI
-    do
-      CORE=${__CORE_OVERCLOCK[${gpu}]}
-      MEM=${MEMORY_OVERCLOCK[${gpu}]}
-      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
-    done
+    NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=\"${GPUPowerMizerMode}\""
     gpu=$((gpu+1))
   done
-  
-  if [[ $GPUPowerMizerMode_Adjust == YES ]]
-  then
-    gpu=0
-    while (( gpu < GPUS ))
-    do
-      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=\"${GPUPowerMizerMode}\""
-      gpu=$((gpu+1))
-    done
-  fi
-  
-  # Apply GPU settings
-  sudo ${NVD} $NVD_SETTINGS
 fi
+
+# Apply GPU settings
+sudo ${NVD} $NVD_SETTINGS
+
 
 if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
@@ -968,8 +954,14 @@ then
     sleep 2
   done
 
-  if [[ $ALGO != UNDEFINED && ( $AUTO_SWITCH == NO || $AUTO_SWITCH == WTM_SWITCHING ) ]]
+  if [[ $AUTO_SWITCH == NO || $AUTO_SWITCH == WTM_SWITCHING ]]
   then
+    if [[ $ALGO == UNDEFINED ]]
+    then
+      echo ""
+      echo "WARNING: Attempting to launch miner for an undefined algo"
+    fi
+    
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
@@ -1003,7 +995,9 @@ then
       echo ""
       if [[ $LOCALorREMOTE == LOCAL ]]
       then
-        guake -n 1 -r ${AUTO_SWITCH} -e "screen -r miner"
+        if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then	
+          guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0"	
+        fi
         echo "mining process in Guake Tab"
         echo ""
       fi

@@ -127,5 +127,5 @@ if (current==0):
         subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1").split(" "))
         subprocess.call(("nvidia-settings -a [fan:"+str(i)+"]/GPUTargetFanSpeed="+str(performance[max_profit_algo]["fan"][i])).split(" "))
   # launch new miner
-  subprocess.call(("screen -dmS miner "+performance[max_profit_algo]["cmd"]).split(" "))
+  subprocess.call(("screen -c "+str(output_dir)+"/nvoc_logs/screenlog.0 -dmS miner "+performance[max_profit_algo]["cmd"]).split(" "))
 
