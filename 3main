@@ -126,10 +126,13 @@ then
   fi
 fi
 
-# make log folder, remove old tmpfs from /etc/fstab and mount new one 
+# make log folder, re/mount new one 
 mkdir -p "${NVOC}/nvoc_logs"
-sudo mount -t tmpfs -o defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
-
+if mountpoint -q "${NVOC}/nvoc_logs"
+then
+    REMOUNT="remount,"
+fi
+sudo mount -t tmpfs -o ${REMOUNT}defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
 
 if [[ $CLEAR_LOGS_ON_BOOT == YES ]]
 then
