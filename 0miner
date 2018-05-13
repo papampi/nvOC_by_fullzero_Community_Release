@@ -157,6 +157,13 @@ then
   screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a x16r -i $RVN_INTENSITY -o stratum+tcp://$RVN_POOL:$RVN_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
 fi
 
+if [[ $COIN == BSD ]]
+then
+  HCD=${NVOC}/miners/z-enemy/z-enemy_miner
+  ADDR="$BSD_ADDRESS.$BSD_WORKER"
+  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a xevan -i $BSD_INTENSITY -o stratum+tcp://$BSD_POOL:$BSD_PORT -u $ADDR -p $MINER_PWD $Z-ENEMY_OPTS
+fi
+
 if [[ $COIN == ONION ]]
 then
   HCD=${NVOC}/miners/TPccminer/ccminer

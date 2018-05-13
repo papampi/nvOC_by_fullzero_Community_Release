@@ -55,12 +55,14 @@
 #          Declaration of ALGO
 # v=0017 : LuKePicci
 #          Flexible and simplified OC policies
-# v=0015 : papampi
+# v=0018 : papampi
 #          HEADLEAS_MODE and some code cleanups
+# v=0019 : LuKePicci,papampi
+#          ${NVOC}/nvoc_logs tmpfs mount 
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.0018"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.0019"                  # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -122,8 +124,10 @@ then
   fi
 fi
 
-# make log folder if not exist
+# make log folder, remove old tmpfs from /etc/fstab and mount new one 
 mkdir -p "${NVOC}/nvoc_logs"
+sudo mount -t tmpfs -o defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
+
 
 if [[ $CLEAR_LOGS_ON_BOOT == YES ]]
 then
@@ -313,6 +317,15 @@ then
 elif [[ $COIN == ZCOIN ]]
 then
   ALGO=LYRA2V2
+elif [[ $COIN == BSD ]]
+then
+  ALGO=XEVAN
+elif [[ $COIN == RVN ]]
+then
+  ALGO=X16R
+elif [[ $COIN == BTX ]]
+then
+  ALGO=TIMETRAVEL10
 elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFIT_SWITCHING || $COIN == SALFTER_PROGRAMATIC_SWITCHING ]]
 then
   ALGO=SALFTER
