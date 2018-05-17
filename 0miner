@@ -110,7 +110,6 @@ if [[ $ALGO == ETHASH ]];
 
                         if [[ $ETHASH_MINER == CLAYMORE ]];
                         then
-                                WALLET_ADDRESS_FORMAT=" -eworker "
                                 HCD="$LAUNCH ${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool "${!xpool}"$CLN"${!xport}" -ewal "${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}" -epsw x  -mode 1 -allcoins 1 -allpools 1 -dbg -1 "${!xext}""
                         fi
                 ## Declare Miner End
