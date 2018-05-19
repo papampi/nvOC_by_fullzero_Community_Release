@@ -45,7 +45,7 @@
 #          Relocate nvOC to arbitrary install directory
 #
 # v=0009 : LuKePicci
-#          added main-log, install-service 
+#          added main-log, install- start- and stop-service 
 
 # DEV_VERSION=0009
 
@@ -102,6 +102,12 @@ echo_usage()
    echo "           stops mining, watchdog and temperature control"
    echo -e "        ${C}$0 start${N}"
    echo "           starts normal nvOC mining operations"
+   echo -e "        ${C}$0 install-service${N}"
+   echo "           (re)install nvOC service for this nvOC tree"
+   echo -e "        ${C}$0 start-service${N}"
+   echo "           manually start the nvOC service"
+   echo -e "        ${C}$0 stop-service${N}"
+   echo "           stop the running nvOC service"
    echo -e "        ${C}$0 main-log${N}"
    echo "           display nvOC startup output"
    echo -e "        ${C}$0 miner-log${N}"
@@ -742,7 +748,7 @@ echo
 echo
 }
 
-################################# install-service ######################################
+################################# install-service ##############################
 install-service()
 {
   echo Reinstalling nvOC service for ${NVOC}
@@ -773,6 +779,22 @@ EOF
     echo "Done. This service has autostart enabled."
     sudo systemctl enable nvoc
   fi
+}
+
+################################# start-service ################################
+start-service()
+{
+  echo "Starting nvOC service.."
+  sudo systemctl start nvoc
+  sleep 2
+  systemctl status nvoc
+}
+
+################################# stop-service #################################
+stop-service()
+{
+  echo "Stopping nvOC service.."
+  sudo systemctl stop nvoc
 }
 
 ################################# main-log ######################################
@@ -835,21 +857,24 @@ echo "$prompt$0 $1"
 case $# in
    0) echo_usage;;
    1) case $1 in
-         clearlogs)    Clearlogs;;
-         gpuinfo)      GPUinfo;;
-         gpumap)       GPUmap;;
-         report)       Report;;
-         patch)        Patch;;
-         reboot)       Reboot;;
-         start)        Start;;
-         stop)         Stop;;
-         main-log)     main-log;;
-         miner-log)    miner-log;;
-         wdog-log)     wdog-log;;
-         temp-log)     temp-log;;
-         wtm-log)      wtm-log;;
-         master-log)   master-log;;  
-         *)            echo_usage;;
+         clearlogs)           Clearlogs;;
+         gpuinfo)             GPUinfo;;
+         gpumap)              GPUmap;;
+         report)              Report;;
+         patch)               Patch;;
+         reboot)              Reboot;;
+         start)               Start;;
+         stop)                Stop;;
+         install-service)     install-service;;
+         start-service)       start-service;;
+         stop-service)        stop-service;;
+         main-log)            main-log;;
+         miner-log)           miner-log;;
+         wdog-log)            wdog-log;;
+         temp-log)            temp-log;;
+         wtm-log)             wtm-log;;
+         master-log)          master-log;;  
+         *)                   echo_usage;;
       esac;;
    *) echo_usage;;
 esac  
