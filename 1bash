@@ -649,7 +649,6 @@ RVN_WORKER="$WORKERNAME"
 RVN_ADDRESS="replace_with_your_address"
 RVN_POOL="RVN_POOL_ADDRESS"
 RVN_PORT="RVN_POOL_PORT"
-RVN_INTENSITY="19"
 
 # BTCP
 BTCP_WORKER="$WORKERNAME"
@@ -662,7 +661,6 @@ BTX_WORKER="$WORKERNAME"
 BTX_ADDRESS="replace_with_your_address"
 BTX_POOL="btx.suprnova.cc"
 BTX_PORT="3629"
-BTX_INTENSITY="21"
 
 # XZC or ZCOIN  ## No Need to add stratum+tcp:// to server address
 ZCOIN_WORKER="$WORKERNAME"
@@ -699,7 +697,6 @@ SIB_WORKER="$WORKERNAME"
 SIB_ADDRESS="replace_with_your_address"
 SIB_POOL="sib.suprnova.cc"
 SIB_PORT="3458"
-SIB_INTENSITY="21"
 
 # PXC ## No Need to add stratum+tcp:// to server address
 PXC_WORKER="$WORKERNAME"
@@ -712,14 +709,12 @@ GRS_WORKER="$WORKERNAME"
 GRS_ADDRESS="replace_with_your_address"
 GRS_POOL="moria.dwarfpool.com"
 GRS_PORT="3345"
-GRS_INTENSITY="23"
 
 # XMY ## No Need to add stratum+tcp:// to server address
 XMY_WORKER="$WORKERNAME"
 XMY_ADDRESS="replace_with_your_address"
 XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
 XMY_PORT="20479"
-XMY_INTENSITY="23"
 
 # MONA ## No Need to add stratum+tcp:// to server address
 MONA_WORKER="$WORKERNAME"
@@ -750,7 +745,6 @@ LBC_WORKER="$WORKERNAME"
 LBC_ADDRESS="replace_with_your_address"
 LBC_POOL="lbry.suprnova.cc"
 LBC_PORT="6256"
-LBC_INTENSITY="23"
 
 # FTC ## No Need to add stratum+tcp:// to server address
 FTC_WORKER="$WORKERNAME"
@@ -799,14 +793,12 @@ XVG_WORKER="$WORKERNAME"
 XVG_ADDRESS="replace_with_your_address"
 XVG_POOL="replace_with_pool_address"
 XVG_PORT="replace_with_pool_port"
-XVG_INTENSITY="21"
 
 #LUXCORE LUX ## No Need to add stratum+tcp:// to server address
 LUX_WORKER="$WORKERNAME"
 LUX_ADDRESS="Your Address"
 LUX_POOL="yiimp.eu"
 LUX_PORT="8333"
-LUX_INTENSITY="20"
 
 # Sumo Koin(SUMO) ## No Need to add stratum+tcp:// to server address
 SUMO_WORKER="$WORKERNAME"
@@ -869,13 +861,6 @@ SOIL_POOL="soil.pool.sexy"
 SOIL_PORT="9009"
 SOIL_EXTENSION_ARGUMENTS=""   # add any additional Claymore miner arguments here
 
-# DUAL_NICEHASH
-DUAL_WORKER="$WORKERNAME"
-DUAL_BTC_ADDRESS="$BTC_ADDRESS"
-DUAL_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
-DUAL_DCR_POOL="stratum+tcp://decred.usa.nicehash.com:3354"
-DUAL_EXTENSION_ARGUMENTS="-dcri 40"
-
 # SIA
 SC_WORKER="$WORKERNAME"
 SC_ADDRESS="replace_with_your_address"
@@ -927,7 +912,6 @@ BSD_WORKER="$WORKERNAME"
 BSD_ADDRESS="replace_with_your_address"
 BSD_POOL="bsd.suprnova.cc"
 BSD_PORT="8686"
-BSD_INTENSITY="20"
 
 
 ###################################################
