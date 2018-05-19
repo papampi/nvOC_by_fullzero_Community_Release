@@ -285,11 +285,14 @@ fi
 ## CRYPTONIGHTV7
 if [[ $ALGO == CRYPTONIGHTV7 ]];
 then
-  # Remove nvidia.txt incase cards changed
+  # Remove nvidia.txt if cards count changed
   if [ -f ~/nvidia.txt ]
   then
-    rm ~/nvidia.txt
-  fi
+    if [ $(grep -c "// gpu:" ~/nvidia.txt) != $(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits) ]
+    then
+      rm ~/nvidia.txt
+    fi
+  fi  
   # Change verbosity to show hashrate in output log
   if grep '"verbose_level" : 3' ~/config.txt
   then
