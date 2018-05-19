@@ -97,7 +97,7 @@ then
 fi
 
 ## ZPOOL
-if [[ ${COIN:0:4} == ZPOOL ]]
+if [[ ${COIN:0:5} == ZPOOL ]]
 then
   ZPOOL_NEOSCRYPT_ADDRESS=$BTC_ADDRESS
   ZPOOL_LYRA2REV2_ADDRESS=$BTC_ADDRESS
@@ -111,7 +111,7 @@ then
 fi
 
 ## MPH
-if [[ ${COIN:0:4} == MPH ]]
+if [[ ${COIN:0:3} == MPH ]]
 then
   MPH_NEOSCRYPT_ADDRESS=$MPH_ADDRESS
   MPH_LYRA2REV2_ADDRESS=$MPH_ADDRESS
