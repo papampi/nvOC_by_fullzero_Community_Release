@@ -286,32 +286,28 @@ then
   WALLET_ADDRESS_FORMAT="$CRYPTONIGHT_WALLET_FORMAT"
   HCD=${NVOC}/miners/KTccminer-cryptonight/ccminer
   UCCALGO=""
+elif [[ $ALGO == X16R ]];
+then
+  UCCALGO="-a x16r"
+  WALLET_ADDRESS_FORMAT=$X16R_WALLET_FORMAT
+  if [[ $X16R_MINER == Z-ENEMY ]]
+  then
+    HCD=${NVOC}/miners/z-enemy/z-enemy_miner
+  elif [[ $X16R_MINER == SILENT ]]
+  then
+    HCD=${NVOC}/miners/silent_miner/ccminer
+  elif [[ $X16R_MINER == SUPRMINER ]]
+  then
+    HCD=${NVOC}/miners/suprminer/ccminer
+  fi
 fi
 
-if [[ $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == TIMETRAVEL10 || $ALGO == PHI || $ALGO == PASCAL || $ALGO == LBRY || $ALGO == DMDGR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DCR || $ALGO == SIA || $ALGO == X13 || $ALGO == CRYPTONIGHT ]]
+if [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == TIMETRAVEL10 || $ALGO == PHI || $ALGO == PASCAL || $ALGO == LBRY || $ALGO == DMDGR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DCR || $ALGO == SIA || $ALGO == X13 || $ALGO == CRYPTONIGHT ]]
 then
   screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""$WALLET_ADDRESS_FORMAT""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 fi
 
 
-## X16R
-if [[ $ALGO == X16R ]];
-then
-  WALLET_ADDRESS_FORMAT=$X16R_WALLET_FORMAT
-  if [[ $X16R_MINER == Z-ENEMY ]]
-  then
-    HCD=${NVOC}/miners/z-enemy/z-enemy_miner
-  fi
-  if [[ $X16R_MINER == SILENT ]]
-  then
-    HCD=${NVOC}/miners/silent_miner/ccminer
-  fi
-  if [[ $X16R_MINER == SUPRMINER ]]
-  then
-    HCD=${NVOC}/miners/suprminer/ccminer
-  fi
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -a x16r -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""$WALLET_ADDRESS_FORMAT""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
-fi
 
 ## CRYPTONIGHTV7
 if [[ $ALGO == CRYPTONIGHTV7 ]];
