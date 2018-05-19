@@ -281,6 +281,16 @@ then
   WALLET_ADDRESS_FORMAT="$X13_WALLET_FORMAT"
   HCD=${NVOC}/miners/$X13_MINER/ccminer
   UCCALGO="-a x13"
+elif [[ $ALGO == XEVAN ]]
+then
+  WALLET_ADDRESS_FORMAT="$XEVAN_WALLET_FORMAT"
+  UCCALGO="-a xevan"
+  if [[ $XEVAN_MINER == Z-ENEMY ]]
+  then
+    HCD=${NVOC}/miners/z-enemy/z-enemy_miner
+  else
+    HCD=${NVOC}/miners/$XEVAN_MINER/ccminer
+  fi
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   WALLET_ADDRESS_FORMAT="$CRYPTONIGHT_WALLET_FORMAT"
