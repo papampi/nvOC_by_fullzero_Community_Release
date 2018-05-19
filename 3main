@@ -58,11 +58,13 @@
 # v=0018 : papampi
 #          HEADLEAS_MODE and some code cleanups
 # v=0019 : LuKePicci,papampi
-#          ${NVOC}/nvoc_logs tmpfs mount 
+#          ${NVOC}/nvoc_logs tmpfs mount
+# v=0020 : LuKePicci,papampi
+#          AUTO_SWITCH generalized implementetion
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.0019"                  # Do not edit this
+nvOC_3main_ver="v0019-2.0.0020"                  # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -124,10 +126,13 @@ then
   fi
 fi
 
-# make log folder, remove old tmpfs from /etc/fstab and mount new one 
+# make log folder, re/mount new one 
 mkdir -p "${NVOC}/nvoc_logs"
-sudo mount -t tmpfs -o defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
-
+if mountpoint -q "${NVOC}/nvoc_logs"
+then
+    REMOUNT="remount,"
+fi
+sudo mount -t tmpfs -o ${REMOUNT}defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
 
 if [[ $CLEAR_LOGS_ON_BOOT == YES ]]
 then
@@ -188,8 +193,9 @@ then
     echo "disconnect monitor if connected"
     sleep 5
     sudo reboot
+  else
+    XORG="OK"
   fi
-  XORG="OK"
 fi
 
 if grep -q "28800" /etc/X11/xorg.conf;
@@ -197,9 +203,6 @@ then
   XORG="OK"
 fi
 
-# dev note by leenoox:
-# I don't see the relevance of this code, if the previous check for 28800 fails, but this one passes, it
-# will mistakenly set XORG="OK" even though the check for 28800 failed. This needs to be revisited
 if [[ $P10X_100 == YES ]]
 then
   XORG="OK"
@@ -326,9 +329,8 @@ then
 elif [[ $COIN == BTX ]]
 then
   ALGO=TIMETRAVEL10
-elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFIT_SWITCHING || $COIN == SALFTER_PROGRAMATIC_SWITCHING ]]
-then
-  ALGO=SALFTER
+else
+  ALGO=UNDEFINED
 fi
 export ALGO
 ## IDENTIFY ALGORITHM END
@@ -340,7 +342,7 @@ fi
 
 if [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
 then
-  for i in $(seq 0 $(($GPUS-1)))
+  for i in $(seq 0 $((GPUS-1)))
   do
     sudo nvidia-smi -i $i -pl $((INDIVIDUAL_POWERLIMIT_$i))
   done
@@ -348,7 +350,7 @@ fi
 
 if [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
 then
-  for i in $(seq 0 $(($GPUS-1)))
+  for i in $(seq 0 $((GPUS-1)))
   do
     sudo nvidia-smi -i $i -pl $((${ALGO}_POWERLIMIT_WATTS))
   done
@@ -356,7 +358,7 @@ fi
 
 if [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
 then
-  for i in $(seq 0 $(($GPUS-1)))
+  for i in $(seq 0 $((GPUS-1)))
   do
     sudo nvidia-smi -i $i -pl $((_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
   done
@@ -364,15 +366,10 @@ fi
 
 if [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
 then
-  for i in $(seq 0 $(($GPUS-1)))
+  for i in $(seq 0 $((GPUS-1)))
   do
     sudo nvidia-smi -i $i -pl $((${ALGO}_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
   done
-fi
-
-if [[ $ALGO != SALFTER ]]
-then
-  pkill -e miner
 fi
 
 if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
@@ -426,63 +423,25 @@ sleep 2
 if [[ $MINER_TEMP_CONTROL == YES ]]
 then
   if ps ax | grep -q '[6]tempcontrol'; then
-    if [[ $WTM_AUTO_SWITCH == NO ]]; then
-      ps -ef | awk '$NF~"6tempcontrol" {print $2}' | xargs kill
-    fi
+    ps -ef | awk '$NF~"6tempcontrol" {print $2}' | xargs kill
   fi
   sleep 2
   echo ""
   if ! ps ax | grep -q '[6]tempcontrol'; then
     echo "LAUNCHING:  MINER TEMPCONTROL"
     screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
+    echo ""
     if [[ $LOCALorREMOTE == LOCAL ]]; then
-      echo ""
       echo "process in screen temp, guake terminal Tab (f12), 'nvOC temp-log'"
       #if guake tab is already showing temp control output dont open a new one
-      if [[ -z $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" |grep -v grep) ]];then
-        guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -f  ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 "
+      if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[t]empcontrol-screenlog.0"; then
+        guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -n 0 -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0"
       fi
-      echo ""
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
-      echo ""
       echo "process in screen temp; 'nvOC temp-log'"
-      echo ""
     fi
+    echo ""
   fi
-fi
-
-if [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == YES && $ALGO == SALFTER ]]
-then
-  echo ""
-  sleep 2
-  if ! ps -ef | grep -q '[5]watchdog'; then
-    echo "LAUNCHING:  MINER WATCHDOG"
-    screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      echo ""
-      echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
-      #if guake tab is already showing watchdog output dont open a new one
-      if [[ -z $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ]];then
-        guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -f  ${NVOC}/nvoc_logs/watchdog-screenlog.0 "
-      fi
-      echo ""
-      running=""
-    elif [[ $LOCALorREMOTE == REMOTE ]]
-    then
-      echo ""
-      echo "process in screen wdog; 'nvOC wdog-log'"
-      echo ""
-      running=""
-    fi
-  fi
-elif [[ $MINER_WATCHDOG == YES && $AUTO_START_MINER == NO && $ALGO == SALFTER ]]
-then
-  echo "  "
-  echo "  "
-  echo "Auto start miner is set to NO, Watchdog is not starting"
-  echo "  "
-  echo "  "
 fi
 
 if [[ $TELEGRAM_MESSAGES == YES ]]
@@ -500,7 +459,7 @@ then
   FAN_SPEED=40
 fi
 
-if [[ $WTM_PROFIT_CHECK == YES && $WTM_AUTO_SWITCH == NO ]]
+if [[ $WTM_PROFIT_CHECK == YES && $AUTO_SWITCH != WTM_SWITCHING ]]
 then
   echo ""
   echo "LAUNCHING:  WTM PROFIT CHECK "
@@ -516,14 +475,14 @@ then
 }
 EOF
   HCD="${NVOC}/8wtm_profit_check"
-  if ! ps ax | grep -q '[8wtm_profit_check'
+  if ! ps ax | grep -q '[8]wtm_profit_check'
   then
     guake -n $HCD -r WTM_PROFIT_CHECK -e "bash ${NVOC}/8wtm_profit_check"
     running=""
   fi
 fi
 
-if [[ $ALGO == SALFTER ]]
+if [[ ${AUTO_SWITCH:0:7} == SALFTER ]]
 then
   for a in daggerhashimoto equihash neoscrypt lyra2rev2 lbry blake_vanilla cryptonight groestl keccak myriad_groestl qubit scrypt sia skein x11
   do
@@ -537,20 +496,20 @@ then
       eval mem_clks_$a=$_MEMORY_OVERCLOCK
     elif [[ $OVERCLOCK_MODE == GLOBAL_with_GPU_OFFSET ]]
     then
-      eval gpu_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
-      eval mem_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval gpu_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval mem_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
     elif [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
     then
-      eval gpu_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${__CORE_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
-      eval mem_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${MEMORY_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
+      eval gpu_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\${__CORE_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
+      eval mem_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\${MEMORY_OVERCLOCK_/' -e 's/$/}/' | paste -s -d, -)]"
     elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
     then
       eval gpu_clks_$a=$((${a}_CORE_OVERCLOCK))
       eval mem_clks_$a=$((${a}_MEMORY_OVERCLOCK))
     elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
     then
-      eval gpu_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((${a}_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
-      eval mem_clks_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((${a}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval gpu_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval mem_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
     fi
 
     if [[ $POWERLIMIT_MODE == GLOBAL ]]
@@ -558,31 +517,26 @@ then
       eval pwr_lim_$a=$_POWERLIMIT_WATTS
     elif [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
     then
-      eval pwr_lim_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
     elif [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
     then
-      eval pwr_lim_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
+      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
     elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
     then
       eval pwr_lim_$a=$((${a}_POWERLIMIT_WATTS))
     elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
     then
-      eval pwr_lim_$a="[$(seq 0 $(($GPUS-1)) | sed -e 's/^/\$((${a}_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
+      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
     fi
   done
 fi
 
-if [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING && $AUTO_START_MINER == YES ]]
+if [[ $AUTO_SWITCH == SALFTER_NICEHASH_SWITCHING ]]
 then
-  HOSTEDIT="YES"
-  if grep -q "api.nicehash.com" /etc/hosts;
+  if ! grep -q "api.nicehash.com" /etc/hosts
   then
-    HOSTEDIT="NO"
-  fi
-  if [[ $HOSTEDIT == YES ]]
-  then
-    sudo -- sh -c -e "echo '' >> /etc/hosts";
-    sudo -- sh -c -e "echo '104.20.158.21 api.nicehash.com' >> /etc/hosts";
+    sudo -- sh -c -e "echo '' >> /etc/hosts"
+    sudo -- sh -c -e "echo '104.20.158.21 api.nicehash.com' >> /etc/hosts"
     echo UPDATED HOSTS FILE WITH IPv6 FIX
     echo ""
     echo ""
@@ -591,7 +545,7 @@ then
   sleep 2
   cd "${NVOC}"
 
-  cat <<EOF >${NVOC}/conf.json
+  cat <<EOF >${NVOC}/nice_conf.json
 {
  "output_dir": "${NVOC}",
  "currency": "$CURRENCY",
@@ -630,57 +584,11 @@ then
 }
 EOF
 
-  echo "LAUNCHING:  SALFTER_NICEHASH_PROFIT_SWITCHING "
-  echo ""
-
-  python2.7 "${NVOC}/switch" ${NVOC}/conf.json
-
-  if [[ $LOCALorREMOTE == LOCAL ]]
-  then
-    guake -n 1 -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
-  fi
-
-  while true
-  do
-    echo ""
-    cat current-profit
-    echo ""
-
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      guake -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
-      echo ""
-      echo "mining process in Guake Tab"
-      echo ""
-      sleep "$PROFIT_CHECK_TIMEOUT"
-      python2.7 "${NVOC}/switch" ${NVOC}/conf.json
-    fi
-
-    if [[ $LOCALorREMOTE == REMOTE ]]
-    then
-      echo "ENTER:"
-      echo ""
-      echo "screen -r miner"
-      echo ""
-      echo "in a terminal to view mining process"
-      sleep "$PROFIT_CHECK_TIMEOUT"
-      python2.7 "${NVOC}/switch" ${NVOC}/conf.json
-    fi
-  done
-
-elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING && $AUTO_START_MINER == NO ]]
-then
-  echo "    "
-  echo "    "
-  echo "Auto Start Miner is set to NO"
-  echo "    "
-  echo "Miner is not starting"
-  echo "    "
-  echo "    "
+  AUTO_SWITCH_CMD="python2.7 \"${NVOC}/nice_switch\" \"${NVOC}/nice_conf.json\""
 fi
+# END SALFTER_NICEHASH_SWITCHING #
 
-
-if [[ $COIN == SALFTER_MPH_PROFIT_SWITCHING && $AUTO_START_MINER == YES ]]
+if [[ $AUTO_SWITCH == SALFTER_MPH_SWITCHING ]]
 then
   cd "${NVOC}"
 
@@ -783,57 +691,11 @@ then
 }
 EOF
 
-  echo "LAUNCHING:  SALFTER_MPH_PROFIT_SWITCHING "
-  echo ""
-
-  python2.7 "${NVOC}/mph_switch" ${NVOC}/mph_conf.json
-
-  if [[ $LOCALorREMOTE == LOCAL ]]
-  then
-    guake -n 1 -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
-  fi
-
-  while true
-  do
-    echo ""
-    cat current-profit
-    echo ""
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      guake -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
-      echo ""
-      echo "mining process in Guake Tab"
-      echo ""
-      sleep "$PROFIT_CHECK_TIMEOUT"
-      python2.7 "${NVOC}/mph_switch" ${NVOC}/mph_conf.json
-    fi
-    if [[ $LOCALorREMOTE == REMOTE ]]
-    then
-      echo "ENTER:"
-      echo ""
-      echo "screen -r miner"
-      echo ""
-      echo "in a terminal to view mining process"
-      sleep "$PROFIT_CHECK_TIMEOUT"
-      python2.7 "${NVOC}/mph_switch" ${NVOC}/mph_conf.json
-    fi
-  done
-elif [[ $COIN == SALFTER_MPH_PROFIT_SWITCHING && $AUTO_START_MINER == NO ]]
-then
-  echo "    "
-  echo "    "
-  echo "Auto Start Miner is set to NO"
-  echo "    "
-  echo "Miner is not starting"
-  echo "    "
-  echo "    "
+  AUTO_SWITCH_CMD="python2.7 \"${NVOC}/mph_switch\" \"${NVOC}/mph_conf.json\""
 fi
+# END SALFTER_MPH_SWITCHING #
 
-#################################
-# SALFTER_PROGRAMATIC_SWITCHING #
-#################################
-
-if [[ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" && $AUTO_START_MINER == "YES" ]]
+if [[ $AUTO_SWITCH == SALFTER_PROGRAMATIC_SWITCHING ]]
 then
   cd "${NVOC}"
 
@@ -923,55 +785,48 @@ then
 }
 EOF
 
-  echo "LAUNCHING:  SALFTER_PROGRAMATIC_SWITCHING "
-  echo ""
-
-  python2.7 "${NVOC}/programatic_switch" "${NVOC}/programatic_conf.json"
-
-  if [[ $LOCALorREMOTE == LOCAL ]]
-  then
-    guake -n 1 -r SALFTER_PROGRAMATIC_SWITCHING -e "screen -r miner"
-  fi
-
-  while true
-  do
-    echo ""
-    cat current-profit
-    echo ""
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      guake -r SALFTER_PROGRAMATIC_SWITCHING -e "screen -r miner"
-      echo ""
-      echo "mining process in Guake Tab"
-      echo ""
-      sleep "$PROFIT_CHECK_TIMEOUT"
-      python2.7 "${NVOC}/programatic_switch" "${NVOC}/programatic_conf.json"
-    fi
-    if [[ $LOCALorREMOTE == REMOTE ]]
-    then
-      echo "ENTER:"
-      echo ""
-      echo "screen -r miner"
-      echo ""
-      echo "in a terminal to view mining process"
-      sleep "$PROFIT_CHECK_TIMEOUT"
-      python2.7 "${NVOC}/programatic_switch" "${NVOC}/programatic_conf.json"
-    fi
-  done
-elif [[ $COIN == SALFTER_MPH_PROFIT_SWITCHING && $AUTO_START_MINER == NO ]]
-then
-  echo "    "
-  echo "    "
-  echo "Auto Start Miner is set to NO"
-  echo "    "
-  echo "Miner is not starting"
-  echo "    "
-  echo "    "
+  AUTO_SWITCH_CMD="python2.7 \"${NVOC}/programatic_switch\" \"${NVOC}/programatic_conf.json\""
 fi
-
-#####################################
 # END SALFTER_PROGRAMATIC_SWITCHING #
-#####################################
+
+if [[ $AUTO_SWITCH == WTM_SWITCHING ]]
+then
+  echo ""
+  echo "LAUNCHING:  WTM AUTO SWITCH "
+  echo ""
+  cat <<EOF >${NVOC}/WTM.json
+{
+"output_dir": "${NVOC}",
+"WTM_URL": "$WTM_AUTO_SWITCH_URL",
+"WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+"WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
+"currency":"$WTM_CURRENCY"
+}
+EOF
+    cat <<EOF >${NVOC}/WTM_1.json
+{
+"output_dir": "${NVOC}",
+"WTM_URL": "$WTM_AUTO_SWITCH_URL",
+"WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+"WTM_MIN_DIFFERENCE": "$WTM_LOWER_MIN_DIFFERENCE",
+"currency":"$WTM_CURRENCY"
+}
+EOF
+  if ! ps ax | grep -q '[8]wtm_auto_switch'
+  then
+    screen -c ${NVOC}/screenrc-wtm -dmSL wtm bash ${NVOC}/8wtm_auto_switch
+    if [[ $LOCALorREMOTE == LOCAL ]]; then
+      echo ""
+      echo "process in screen wtm, guake terminal Tab (f12)"
+      if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[8]_wtmautoswitchlog"; then
+        guake -n ${NVOC}/8wtm_auto_switch -r WTM_SWITCHING -e "tail -n 0 -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog"
+      fi
+    elif [[ $LOCALorREMOTE == REMOTE ]]; then
+      echo "process in screen wtm, 'nvOC wtm-log'"
+      echo "    "
+    fi
+  fi
+fi
 
 if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
 then
@@ -980,7 +835,7 @@ then
   if ! ps ax | grep -q '[O]hGodAnETHlargementPill'
   then
     screen -dmS eth_pill sudo $HCD
-    if [[ LOCAL_OR_REMOTE == LOCAL ]]
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
       guake -n $HCD -r ETH_PILL -e "screen -r eth_pill"
     fi
@@ -989,79 +844,74 @@ else
   pkill -f OhGodAnETHlargementPill-r2
 fi
 
-if [[ $ALGO != SALFTER ]]
+if [[ $OVERCLOCK_MODE == NO ]]
 then
-  if [[ $OVERCLOCK_MODE == NO ]]
-  then
-    for i in $(seq 0 $(($GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=0
-      MEMORY_OVERCLOCK[$i]=0
-    done
-  fi
-
-  if [[ $OVERCLOCK_MODE == GLOBAL ]]
-  then
-    for i in $(seq 0 $(($GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=$_CORE_OVERCLOCK
-      MEMORY_OVERCLOCK[$i]=$_MEMORY_OVERCLOCK
-    done
-  fi
-
-  if [[ $OVERCLOCK_MODE == GLOBAL_with_GPU_OFFSET ]]
-  then
-    for i in $(seq 0 $(($GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=$(( _CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
-      MEMORY_OVERCLOCK[$i]=$(( _MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
-    done
-  fi
-
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=0
+    MEMORY_OVERCLOCK[$i]=0
+  done
+elif [[ $OVERCLOCK_MODE == GLOBAL ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=$_CORE_OVERCLOCK
+    MEMORY_OVERCLOCK[$i]=$_MEMORY_OVERCLOCK
+  done
+elif [[ $OVERCLOCK_MODE == GLOBAL_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=$(( _CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
+    MEMORY_OVERCLOCK[$i]=$(( _MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
+  done
+elif [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=$((__CORE_OVERCLOCK_$i))
+    MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
+  done
+else
+  UNDEFINED_CORE_OVERCLOCK=$_CORE_OVERCLOCK
+  UNDEFINED_MEMORY_OVERCLOCK=$_MEMORY_OVERCLOCK
+  
   if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
   then
-    for i in $(seq 0 $(($GPUS-1)))
+    for i in $(seq 0 $((GPUS-1)))
     do
       __CORE_OVERCLOCK[$i]=$(( ${ALGO}_CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
       MEMORY_OVERCLOCK[$i]=$(( ${ALGO}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
     done
-  fi
-
-  if [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
+  elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
   then
-    for i in $(seq 0 $(($GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=$((__CORE_OVERCLOCK_$i))
-      MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
-    done
-  fi
-
-  if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
-  then
-    for i in $(seq 0 $(($GPUS-1)))
+    for i in $(seq 0 $((GPUS-1)))
     do
       __CORE_OVERCLOCK[$i]=$((${ALGO}_CORE_OVERCLOCK))
       MEMORY_OVERCLOCK[$i]=$((${ALGO}_MEMORY_OVERCLOCK))
     done
   fi
+fi
+  
+TI="3"
 
-  TI="3"
-
-  if [ $___1050_or_1050ti == "YES" ]
+if [[ $___1050_or_1050ti == YES ]]
+then
+  TI="2"
+  if [[ $NORMAL == YES ]]
   then
-    TI="2"
-    if [ $NORMAL == "YES" ]
-    then
-      TI="2 3"
-    fi
+    TI="2 3"
   fi
+fi
 
-  if [[ $SLOW_USB_KEY_MODE == YES ]]
-  then
-    sleep 6
-  fi
-
-  if [[ $MANUAL_FAN == YES && $MINER_TEMP_CONTROL == NO ]]
+if [[ $SLOW_USB_KEY_MODE == YES ]]
+then
+  sleep 6
+fi
+  
+if [[ $MINER_TEMP_CONTROL == NO ]]
+then
+  if [[ $MANUAL_FAN == YES ]]
   then
     gpu=0
     while (( gpu < GPUS ))
@@ -1069,10 +919,7 @@ then
       NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUFanControlState=1 -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED}"
       gpu=$((gpu+1))
     done
-  fi
-
-  if [[ $MANUAL_FAN == NO && $MINER_TEMP_CONTROL == NO ]]
-  then
+  else
     gpu=0
     while (( gpu < GPUS ))
     do
@@ -1080,94 +927,49 @@ then
       gpu=$((gpu+1))
     done
   fi
+fi
 
+gpu=0
+while (( gpu < GPUS ))
+do
+  for j in $TI
+  do
+    CORE=${__CORE_OVERCLOCK[${gpu}]}
+    MEM=${MEMORY_OVERCLOCK[${gpu}]}
+    NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
+  done
+  gpu=$((gpu+1))
+done
+  
+if [[ $GPUPowerMizerMode_Adjust == YES ]]
+then
   gpu=0
   while (( gpu < GPUS ))
   do
-    for j in $TI
-    do
-      CORE=${__CORE_OVERCLOCK[${gpu}]}
-      MEM=${MEMORY_OVERCLOCK[${gpu}]}
-      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUGraphicsClockOffset[${j}]=$CORE -a [gpu:$gpu]/GPUMemoryTransferRateOffset[${j}]=$MEM"
-    done
+    NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=\"${GPUPowerMizerMode}\""
     gpu=$((gpu+1))
   done
+fi
 
-  if [[ $GPUPowerMizerMode_Adjust == YES ]]
-  then
-    gpu=0
-    while (( gpu < GPUS ))
-    do
-      NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=\"${GPUPowerMizerMode}\""
-      gpu=$((gpu+1))
-    done
-  fi
+# Apply GPU settings
+sudo ${NVD} $NVD_SETTINGS &
 
-  # Apply GPU settings
-  sudo ${NVD} $NVD_SETTINGS
 
-  if [[ $SLOW_USB_KEY_MODE == YES ]]
-  then
-    sleep 6
-  fi
+if [[ $SLOW_USB_KEY_MODE == YES ]]
+then
+  sleep 6
+fi
 
-  if [[ $AUTO_START_MINER == YES ]]
-  then
-    echo "Auto Start Miner Set to YES"
-    if [[ $WTM_AUTO_SWITCH == YES ]]
-    then
-      echo ""
-      echo "LAUNCHING:  WTM AUTO SWITCH "
-      echo ""
-      cat <<EOF >${NVOC}/WTM.json
-{
- "output_dir": "${NVOC}",
- "WTM_URL": "$WTM_AUTO_SWITCH_URL",
- "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
- "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
- "currency":"$WTM_CURRENCY"
-}
-EOF
-      cat <<EOF >${NVOC}/WTM_1.json
-{
- "output_dir": "${NVOC}",
- "WTM_URL": "$WTM_AUTO_SWITCH_URL",
- "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
- "WTM_MIN_DIFFERENCE": "$WTM_LOWER_MIN_DIFFERENCE",
- "currency":"$WTM_CURRENCY"
-}
-EOF
-      if ! ps ax | grep -q '[8]wtm_auto_switch'
-      then
-        screen -c ${NVOC}/screenrc-wtm -dmSL wtm bash ${NVOC}/8wtm_auto_switch
-        if [[ $LOCALorREMOTE == LOCAL ]]; then
-          echo ""
-          echo "process in screen wtm, guake terminal Tab (f12)"
-          if [[ ! $(ps ax | grep "tail -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" | grep -v grep) ]];then
-            guake -n ${NVOC}/8wtm_auto_switch -r WTM_AUTO_SWITCH -e "tail -f  ${NVOC}/nvoc_logs/8_wtmautoswitchlog"
-          fi
-        elif [[ $LOCALorREMOTE == REMOTE ]]; then
-          echo "process in screen wtm, 'nvOC wtm-log'"
-          echo "    "
-        fi
-      fi
-    fi
-  fi
+if [[ $AUTO_START_MINER == YES ]]
+then
+  echo "Auto Start Miner Set to YES"
 
   while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
     echo "" | tee -a ${NVOC}/nvoc_logs/screenlog.0
-    echo "$(date) - Miner is running, 3main restarting miner" | tee -a ${NVOC}/nvoc_logs/screenlog.0
+    echo "$(date) - Miner is running, 3main killing miner" | tee -a ${NVOC}/nvoc_logs/screenlog.0
     ps ax | grep SCREEN | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
     sleep 2
   done
-
-  echo ""
-  echo "LAUNCHING:  MINER"
-  echo "    "
-  bash ${NVOC}/0miner
-  echo "    "
-  echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
-  echo "    "
 
   if [[ $MINER_WATCHDOG == YES ]]
   then
@@ -1195,22 +997,63 @@ EOF
     fi
   fi
 
-  if [ $LOCALorREMOTE == "REMOTE" ]
+  if [[ $AUTO_SWITCH == NO || $AUTO_SWITCH == WTM_SWITCHING ]]
   then
-    echo "Miner output: ./nvOC miner-log"
+    if [[ $ALGO == UNDEFINED ]]
+    then
+      echo ""
+      echo "[WARNING] - Attempting to launch miner for an undefined algo"
+    fi
+    
+    echo ""
+    echo "LAUNCHING:  MINER"
     echo "    "
+    bash ${NVOC}/0miner
     echo "    "
-  elif [ $LOCALorREMOTE == "LOCAL" ]
-  then
-    if [ $WTM_AUTO_SWITCH == "YES" ]
+    echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
+    echo "    "
+  
+    if [[ $LOCALorREMOTE == REMOTE ]]
+    then
+      echo "Miner output: ./nvOC miner-log"
+      echo "    "
+      echo "    "
+    elif [[ $LOCALorREMOTE == LOCAL ]]
     then
       echo "Miner output: ./nvOC miner-log"
       echo "    "
       echo "    "
       tail -f -n 1 ${NVOC}/nvoc_logs/screenlog.0
-    else
-      screen -r miner
     fi
+  elif [[ ${AUTO_SWITCH:0:7} == SALFTER ]]
+  then
+    echo "LAUNCHING:  ${AUTO_SWITCH} (will launch miner)"
+    echo ""
+  
+    while true
+    do
+      ${AUTO_SWITCH_CMD}
+      echo ""
+      cat ${NVOC}/current-profit
+      echo ""
+      if [[ $LOCALorREMOTE == LOCAL ]]
+      then
+        if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then	
+          guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0"	
+        fi
+        echo "mining process in Guake Tab"
+        echo ""
+      fi
+      if [[ $LOCALorREMOTE == REMOTE ]]
+      then
+        echo "ENTER:"
+        echo ""
+        echo "screen -r miner"
+        echo ""
+        echo "in a terminal to view mining process"
+      fi
+      sleep "$PROFIT_CHECK_TIMEOUT"
+    done
   fi
 
 elif [[ $AUTO_START_MINER == NO ]]
