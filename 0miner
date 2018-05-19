@@ -286,14 +286,14 @@ fi
 if [[ $ALGO == CRYPTONIGHTV7 ]];
 then
   # Remove nvidia.txt incase cards changed
-  if [ -f "${NVOC}"/nvidia.txt ]
+  if [ -f ~/nvidia.txt ]
   then
-    rm "${NVOC}"/nvidia.txt
+    rm ~/nvidia.txt
   fi
   # Change verbosity to show hashrate in output log
-  if grep '"verbose_level" : 3' "${NVOC}"/config.txt
+  if grep '"verbose_level" : 3' ~/config.txt
   then
-    sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' "${NVOC}"/config.txt
+    sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
   fi
   WALLET_ADDRESS_FORMAT="$CRYPTONIGHTV7_WALLET_FORMAT"
   HCD=${NVOC}/miners/xmr-stak/build/bin/xmr-stak_miner
