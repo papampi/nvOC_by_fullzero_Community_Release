@@ -261,7 +261,7 @@ then
   then
     HCD=${NVOC}/miners/suprminer/ccminer
   fi
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner-a x16r -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""$WALLET_ADDRESS_FORMAT""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -a x16r -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""$WALLET_ADDRESS_FORMAT""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 fi
 
 ## TIMETRAVEL10
