@@ -326,6 +326,39 @@ then
 elif [[ $COIN == BTX ]]
 then
   ALGO=TIMETRAVEL10
+elif [[ $COIN == SIB  || $COIN == NICE-X11GHOST ]]
+then
+  ALGO=SIB
+elif [[ $COIN == MONERO ]]
+then
+  ALGO=CRYPTONIGHTV7
+elif [[ $COIN == LUX ]]
+then
+  ALGO=PHI
+elif [[ $COIN == PASC || $COIN == PASL ]]
+then
+  ALGO=PASCAL
+elif [[ $COIN == LBC ]]
+then
+  ALGO=LBRY
+elif [[ $COIN == DMD ]]
+then
+  ALGO=DMDGR
+elif [[ $COIN == GRS ]]
+then
+  ALGO=GRS
+elif [[ $COIN == XMY ]]
+then
+  ALGO=MYR_GR
+elif [[ $COIN == DCR ]]
+then
+  ALGO=DCR
+elif [[ $COIN == SIA ]]
+then
+  ALGO=SIA
+elif [[ $COIN == ONION ]]
+then
+  ALGO=X13  
 elif [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFIT_SWITCHING || $COIN == SALFTER_PROGRAMATIC_SWITCHING ]]
 then
   ALGO=SALFTER
