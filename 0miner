@@ -73,13 +73,19 @@ UEXT="_EXTENSION_ARGUMENTS"
 UADDR="_ADDRESS"
 UWORK="_WORKER"
 UINTENSITY="_INTENSITY"
-LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
+UWALLET="_WALLET_FORMAT"
+UMINER="_MINER"
+
 xpool=$COIN$UPOOL
 xport=$COIN$UPORT
 xadd=$COIN$UADDR
 xwrk=$COIN$UWORK
 xext=$COIN$UEXT
 xintensity=$ALGO$UINTENSITY
+xwallet=$ALGO$UWALLET
+xminer=$ALGO$UMINER
+
+LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
 
 ## Unify COIN End
 
@@ -161,143 +167,99 @@ then
   fi
   $HCD
 
-elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == TIMETRAVEL10 || $ALGO == PHI || $ALGO == PASCAL || $ALGO == LBRY || $ALGO == DMDGR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DCR || $ALGO == SIA || $ALGO == X13 || $ALGO == CRYPTONIGHT ]]
+elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == TIMETRAVEL10 || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMDGR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DCR || $ALGO == SIA || $ALGO == X13 ]]
 then
 ## SIB, X11GHOST
   if [[ $ALGO == SIB ]]
   then
-    WALLET_ADDRESS_FORMAT="$SIB_WALLET_FORMAT"
-    HCD=${NVOC}/miners/"$SIB_MINER"/ccminer
     UCCALGO="-a sib"
   ## LYRA2Z
   elif [[ $ALGO == LYRA2Z ]]
   then
-    WALLET_ADDRESS_FORMAT="$LYRA2Z_WALLET_FORMAT"
-    HCD=${NVOC}/miners/"$LYRA2Z_MINER"/ccminer
     UCCALGO="-a lyra2z"
   ## SKUNK
   elif [[ $ALGO == SKUNK ]]
   then
-    WALLET_ADDRESS_FORMAT="$SKUNK_WALLET_FORMAT"
-    HCD=${NVOC}/miners/"$SKUNK_MINER"/ccminer
     UCCALGO="-a skunk"
   ## KECCAK
   elif [[ $ALGO == KECCAK ]]
   then
-    WALLET_ADDRESS_FORMAT="$KECCAK_WALLET_FORMAT"
-    HCD=${NVOC}/miners/"$XEVAN_MINER"/ccminer
     UCCALGO="-a keccak"
   ## SKEIN
   elif [[ $ALGO == SKEIN ]]
   then
-    WALLET_ADDRESS_FORMAT="$SKEIN_WALLET_FORMAT"
-    HCD=${NVOC}/miners/"$SKEIN_MINER"/ccminer
     UCCALGO="-a skein"
   ## NEOSCRYPT
   elif [[ $ALGO == NEOSCRYPT ]]
   then
-    WALLET_ADDRESS_FORMAT="$NEOSCRYPT_WALLET_FORMAT"
-    HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
     UCCALGO="-a neoscrypt"
   ## LYRA2V2
   elif [[ $ALGO == LYRA2V2 ]]
   then
-    WALLET_ADDRESS_FORMAT="$LYRA2V2_WALLET_FORMAT"
-    HCD="${NVOC}"/miners/"$LYRA2V2_MINER"/ccminer
     UCCALGO="-a lyra2v2"
   ## TIMETRAVEL10
   elif [[ $ALGO == TIMETRAVEL10 ]]
   then
-    WALLET_ADDRESS_FORMAT="$TIMETRAVEL10_WALLET_FORMAT"
-    HCD=${NVOC}/miners/"$TIMETRAVEL10_MINER"/ccminer
     UCCALGO="-a timetravel10"
   ## PHI1612
   elif [[ $ALGO == PHI ]]
   then
-    WALLET_ADDRESS_FORMAT="$PHI_WALLET_FORMAT"
-    HCD=${NVOC}/miners/PHI_MINER/ccminer
     UCCALGO="-a phi"
-  ## PASCAL
-  elif [[ $ALGO == PASCAL ]]
-  then
-    WALLET_ADDRESS_FORMAT="$PASCAL_WALLET_FORMAT"
-    HCD=${NVOC}/miners/pasc/sgminer
-    UCCALGO="-k pascal"
   ## LBRY
   elif [[ $ALGO == LBRY ]]
   then
-    WALLET_ADDRESS_FORMAT="$LBRY_WALLET_FORMAT"
-    HCD=${NVOC}/miners/$LBRY_MINER/ccminer
     UCCALGO="-a lbry"
   ## DMD-GR
   elif [[ $ALGO == DMDGR ]]
   then
-    WALLET_ADDRESS_FORMAT="$DMDGR_WALLET_FORMAT"
-    HCD=${NVOC}/miners/$DMDGR_MINER/ccminer
     UCCALGO="-a dmd-gr"
   ## GROESTL
   elif [[ $ALGO == GROESTL ]]
   then
-    WALLET_ADDRESS_FORMAT="$GROESTL_WALLET_FORMAT"
-    HCD=${NVOC}/miners/$GROESTL_MINER/ccminer
     UCCALGO="-a groestl"
   ## MYRIAD GROESTL
   elif [[ $ALGO == MYR_GR ]]
   then
-    WALLET_ADDRESS_FORMAT="$MYR_GR_WALLET_FORMAT"
-    HCD=${NVOC}/miners/$MYR_GR_MINER/ccminer
     UCCALGO="-a myr-gr"
   ## DECRED
   elif [[ $ALGO == DCR ]]
   then
-    WALLET_ADDRESS_FORMAT="$DCR_WALLET_FORMAT"
-    HCD=${NVOC}/miners/$DCR_MINER/ccminer
     UCCALGO="-a decred"
   ## SIA
   elif [[ $ALGO == SIA ]]
   then
-    WALLET_ADDRESS_FORMAT="$SIA_WALLET_FORMAT"
-    HCD=${NVOC}/miners/$SIA_MINER/ccminer
     UCCALGO="-a sia"
   ## X13
   elif [[ $ALGO == X13 ]]
   then
-    WALLET_ADDRESS_FORMAT="$X13_WALLET_FORMAT"
-    HCD=${NVOC}/miners/$X13_MINER/ccminer
     UCCALGO="-a x13"
+  ## XEVAN
   elif [[ $ALGO == XEVAN ]]
   then
-    WALLET_ADDRESS_FORMAT="$XEVAN_WALLET_FORMAT"
     UCCALGO="-a xevan"
-    if [[ $XEVAN_MINER == Z-ENEMY ]]
-    then
-      HCD=${NVOC}/miners/z-enemy/z-enemy_miner
-    else
-      HCD=${NVOC}/miners/$XEVAN_MINER/ccminer
-    fi
-  elif [[ $ALGO == CRYPTONIGHT ]]
-  then
-    WALLET_ADDRESS_FORMAT="$CRYPTONIGHT_WALLET_FORMAT"
-    HCD=${NVOC}/miners/KTccminer-cryptonight/ccminer
-    UCCALGO=""
+  ## X16R
   elif [[ $ALGO == X16R ]];
   then
     UCCALGO="-a x16r"
-    WALLET_ADDRESS_FORMAT=$X16R_WALLET_FORMAT
-    if [[ $X16R_MINER == Z-ENEMY ]]
-    then
-      HCD=${NVOC}/miners/z-enemy/z-enemy_miner
-    elif [[ $X16R_MINER == SILENT ]]
-    then
-      HCD=${NVOC}/miners/silent_miner/ccminer
-    elif [[ $X16R_MINER == SUPRMINER ]]
-    then
-      HCD=${NVOC}/miners/suprminer/ccminer
-    fi
   fi
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""$WALLET_ADDRESS_FORMAT""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  HCD="${NVOC}"/miners/"${!xminer}"/ccminer
+  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""${!xwallet}""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
-## CRYPTONIGHTV7
+## CRYPTONIGHT
+elif [[ $ALGO == CRYPTONIGHT ]]
+then
+  HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
+  UCCALGO=""
+  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""${!xwallet}""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+
+## PASCAL
+elif [[ $ALGO == PASCAL ]]
+then
+  HCD="${NVOC}"/miners/pasc/sgminer
+  UCCALGO="-k pascal"
+  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""${!xwallet}""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+
+  ## CRYPTONIGHTV7
 elif [[ $ALGO == CRYPTONIGHTV7 ]];
 then
 # Remove nvidia.txt if cards count changed
@@ -313,14 +275,12 @@ then
   then
     sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
   fi
-  WALLET_ADDRESS_FORMAT="$CRYPTONIGHTV7_WALLET_FORMAT"
   HCD=${NVOC}/miners/xmr-stak/build/bin/xmr-stak_miner
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xadd}""$WALLET_ADDRESS_FORMAT""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xadd}""${!xwallet}""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 else
   echo ""
   echo "COIN/ALGO not found, Check your settings"
-  echo "Miner not started, Stopping watchdog and tempcontrol "
-  pkill -e 5watchdog
-  pkill -e 6tempcontrol
+  echo "Miner not started, Stopping watchdog, tempcontrol, ..."
+  pkill -e screen
 fi
