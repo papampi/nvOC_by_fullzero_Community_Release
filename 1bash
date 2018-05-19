@@ -493,7 +493,7 @@ EWBF_OPTS=""                                     # EWBF ZEC Miner optional argum
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 
 # Miner, Intensity and wallet address format for different algos 
-# "KTccminer", "SPccminer", "TPccminer", "ASccminer", "Z-ENEMY", "SILENT_MINER", "SUPRMINER", "ANXccminer" 
+# "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer" , XMRstak
 # Test intensity on your rig and edit it or miner will set default values
 
 ## NEOSCRYPT
@@ -522,12 +522,12 @@ TIMETRAVEL10_INTENSITY=""
 TIMETRAVEL10_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X16R
-X16R_MINER="Z-ENEMY"
+X16R_MINER="ZENEMYminer"
 X16R_INTENSITY=""
 X16R_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## XEVAN
-XEVAN_MINER="Z-ENEMY"
+XEVAN_MINER="ZENEMYminer"
 XEVAN_INTENSITY=""
 XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
@@ -552,7 +552,7 @@ CRYPTONIGHT_INTENSITY=""
 CRYPTONIGHT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT-V7
-CRYPTONIGHTV7_MINER="TPccminer"
+CRYPTONIGHTV7_MINER="XMRstak"
 CRYPTONIGHTV7_INTENSITY=""
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
