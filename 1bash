@@ -58,15 +58,13 @@
 #          OhGodAnETHlargementPill
 # v=0023 : LukePicci
 #          Simplified ALGO specific settings
-# v=0022 : papampi
-#          HEADLEASS_MODE  
+# v=0024 : papampi
+#          HEADLEASS_MODE
+# v=0025 : LuKePicci
+#          AUTO_SWITCH generalized implementetion
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0023"   # Do not edit this
-
-
-# 1bash for v0019-2.1 (1bash subversion 001)
-
+nvOC_1bash_ver="v0019-2.1.0025"   # Do not edit this
 
 # fullzero:     nvOC creator
 
@@ -235,7 +233,18 @@ nvOC_1bash_ver="v0019-2.1.0023"   # Do not edit this
 #                                                      #
 ########################################################
 
-COIN="ZEC"
+COIN="ZEC"                  # Choose manually the coin to mine (like ETH, ZEC ...)
+                            # or pick an automatic profit-based switcher below
+
+AUTO_SWITCH="NO"       # NO, WTM_SWTICHING, SALFTER_NICEHASH_SWITCHING,
+                       # SALFTER_MPH_SWITCHING, SALFTER_PROGRAMATIC_SWITCHING
+
+#        - NO disables auto switching, mine previously selected COIN
+#        - WTM_SWTICHING whattomine.com switcher
+#        - SALFTER_NICEHASH_SWITCHING nicehash profit switcher
+#        - SALFTER_MPH_SWITCHING miningpoolhub profit switcher
+#        - SALFTER_PROGRAMATIC_SWITCHING reads the coin to switch to from a given URL
+
 
 AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
@@ -243,7 +252,7 @@ NUMBER_GPUS_INSTALLED=""    # Number or "" # Set number of GPUs installed. Watch
 
 LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local access to the rig. Set to REMOTE if logging remotely to the rig
 # LOCAL will attach the mining process to the gnome or guake terminal
-# REMOTE will leave it unattached, it will be launched using "screen", ready for SSH
+# REMOTE will leave it unattached, miner will be launched using "screen", ready for SSH
 
 
 TEAMVIEWER="NO"             # YES or NO # If you use Team Viewer to remotely connect to this rig set this to YES
@@ -313,6 +322,8 @@ LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OF
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
 WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU utilization
+
+WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
 
 GPU_UTIL_THRESHOLD="80"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recomended values 70-90) 
 
@@ -1280,15 +1291,17 @@ x11_POWERLIMIT_WATTS=120
 x11_CORE_OVERCLOCK=100
 x11_MEMORY_OVERCLOCK=100
 
-########################################################
-#                                                      #
-# PAPAMPI WTM_AUTO_SWITCH settings                     #
-#                                                      #
-########################################################
+################################################################
+#                                                              #
+# AUTOMATIC PROFIT-BASED MINING SWITCHERS                      #
+#                                                              #
+################################################################
 
-WTM_AUTO_SWITCH="NO"        # ( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
 
-WTM_PROFIT_CHECK="NO"      # whattomine.com Profit check for webinfo, only use if WTM_AUTO_SWITCH=NO
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+# papampi WTM_SWITCHING / PROFIT_CHECK settings        #
+
+WTM_PROFIT_CHECK="NO"      # whattomine.com Profit check for webinfo, only use if AUTO_SWITCH is not WTM_SWITCHING
 
 # note!! all selected COINS must HAVE ADDRESSES in the coin section below (no need for address if switch=no and profit=yes )
 # select which coins you want to mine or check profit (profit switch only using this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
@@ -1319,13 +1332,8 @@ WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_28
 # Above url is for 6x1060
 
 
-########################################################
-#                                                      #
-# SALFTER_NICEHASH_PROFIT_SWITCHING &                  #
-# SALFTER_MPH_PROFIT_SWITCHING &                       #
-# SALFTER_PROGRAMATIC_SWITCHING Settings               #
-#                                                      #
-########################################################
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+# All SALFTER_*_SWITCHING settings                     #
 
 # Change this url to one you use for your own
 PROGRAMATIC_SWITCH_CONFIG_JSON_URL="https://pastebin.com/dl/eLU4B8rK"

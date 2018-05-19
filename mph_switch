@@ -100,6 +100,7 @@ if (current==0):
     time.sleep(3)
   if card_type=="nvidia": # update card settings
     cards=int(subprocess.check_output("nvidia-smi --query-gpu=count --format=csv,noheader,nounits".split(" ")).split("\n")[-2])
+    nv_settings="nvidia-settings"
     for i in range(0, cards):
       # power limit
       if type(miner["power_limit"]) is int:
@@ -108,30 +109,15 @@ if (current==0):
         subprocess.call(("sudo nvidia-smi -i "+str(i)+" -pl "+str(miner["power_limit"][i])).split(" "))
       # core overclock
       if type(miner["gpu_oc"]) is int:
-        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[2]="+str(miner["gpu_oc"])).split(" "))
-        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[3]="+str(miner["gpu_oc"])).split(" "))
+        nv_settings+=" -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[2]="+str(miner["gpu_oc"])+" -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[3]="+str(miner["gpu_oc"])
       else:
-        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[2]="+str(miner["gpu_oc"][i])).split(" "))
-        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[3]="+str(miner["gpu_oc"][i])).split(" "))
+        nv_settings+=" -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[2]="+str(miner["gpu_oc"][i])+" -a [gpu:"+str(i)+"]/GPUGraphicsClockOffset[3]="+str(miner["gpu_oc"][i])
       # memory overclock
       if type(miner["mem_oc"]) is int:
-        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[2]="+str(miner["mem_oc"])).split(" "))
-        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[3]="+str(miner["mem_oc"])).split(" "))
+        nv_settings+=" -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[2]="+str(miner["mem_oc"])+" -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[3]="+str(miner["mem_oc"])
       else:
-        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[2]="+str(miner["mem_oc"][i])).split(" "))
-        subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[3]="+str(miner["mem_oc"][i])).split(" "))
-      # fan speed
-      if type(miner["fan"]) is int:
-        if (miner["fan"]==0):
-          subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0").split(" "))
-        else:
-          subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1").split(" "))
-          subprocess.call(("nvidia-settings -a [fan:"+str(i)+"]/GPUTargetFanSpeed="+str(miner["fan"])).split(" "))
-      else:
-        if (miner["fan"][i]==0):
-          subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0").split(" "))
-        else:
-          subprocess.call(("nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1").split(" "))
-          subprocess.call(("nvidia-settings -a [fan:"+str(i)+"]/GPUTargetFanSpeed="+str(miner["fan"][i])).split(" "))
+        nv_settings+=" -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[2]="+str(miner["mem_oc"][i])+" -a [gpu:"+str(i)+"]/GPUMemoryTransferRateOffset[3]="+str(miner["mem_oc"][i])
+
+    subprocess.call(nv_settings.split(" "))
   # launch new miner
-  subprocess.call(("screen -dmS miner "+coin).split(" "))
+  subprocess.call(("screen -c "+str(output_dir)+"/nvoc_logs/screenlog.0 -dmS miner "+coin).split(" "))

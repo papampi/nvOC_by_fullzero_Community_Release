@@ -82,28 +82,28 @@ then
 
 ########### Auto Switch History and current mining ##############
 
-  if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
+  if [ $AUTO_SWITCH == "SALFTER_MPH_SWITCHING" ]
   then
     CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
     MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0}')
     AUTO_SWITCH=("Salfter MPH Auto Switch")
 
 
-  elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
+  elif [ $AUTO_SWITCH == "SALFTER_NICEHASH_SWITCHING" ]
   then
     CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
     MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0}')
     AUTO_SWITCH=("Salfter Nicehash Auto Switch")
     
     
-  elif [ $COIN == "SALFTER_PROGRAMATIC_SWITCHING" ]
+  elif [ $AUTO_SWITCH == "SALFTER_PROGRAMATIC_SWITCHING" ]
   then
     CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
     MINING_HISTORY=$(tail -n 5 ${NVOC}/algo-log |  awk '{print $0,"<br>"}')
     AUTO_SWITCH=("Salfter Programatic Switch")
 
 
-  elif [ $WTM_AUTO_SWITCH == "YES" ]
+  elif [ $AUTO_SWITCH == "WTM_SWITCHING" ]
   then
 
     CURRENT_COIN="Mining Coin: $COIN"
@@ -120,17 +120,16 @@ then
     fi
     AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH  $WTM_A_S")
 
-  elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
+  elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $AUTO_SWITCH == "NO" ]
   then
     CURRENT_COIN="Mining Coin: $COIN"
+    AUTO_SWITCH="No Auto Switch"
     MINING_HISTORY=""
     WTM_PROFIT="WTM Current Profit: $(cat ${NVOC}/WTM_current_profit | awk '{print $0,"%"}')"
     WTM_REV=$(cat ${NVOC}/WTM_current_revenue | awk '{print $0,""}')
     WTM_SWITCH=("WTM Profit Check Running. ")
     BTC_PRICE="BTC Price: $(cat ${NVOC}/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )"
     WTM_AVERAGE_REV=""
-    AUTO_SWITCH=""
-
 
   else
     CURRENT_COIN="Mining Coin: $COIN"
@@ -1157,7 +1156,7 @@ then
       # Mining coin
       if [[ "$SEND_MINING_COIN" == "YES" ]]; then
 
-        if [[ $COIN == SALFTER_NICEHASH_PROFIT_SWITCHING || $COIN == SALFTER_MPH_PROFIT_SWITCHING  || $COIN == SALFTER_PROGRAMATIC_SWITCHING ]]; then
+        if [[ ${AUTO_SWITCH:0:7} == SALFTER ]]; then
           CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
         else
           CURRENT_COIN=$COIN
