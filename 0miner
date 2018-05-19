@@ -283,7 +283,7 @@ then
   fi
   WALLET_ADDRESS_FORMAT="$CRYPTONIGHTV7_WALLET_FORMAT"
   HCD=${NVOC}/miners/xmr-stak/build/bin/xmr-stak_miner
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -o stratum+tcp://"${!xpool}"$CLN"${!xport}" -u "${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}" -p $MINER_PWD -i "${!xintensity}" $CCMINER_OPTS
+  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD --currency monero7 --noCPU --noAMD -o "${!xpool}"$CLN"${!xport}" -u "${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}" -p $MINER_PWD -i "${!xintensity}" $CCMINER_OPTS
 fi
 
 if [[ $COIN == ONION ]]
