@@ -152,7 +152,7 @@ fi
 ## EQUIHASH
 if [[ $ALGO == EQUIHASH ]];
 then
-  if [[ $EQUIHASH_MINER == ZM ]]
+  if [[ $EQUIHASH_MINER == DSTM ]]
   then
     HCD="$LAUNCH ${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xadd}$EQUIHASH_WALLET_FORMAT${!xwrk} --port ${!xport} --pass $MINER_PWD --time $ZM_OPTS ${!xext}"
   fi
