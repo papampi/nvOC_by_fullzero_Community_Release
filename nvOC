@@ -43,11 +43,14 @@
 #
 # v=0008 : LukePicci
 #          Relocate nvOC to arbitrary install directory
+#
+# v=0009 : LuKePicci
+#          added main-log, install-service 
 
-# DEV_VERSION=0007
+# DEV_VERSION=0009
 
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.0.007"                   # Do not edit this
+nvOC_nvOC_ver="v0019-2.0.009"                   # Do not edit this
 
 
 export DISPLAY=:0
@@ -99,6 +102,8 @@ echo_usage()
    echo "           stops mining, watchdog and temperature control"
    echo -e "        ${C}$0 start${N}"
    echo "           starts normal nvOC mining operations"
+   echo -e "        ${C}$0 main-log${N}"
+   echo "           display nvOC startup output"
    echo -e "        ${C}$0 miner-log${N}"
    echo "           display live miner output"
    echo -e "        ${C}$0 wdog-log${N}"
@@ -737,6 +742,44 @@ echo
 echo
 }
 
+################################# install-service ######################################
+install-service()
+{
+  echo Reinstalling nvOC service for ${NVOC}
+  sudo cat <<EOF > /etc/systemd/system/nvoc.service
+[Unit]
+Description=nvOC Service
+
+[Service]
+Type=forking
+User=nvoc
+
+Environment=GPU_FORCE_64BIT_PTR=0
+Environment=GPU_MAX_HEAP_SIZE=100
+Environment=GPU_USE_SYNC_OBJECTS=1
+Environment=GPU_MAX_ALLOC_PERCENT=100
+Environment=GPU_SINGLE_ALLOC_PERCENT=100
+
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=~/.Xauthority
+
+WorkingDirectory=${NVOC}
+ExecStart=/usr/bin/screen -c ${NVOC}/screenrc-main -dmSL main /bin/bash "${NVOC}/2unix"
+Restart=always
+EOF
+  
+  if systemd-analyze verify nvoc.service
+  then
+    echo "Done. This service has autostart enabled."
+    sudo systemctl enable nvoc
+  fi
+}
+
+################################# main-log ######################################
+main-log()
+{
+tail -f ${NVOC}/nvoc_logs/screenlog-main.0
+}
 
 ################################# miner-log ######################################
 miner-log()
@@ -800,6 +843,7 @@ case $# in
          reboot)       Reboot;;
          start)        Start;;
          stop)         Stop;;
+         main-log)     main-log;;
          miner-log)    miner-log;;
          wdog-log)     wdog-log;;
          temp-log)     temp-log;;

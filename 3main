@@ -126,14 +126,6 @@ then
   fi
 fi
 
-# make log folder, re/mount new one 
-mkdir -p "${NVOC}/nvoc_logs"
-if mountpoint -q "${NVOC}/nvoc_logs"
-then
-    REMOUNT="remount,"
-fi
-sudo mount -t tmpfs -o ${REMOUNT}defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
-
 if [[ $CLEAR_LOGS_ON_BOOT == YES ]]
 then
   sudo bash "${NVOC}/clear_logs"
@@ -228,9 +220,10 @@ then
     sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   else
     echo "Downloading default xorg.conf"
-    sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf -O /etc/X11/xorg.conf.default
+    wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf -O /tmp/xorg.conf.default
     echo "Restore default xorg.conf"
-    sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
+    sudo cp /tmp/xorg.conf.default /etc/X11/xorg.conf.default
+	sudo cp /tmp/xorg.conf.default /etc/X11/xorg.conf
   fi
   echo "Rebooting in 5 seconds"
   sleep 5
@@ -535,8 +528,9 @@ if [[ $AUTO_SWITCH == SALFTER_NICEHASH_SWITCHING ]]
 then
   if ! grep -q "api.nicehash.com" /etc/hosts
   then
-    sudo -- sh -c -e "echo '' >> /etc/hosts"
-    sudo -- sh -c -e "echo '104.20.158.21 api.nicehash.com' >> /etc/hosts"
+    cp -f /etc/hosts /tmp/hosts.edited
+	echo "104.20.158.21 api.nicehash.com" >> /tmp/hosts.edited
+	sudo cp -f /tmp/hosts.edited /etc/hosts
     echo UPDATED HOSTS FILE WITH IPv6 FIX
     echo ""
     echo ""

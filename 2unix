@@ -2,20 +2,25 @@
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-firstBOOT="NO"
+pkill -f 3main
 
-if grep -q "convert" ${NVOC}/firstBOOT;
+# make log folder, re/mount new one 
+mkdir -p "${NVOC}/nvoc_logs"
+if mountpoint -q "${NVOC}/nvoc_logs"
 then
-  firstBOOT="YES"
+    REMOUNT="remount,"
+fi
+if sudo mount -t tmpfs -o ${REMOUNT}defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
+then
+    # restart with tmpfs logging enabled
+    exit
 fi
 
-if [ $firstBOOT == "YES" ]
+if grep -q "convert" ${NVOC}/firstBOOT
 then
   echo "First Boot, Copying 1bash and Expanding root partition"
   sleep 5
-  rm ${NVOC}/firstBOOT
-  sleep 1
-  touch ${NVOC}/firstBOOT
+  echo "" > ${NVOC}/firstBOOT
   if [ -e /media/m1/12D3-A869/1bash ]
   then
     echo "Copying 1bash"
@@ -40,9 +45,6 @@ then
   sleep 5
   sudo reboot
 fi
-pkill -f 3main
-
-sleep 3
 
 update="YES"
 
@@ -54,5 +56,6 @@ fi
 if [ $update == "YES" ] ; then
   echo "Update Available"
 fi
+
 
 bash "${NVOC}/3main"
