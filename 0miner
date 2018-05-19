@@ -372,7 +372,7 @@ then
 fi
 
 
-## SIA
+## X13
 if [[ $ALGO == X13 ]];
 then
   WALLET_ADDRESS_FORMAT="$X13_WALLET_FORMAT"
