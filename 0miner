@@ -45,9 +45,9 @@
 # v=0016 : papampi
 #          Prevent running 2 miners
 # v=0017 : sizzlephizzle
-#	   Unification of EQUIHASH & ETHASH mining by ALGO.
-# v=0018 : papampi
-#	   Algo Unification for all algorithms
+#	         Unification of EQUIHASH & ETHASH mining by ALGO.
+# v=0018 : papampi, sizzlephizzle
+#	         Algo Unification for all algorithms
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
@@ -65,7 +65,6 @@ if [ -z "${MINER_PWD+x}" ]
 then
   MINER_PWD="x"
 fi
-
 
 ## Unify COIN Start
 UPOOL="_POOL"
@@ -321,5 +320,7 @@ then
 else
   echo ""
   echo "COIN/ALGO not found, Check your settings"
-  echo ""
+  echo "Miner not started, Stopping watchdog and tempcontrol "
+  pkill -e 5watchdog
+  pkill -e 6tempcontrol
 fi
