@@ -69,17 +69,17 @@ fi
 ## Unify COIN Start
 UPOOL="_POOL"
 UPORT="_PORT"
-UEXT="_EXTENSION_ARGUMENTS"
 UADDR="_ADDRESS"
 UWORK="_WORKER"
+UEXT="_EXTENSION_ARGUMENTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
 
 xpool=$COIN$UPOOL
 xport=$COIN$UPORT
-xadd=$COIN$UADDR
-xwrk=$COIN$UWORK
+xaddr=$COIN$UADDR
+xwork=$COIN$UWORK
 xext=$COIN$UEXT
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
@@ -139,13 +139,13 @@ then
 ## Declare Miner Start
   if [[ $ETHASH_MINER == GENOIL ]]
   then
-    HCD="$LAUNCH ${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xadd}$ETHASH_WALLET_FORMAT${!xwrk}:$MINER_PWD -SP 1 -U ${!xext}"
+    HCD="$LAUNCH ${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
   elif [[ $ETHASH_MINER == ETHMINER ]]
   then
-    HCD="$LAUNCH ${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xadd}$ETHASH_WALLET_FORMAT${!xwrk}:$MINER_PWD -SP 1 -U ${!xext}"
+    HCD="$LAUNCH ${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
-    HCD="$LAUNCH ${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xadd}$ETHASH_WALLET_FORMAT${!xwrk} -epsw $MINER_PWD  -mode 1 -allcoins 1 -allpools 1 -dbg -1 ${!xext}"
+    HCD="$LAUNCH ${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD  -mode 1 -allcoins 1 -allpools 1 -dbg -1 ${!xext}"
   fi
   $HCD
 
@@ -154,16 +154,16 @@ elif [[ $ALGO == EQUIHASH ]];
 then
   if [[ $EQUIHASH_MINER == DSTM ]]
   then
-    HCD="$LAUNCH ${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xadd}$EQUIHASH_WALLET_FORMAT${!xwrk} --port ${!xport} --pass $MINER_PWD --time $DSTM_OPTS ${!xext}"
+    HCD="$LAUNCH ${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $DSTM_OPTS ${!xext}"
   elif [[ $EQUIHASH_MINER == EWBF ]]
   then
-    HCD="$LAUNCH ${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xadd}$EQUIHASH_WALLET_FORMAT${!xwrk} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
+    HCD="$LAUNCH ${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
   elif [[ $EQUIHASH_MINER == BMINER ]]
   then
-    HCD="$LAUNCH ${NVOC}/miners/bminer/latest/bminer -uri stratum://${!xadd}$EQUIHASH_WALLET_FORMAT${!xwrk}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
+    HCD="$LAUNCH ${NVOC}/miners/bminer/latest/bminer -uri stratum://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   elif [[ $EQUIHASH_MINER == BMINER_SSL ]]
   then
-    HCD="$LAUNCH ${NVOC}/miners/bminer/latest/bminer -uri stratum+ssl://${!xadd}$EQUIHASH_WALLET_FORMAT${!xwrk}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
+    HCD="$LAUNCH ${NVOC}/miners/bminer/latest/bminer -uri stratum+ssl://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
   $HCD
 
@@ -243,21 +243,21 @@ then
     UCCALGO="-a x16r"
   fi
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
-  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""${!xwallet}""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
   UCCALGO=""
-  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""${!xwallet}""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
 then
   HCD="${NVOC}"/miners/pasc/sgminer
   UCCALGO="-k pascal"
-  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xadd}""${!xwallet}""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
   ## CRYPTONIGHTV7
 elif [[ $ALGO == CRYPTONIGHTV7 ]];
@@ -276,7 +276,7 @@ then
     sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
   fi
   HCD=${NVOC}/miners/xmr-stak/build/bin/xmr-stak_miner
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xadd}""${!xwallet}""${!xwrk}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 else
   echo ""
