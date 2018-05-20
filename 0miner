@@ -205,6 +205,6 @@ then
 else
   echo ""
   echo "COIN/ALGO not found, Check your settings"
-  echo "Miner not started, Stopping watchdog, tempcontrol, ..."
-  pkill -e screen
+  echo "Miner not started, Stopping watchdog"
+  pkill -f 5watchdog
 fi
