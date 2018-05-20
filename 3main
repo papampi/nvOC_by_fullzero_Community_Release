@@ -299,7 +299,7 @@ then
 fi
 
 ## IDENTIFY MINING ALGORITHM START
-if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX ]]
+if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX || $COIN == MPH_NEOSCRYPT ]]
 then
   ALGO=NEOSCRYPT
 elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE-ETHASH ]]
@@ -311,15 +311,15 @@ then
 elif [[ $COIN == SIGT || $COIN == ZPOOL_SKUNK || $COIN == ALTCOM || $COIN == NICE-SKUNKHASH ]]
 then
   ALGO=SKUNK
-elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE-LYRA2REV2 || $COIN == XVG ]]
+elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE-LYRA2REV2 || $COIN == XVG || $COIN == MPH_LYRA2V2 ]]
 then
-  ALGO=LYRA2REV2
+  ALGO=LYRA2V2
 elif [[ $COIN == XMR || $COIN == KRB || $COIN == ETN || $COIN == NICE-CRYPTONIGHT ]]
 then
   ALGO=CRYPTONIGHT
-elif [[ $COIN == ZCOIN ]]
+elif [[ $COIN == ZCOIN || $COIN == MPH_LYRA2Z ]]
 then
-  ALGO=LYRA2V2
+  ALGO=LYRA2Z
 elif [[ $COIN == BSD ]]
 then
   ALGO=XEVAN
@@ -332,7 +332,7 @@ then
 elif [[ $COIN == SIB  || $COIN == NICE-X11GHOST ]]
 then
   ALGO=SIB
-elif [[ $COIN == MONERO ]]
+elif [[ $COIN == MONERO || $COIN == MPH_CRYPTONIGHTV7 ]]
 then
   ALGO=CRYPTONIGHTV7
 elif [[ $COIN == LUX ]]
@@ -347,13 +347,13 @@ then
 elif [[ $COIN == DMD ]]
 then
   ALGO=DMD-GR
-elif [[ $COIN == GRS ]]
+elif [[ $COIN == GRS || $COIN == MPH_GRS]]
 then
   ALGO=GRS
 elif [[ $COIN == XMY ]]
 then
   ALGO=MYR-GR
-elif [[ $COIN == DCR ]]
+elif [[ $COIN == DCR || $COIN == MPH_MYR-GR ]]
 then
   ALGO=DECRED
 elif [[ $COIN == SIA ]]
