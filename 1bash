@@ -62,9 +62,11 @@
 #          HEADLEASS_MODE
 # v=0025 : LuKePicci
 #          AUTO_SWITCH generalized implementetion
+# v=0026 : papampi, sizzlephizzle
+#          Algo mining unification 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0025"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0026"   # Do not edit this
 
 # fullzero:     nvOC creator
 
