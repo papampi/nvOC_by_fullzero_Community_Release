@@ -346,16 +346,16 @@ then
   ALGO=LBRY
 elif [[ $COIN == DMD ]]
 then
-  ALGO=DMDGR
+  ALGO=DMD-GR
 elif [[ $COIN == GRS ]]
 then
   ALGO=GRS
 elif [[ $COIN == XMY ]]
 then
-  ALGO=MYR_GR
+  ALGO=MYR-GR
 elif [[ $COIN == DCR ]]
 then
-  ALGO=DCR
+  ALGO=DECRED
 elif [[ $COIN == SIA ]]
 then
   ALGO=SIA
