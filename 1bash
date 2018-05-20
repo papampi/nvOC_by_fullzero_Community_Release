@@ -1006,11 +1006,6 @@ ZPOOL_LYRA2V2_POOL="lyra2v2.mine.zpool.ca"
 ZPOOL_LYRA2V2_PORT="4533"
 ZPOOL_LYRA2V2_WORKER="$WORKERNAME"
 
-# ZPOOL_BLAKE2S ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
-ZPOOL_BLAKE2S_POOL="blake2s.mine.zpool.ca"
-ZPOOL_BLAKE2S_PORT="5766"
-ZPOOL_BLAKE2S_WORKER="$WORKERNAME"
-
 # ZPOOL_EQUIHASH ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_EQUIHASH_POOL="equihash.mine.zpool.ca"
 ZPOOL_EQUIHASH_PORT="2142"
