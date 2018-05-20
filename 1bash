@@ -352,15 +352,15 @@ ALT_POOL="NO"               #YES or NO, Set to YES if you want to enable  poolsw
 #                                                      #
 ########################################################
 
-POWERLIMIT_MODE="GLOBAL"    # GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC, GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET 
+POWERLIMIT_MODE="GLOBAL"    # GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC (Pro Settings: GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET)
 
-OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC,GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET 
+OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC (Pro Settings: GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET)
 
 # Modes: - NO disables overclock
 #        - GLOBAL mode means no individual gpu- or algo-specific settings are used
 #        - GPU_SPECIFIC let global setting be overridden by individual gpu-specific setting
 #        - ALGO_SPECIFIC let global setting be dynamically overridden by algo-specific setting
-#
+#        - Pro Settings are not for the faint-hearted. Dont use if you dont know what they are. 
 #        For optimal use of any mining switcher use ALGO_SPECIFIC modes !!
 #        Default values set later on in 1bash are for 1060, remember to set yours accordingly.
 
