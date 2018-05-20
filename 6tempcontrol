@@ -59,7 +59,7 @@ source ${NVOC}/1bash
 sleep 1
 
 NVD=nvidia-settings
-SMI="sudo nvidia-smi"
+SMI=nvidia-smi
 
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
@@ -121,7 +121,7 @@ sleep 1
 
 
 # Determine the number of available GPU's
-GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+GPUS=$(${SMI} -i 0 --query-gpu=count --format=csv,noheader,nounits)
 
 echo -e "Detected: ${B}$GPUS${N} GPU's"
 echo ""
@@ -155,13 +155,13 @@ do
   # Info - display assigned values per GPU
   echo -e "${B}GPU $count:${N}  POWER LIMIT: ${B}${POWER_LIMIT[$count]}${N},  TARGET TEMP: ${B}${TARGET_TEMP[$count]}${N}"
 
-  # Enable fan control
-  ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
-  sleep 0.1
-
+  $__CTL_ENABLE="${__CTL_ENABLE} -a [gpu:${count}]/GPUFanControlState=1"
   (( count++ ))
-
 done
+
+# Enable fan control
+sudo ${NVD} $__CTL_ENABLE >/dev/null 2>&1
+sleep 0.1
 
 FAN_ADJUST=$__FAN_ADJUST
 
@@ -186,13 +186,6 @@ echo ""
 # I am using it for a while and had no problems with it.
 # If we decide to use it, please move this to the top of 3main:
 # sudo nvidia-smi -pm 1
-#
-# Next line to be deleted after being moved to 3main:
-# added for salfter auto switch compatibilty
-if [[  $COIN != *"SALFTER"* ]]
-then
-  sudo nvidia-smi -pm 1 >/dev/null 2>&1
-fi
 
 
 # How often should TEMP_CONTROL check and adjust the fans
@@ -224,16 +217,17 @@ ERR_TIMER=60
 ERR_TIMER_BRK=$ERR_TIMER
 
 # The Main Loop
-while true; do
+while true
+do
   GPU=0
   while (( GPU < GPUS ))
   do
-    { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+    { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
 
     # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
-    if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]; then
+    if [[ $(${SMI} -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]; then
       if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
         # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
         while [ $ERR_TIMER -gt 0 ]; do
@@ -242,7 +236,7 @@ while true; do
             bash "${NVOC}/telegram"
           fi
           sleep 15
-          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit --format=csv,noheader,nounits)
+          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit --format=csv,noheader,nounits)
           if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
             ERR_TIMER=$(($ERR_TIMER - 15))
           else
@@ -268,7 +262,7 @@ while true; do
             bash "${NVOC}/telegram"
           fi
           sleep 15
-          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
           if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
             ERR_TIMER=$(($ERR_TIMER - 15))
           else
@@ -312,7 +306,7 @@ while true; do
         NEW_POWER_LIMIT=$(($POWERLIMIT - $POWER_ADJUST))
         echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a ${LOG_FILE}
         echo ""
-        ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
+        sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
       fi
     else
       # Current temp is lower than target, so we can relax fan speed, and restore original power limit if applicable
@@ -329,7 +323,7 @@ while true; do
             NEW_POWER_LIMIT=${POWER_LIMIT[${GPU}]}
             echo -e "${B}GPU$GPU${N}${C}$(date) - Restoring Power Limit for ${N}${B}GPU$GPU${N}. ${C}Old limit: ${N}${B}$POWERLIMIT${N}${C} New limit: ${N}${B}$NEW_POWER_LIMIT${N}${C} Fan speed: ${N}${B}$NEW_FAN_SPEED${N}"
             echo ""
-            ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
+            sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
           fi
         fi
       fi
@@ -338,7 +332,7 @@ while true; do
     if [ "$NEW_FAN_SPEED" -ne "$CURRENT_FAN" ]; then
       echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"
       echo ""
-      ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
+      sudo ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
     fi
 
     (( GPU++ ))
