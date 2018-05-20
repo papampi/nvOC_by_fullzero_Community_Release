@@ -288,7 +288,7 @@ fi
 
 if [[ $CONTROL_GPU_LED == YES ]]
 then
-  ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
+  sudo ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
 fi
 
 ## IDENTIFY MINING ALGORITHM START
