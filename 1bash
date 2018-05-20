@@ -1047,6 +1047,47 @@ MPH_ETHASH_WORKER="$WORKERNAME"
 MPH_ETHASH_POOL="us-east.ethash-hub.miningpoolhub.com"
 MPH_ETHASH_PORT="17020"
 
+# MPH_SKEIN
+MPH_SKEIN_WORKER="$WORKERNAME"
+MPH_SKEIN_POOL="hub.miningpoolhub.com"
+MPH_SKEIN_PORT="17016"
+
+# MPH_LYRA2Z
+MPH_LYRA2Z_WORKER="$WORKERNAME"
+MPH_LYRA2Z_POOL="us-east.lyra2z-hub.miningpoolhub.com"
+MPH_LYRA2Z_PORT="17025"
+
+# MPH_NEOSCRYPT
+MPH_NEOSCRYPT_WORKER="$WORKERNAME"
+MPH_NEOSCRYPT_POOL="hub.miningpoolhub.com"
+MPH_NEOSCRYPT_PORT="17012"
+
+# MPH_LYRA2V2
+MPH_LYRA2V2_WORKER="$WORKERNAME"
+MPH_LYRA2V2_POOL="hub.miningpoolhub.com"
+MPH_LYRA2V2_PORT="17018"
+
+# MPH_CRYPTONIGHTV7
+MPH_CRYPTONIGHTV7_WORKER="$WORKERNAME"
+MPH_CRYPTONIGHTV7_POOL="us-east.cryptonight-hub.miningpoolhub.com"
+MPH_CRYPTONIGHTV7_PORT="17024"
+
+# MPH_KECCAK
+MPH_KECCAK_WORKER="$WORKERNAME"
+MPH_KECCAK_POOL="hub.miningpoolhub.com"
+MPH_KECCAK_PORT="17003"
+
+# MPH_MYR-GR
+MPH_MYR-GR_WORKER="$WORKERNAME"
+MPH_MYR-GR_POOL="hub.miningpoolhub.com"
+MPH_MYR-GR_PORT="17005"
+
+# MPH_GRS
+MPH_GRS_WORKER="$WORKERNAME"
+MPH_GRS_POOL="hub.miningpoolhub.com"
+MPH_GRS_PORT="17004"
+
+
 #####################################################################
 #                                                                   #
 # Individual GPU_SPECIFIC Power Limit, Temp and Clock settings      #
