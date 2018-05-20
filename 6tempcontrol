@@ -156,7 +156,7 @@ do
   echo -e "${B}GPU $count:${N}  POWER LIMIT: ${B}${POWER_LIMIT[$count]}${N},  TARGET TEMP: ${B}${TARGET_TEMP[$count]}${N}"
 
   # Enable fan control
-  ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
+  DISPLAY=:0 ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
   sleep 0.1
 
   (( count++ ))
@@ -338,7 +338,7 @@ while true; do
     if [ "$NEW_FAN_SPEED" -ne "$CURRENT_FAN" ]; then
       echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"
       echo ""
-      ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
+      DISPLAY=:0 ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
     fi
 
     (( GPU++ ))

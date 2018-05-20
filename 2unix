@@ -6,14 +6,12 @@ pkill -f 3main
 
 # make log folder, re/mount new one 
 mkdir -p "${NVOC}/nvoc_logs"
-if mountpoint -q "${NVOC}/nvoc_logs"
+if ! mountpoint -q "${NVOC}/nvoc_logs"
 then
-    REMOUNT="remount,"
-fi
-if sudo mount -t tmpfs -o ${REMOUNT}defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
-then
-    # restart with tmpfs logging enabled
+  if sudo mount -t tmpfs -o defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
+  then
     exit
+  fi
 fi
 
 if grep -q "convert" ${NVOC}/firstBOOT
