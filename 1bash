@@ -352,9 +352,9 @@ ALT_POOL="NO"               #YES or NO, Set to YES if you want to enable  poolsw
 #                                                      #
 ########################################################
 
-POWERLIMIT_MODE="GLOBAL"    # GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC
+POWERLIMIT_MODE="GLOBAL"    # GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC, GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET 
 
-OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC
+OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC,GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET 
 
 # Modes: - NO disables overclock
 #        - GLOBAL mode means no individual gpu- or algo-specific settings are used
