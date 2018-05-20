@@ -210,20 +210,11 @@ Reboot()
    sudo su -c "shutdown -r now"
 }
 
-
-############################### Reboot host ###################################
-Reboot()
-{
-   # Reboots the host
-   echo -e "${B}${R}Warning: The host will reboot in 10 seconds, ctrl-c to cancel...${N}"
-   sleep 10
-   sudo su -c "shutdown -r now"
-}
-############################### Reboot host ###################################
+############################### Restart Miner ##################################
 Restart()
 {
    # Reboots the host
-        nvoc stop && timeout 2 && nvoc start
+        Stop() && Start()
 }
 ############################### Start nvOC ####################################
 Start()
