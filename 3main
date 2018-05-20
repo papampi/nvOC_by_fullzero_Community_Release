@@ -131,10 +131,7 @@ then
   sudo bash "${NVOC}/clear_logs"
 fi
 
-if [[ $LOCALorREMOTE == REMOTE ]]
-then
-  export DISPLAY=:0
-fi
+export DISPLAY=:0
 
 if [[ $LOG_ROTATE == YES ]]
 then
@@ -231,6 +228,7 @@ then
 fi
 
 # install web scripts
+mkdir -p "${HOME}/www/cgi-bin"
 for webscript in minerinfo
 do
   if [[ -L "$HOME/www/cgi-bin/$webscript" ]]
