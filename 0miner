@@ -167,81 +167,9 @@ then
   fi
   $HCD
 
-elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == TIMETRAVEL10 || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMDGR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DCR || $ALGO == SIA || $ALGO == X13 ]]
+elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == TIMETRAVEL10 || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMD-GR || $ALGO == GROESTL || $ALGO == MYR-GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 ]]
 then
-## SIB, X11GHOST
-  if [[ $ALGO == SIB ]]
-  then
-    UCCALGO="-a sib"
-  ## LYRA2Z
-  elif [[ $ALGO == LYRA2Z ]]
-  then
-    UCCALGO="-a lyra2z"
-  ## SKUNK
-  elif [[ $ALGO == SKUNK ]]
-  then
-    UCCALGO="-a skunk"
-  ## KECCAK
-  elif [[ $ALGO == KECCAK ]]
-  then
-    UCCALGO="-a keccak"
-  ## SKEIN
-  elif [[ $ALGO == SKEIN ]]
-  then
-    UCCALGO="-a skein"
-  ## NEOSCRYPT
-  elif [[ $ALGO == NEOSCRYPT ]]
-  then
-    UCCALGO="-a neoscrypt"
-  ## LYRA2V2
-  elif [[ $ALGO == LYRA2V2 ]]
-  then
-    UCCALGO="-a lyra2v2"
-  ## TIMETRAVEL10
-  elif [[ $ALGO == TIMETRAVEL10 ]]
-  then
-    UCCALGO="-a timetravel10"
-  ## PHI1612
-  elif [[ $ALGO == PHI ]]
-  then
-    UCCALGO="-a phi"
-  ## LBRY
-  elif [[ $ALGO == LBRY ]]
-  then
-    UCCALGO="-a lbry"
-  ## DMD-GR
-  elif [[ $ALGO == DMDGR ]]
-  then
-    UCCALGO="-a dmd-gr"
-  ## GROESTL
-  elif [[ $ALGO == GROESTL ]]
-  then
-    UCCALGO="-a groestl"
-  ## MYRIAD GROESTL
-  elif [[ $ALGO == MYR_GR ]]
-  then
-    UCCALGO="-a myr-gr"
-  ## DECRED
-  elif [[ $ALGO == DCR ]]
-  then
-    UCCALGO="-a decred"
-  ## SIA
-  elif [[ $ALGO == SIA ]]
-  then
-    UCCALGO="-a sia"
-  ## X13
-  elif [[ $ALGO == X13 ]]
-  then
-    UCCALGO="-a x13"
-  ## XEVAN
-  elif [[ $ALGO == XEVAN ]]
-  then
-    UCCALGO="-a xevan"
-  ## X16R
-  elif [[ $ALGO == X16R ]];
-  then
-    UCCALGO="-a x16r"
-  fi
+  UCCALGO="-a $(echo $ALGO | sed -e 's/\(.*\)/\L\1/')"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
   "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
@@ -249,8 +177,7 @@ then
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
-  UCCALGO=""
-  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  "$LAUNCH" "$HCD" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
