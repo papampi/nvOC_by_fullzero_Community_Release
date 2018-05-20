@@ -144,22 +144,22 @@ nvOC_1bash_ver="v0019-2.1.0025"   # Do not edit this
 ######### SIB
 
 #ALGO - CryptoNight
-######### XMR  KRB ETN
+######### XMR KRB ETN
 
 #ALGO - Skunk
-######### SIGT  ZPOOL_SKUNK ALTCOM
+######### SIGT ZPOOL_SKUNK ALTCOM
 
 #ALGO - Ethash
-######### ETH  ETC  EXP  UBQ  MUSIC  SOIL PIRL
+######### ETH ETC EXP UBQ MUSIC CLO SOIL PIRL
 
 #ALGO - SKUNKASH
 ######### ALTCOM
 
 #ALGO - Equihash
-######### ZEC  ZEN  HUSH  ZCL  KMD BTG BTCZ
+######### ZEC ZEN HUSH ZCL KMD BTG BTCZ
 
 #ALGO - NiceHash
-######### DUAL_NICEHASH (Ethash + Decred)  NICE-EQUIHASH  NICE-ETHASH
+######### DUAL_NICEHASH (Ethash + Decred) NICE-EQUIHASH NICE-ETHASH
 
 #ALGO - X13
 ######### ONION
@@ -171,7 +171,7 @@ nvOC_1bash_ver="v0019-2.1.0025"   # Do not edit this
 ######### XMY
 
 #ALGO - LYRA2V2
-######### MONA  VTC  ZCOIN
+######### MONA VTC ZCOIN
 
 #ALGO - SKEIN
 ######### DGB
@@ -820,6 +820,13 @@ MUSIC_ADDRESS="replace_with_your_MUSIC_address"
 MUSIC_POOL="eus.gmc.epool.io"
 MUSIC_PORT="8008"
 MUSIC_EXTENSION_ARGUMENTS=""   # add any additional Claymore miner arguments here
+
+#CLO
+CLO_WORKER="$WORKERNAME"
+CLO_ADDRESS="0x4b0153e08e682d2be1bee100f51f8841dc41382c"
+CLO_POOL="clo.2miners.com"
+CLO_PORT="3030"
+CLO_EXTENSION_ARGUMENTS="-allcoins 1 -allpools 1"   # add any additional Claymore miner arguments here
 
 # SOIL
 SOIL_WORKER="$WORKERNAME"
