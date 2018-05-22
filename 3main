@@ -148,22 +148,23 @@ NORMAL="NO"
 
 P10X_100="NO"
 
-nvidia-smi -L > /tmp/tempa
+if [ ! -f ${NVOC}/nvoc_logs/tempa ]
+then
+  nvidia-smi -L > ${NVOC}/nvoc_logs/tempa
+fi
 
-if grep -q "1050" /tmp/tempa; then
+if grep -q "1050" ${NVOC}/nvoc_logs/tempa; then
   ___1050_or_1050ti="YES"
 fi
 
-if grep -q -E 'P106|P104|P102' /tmp/tempa; then
+if grep -q -E 'P106|P104|P102' ${NVOC}/nvoc_logs/tempa; then
   ___1050_or_1050ti="YES"
   P10X_100="YES"
 fi
 
-if grep -q -E '1060|1070|1080' /tmp/tempa; then
+if grep -q -E '1060|1070|1080' ${NVOC}/nvoc_logs/tempa; then
   NORMAL="YES"
 fi
-
-rm /tmp/tempa
 
 XORG="FAIL"
 
@@ -264,14 +265,18 @@ then
   sleep 6
 fi
 
-echo ""
-echo ""
-nvidia-smi
-echo ""
-
-if [[ $SLOW_USB_KEY_MODE == YES ]]
+if [[ $LOCALorREMOTE == LOCAL ]]
 then
-  sleep 6
+  echo ""
+  echo ""
+  # Just print out some info in the terminal
+  nvidia-smi
+  echo ""
+  
+  if [[ $SLOW_USB_KEY_MODE == YES ]]
+  then
+    sleep 6
+  fi
 fi
 
 if [[ $USE_ENVIRONMENTAL_VARIBLES == YES ]]
