@@ -59,6 +59,7 @@ GPU_OC=$_CORE_OVERCLOCK
 GPU_MC=$_MEMORY_OVERCLOCK
 GPU_PL=$_POWERLIMIT_WATTS
 MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
+MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 eval 'COIN_POOL=${COIN}_POOL'
 
 
@@ -284,48 +285,30 @@ elif  ps ax | grep miner| grep -v grep | grep x16r | grep -q "suprminer" ;then
 fi
 
 ##################################################################
-########################### Miner Logs ###########################
+########################### Miner ERROR Logs ###########################
 
-if  ps ax | grep miner| grep -v grep | grep -q "dstm" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -e GPU -e "====" |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+if  ps ax | grep miner| grep -v grep | grep -q "[z]m_miner" ;then
+  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|reject|close" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+elif  ps ax |  grep -q "[c]laymore" 
+then
+  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
+  then
+    REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2}')
+  fi
 
-elif  ps ax | grep miner| grep -v grep | grep -q "zec/v3_" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -E 'GPU0|Total' | grep -v Temp |grep -v INFO |  tail -n $TAIL_GPU_COUNT  |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-
-elif  ps ax | grep miner| grep -v grep | grep -q "bminer" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 | grep -e GPU -e Total |grep -v '#' | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-
-elif  ps ax | grep miner| grep -v grep | grep -q "SPccminer" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-
-elif  ps ax | grep miner| grep -v grep | grep -q "TPccminer" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-
-elif  ps ax | grep miner| grep -v grep | grep -q "KTccminer" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "accepted" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-
-elif  ps ax | grep miner| grep -v grep | grep -q "ASccminer" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "S/A/T" -e "GPU" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-
-elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -e "ethminer" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-
-elif  ps ax | grep miner| grep -v grep | grep -q "claymore" ;then
-  MINER_LOG=$(tail -n 150 ${NVOC}/nvoc_logs/screenlog.0 |  grep -Ev 'DevFee|New job|SHARE FOUND|Share accepted' | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-
-else
-  MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 fi
+
 
 ###################################################################
 ######################### BODY ####################################
 
-echo '<br></br>'
-echo '<body style="background-color:black; color:#ffff66;font-size: 16px ">'
-echo "<strong>"
-echo "<button>"
-echo '<a href="minerinfo" class="button">Refresh Miner Info</a>'
-echo "</button>"
+echo '<body style="background-color:black; color:#ffff66;font-size: 16px ">' ; echo "<strong>"
+echo "<button>"; echo '<a href="minerinfo" class="button">Refresh Miner Info</a>' ;echo "</button>" ;echo "<button>" ; echo '<a href="minerinfo?clearalerts" class="button">Clear Alerts</a>'; echo "</button>"
+if [[ $1 == clearalerts ]]
+then
+ echo "<tt style=\"text-align:left; color:green\">Alert history cleared <br/> </tt>"
+fi
 echo '<title>Worker: '$WORKERNAME'</title>'
 echo '</head>'
 echo '<body>'
@@ -399,6 +382,10 @@ echo "$Average_Revenue" "<tt style=\"text-align:left; color:white\">" "$P_WTM_AV
 echo "$LAST_10_AUTO_SWITCHES  " "<tt style=\"text-align:left; color:white\">" "$P_MINING_HISTORY </tt>"
 
 echo "Miner Hash Rate / Output: <br>" "<tt style=\"text-align:left; color:white\">" "$MINER_LOG <br> </tt>"
+
+echo "Miner Last Errors: <br>" "<tt style=\"text-align:left; color:white\">" "$MINER_ERROR <br> </tt>"
+
+echo "Rejected Shares: " "<tt style=\"text-align:left; color:red\">" "$REJECTED_SHARES <br> </tt> <br>"
 
 echo "GPU Temp, Fan and Power Info: <br>"  "<tt style=\"text-align:left; color:white\">" "$TEMP_FAN_POWER <br> </tt>"
 
