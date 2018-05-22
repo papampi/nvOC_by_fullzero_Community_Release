@@ -2,13 +2,12 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-2.1 - Community Release   #################
-##############      by papampi, Stubo, leenoox, damNmad   ################
-##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
+################# nvOC v0019-2.1 - Community Release     #################
+#########  Based on the original nvOC v0019-1.4 by fullzero     ##########
 ##########################################################################
 ##########################################################################
 
-# 0miner for nvOC v0019-2.1 by papampi
+# 0miner for nvOC v0019-2.1
 
 # DEV Mod Log:
 # v=0001 : papampi: Initial Release
@@ -21,7 +20,7 @@
 # v=0004 : damNmad:
 #          New Coins LUX, SUMO, DSR
 # v=0005 : papampi:
-#          New Coin ELLA,  XVG, GBX, CRC
+#          New Coin ELLA, XVG, GBX, CRC
 # v=0006 : papampi:
 #          EQUIHASH_MINER, bminer, ETHASH_MINER
 # v=0007 : papampi:
@@ -47,11 +46,11 @@
 # v=0017 : sizzlephizzle
 #	         Unification of EQUIHASH & ETHASH mining by ALGO.
 # v=0018 : papampi, sizzlephizzle
-#	         Algo Unification for all algorithms
+#	 Algo Unification for all algorithms
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0018"   # Do not edit this
+nvOC_0miner_ver="v0019-2.0.0018" # Do not edit this
 
 source "${NVOC}/1bash"
 
@@ -142,9 +141,9 @@ then
     HCD="${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
-    HCD="${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD  -mode 1 -allcoins 1 -allpools 1 -dbg -1 ${!xext}"
+    HCD="${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -allcoins 1 -allpools 1 -dbg -1 ${!xext}"
   fi
-  $LAUNCH $HCD
+  "$LAUNCH" "$HCD"
 
 ## EQUIHASH
 elif [[ $ALGO == EQUIHASH ]];
@@ -162,11 +161,11 @@ then
   then
     HCD="${NVOC}/miners/bminer/latest/bminer -uri stratum+ssl://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
-  $LAUNCH $HCD
+  "$LAUNCH" "$HCD"
 
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMD-GR || $ALGO == GROESTL || $ALGO == MYR-GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 ]]
 then
-  UCCALGO="-a $(echo $ALGO | sed -e 's/\(.*\)/\L\1/')"
+  UCCALGO="-a $(echo "$ALGO" | sed -e 's/\(.*\)/\L\1/')"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
   "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
@@ -200,7 +199,7 @@ then
     sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
   fi
   HCD=${NVOC}/miners/xmr-stak/build/bin/xmr-stak_miner
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  "$LAUNCH" "$HCD" --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 else
   echo ""
