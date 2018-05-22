@@ -1208,115 +1208,115 @@ MEMORY_OVERCLOCK_18=100
 # Uppercase algos are those used for single coin mining and by WTM switcher
 
 # Neoscrypt
-NEOSCRYPT_POWERLIMIT_WATTS=80
-NEOSCRYPT_CORE_OVERCLOCK=150
-NEOSCRYPT_MEMORY_OVERCLOCK=800
+NEOSCRYPT_POWERLIMIT_WATTS=0             # Recomended value for some GTX-1060: 80
+NEOSCRYPT_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 150
+NEOSCRYPT_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: 800
 
 # Ethash
-ETHASH_POWERLIMIT_WATTS=76
-ETHASH_CORE_OVERCLOCK=100
-ETHASH_MEMORY_OVERCLOCK=1600
+ETHASH_POWERLIMIT_WATTS=0                # Recomended value for some GTX-1060: 76
+ETHASH_CORE_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
+ETHASH_MEMORY_OVERCLOCK=0                # Recomended value for some GTX-1060: 1600
 
 # Equihash
-EQUIHASH_POWERLIMIT_WATTS=76
-EQUIHASH_CORE_OVERCLOCK=150
-EQUIHASH_MEMORY_OVERCLOCK=800
+EQUIHASH_POWERLIMIT_WATTS=0              # Recomended value for some GTX-1060: 76
+EQUIHASH_CORE_OVERCLOCK=0                # Recomended value for some GTX-1060: 150
+EQUIHASH_MEMORY_OVERCLOCK=0              # Recomended value for some GTX-1060: 400
 
 # Skunk
-SKUNK_POWERLIMIT_WATTS=78
-SKUNK_CORE_OVERCLOCK=150
-SKUNK_MEMORY_OVERCLOCK=1000
+SKUNK_POWERLIMIT_WATTS=0                 # Recomended value for some GTX-1060: 78
+SKUNK_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 150
+SKUNK_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 1000
 
 # Cryptonight
-CRYPTONIGHT_POWERLIMIT_WATTS=62
-CRYPTONIGHT_CORE_OVERCLOCK=155
-CRYPTONIGHT_MEMORY_OVERCLOCK=-300
+CRYPTONIGHT_POWERLIMIT_WATTS=0           # Recomended value for some GTX-1060: 62
+CRYPTONIGHT_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
+CRYPTONIGHT_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
 
 # lyra2vRev2
-LYRA2REV2_POWERLIMIT_WATTS=65
-LYRA2REV2_CORE_OVERCLOCK=135
-LYRA2REV2_MEMORY_OVERCLOCK=-1200
+LYRA2REV2_POWERLIMIT_WATTS=0             # Recomended value for some GTX-1060: 65
+LYRA2REV2_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 135
+LYRA2REV2_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: -1200
 
 # lyra2v2
-LYRA2V2_POWERLIMIT_WATTS=65
-LYRA2V2_CORE_OVERCLOCK=160
-LYRA2V2_MEMORY_OVERCLOCK=-1000
+LYRA2V2_POWERLIMIT_WATTS=0               # Recomended value for some GTX-1060: 65
+LYRA2V2_CORE_OVERCLOCK=0                 # Recomended value for some GTX-1060: 160
+LYRA2V2_MEMORY_OVERCLOCK=0               # Recomended value for some GTX-1060: -1000
 
 # Xevan
-XEVAN_POWERLIMIT_WATTS=65
-XEVAN_CORE_OVERCLOCK=100
-XEVAN_MEMORY_OVERCLOCK=600
+XEVAN_POWERLIMIT_WATTS=0                 # Recomended value for some GTX-1060: 65
+XEVAN_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
+XEVAN_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 600
 
 # X16R
-X16R_POWERLIMIT_WATTS=65
-X16R_CORE_OVERCLOCK=100
-X16R_MEMORY_OVERCLOCK=100
+X16R_POWERLIMIT_WATTS=0                  # Recomended value for some GTX-1060: 65
+X16R_CORE_OVERCLOCK=0                    # Recomended value for some GTX-1060: 100
+X16R_MEMORY_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
 
 # TIMETRAVEL10
-TIMETRAVEL10_POWERLIMIT_WATTS=65
-TIMETRAVEL10_CORE_OVERCLOCK=150
-TIMETRAVEL10_MEMORY_OVERCLOCK=1000
+TIMETRAVEL10_POWERLIMIT_WATTS=0          # Recomended value for some GTX-1060: 65
+TIMETRAVEL10_CORE_OVERCLOCK=0            # Recomended value for some GTX-1060: 150
+TIMETRAVEL10_MEMORY_OVERCLOCK=0          # Recomended value for some GTX-1060: 800
 
 
-daggerhashimoto_POWERLIMIT_WATTS=120
-daggerhashimoto_CORE_OVERCLOCK=100
-daggerhashimoto_MEMORY_OVERCLOCK=100
+daggerhashimoto_POWERLIMIT_WATTS=0       # Recomended value for some GTX-1060: 76
+daggerhashimoto_CORE_OVERCLOCK=0         # Recomended value for some GTX-1060: -200
+daggerhashimoto_MEMORY_OVERCLOCK=0       # Recomended value for some GTX-1060: 1200
 
-equihash_POWERLIMIT_WATTS=120
-equihash_CORE_OVERCLOCK=100
-equihash_MEMORY_OVERCLOCK=100
+equihash_POWERLIMIT_WATTS=0              # Recomended value for some GTX-1060: 76
+equihash_CORE_OVERCLOCK=0                # Recomended value for some GTX-1060: 150
+equihash_MEMORY_OVERCLOCK=0              # Recomended value for some GTX-1060: 400
 
-neoscrypt_POWERLIMIT_WATTS=120
-neoscrypt_CORE_OVERCLOCK=100
-neoscrypt_MEMORY_OVERCLOCK=100
+neoscrypt_POWERLIMIT_WATTS=0             # Recomended value for some GTX-1060: 80
+neoscrypt_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 150
+neoscrypt_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: 800
 
-lyra2rev2_POWERLIMIT_WATTS=120
-lyra2rev2_CORE_OVERCLOCK=100
-lyra2rev2_MEMORY_OVERCLOCK=100
+lyra2rev2_POWERLIMIT_WATTS=0             # Recomended value for some GTX-1060: 120
+lyra2rev2_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 100
+lyra2rev2_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: 100
 
-lbry_POWERLIMIT_WATTS=120
-lbry_CORE_OVERCLOCK=100
-lbry_MEMORY_OVERCLOCK=100
+lbry_POWERLIMIT_WATTS=0                  # Recomended value for some GTX-1060: 120
+lbry_CORE_OVERCLOCK=0                    # Recomended value for some GTX-1060: 100
+lbry_MEMORY_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
 
-blake_vanilla_POWERLIMIT_WATTS=120
-blake_vanilla_CORE_OVERCLOCK=100
-blake_vanilla_MEMORY_OVERCLOCK=100
+blake_vanilla_POWERLIMIT_WATTS=0         # Recomended value for some GTX-1060: 120
+blake_vanilla_CORE_OVERCLOCK=0           # Recomended value for some GTX-1060: 100
+blake_vanilla_MEMORY_OVERCLOCK=0         # Recomended value for some GTX-1060: 100
 
-cryptonight_POWERLIMIT_WATTS=120
-cryptonight_CORE_OVERCLOCK=100
-cryptonight_MEMORY_OVERCLOCK=100
+cryptonight_POWERLIMIT_WATTS=0           # Recomended value for some GTX-1060: 62
+cryptonight_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
+cryptonight_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
 
-groestl_POWERLIMIT_WATTS=120
-groestl_CORE_OVERCLOCK=100
-groestl_MEMORY_OVERCLOCK=100
+groestl_POWERLIMIT_WATTS=0               # Recomended value for some GTX-1060: 120
+groestl_CORE_OVERCLOCK=0                 # Recomended value for some GTX-1060: 100
+groestl_MEMORY_OVERCLOCK=0               # Recomended value for some GTX-1060: 100
 
-keccak_POWERLIMIT_WATTS=120
-keccak_CORE_OVERCLOCK=100
-keccak_MEMORY_OVERCLOCK=100
+keccak_POWERLIMIT_WATTS=0                # Recomended value for some GTX-1060: 120
+keccak_CORE_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
+keccak_MEMORY_OVERCLOCK=0                # Recomended value for some GTX-1060: 100
 
-myriad_groestl_POWERLIMIT_WATTS=120
-myriad_groestl_CORE_OVERCLOCK=100
-myriad_groestl_MEMORY_OVERCLOCK=100
+myriad_groestl_POWERLIMIT_WATTS=0        # Recomended value for some GTX-1060: 120
+myriad_groestl_CORE_OVERCLOCK=0          # Recomended value for some GTX-1060: 100
+myriad_groestl_MEMORY_OVERCLOCK=0        # Recomended value for some GTX-1060: 100
 
-qubit_POWERLIMIT_WATTS=120
-qubit_CORE_OVERCLOCK=100
-qubit_MEMORY_OVERCLOCK=100
+qubit_POWERLIMIT_WATTS=0                 # Recomended value for some GTX-1060: 120
+qubit_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
+qubit_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 100
 
-scrypt_POWERLIMIT_WATTS=120
-scrypt_CORE_OVERCLOCK=100
-scrypt_MEMORY_OVERCLOCK=100
+scrypt_POWERLIMIT_WATTS=0                # Recomended value for some GTX-1060: 120
+scrypt_CORE_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
+scrypt_MEMORY_OVERCLOCK=0                # Recomended value for some GTX-1060: 100
 
-sia_POWERLIMIT_WATTS=120
-sia_CORE_OVERCLOCK=100
-sia_MEMORY_OVERCLOCK=100
+sia_POWERLIMIT_WATTS=0                   # Recomended value for some GTX-1060: 120
+sia_CORE_OVERCLOCK=0                     # Recomended value for some GTX-1060: 100
+sia_MEMORY_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
 
-skein_POWERLIMIT_WATTS=120
-skein_CORE_OVERCLOCK=100
-skein_MEMORY_OVERCLOCK=100
+skein_POWERLIMIT_WATTS=0                 # Recomended value for some GTX-1060: 120
+skein_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
+skein_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 100
 
-x11_POWERLIMIT_WATTS=120
-x11_CORE_OVERCLOCK=100
-x11_MEMORY_OVERCLOCK=100
+x11_POWERLIMIT_WATTS=0                   # Recomended value for some GTX-1060: 120
+x11_CORE_OVERCLOCK=0                     # Recomended value for some GTX-1060: 100
+x11_MEMORY_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
 
 ################################################################
 #                                                              #
