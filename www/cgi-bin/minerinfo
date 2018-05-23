@@ -262,47 +262,47 @@ fi
 ##################################################################
 ########################### WTM Hash Rate ########################
 
-if [ $ALGORITHM == ETHASH ]
+if [ $ALGO == ETHASH ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5eth_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == EQUIHASH ]
+elif [ $ALGO == EQUIHASH ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Beth_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == NEOSCRYPT ]
+elif [ $ALGO == NEOSCRYPT ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5ns_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == CRYPTONIGHTV7 ] 
+elif [ $ALGO == CRYPTONIGHTV7 ] 
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcn7_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == CRYPTONIGHT ] 
+elif [ $ALGO == CRYPTONIGHT ] 
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcn_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == LYRA2V2 ]
+elif [ $ALGO == LYRA2V2 ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Blrev2_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == BITCORE ]
+elif [ $ALGO == BITCORE ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Btt10_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == X16R ]
+elif [ $ALGO == X16R ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bx16r_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == XEVAN ]
+elif [ $ALGO == XEVAN ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bxn_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == PHI ]
+elif [ $ALGO == PHI ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bphi_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
-elif [ $ALGORITHM == GROESTL ]
+elif [ $ALGO == GROESTL ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bgro_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 fi
