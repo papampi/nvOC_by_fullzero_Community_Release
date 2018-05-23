@@ -349,7 +349,7 @@ then
 elif [[ $COIN == DMD ]]
 then
   ALGO=DMD-GR
-elif [[ $COIN == GRS || $COIN == MPH_GRS]]
+elif [[ $COIN == GRS || $COIN == MPH_GRS ]]
 then
   ALGO=GRS
 elif [[ $COIN == XMY ]]
