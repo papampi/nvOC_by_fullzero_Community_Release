@@ -330,7 +330,7 @@ then
   ALGO=X16R
 elif [[ $COIN == BTX ]]
 then
-  ALGO=TIMETRAVEL10
+  ALGO=BITCORE
 elif [[ $COIN == SIB  || $COIN == NICE-X11GHOST ]]
 then
   ALGO=SIB
