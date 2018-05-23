@@ -306,11 +306,14 @@ elif [ $ALGORITHM == GROESTL ]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bgro_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 fi
-##################################################################
+########################################################################
 ########################### Miner ERROR Logs ###########################
 
-if  ps ax | grep miner| grep -v grep | grep -q "[z]m_miner" ;then
-  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|reject|close" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+if  ps ax | grep -q "[z]m_miner"
+then
+  MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  REJECTED_SHARES=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep  "reject" )
+
 elif  ps ax |  grep -q "[c]laymore" 
 then
   MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
@@ -319,8 +322,9 @@ then
     REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2}')
   fi
 
+else
+echo "Send us your miner error logs to add"
 fi
-
 
 ###################################################################
 ######################### BODY ####################################
