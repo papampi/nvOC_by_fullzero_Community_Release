@@ -216,78 +216,116 @@ fi
 ##################################################################
 ########################### Average Hash Rate ####################
 
-if  ps ax | grep miner| grep -v grep | grep -q "zec/zm" ;then
-  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "Sol/s: [0-9]*" | cut -f2- -d: | awk '{s+=$1} END {printf "%.0f", s}')
+if  ps ax | grep -q "[z]m_miner"
+then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "[0-9]*.[0-9]* Sol/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
 
-elif  ps ax | grep miner| grep -v grep | grep -q "ethminer" ;then
+elif  ps ax | grep -q "[e]thminer"
+then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o '[0-9]*.[0-9]* Mh/s' | awk '{print$1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
 
-elif  ps ax | grep miner| grep -v grep | grep -q "claymore" ;then
+elif  ps ax |  grep -q "[c]laymore"
+then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $5}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
 
-elif  ps ax | grep miner| grep -v grep | grep "neoscrypt"| grep -q "KTccminer" ;then
+elif  ps ax | grep -q "[K]Tccminer"
+then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* kH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
 
-elif  ps ax | grep miner| grep -v grep | grep lyra2v2 | grep -q "TPccminer" ;then
+elif  ps ax | grep -q "[T]Pccminer"
+then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash * 1000 / hash_count)) 
 
-elif  ps ax | grep miner| grep -v grep | grep x16r | grep -q "suprminer" ;then
-  total_hash=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
-  HASH_AVERAGE=$((total_hash / hash_count))
-
-elif  ps ax | grep miner| grep -v grep | grep timetravel10 | grep -q "TPccminer" ;then
+elif  ps ax | grep -q "[s]uprminer"
+then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
-  
-elif  ps ax | grep miner| grep -v grep | grep -q "zec/bminer" ;then
+
+elif  ps ax | grep -q "[b]miner"
+then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
+  
+elif  ps ax | grep -q  "[z]-enemy_miner" ;then
+  if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"; then
+    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]*MH/s" | sed 's:MH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
+    hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep -v grep |  wc -l | awk '{print $1}')
+    HASH_AVERAGE=$((total_hash / hash_count))
+  elif tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[k]H/s"  ;then
+    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]*kH/s" | sed 's:kH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
+    hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep -v grep |  wc -l | awk '{print $1}')
+    HASH_AVERAGE=$((total_hash / hash_count))
+  fi
 fi
-
 ##################################################################
-########################### WTM Hash Rate ####################
+########################### WTM Hash Rate ########################
 
-if  ps ax | grep miner | grep -v grep | grep -q -E "zm_miner|ewbf|bminer" ;then
-  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Beq_hr%5D=[0-9]*' | cut -f2- -d=)
+if [[ $ALGO == ETHASH ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5eth_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif  ps ax | grep miner | grep -v grep | grep -q -E "claymore|ethminer" ;then
-  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Beth_hr%5D=[0-9]*' | cut -f2- -d=)
+elif [[ $ALGO == EQUIHASH ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Beth_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif  ps ax | grep miner | grep -v grep | grep -q "neoscrypt"  ;then
-  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o 'ns_hr%5D=[0-9]*' | cut -f2- -d=)
+elif [[ $ALGO == NEOSCRYPT ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5ns_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif  ps ax | grep miner | grep -v grep | grep -q "xmr"  ;then
-  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '%5Bcn_hr%5D=[0-9]*' | cut -f2- -d=)
+elif [[ $ALGO == CRYPTONIGHTV7 ]] 
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcn7_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif  ps ax | grep miner | grep -v grep | grep "lyra2v2" | grep -q "TPccminer" ;then
-  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '%5Blrev2_hr%5D=[0-9]*' | cut -f2- -d=)
+elif [[ $ALGO == CRYPTONIGHT ]] 
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcn_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif  ps ax | grep miner| grep -v grep | grep timetravel10 |grep -q "TPccminer" ;then
-  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Btt10_hr%5D=[0-9]*' | cut -f2- -d=)
+elif [[ $ALGO == LYRA2V2 ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Blrev2_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif  ps ax | grep miner| grep -v grep | grep x16r | grep -q "suprminer" ;then
-  WTM_HASH=$(cat ${NVOC}/1bash | grep WTM |  grep -o '5Bx16r_hr%5D=[0-9]*' | cut -f2- -d=)
+elif [[ $ALGO == BITCORE ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Btt10_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif [[ $ALGO == X16R ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bx16r_hr%5D=[0-9]*' | cut -f2- -d=)
+
+elif [[ $ALGO == XEVAN ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bxn_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
+elif [[ $ALGO == PHI ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bphi_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
+elif [[ $ALGO == GROESTL ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bgro_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+else
+  WTM_HASH="Not Available"
 fi
-
-##################################################################
+########################################################################
 ########################### Miner ERROR Logs ###########################
 
-if  ps ax | grep miner | grep -v grep | grep -q "[z]m_miner"
+if  ps ax | grep -q "[z]m_miner"
 then
-  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|reject|close" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  REJECTED_SHARES=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep  "reject" )
+
 elif  ps ax |  grep -q "[c]laymore" 
 then
   MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
@@ -295,8 +333,10 @@ then
   then
     REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2}')
   fi
-fi
 
+else
+echo "Send us your miner error logs to add"
+fi
 
 ###################################################################
 ######################### BODY ####################################
