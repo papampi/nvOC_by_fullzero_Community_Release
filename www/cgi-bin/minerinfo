@@ -324,18 +324,18 @@ fi
 if  ps ax | grep -q "[z]m_miner"
 then
   MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  REJECTED_SHARES=$(tail -500 ${NVOC}/nvoc_logs/screenlog.0 | grep  "reject" )
+  REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
 
 elif  ps ax |  grep -q "[c]laymore" 
 then
   MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
   if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
   then
-    REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2}')
+    REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
   fi
 
 else
-echo "Send us your miner error logs to add"
+ MINER_ERROR="Send us your miner error logs to add"
 fi
 
 ###################################################################
