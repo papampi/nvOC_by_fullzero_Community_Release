@@ -165,7 +165,7 @@ then
 
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMD-GR || $ALGO == GROESTL || $ALGO == MYR-GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 ]]
 then
-  UCCALGO="-a $(echo "$ALGO" | sed -e 's/\(.*\)/\L\1/')"
+  UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
   "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
