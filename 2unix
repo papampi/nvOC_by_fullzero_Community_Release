@@ -20,12 +20,11 @@ then
   if [ -d ${NVOC}/miners ]
   then
   cd ${NVOC}
-  git submodule update miners
+  git clone https://github.com/19-2.1/nvOC_miners miners  
   bash nvOC_miner_update.sh
   else
   mkdir -p ${NVOC}/miners
   git clone https://github.com/19-2.1/nvOC_miners miners  
-  git pull origin master 
   bash nvOC_miner_update.sh
   fi
 
