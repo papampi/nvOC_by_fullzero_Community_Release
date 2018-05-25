@@ -99,6 +99,8 @@ echo_usage()
    echo "           stops mining, watchdog and temperature control"
    echo -e "        ${C}$0 start${N}"
    echo "           starts normal nvOC mining operations"
+   echo -e "        ${C}$0 restart${N}"
+   echo "           restart nvOC mining operations"
    echo -e "        ${C}$0 miner-log${N}"
    echo "           display live miner output"
    echo -e "        ${C}$0 wdog-log${N}"
@@ -214,7 +216,7 @@ Reboot()
 Restart()
 {
    # Reboots the host
-        Stop() && Start()
+        Stop && Start
 }
 ############################### Start nvOC ####################################
 Start()
@@ -812,6 +814,7 @@ case $# in
          reboot)       Reboot;;
          start)        Start;;
          stop)         Stop;;
+         restart)      Restart;;
          miner-log)    miner-log;;
          wdog-log)     wdog-log;;
          temp-log)     temp-log;;
