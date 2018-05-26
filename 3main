@@ -159,7 +159,9 @@ ___1050_or_1050ti="NO"
 
 NORMAL="NO"
 
-P10X_100="NO"
+P106_100="NO"
+P104_P102="NO"
+
 
 nvidia-smi -L > /tmp/tempa
 
@@ -167,9 +169,13 @@ if grep -q "1050" /tmp/tempa; then
   ___1050_or_1050ti="YES"
 fi
 
-if grep -q -E 'P106|P104|P102' /tmp/tempa; then
+if grep -q 'P106' /tmp/tempa; then
   ___1050_or_1050ti="YES"
-  P10X_100="YES"
+  P106_100="YES"
+fi
+
+if grep -q -E 'P104|P102' /tmp/tempa; then
+  P104_P102="YES"
 fi
 
 if grep -q -E '1060|1070|1080' /tmp/tempa; then
@@ -941,6 +947,12 @@ then
     TI="2 3"
   fi
 fi
+
+if [[ $P104_P102 == YES ]]
+then
+  TI="1"
+fi
+
 
 if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
