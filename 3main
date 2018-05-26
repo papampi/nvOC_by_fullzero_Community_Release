@@ -954,6 +954,10 @@ then
   if [[ $NORMAL == YES ]]
   then
     TI="1 3"
+    if [[ $___1050_or_1050ti == YES ]]
+    then
+      TI="1 2 3"
+    fi
   fi  
 fi
 
