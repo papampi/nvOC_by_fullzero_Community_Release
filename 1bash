@@ -481,18 +481,22 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
 ## ETHASH
-ETHASH_MINER="ETHMINER"                          # choose "CLAYMORE" or "ETHMINER" or "GENOIL"
+ETHASH_MINER="ETHMINER"                          # choose "CLAYMORE" or "ETHMINER", "GENOIL" or "BMINER"
 CLAYMORE_VERSION="latest"                        # choose: latest or any version you add its folder.
 ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
 CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 
 ## EQUIHASH
-EQUIHASH_MINER="DSTM"                            # choose "DSTM" or "EWBF" or "BMINER" or "BMINER_SSL"
+EQUIHASH_MINER="DSTM"                            # choose "DSTM" or "EWBF" or "BMINER"
 DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 EWBF_VERSION="3_4"                               # choose 3_3  or  3_4 # EWBF ZEC Miner version
 EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
 EWBF_OPTS=""                                     # EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
+
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
+BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
+                                                 # Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
+						 # Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
 
 # Miner, Intensity and wallet address format for different algos 
 # "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer" , XMRstak
