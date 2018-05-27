@@ -99,6 +99,7 @@ nvOC_1bash_ver="v0019-2.1.0026"   # Do not edit this
 #               Methods for separating settings and implementation
 #               Methods for AUTO_UPDATE
 #               ( BTC address: 1GFTEtLLvvwoa4ogDntD5oaXBgJLYokzTC )
+# LukePicci: 
 
 # Maxximus007:  Maxximus007_AUTO_TEMPERATURE_CONTROL
 #               Expectless 1bash
@@ -108,10 +109,10 @@ nvOC_1bash_ver="v0019-2.1.0026"   # Do not edit this
 # meligo:       FAQ website nvoc-mining-os.com
 #               ( BTC address: 1AwUJMztX2ARZp8ULqR5UsK3b27om8j3vq )
 
-# papampi:      nvOC ver 0019-2.0 (community release) main developer
+# papampi:      nvOC Community Release main developer
 #               WTM_AUTO_SWITCH
-#	            WTM_PROFIT_CHECK
-#	            Added multiple COIN selections
+#	        WTM_PROFIT_CHECK
+#	        Added multiple COIN selections
 #               Alternative telegram alert and guide
 #               Web info http://rig_ip/index.html
 #               multiple bug fixes and enhacements for ver 0019-2.0
@@ -126,6 +127,8 @@ nvOC_1bash_ver="v0019-2.1.0026"   # Do not edit this
 #               SALFTER_MPH_PROFIT_SWITCHING
 #               ( BTC address: 1TipsGocnz2N5qgAm9f7JLrsMqkb3oXe2 )
 
+# SizzlePizzle: Algo mining unification
+#               
 # Stubo:        ver 0019-2.0 (community release) main developer
 #               nvOC function script
 #               minerinfo script
@@ -140,88 +143,30 @@ nvOC_1bash_ver="v0019-2.1.0026"   # Do not edit this
 # firefox has an OP bookmark; look at the OP for more information
 
 
-# CHOOSE COIN FROM:
+# Supported Algorithms: 
+#               ETHASH, EQUIHASH, NEOSCRYPT, LYRA2V2, SKUNK, SKEIN, BITCORE, TIMETRAVEL10 
+#               KECCAK, LYRA2Z, X11GHOST, SIB, CRYPTONIGHT, CRYPTONIGHT-V7, PHI1612, PASCAL, LBRY 
+#               Diamond Groestl, GROESTL, Myriad Groestl, Decred, SIA, X13, X16R, XEVAN
 
-#ALGO - SIB
-######### SIB
+# ALGO Mining with NiceHash (Auto converts to BTC)
+######### NICE_ETHASH,NICE_EQUIHASH, NICE_LYRA2REV2, NICE_NEOSCRYPT, NICE_CRYPTONIGHT, NICE_X11GOST, NICE_SKUNKHASH
 
-#ALGO - CryptoNight
-######### XMR KRB ETN
-
-#ALGO - Skunk
-######### SIGT ZPOOL_SKUNK ALTCOM
-
-#ALGO - Ethash
-######### ETH ETC EXP UBQ MUSIC CLO SOIL PIRL
-
-#ALGO - SKUNKASH
-######### ALTCOM
-
-#ALGO - Equihash
-######### ZEC ZEN HUSH ZCL KMD BTG BTCZ
-
-#ALGO - NiceHash
-######### DUAL_NICEHASH (Ethash + Decred) NICE-EQUIHASH NICE-ETHASH
-
-#ALGO - X13
-######### ONION
-
-#ALGO - Neoscrypt
-######### PXC  FTC  ORB  TZC VIVO DSR
-
-#ALGO - Myriad-Groestl
-######### XMY
-
-#ALGO - LYRA2V2
-######### MONA VTC ZCOIN
-
-#ALGO - SKEIN
-######### DGB
-
-#ALGO - GROESTL
-######### GRS
-
-#ALGO - SIA
-######### SIA
-
-#ALGO - LBRY
-######### LBC (LBRY)
-
-#ALGO - Decred
-######### DCR
-
-#ALGO - Pascal
-######### PASC PASL
-
-#ALGO - timetravel10
-######### BTX
-
-#ALGO - PHI
-######### LUX
-
-#TYPE - Zpool (auto converts to BTC)
+# ALGO Miningh with Zpool (Auto converts to BTC)
 ######### ZPOOL_LYRA2V2  ZPOOL_BLAKE2S  ZPOOL_EQUIHASH  ZPOOL_LBC  ZPOOL_NEOSCRYPT  ZPOOL_LBRY  ZPOOL_SKEIN
 
-#TYPE - DUAL Claymore (ETHASH + DCR/LBC/PASC/PASL/SC)
-######### DUAL_ETH_DCR    DUAL_ETH_PASC    DUAL_ETH_PASL    DUAL_ETH_LBC    DUAL_ETH_SC
-######### DUAL_ETC_DCR    DUAL_ETC_PASC    DUAL_ETC_PASL    DUAL_ETC_LBC    DUAL_ETC_SC
-######### DUAL_EXP_DCR    DUAL_EXP_PASC    DUAL_EXP_PASL    DUAL_EXP_LBC    DUAL_EXP_SC
-######### DUAL_MUSIC_DCR  DUAL_MUSIC_PASC  DUAL_MUSIC_PASL  DUAL_MUSIC_LBC  DUAL_MUSIC_SC
-######### DUAL_UBQ_DCR    DUAL_UBQ_PASC    DUAL_UBQ_PASL    DUAL_UBQ_LBC    DUAL_UBQ_SC
-######### DUAL_SOIL_DCR   DUAL_SOIL_PASC   DUAL_SOIL_PASL   DUAL_SOIL_LBC   DUAL_SOIL_SC
+# ALGO Miningh with Miningpoolhub (Auto convert to any coins in MPH settings web page)
+#########MPH_EQUIHASH, MPH_ETHASH, MPH_SKEIN, MPH_LYRA2Z, MPH_NEOSCRYPT, MPH_LYRA2V2, MPH_CRYPTONIGHTV7, MPH_KECCAK
 
-#TYPE - Miningpoolhub Auto Coin Switches based on Algo
-######### MPH_ETHASH  MPH_EQUIHASH
+# Claymore_Dual (ETHASH + Decred/Siacoin/Lbry/Pascal/Blake2s/Keccak)
+## All supported coins can be added in Claymore_Dual section
 
-#TYPE - Profit Switchers
+# Profit Switchers
+######### WhatToMine.com Auto switch
 ######### SALFTER_NICEHASH_PROFIT_SWITCHING
 ######### SALFTER_MPH_PROFIT_SWITCHING
 ######### SALFTER_PROGRAMATIC_SWITCHING       # - change what coin/algo you mine through an external JSON configuration file 
 
-### New Coins: LUX, SUMO, DSR, ELLA, XVG, GBX, CRC, BTCP
-
-
-
+# Choose any coins listed in coin section or add yours (Ask devs if you dont know how)
 
 ###############################################################################
 #                                                                             #
@@ -238,6 +183,8 @@ nvOC_1bash_ver="v0019-2.1.0026"   # Do not edit this
 COIN="ZEC"                  # Choose manually the coin to mine (like ETH, ZEC ...)
                             # or pick an automatic profit-based switcher below
 
+AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
+
 AUTO_SWITCH="NO"       # NO, WTM_SWTICHING, SALFTER_NICEHASH_SWITCHING,
                        # SALFTER_MPH_SWITCHING, SALFTER_PROGRAMATIC_SWITCHING
 
@@ -246,9 +193,6 @@ AUTO_SWITCH="NO"       # NO, WTM_SWTICHING, SALFTER_NICEHASH_SWITCHING,
 #        - SALFTER_NICEHASH_SWITCHING nicehash profit switcher
 #        - SALFTER_MPH_SWITCHING miningpoolhub profit switcher
 #        - SALFTER_PROGRAMATIC_SWITCHING reads the coin to switch to from a given URL
-
-
-AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
 NUMBER_GPUS_INSTALLED=""    # Number or "" # Set number of GPUs installed. Watchdog will check installed vs detected. Leave empty to not check
 
@@ -329,13 +273,13 @@ WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
 
 GPU_UTIL_THRESHOLD="80"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recomended values 70-90) 
 
-ALT_POOL="NO"               #YES or NO, Set to YES if you want to enable  poolswitch. 
-                            #Switch to alternate pool if main pool goes down.
-                            #Dual mining and salfter auto switch not supported.
-                            #If pool goes down, poolswitch will stop/disable wtm auto switch and will enable/start it after pool comes up to prevent coin data mixed up.
-						                #If main pool use username, alternate pool should use same username and workername. 
-						                #If anonymous mining with coin address alternate pool should use same. 
-                            #If ALT_POOL="YES" add as follow to your coins data (order should be the same).
+ALT_POOL="NO"               # YES or NO, Set to YES if you want to enable  poolswitch. 
+                            # Switch to alternate pool if main pool goes down.
+                            # Dual mining and salfter auto switch not supported.
+                            # If pool goes down, poolswitch will stop/disable wtm auto switch and will enable/start it after pool comes up to prevent coin data mixed up.
+	                    # If main pool use username, alternate pool should use same username and workername. 
+                            # If anonymous mining with coin address alternate pool should use same. 
+                            # If ALT_POOL="YES" add as follow to your coins data (order should be the same).
 
 ###alternate pool setup example: 
 #ZCL_POOL_1="europe.equihash-hub.miningpoolhub.com"
@@ -477,17 +421,17 @@ WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-
 
 MINER_PWD="x"                                    # Set the miner password. Default: x
                                                  # For zpool use MINER_PWD="$WORKERNAME,c=btc"
-
-CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
-
+                                                 # For dwarfpool and some other pools you can set your email to enable notification from pool
 ## ETHASH
-ETHASH_MINER="ETHMINER"                          # choose "CLAYMORE" or "ETHMINER", "GENOIL" or "BMINER"
-CLAYMORE_VERSION="latest"                        # choose: latest or any version you add its folder.
+ETHASH_MINER="ETHMINER"                          # Choose "CLAYMORE" or "ETHMINER", "GENOIL" or "BMINER"
+ETHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"    # Chose the format your pool requires
+CLAYMORE_VERSION="latest"                        # Choose: latest or any version you add its folder.
 ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
 CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 
 ## EQUIHASH
-EQUIHASH_MINER="DSTM"                            # choose "DSTM" or "EWBF" or "BMINER"
+EQUIHASH_MINER="DSTM"                            # Choose "DSTM" or "EWBF" or "BMINER"
+EQUIHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"  # Chose the format your pool requires 
 DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 EWBF_VERSION="3_4"                               # choose 3_3  or  3_4 # EWBF ZEC Miner version
 EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
@@ -497,6 +441,9 @@ BMINER_OPTS=""                                   # Bminer optional arguments. ad
 BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
                                                  # Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
 						 # Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
+
+CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
+
 
 # Miner, Intensity and wallet address format for different algos 
 # "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer" , XMRstak
@@ -643,7 +590,6 @@ BTG_ADDRESS="replace_with_your_address"
 BTG_POOL="replace_with_your_BTG_POOL"
 BTG_PORT="replace_with_your_BTG_PORT"
 
-
 # KMD
 KMD_WORKER="$WORKERNAME"
 KMD_ADDRESS="replace_with_your_address"
@@ -662,7 +608,7 @@ BTCP_ADDRESS="replace_with_your_address"
 BTCP_POOL="BTCP_POOL_ADDRESS"
 BTCP_PORT="BTCP_POOL_PORT"
 
-# BTX ## No Need to add stratum+tcp:// to server address
+# BTX Bitcore ## No Need to add stratum+tcp:// to server address
 BTX_WORKER="$WORKERNAME"
 BTX_ADDRESS="replace_with_your_address"
 BTX_POOL="btx.suprnova.cc"
@@ -920,12 +866,35 @@ SMART_POOL="pool-eu.smartcash.cc"
 SMART_PORT="3333"
 SMART_INTENSITY="25"
 
-#BSD
+#BSD Bitsend ## No Need to add stratum+tcp:// to server address
 BSD_WORKER="$WORKERNAME"
 BSD_ADDRESS="replace_with_your_address"
 BSD_POOL="bsd.suprnova.cc"
 BSD_PORT="8686"
 
+# BTI Bitcoin Interest ## No Need to add stratum+tcp:// to server address
+BTI_WORKER="$WORKERNAME"
+BTI_ADDRESS="replace_with_your_address"
+BTI_POOL="replace_with_your_BTI_POOL"
+BTI_PORT="replace_with_your_BTI_PORT"
+
+# BTCP Bitcoin Private ## No Need to add stratum+tcp:// to server address
+BTCP_WORKER="$WORKERNAME"
+BTCP_ADDRESS="replace_with_your_address"
+BTCP_POOL="replace_with_your_BTCP_POOL"
+BTCP_PORT="replace_with_your_BTCP_PORT"
+
+#FLM Folm ## No Need to add stratum+tcp:// to server address
+FLM_WORKER="$WORKERNAME"
+FLM_ADDRESS="replace_with_your_address"
+FLM_POOL="replace_with_your_FLM_POOL"
+FLM_PORT="replace_with_your_FLM_PORT"
+
+#ETP Metaverse ## No Need to add stratum+tcp:// to server address
+ETP_WORKER="$WORKERNAME"
+ETP_ADDRESS="replace_with_your_address"
+ETP_POOL="replace_with_your_ETP_POOL"
+ETP_PORT="replace_with_your_ETP_PORT"
 
 ###################################################
 # Claymore_Dual Mining                            #
