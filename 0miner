@@ -142,7 +142,7 @@ then
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
     HCD="${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -allcoins 1 -allpools 1 -dbg -1 ${!xext}"
-    elif [[ $ETHASH_MINER == BMINER ]]
+  elif [[ $ETHASH_MINER == BMINER ]]
   then
     HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
