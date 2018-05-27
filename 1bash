@@ -446,7 +446,7 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 
 
 # Miner, Intensity and wallet address format for different algos 
-# "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer" , XMRstak
+# "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer" , xmr-stak
 # Test intensity on your rig and edit it or miner will set default values
 
 ## NEOSCRYPT
@@ -505,7 +505,7 @@ CRYPTONIGHT_INTENSITY=""
 CRYPTONIGHT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT-V7
-CRYPTONIGHTV7_MINER="XMRstak"
+CRYPTONIGHTV7_MINER="xmr-stak"
 CRYPTONIGHTV7_INTENSITY=""
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
