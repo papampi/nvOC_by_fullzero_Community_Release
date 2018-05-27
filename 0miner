@@ -2,13 +2,12 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-2.1 - Community Release   #################
-##############      by papampi, Stubo, leenoox, damNmad   ################
-##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
+################# nvOC v0019-2.1 - Community Release     #################
+#########  Based on the original nvOC v0019-1.4 by fullzero     ##########
 ##########################################################################
 ##########################################################################
 
-# 0miner for nvOC v0019-2.1 by papampi
+# 0miner for nvOC v0019-2.1
 
 # DEV Mod Log:
 # v=0001 : papampi: Initial Release
@@ -21,13 +20,13 @@
 # v=0004 : damNmad:
 #          New Coins LUX, SUMO, DSR
 # v=0005 : papampi:
-#          New Coin ELLA,  XVG, GBX, CRC
+#          New Coin ELLA, XVG, GBX, CRC
 # v=0006 : papampi:
 #          EQUIHASH_MINER, bminer, ETHASH_MINER
 # v=0007 : papampi:
 #          Nicehash bug fixes
 # v=0008 : papampi:
-#          Move all miners to ${NVOC}/miners/
+#          Move all miners to "${NVOC}"/miners/
 # v=0009 : papampi
 #          Pool Wallet Address Format
 # v=0010 : papampi
@@ -45,10 +44,13 @@
 # v=0016 : papampi
 #          Prevent running 2 miners
 # v=0017 : sizzlephizzle
-#	   Unification of EQUIHASH & ETHASH mining by ALGO.
+#	         Unification of EQUIHASH & ETHASH mining by ALGO.
+# v=0018 : papampi, sizzlephizzle
+#	 Algo Unification for all algorithms
+
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0017"   # Do not edit this
+nvOC_0miner_ver="v0019-2.0.0018" # Do not edit this
 
 source "${NVOC}/1bash"
 
@@ -58,7 +60,7 @@ if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; then
 fi
 
 # Set MINER_PWD if unset
-if [ -z ${MINER_PWD+x} ]
+if [ -z "${MINER_PWD+x}" ]
 then
   MINER_PWD="x"
 fi
@@ -66,433 +68,142 @@ fi
 ## Unify COIN Start
 UPOOL="_POOL"
 UPORT="_PORT"
-UEXT="_EXTENSION_ARGUMENTS"
 UADDR="_ADDRESS"
 UWORK="_WORKER"
-LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
+UEXT="_EXTENSION_ARGUMENTS"
+UINTENSITY="_INTENSITY"
+UWALLET="_WALLET_FORMAT"
+UMINER="_MINER"
+
 xpool=$COIN$UPOOL
 xport=$COIN$UPORT
-xadd=$COIN$UADDR
-xwrk=$COIN$UWORK
+xaddr=$COIN$UADDR
+xwork=$COIN$UWORK
 xext=$COIN$UEXT
-CLN=:
+xintensity=$ALGO$UINTENSITY
+xwallet=$ALGO$UWALLET
+xminer=$ALGO$UMINER
+
+LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
+
 ## Unify COIN End
 
-## NICEHASH START
+## NICEHASH
 if [[ ${COIN:0:4} == NICE ]]
 then
-    NICE_ADDRESS=$BTC_ADDRESS
-    NICE_WORKER=$WORKERNAME
-    NICE_NEOSCRYPT_ADDRESS=$BTC_ADDRESS
-    NICE_LYRA2REV2_ADDRESS=$BTC_ADDRESS
-    NICE_X11GOST_ADDRESS=$BTC_ADDRESS
-    NICE_SKUNKHASH_ADDRESS=$BTC_ADDRESS
-    NICE_CRYPTONIGHT_ADDRESS=$BTC_ADDRESS
-    NICE_EQUIHASH_ADDRESS=$BTC_ADDRESS
-    NICE_ETHASH_ADDRESS=$BTC_ADDRESS
+  NICE_NEOSCRYPT_ADDRESS=$NICE_ADDRESS
+  NICE_LYRA2REV2_ADDRESS=$NICE_ADDRESS
+  NICE_X11GOST_ADDRESS=$NICE_ADDRESS
+  NICE_SKUNKHASH_ADDRESS=$NICE_ADDRESS
+  NICE_CRYPTONIGHT_ADDRESS=$NICE_ADDRESS
+  NICE_EQUIHASH_ADDRESS=$NICE_ADDRESS
+  NICE_ETHASH_ADDRESS=$NICE_ADDRESS
+## ZPOOL
+elif [[ ${COIN:0:5} == ZPOOL ]]
+then
+  ZPOOL_NEOSCRYPT_ADDRESS=$BTC_ADDRESS
+  ZPOOL_LYRA2REV2_ADDRESS=$BTC_ADDRESS
+  ZPOOL_SKUNK_ADDRESS=$BTC_ADDRESS
+  ZPOOL_EQUIHASH_ADDRESS=$BTC_ADDRESS
+  ZPOOL_LBRY_ADDRESS=$BTC_ADDRESS
+  ZPOOL_SKEIN_ADDRESS=$BTC_ADDRESS
+## MPH
+elif [[ ${COIN:0:3} == MPH ]]
+then
+  MPH_NEOSCRYPT_ADDRESS=$MPH_ADDRESS
+  MPH_LYRA2REV2_ADDRESS=$MPH_ADDRESS
+  MPH_LYRA2Z_ADDRESS=$MPH_ADDRESS
+  MPH_CRYPTONIGHT_ADDRESS=$MPH_ADDRESS
+  MPH_EQUIHASH_ADDRESS=$MPH_ADDRESS
+  MPH_ETHASH_ADDRESS=$MPH_ADDRESS
+  MPH_SKEIN_ADDRESS=$MPH_ADDRESS
+  MPH_CRYPTONIGHTV7==$MPH_ADDRESS
 fi
-## NICEHASH END
 
-## ETHASH START
-if [[ $ALGO == ETHASH ]];
-        then
-                ## Declare Miner Start
-						if [[ $ETHASH_MINER == GENOIL ]];
-                        then
-                                HCD="$LAUNCH ${NVOC}/miners/Genoil-U/ethminer -S "${!xpool}"$CLN"${!xport}" -O "${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}":x -SP 1 -U "${!xext}""
-                        fi
-
-                        if [[ $ETHASH_MINER == ETHMINER ]];
-                        then
-                                HCD="$LAUNCH ${NVOC}/miners/ethminer/latest/ethminer -S "${!xpool}"$CLN"${!xport}" -O "${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}":x -SP 1 -U "${!xext}""
-                        fi
-
-                        if [[ $ETHASH_MINER == CLAYMORE ]];
-                        then
-                                HCD="$LAUNCH ${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool "${!xpool}"$CLN"${!xport}" -ewal "${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}" -epsw x  -mode 1 -allcoins 1 -allpools 1 -dbg -1 "${!xext}""
-                        fi
-                ## Declare Miner End
-$HCD
-fi
-## ETHASH END
-
-## EQUIHASH START
-if [[ $ALGO == EQUIHASH ]];
-        then
-        if [[ $EQUIHASH_MINER == ZM ]]
-                then
-                        HCD="$LAUNCH ${NVOC}/miners/dstm/latest/zm_miner --server "${!xpool}" --user "${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}" --port "${!xport}" --pass $MINER_PWD --time $ZM_OPTS"
-        fi
-        if [[ $EQUIHASH_MINER == EWBF ]]
-                then
-                        HCD="$LAUNCH ${NVOC}/miners/ewbf/v$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server "${!xpool}" --user "${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}" --pass $MINER_PWD --port "${!xport}" $EWBF_OPTS"
-        fi
-        if [[ $EQUIHASH_MINER == BMINER ]]
-                then
-                        HCD="$LAUNCH ${NVOC}/miners/bminer/latest/bminer -uri stratum://"${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}":$MINER_PWD@"${!xpool}"$CLN"${!xport}" $BMINER_OPTS"
-        fi
-        if [[ $EQUIHASH_MINER == BMINER_SSL ]]
-                then
-                        HCD="$LAUNCH ${NVOC}/miners/bminer/latest/bminer -uri stratum+ssl://"${!xadd}"$WALLET_ADDRESS_FORMAT"${!xwrk}":$MINER_PWD@"${!xpool}"$CLN"${!xport}" $BMINER_OPTS"
-        fi
-$HCD
-fi
-## EQUIHASH END
-
-
+## CLAYMORE_DUAL
 if [[ $COIN == CLAYMORE_DUAL ]]
 then
   HCD=${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64
-  E_ADDR="$DUAL_EWAL$WALLET_ADDRESS_FORMAT$DUAL_EWORKER"
-  D_ADDR="$DUAL_DWAL$WALLET_ADDRESS_FORMAT$DUAL_DWORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -epool $DUAL_EPOOL:$DUAL_EPORT -ewal $E_ADDR -epsw  $DUAL_EPSW -dpool stratum+tcp://$DUAL_DPOOL:$DUAL_DPORT -dwal $D_ADDR -dpsw $DUAL_DPSW -dcoin $DUAL_DCOIN -allpools $ALL_POOLS -dbg -1 -mport $MPORT -mpsw $MPSW $DUAL_ADDITIONAL_ARGUMENTS
+  E_ADDR="$DUAL_EWAL""$ETHASH_WALLET_FORMAT""$DUAL_EWORKER"
+  D_ADDR="$DUAL_DWAL""$DUAL_WALLET_FORMAT""$DUAL_DWORKER"
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS"
 fi
 
-if [[ $COIN == RVN ]]
+## ETHASH
+if [[ $ALGO == ETHASH ]]
 then
-  HCD=${NVOC}/miners/MSFTccminer/ccminer
-  ADDR="$RVN_ADDRESS"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a x16r -i $RVN_INTENSITY -o stratum+tcp://$RVN_POOL:$RVN_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
-fi
+## Declare Miner Start
+  if [[ $ETHASH_MINER == GENOIL ]]
+  then
+    HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
+  elif [[ $ETHASH_MINER == ETHMINER ]]
+  then
+    HCD="${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
+  elif [[ $ETHASH_MINER == CLAYMORE ]]
+  then
+    HCD="${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -allcoins 1 -allpools 1 -dbg -1 ${!xext}"
+  elif [[ $ETHASH_MINER == BMINER ]]
+  then
+    HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
+  fi
+  "$LAUNCH" "$HCD"
 
-if [[ $COIN == BSD ]]
+## EQUIHASH
+elif [[ $ALGO == EQUIHASH ]];
 then
-  HCD=${NVOC}/miners/z-enemy/z-enemy_miner
-  ADDR="$BSD_ADDRESS.$BSD_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a xevan -i $BSD_INTENSITY -o stratum+tcp://$BSD_POOL:$BSD_PORT -u $ADDR -p $MINER_PWD $Z-ENEMY_OPTS
-fi
+  if [[ $EQUIHASH_MINER == DSTM ]]
+  then
+    HCD="${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $DSTM_OPTS ${!xext}"
+  elif [[ $EQUIHASH_MINER == EWBF ]]
+  then
+    HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
+  elif [[ $EQUIHASH_MINER == BMINER ]]
+  then
+    HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
+  fi
+  "$LAUNCH" "$HCD"
 
-if [[ $COIN == ONION ]]
+elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMD-GR || $ALGO == GROESTL || $ALGO == MYR-GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 ]]
 then
-  HCD=${NVOC}/miners/TPccminer/ccminer
-  ADDR="$ONION_ADDRESS"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a x13 -o stratum+tcp://$ONION_POOL:$ONION_PORT -u $ADDR -p c=ONION $CCMINER_OPTS
-fi
+  UCCALGO="-a ${ALGO,,}"
+  HCD="${NVOC}"/miners/"${!xminer}"/ccminer
+  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
-if [[ $COIN == SMART ]]
+## CRYPTONIGHT
+elif [[ $ALGO == CRYPTONIGHT ]]
 then
-  HCD=${NVOC}/miners/ASccminer/ccminer
-  ADDR="$SMART_ADDRESS$WALLET_ADDRESS_FORMAT$SMART_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a keccak -o stratum+tcp://$SMART_POOL:$SMART_PORT -u $ADDR -p $MINER_PWD -i $SMART_INTENSITY $CCMINER_OPTS
-fi
+  HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
+  "$LAUNCH" "$HCD" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
-if [[ $COIN == ZCOIN ]]
+## PASCAL
+elif [[ $ALGO == PASCAL ]]
 then
-  HCD=${NVOC}/miners/TPccminer/ccminer
-  ADDR="$ZCOIN_ADDRESS$WALLET_ADDRESS_FORMAT$ZCOIN_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a lyra2z -o stratum+tcp://$ZCOIN_POOL:$ZCOIN_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
-fi
+  HCD="${NVOC}"/miners/pasc/sgminer
+  UCCALGO="-k pascal"
+  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
-if [[ $COIN == BTX ]]
+  ## CRYPTONIGHTV7
+elif [[ $ALGO == CRYPTONIGHTV7 ]];
 then
-  HCD=${NVOC}/miners/TPccminer/ccminer
-  ADDR="$BTX_ADDRESS$WALLET_ADDRESS_FORMAT$BTX_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a timetravel10 -o stratum+tcp://$BTX_POOL:$BTX_PORT -u $ADDR -p $MINER_PWD -i $BTX_INTENSITY $CCMINER_OPTS
-fi
+# Remove nvidia.txt if cards count changed
+  if [ -f ~/nvidia.txt ]
+  then
+    if [ "$(grep -c "// gpu:" ~/nvidia.txt)" != "$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)" ]
+    then
+      rm ~/nvidia.txt
+    fi
+  fi
+  # Change verbosity to show hashrate in output log
+  if grep '"verbose_level" : 3' ~/config.txt
+  then
+    sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
+  fi
+  HCD=${NVOC}/miners/xmr-stak/build/bin/xmr-stak_miner
+  "$LAUNCH" "$HCD" --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
-if [[ $COIN == ZPOOL_LYRA2V2 ]]
-then
-  HCD=${NVOC}/miners/"$LYRA2V2_MINER"/ccminer
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$ZPOOL_LYRA2V2_POOL:$ZPOOL_LYRA2V2_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $LYRA2V2_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == ZPOOL_LBRY ]]
-then
-  HCD=${NVOC}/miners/SPccminer/ccminer
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a lbry -o stratum+tcp://$ZPOOL_LBRY_POOL:$ZPOOL_LBRY_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $ZPOOL_LBRY_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == ZPOOL_SKEIN ]]
-then
-  HCD=${NVOC}/miners/"$SKEIN_MINER"/ccminer
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a skein -o stratum+tcp://$ZPOOL_SKEIN_POOL:$ZPOOL_SKEIN_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $SKEIN_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == DGB ]]
-then
-  HCD=${NVOC}/miners/"$SKEIN_MINER"/ccminer
-  ADDR="$DGB_ADDRESS$WALLET_ADDRESS_FORMAT$DGB_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a skein -o stratum+tcp://$DGB_POOL:$DGB_PORT -u $ADDR -p $MINER_PWD -i $SKEIN_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == ZPOOL_BLAKE2S ]]
-then
-  HCD=${NVOC}/miners/SPccminer/ccminer
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a blake2s -o stratum+tcp://$ZPOOL_BLAKE2S_POOL:$ZPOOL_BLAKE2S_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $ZPOOL_BLAKE2S_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == ZPOOL_SKUNK ]]
-then
-  HCD=${NVOC}/miners/"$SKUNK_MINER"/ccminer
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a skunk -o stratum+tcp://$SKUNK_POOL:$SKUNK_PORT -u $BTC_ADDRESS -p $MINER_PWD -i $SKUNK_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == MONA ]]
-then
-  HCD=${NVOC}/miners/"$LYRA2V2_MINER"/ccminer
-  ADDR="$MONA_ADDRESS$WALLET_ADDRESS_FORMAT$MONA_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$MONA_POOL:$MONA_PORT -u $ADDR -p $MINER_PWD -i $LYRA2V2_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == VTC ]]
-then
-  HCD=${NVOC}/miners/"$LYRA2V2_MINER"/ccminer
-  ADDR="$VTC_ADDRESS$WALLET_ADDRESS_FORMAT$VTC_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$VTC_POOL:$VTC_PORT -u $ADDR -p $MINER_PWD -i $LYRA2V2_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == XVG ]]
-then
-  HCD=${NVOC}/miners/"$LYRA2V2_MINER"/ccminer
-  ADDR="$XVG_ADDRESS$WALLET_ADDRESS_FORMAT$XVG_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$XVG_POOL:$XVG_PORT -u $ADDR -p $MINER_PWD -i $LYRA2V2_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == DMD ]]
-then
-  HCD=${NVOC}/miners/TPccminer/ccminer
-  ADDR="$DMD_ADDRESS$WALLET_ADDRESS_FORMAT$DMD_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a dmd-gr -o stratum+tcp://$DMD_POOL:$DMD_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
-fi
-
-if [[ $COIN == GRS ]]
-then
-  HCD=${NVOC}/miners/TPccminer/ccminer
-  ADDR="$GRS_ADDRESS$WALLET_ADDRESS_FORMAT$GRS_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a groestl -o stratum+tcp://$GRS_POOL:$GRS_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
-fi
-
-if [[ $COIN == XMY ]]
-then
-  HCD=${NVOC}/miners/TPccminer/ccminer
-  ADDR="$XMY_ADDRESS$WALLET_ADDRESS_FORMAT$XMY_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a myr-gr -o stratum+tcp://$XMY_POOL:$XMY_PORT -u $ADDR -p $MINER_PWD -i $XMY_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == LBC ]]
-then
-  HCD=${NVOC}/miners/SPccminer/ccminer
-  ADDR="$LBC_ADDRESS$WALLET_ADDRESS_FORMAT$LBC_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a lbry -o stratum+tcp://$LBC_POOL:$LBC_PORT -u $ADDR -p $MINER_PWD -i $LBC_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == FTC ]]
-then
-  HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$FTC_ADDRESS$WALLET_ADDRESS_FORMAT$FTC_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$FTC_POOL:$FTC_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == TZC ]]
-then
-  HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$TZC_ADDRESS$WALLET_ADDRESS_FORMAT$TZC_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$TZC_POOL:$TZC_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == VIVO ]]
-then
-  HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$VIVO_ADDRESS$WALLET_ADDRESS_FORMAT$VIVO_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$VIVO_POOL:$VIVO_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == ORB ]]
-then
-  HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$ORB_ADDRESS$WALLET_ADDRESS_FORMAT$ORB_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$ORB_POOL:$ORB_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == PXC ]]
-then
-  HCD=/home/m1/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$PXC_ADDRESS$WALLET_ADDRESS_FORMAT$PXC_WORKER"
-  screen -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$PXC_POOL:$PXC_PORT  -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == CRC ]]
-then
-  HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$CRC_ADDRESS$WALLET_ADDRESS_FORMAT$CRC_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$CRC_POOL:$CRC_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == GBX ]]
-then
-  HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$GBX_ADDRESS$WALLET_ADDRESS_FORMAT$GBX_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$GBX_POOL:$GBX_PORT -u $ADDR -p $MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == DSR ]]
-then
-  HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$DSR_ADDRESS"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$DSR_POOL:$DSR_PORT -u $ADDR -p c=$MINER_PWD -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == SIGT ]]
-then
-  HCD=${NVOC}/miners/"$SKUNK_MINER"/ccminer
-  ADDR="$SIGT_ADDRESS$WALLET_ADDRESS_FORMAT$SIGT_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a skunk -o stratum+tcp://$SIGT_POOL:$SIGT_PORT -u $ADDR -p $MINER_PWD -i $SKUNK_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == ALTCOM ]]
-then
-  HCD=${NVOC}/miners/"$SKUNK_MINER"/ccminer
-  ADDR="$ALTCOM_ADDRESS$WALLET_ADDRESS_FORMAT$ALTCOM_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a skunk -o stratum+tcp://$ALTCOM_POOL:$ALTCOM_PORT -u $ADDR -p $MINER_PWD -i $SKUNK_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == KRB ]]
-then
-  HCD=${NVOC}/miners/KTccminer-cryptonight/ccminer
-  ADDR="$KRB_ADDRESS$WALLET_ADDRESS_FORMAT$KRB_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -o stratum+tcp://$KRB_POOL:$KRB_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
-fi
-
-if [[ $COIN == ETN ]]
-then
-  HCD=${NVOC}/miners/KTccminer-cryptonight/ccminer
-  ADDR="$ETN_ADDRESS$WALLET_ADDRESS_FORMAT$ETN_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -o stratum+tcp://$ETN_POOL:$ETN_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
-fi
-
-if [[ $COIN == SIB ]]
-then
-  HCD=${NVOC}/miners/TPccminer/ccminer
-  ADDR="$SIB_ADDRESS$WALLET_ADDRESS_FORMAT$SIB_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a sib -o stratum+tcp://$SIB_POOL:$SIB_PORT -u $ADDR -p $MINER_PWD -i $SIB_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == XMR ]]
-then
-  HCD=${NVOC}/miners/xmr/stakGPU/bin/xmr-stak-nvidia
-  ADDR="$XMR_ADDRESS$WALLET_ADDRESS_FORMAT$XMR_WORKER"
-  GPUS_FOR_XMR=0
-  echo "" > ${NVOC}/tmp_threads
-  while [ $GPUS_FOR_XMR != $GPUS ]
-  do
-    cat <<EOF >>${NVOC}/tmp_threads
-{ "index" : $GPUS_FOR_XMR,
-    "threads" : 32, "blocks" : 18,
-    "bfactor" : 8, "bsleep" :  10,
-    "affine_to_cpu" : false,
-  },
-EOF
-    GPUS_FOR_XMR=$(($GPUS_FOR_XMR+1))
-  done
-  THREADS=$(cat ${NVOC}/tmp_threads)
-  cat <<EOF >${NVOC}/miners/xmr/stakGPU/bin/config.txt
-
-"gpu_threads_conf" : [
-$THREADS
-],
-
-"use_tls" : false,
-"tls_secure_algo" : true,
-"tls_fingerprint" : "",
-
-"pool_address" : "$XMR_POOL:$XMR_PORT",
-"wallet_address" : "$ADDR",
-"pool_password" : "x",
-
-"call_timeout" : 10,
-"retry_time" : 10,
-"giveup_limit" : 0,
-
-"verbose_level" : 4,
-
-"h_print_time" : 60,
-
-"output_file" : "",
-
-"httpd_port" : 0,
-
-"prefer_ipv4" : true
-EOF
-  cd ${NVOC}/miners/xmr/stakGPU/bin
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD
-  rm ${NVOC}/tmp_threads
-fi
-
-if [[ $COIN == DCR ]]
-then
-  HCD=${NVOC}/pasc/sgminer
-  ADDR="$DCR_ADDRESS$WALLET_ADDRESS_FORMAT$DCR_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -k decred -o stratum+tcp://$DCR_POOL:$DCR_PORT -u $ADDR -p $MINER_PWD  -I 21 -w 64 -g2
-fi
-
-if [[ $COIN == PASC ]]
-then
-  HCD=${NVOC}/pasc/sgminer
-  ADDR="$PASC_ADDRESS$WALLET_ADDRESS_FORMAT.$PASC_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -k pascal -o $PASC_POOL:$PASC_PORT -u $ADDR  -p $MINER_PWD -I 21 -w 64 -g2
-fi
-
-if [[ $COIN == PASL ]]
-then
-  HCD=${NVOC}/pasc/sgminer
-  ADDR="$PASL_ADDRESS$WALLET_ADDRESS_FORMAT$PASL_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -k pascal -o stratum+tcp://$PASL_POOL:$PASL_PORT -u $ADDR  -p $MINER_PWD -I 21 -w 64 -g2
-fi
-
-if [[ $COIN == SIA ]]
-then
-  HCD=${NVOC}/miners/SPccminer/ccminer
-  SCADDR="$SC_ADDRESS$WALLET_ADDRESS_FORMAT$SC_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a sia -o $SC_GW_POOL:$SC_GW_PORT -u $SCADDR -p $MINER_PWD  $CCMINER_OPTS
-fi
-
-
-
-if [[ $COIN == LUX ]]
-then
-  HCD=${NVOC}/miners/ANXccminer/ccminer
-  ADDR="$LUX_ADDRESS"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a phi -o stratum+tcp://$LUX_POOL:$LUX_PORT -u $ADDR -p $LUX_WORKER -i $LUX_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == SUMO ]]
-then
-  HCD=${NVOC}/miners/KTccminer-cryptonight/ccminer
-  ADDR="$SUMO_ADDRESS"
-  screen -dmSL miner $HCD -o stratum+tcp://$SUMO_POOL:$SUMO_PORT -u $ADDR -p $MINER_PWD $CCMINER_OPTS
-fi
-
-if [[ $COIN == NICE-NEOSCRYPT ]]
-then
-  HCD=${NVOC}/miners/"$NEOSCRYPT_MINER"/ccminer
-  ADDR="$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a neoscrypt -o stratum+tcp://$NICE_NEOSCRYPT_POOL:$NICE_NEOSCRYPT_PORT -u $ADDR -p x -i $NEOSCRYPT_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == NICE-LYRA2REV2 ]]
-then
-  HCD=${NVOC}/miners/"$LYRA2V2_MINER"/ccminer
-  ADDR="$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a lyra2v2 -o stratum+tcp://$NICE_LYRA2REV2_POOL:$NICE_LYRA2REV2_PORT -u $ADDR -p x -i $LYRA2V2_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == NICE-X11GOST ]]
-then
-  HCD=${NVOC}/miners/SPccminer/ccminer
-  ADDR="$$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a sib -o stratum+tcp://$NICE_X11GOST_POOL:$NICE_X11GOST_PORT -u $ADDR -p x -i $NICE_X11GOST_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == NICE-SKUNKHASH ]]
-then
-  HCD=${NVOC}/miners/"$SKUNK_MINER"/ccminer
-  ADDR="$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -a skunk -o stratum+tcp://$NICE_SKUNKHASH_POOL:$NICE_SKUNKHASH_PORT -u $ADDR -p x -i $SKUNK_INTENSITY $CCMINER_OPTS
-fi
-
-if [[ $COIN == NICE-CRYPTONIGHT ]]
-then
-  HCD=${NVOC}/miners/KTccminer-cryptonight/ccminer
-  ADDR="$NICE_ADDRESS$WALLET_ADDRESS_FORMAT$NICE_WORKER"
-  screen -c ${NVOC}/screenrc-miner -dmSL miner $HCD -o stratum+tcp://$NICE_CRYPTONIGHT_POOL:$NICE_CRYPTONIGHT_PORT -u $ADDR -p x -i $NICE_CRYPTONIGHT_INTENSITY $CCMINER_OPTS
+else
+  echo ""
+  echo "COIN/ALGO not found, Check your settings"
+  echo "Miner not started, Stopping watchdog"
+  pkill -f 5watchdog
 fi

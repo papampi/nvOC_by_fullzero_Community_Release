@@ -61,10 +61,12 @@
 #          ${NVOC}/nvoc_logs tmpfs mount
 # v=0020 : LuKePicci,papampi
 #          AUTO_SWITCH generalized implementetion
+# v=0021 : papampi
+#          Algo identification edits for Algo mining unification
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.0.0020"                  # Do not edit this
+nvOC_3main_ver="v0019-2.1.0021"                  # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -146,7 +148,8 @@ ___1050_or_1050ti="NO"
 
 NORMAL="NO"
 
-P10X_100="NO"
+P106_100="NO"
+P104_P102="NO"
 
 if [ ! -f ${NVOC}/nvoc_logs/tempa ]
 then
@@ -157,9 +160,13 @@ if grep -q "1050" ${NVOC}/nvoc_logs/tempa; then
   ___1050_or_1050ti="YES"
 fi
 
-if grep -q -E 'P106|P104|P102' ${NVOC}/nvoc_logs/tempa; then
+if grep -q 'P106' ${NVOC}/nvoc_logs/tempa; then
   ___1050_or_1050ti="YES"
-  P10X_100="YES"
+  P106_100="YES"
+fi
+
+if grep -q -E 'P104|P102' /tmp/tempa; then
+  P104_P102="YES"
 fi
 
 if grep -q -E '1060|1070|1080' ${NVOC}/nvoc_logs/tempa; then
@@ -193,7 +200,7 @@ then
   XORG="OK"
 fi
 
-if [[ $P10X_100 == YES ]]
+if [[ $P106_100 == YES || $P104_P102 == YES ]]
 then
   XORG="OK"
 fi
@@ -295,27 +302,27 @@ then
 fi
 
 ## IDENTIFY MINING ALGORITHM START
-if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX ]]
+if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX || $COIN == MPH_NEOSCRYPT || $COIN == ZPOOL_NEOSCRYPT ]]
 then
   ALGO=NEOSCRYPT
-elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE-ETHASH ]]
+elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == CLO || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE-ETHASH || $COIN == ETP ]]
 then
   ALGO=ETHASH
-elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE-EQUIHASH || $COIN == VOTE ]]
+elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE-EQUIHASH || $COIN == VOTE   || $COIN == BTCP  || $COIN == BCI ]]
 then
   ALGO=EQUIHASH
 elif [[ $COIN == SIGT || $COIN == ZPOOL_SKUNK || $COIN == ALTCOM || $COIN == NICE-SKUNKHASH ]]
 then
   ALGO=SKUNK
-elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE-LYRA2REV2 || $COIN == XVG ]]
+elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE-LYRA2REV2 || $COIN == XVG || $COIN == MPH_LYRA2V2 || $COIN == ZPOOL_LYRA2V2 ]]
 then
-  ALGO=LYRA2REV2
+  ALGO=LYRA2V2
 elif [[ $COIN == XMR || $COIN == KRB || $COIN == ETN || $COIN == NICE-CRYPTONIGHT ]]
 then
   ALGO=CRYPTONIGHT
-elif [[ $COIN == ZCOIN ]]
+elif [[ $COIN == ZCOIN || $COIN == MPH_LYRA2Z ]]
 then
-  ALGO=LYRA2V2
+  ALGO=LYRA2Z
 elif [[ $COIN == BSD ]]
 then
   ALGO=XEVAN
@@ -324,7 +331,43 @@ then
   ALGO=X16R
 elif [[ $COIN == BTX ]]
 then
-  ALGO=TIMETRAVEL10
+  ALGO=BITCORE
+elif [[ $COIN == SIB  || $COIN == NICE-X11GHOST ]]
+then
+  ALGO=SIB
+elif [[ $COIN == MONERO || $COIN == MPH_CRYPTONIGHTV7 ]]
+then
+  ALGO=CRYPTONIGHTV7
+elif [[ $COIN == LUX || $COIN == FLM ]]
+then
+  ALGO=PHI
+elif [[ $COIN == PASC || $COIN == PASL ]]
+then
+  ALGO=PASCAL
+elif [[ $COIN == LBC || $COIN == ZPOOL_LBRY ]]
+then
+  ALGO=LBRY
+elif [[ $COIN == DMD ]]
+then
+  ALGO=DMD-GR
+elif [[ $COIN == GRS || $COIN == MPH_GRS ]]
+then
+  ALGO=GRS
+elif [[ $COIN == XMY ]]
+then
+  ALGO=MYR-GR
+elif [[ $COIN == DCR || $COIN == MPH_MYR-GR ]]
+then
+  ALGO=DECRED
+elif [[ $COIN == SIA ]]
+then
+  ALGO=SIA
+elif [[ $COIN == ONION ]]
+then
+  ALGO=X13
+elif [[ $COIN == ZPOOL_SKEIN || $COIN == MPH_SKEIN ]]
+then
+  ALGO=SKEIN
 else
   ALGO=UNDEFINED
 fi
@@ -800,7 +843,7 @@ then
 "currency":"$WTM_CURRENCY"
 }
 EOF
-    cat <<EOF >${NVOC}/WTM_1.json
+  cat <<EOF >${NVOC}/WTM_1.json
 {
 "output_dir": "${NVOC}",
 "WTM_URL": "$WTM_AUTO_SWITCH_URL",
@@ -825,7 +868,7 @@ EOF
   fi
 fi
 
-if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
+if [[ $OhGodAnETHlargementPill == YES && $ALGO == ETHASH ]]
 then
   echo " Launching OhGodAnETHlargementPill"
   HCD="${NVOC}/OhGodAnETHlargementPill-r2"
@@ -872,7 +915,7 @@ then
 else
   UNDEFINED_CORE_OVERCLOCK=$_CORE_OVERCLOCK
   UNDEFINED_MEMORY_OVERCLOCK=$_MEMORY_OVERCLOCK
-  
+
   if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
   then
     for i in $(seq 0 $((GPUS-1)))
@@ -889,7 +932,7 @@ else
     done
   fi
 fi
-  
+
 TI="3"
 
 if [[ $___1050_or_1050ti == YES ]]
@@ -901,11 +944,21 @@ then
   fi
 fi
 
+if [[ $P104_P102 == YES ]]
+then
+  TI="1"
+  if [[ $NORMAL == YES ]]
+  then
+    TI="1 3"
+  fi
+fi
+
+
 if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
   sleep 6
 fi
-  
+
 if [[ $MINER_TEMP_CONTROL == NO ]]
 then
   if [[ $MANUAL_FAN == YES ]]
@@ -937,7 +990,7 @@ do
   done
   gpu=$((gpu+1))
 done
-  
+
 if [[ $GPUPowerMizerMode_Adjust == YES ]]
 then
   gpu=0
@@ -1001,7 +1054,7 @@ then
       echo ""
       echo "[WARNING] - Attempting to launch miner for an undefined algo"
     fi
-    
+
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
@@ -1009,7 +1062,7 @@ then
     echo "    "
     echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
     echo "    "
-  
+
     if [[ $LOCALorREMOTE == REMOTE ]]
     then
       echo "Miner output: ./nvOC miner-log"
@@ -1026,7 +1079,7 @@ then
   then
     echo "LAUNCHING:  ${AUTO_SWITCH} (will launch miner)"
     echo ""
-  
+
     while true
     do
       ${AUTO_SWITCH_CMD}
@@ -1035,8 +1088,8 @@ then
       echo ""
       if [[ $LOCALorREMOTE == LOCAL ]]
       then
-        if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then	
-          guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0"	
+        if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then
+          guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0"
         fi
         echo "mining process in Guake Tab"
         echo ""
