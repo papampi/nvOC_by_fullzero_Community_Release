@@ -872,11 +872,11 @@ BSD_ADDRESS="replace_with_your_address"
 BSD_POOL="bsd.suprnova.cc"
 BSD_PORT="8686"
 
-# BTI Bitcoin Interest ## No Need to add stratum+tcp:// to server address
-BTI_WORKER="$WORKERNAME"
-BTI_ADDRESS="replace_with_your_address"
-BTI_POOL="replace_with_your_BTI_POOL"
-BTI_PORT="replace_with_your_BTI_PORT"
+# BCI Bitcoin Interest ## No Need to add stratum+tcp:// to server address
+BCI_WORKER="$WORKERNAME"
+BCI_ADDRESS="replace_with_your_address"
+BCI_POOL="replace_with_your_BCI_POOL"
+BCI_PORT="replace_with_your_BCI_PORT"
 
 # BTCP Bitcoin Private ## No Need to add stratum+tcp:// to server address
 BTCP_WORKER="$WORKERNAME"
