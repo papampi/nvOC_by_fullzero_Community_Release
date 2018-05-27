@@ -310,10 +310,10 @@ fi
 if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX || $COIN == MPH_NEOSCRYPT || $COIN == ZPOOL_NEOSCRYPT ]]
 then
   ALGO=NEOSCRYPT
-elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == CLO || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE-ETHASH ]]
+elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == CLO || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE-ETHASH || $COIN == ETP ]]
 then
   ALGO=ETHASH
-elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE-EQUIHASH || $COIN == VOTE ]]
+elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE-EQUIHASH || $COIN == VOTE   || $COIN == BTCP  || $COIN == BTI ]]
 then
   ALGO=EQUIHASH
 elif [[ $COIN == SIGT || $COIN == ZPOOL_SKUNK || $COIN == ALTCOM || $COIN == NICE-SKUNKHASH ]]
@@ -343,7 +343,7 @@ then
 elif [[ $COIN == MONERO || $COIN == MPH_CRYPTONIGHTV7 ]]
 then
   ALGO=CRYPTONIGHTV7
-elif [[ $COIN == LUX ]]
+elif [[ $COIN == LUX || $COIN == FLM ]]
 then
   ALGO=PHI
 elif [[ $COIN == PASC || $COIN == PASL ]]
