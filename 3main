@@ -872,7 +872,7 @@ EOF
   fi
 fi
 
-if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
+if [[ $OhGodAnETHlargementPill == YES && $ALGO == ETHASH ]]
 then
   echo " Launching OhGodAnETHlargementPill"
   HCD="${NVOC}/OhGodAnETHlargementPill-r2"
