@@ -62,7 +62,7 @@
 # v=0020 : LuKePicci,papampi
 #          AUTO_SWITCH generalized implementetion
 # v=0021 : papampi
-#          Algo identification edits for Algo mining unification 
+#          Algo identification edits for Algo mining unification
 
 source ${NVOC}/1bash
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
@@ -128,11 +128,11 @@ then
   fi
 fi
 
-# make log folder, re/mount new one 
+# make log folder, re/mount new one
 mkdir -p "${NVOC}/nvoc_logs"
 if mountpoint -q "${NVOC}/nvoc_logs"
 then
-    REMOUNT="remount,"
+  REMOUNT="remount,"
 fi
 sudo mount -t tmpfs -o ${REMOUNT}defaults,noatime,nosuid,nodev,noexec,mode=1777,size=512M nvoc_logs_$(echo ${NVOC} | shasum | head -c 6) ${NVOC}/nvoc_logs
 
@@ -369,12 +369,12 @@ then
   ALGO=SIA
 elif [[ $COIN == ONION ]]
 then
-  ALGO=X13  
+  ALGO=X13
 elif [[ $COIN == ZPOOL_SKEIN || $COIN == MPH_SKEIN ]]
 then
-  ALGO=SKEIN  
+  ALGO=SKEIN
 else
-  ALGO=UNDEFINED  
+  ALGO=UNDEFINED
 fi
 export ALGO
 ## IDENTIFY ALGORITHM END
@@ -847,7 +847,7 @@ then
 "currency":"$WTM_CURRENCY"
 }
 EOF
-    cat <<EOF >${NVOC}/WTM_1.json
+  cat <<EOF >${NVOC}/WTM_1.json
 {
 "output_dir": "${NVOC}",
 "WTM_URL": "$WTM_AUTO_SWITCH_URL",
@@ -919,7 +919,7 @@ then
 else
   UNDEFINED_CORE_OVERCLOCK=$_CORE_OVERCLOCK
   UNDEFINED_MEMORY_OVERCLOCK=$_MEMORY_OVERCLOCK
-  
+
   if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
   then
     for i in $(seq 0 $((GPUS-1)))
@@ -936,7 +936,7 @@ else
     done
   fi
 fi
-  
+
 TI="3"
 
 if [[ $___1050_or_1050ti == YES ]]
@@ -954,7 +954,7 @@ then
   if [[ $NORMAL == YES ]]
   then
     TI="1 3"
-  fi  
+  fi
 fi
 
 
@@ -962,7 +962,7 @@ if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
   sleep 6
 fi
-  
+
 if [[ $MINER_TEMP_CONTROL == NO ]]
 then
   if [[ $MANUAL_FAN == YES ]]
@@ -994,7 +994,7 @@ do
   done
   gpu=$((gpu+1))
 done
-  
+
 if [[ $GPUPowerMizerMode_Adjust == YES ]]
 then
   gpu=0
@@ -1058,7 +1058,7 @@ then
       echo ""
       echo "[WARNING] - Attempting to launch miner for an undefined algo"
     fi
-    
+
     echo ""
     echo "LAUNCHING:  MINER"
     echo "    "
@@ -1066,7 +1066,7 @@ then
     echo "    "
     echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
     echo "    "
-  
+
     if [[ $LOCALorREMOTE == REMOTE ]]
     then
       echo "Miner output: ./nvOC miner-log"
@@ -1083,7 +1083,7 @@ then
   then
     echo "LAUNCHING:  ${AUTO_SWITCH} (will launch miner)"
     echo ""
-  
+
     while true
     do
       ${AUTO_SWITCH_CMD}
@@ -1092,8 +1092,8 @@ then
       echo ""
       if [[ $LOCALorREMOTE == LOCAL ]]
       then
-        if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then	
-          guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0"	
+        if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then
+          guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0"
         fi
         echo "mining process in Guake Tab"
         echo ""
