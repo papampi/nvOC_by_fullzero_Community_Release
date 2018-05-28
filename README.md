@@ -1,4 +1,4 @@
-nvOC v0019-2.0 - community release
+# nvOC v0019-2.0 - community release (Stable)
 
 by papampi, Stubo and leenoox
 
