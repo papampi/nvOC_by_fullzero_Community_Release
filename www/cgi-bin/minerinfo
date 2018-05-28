@@ -289,7 +289,7 @@ then
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
   
-elif  ps ax | grep -q  "[z]-enemy_miner" ;then
+elif  ps ax | grep -q  "[Z]ENEMYminer" ;then
   if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"; then
     total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[M]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]*MH/s" | sed 's:MH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
     hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[M]H/s" | wc -l | awk '{print $1}')
