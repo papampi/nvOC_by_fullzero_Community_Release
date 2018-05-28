@@ -39,7 +39,6 @@ UNAME=$(uname -r)
 
 SYSTEM_BOOT_TIME=$(uptime -s)
 SYSTEM_UP_TIME=$(uptime -p)
-LOAD_AVERAGE=$(cat /proc/loadavg | awk '{print $1,$2,$3}')
 GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
 TAIL_GPU_COUNT=$(( $GPU_COUNT + 3 ))
 REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
@@ -61,6 +60,7 @@ MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
 MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 eval 'COIN_POOL=${COIN}_POOL'
 
+# Reduce nvidia-smi query by trying to read from watchdog log first
 if ps ax | grep -q "[5]watchdog"
 then
   GPU_UTILIZATIONS=$(tail -$TAIL_GPU_COUNT ${NVOC}/nvoc_logs/watchdog-screenlog.0  | grep -o "GPU[0-9]* Utilization: [0-9]*%" | tail -$GPU_COUNT | sed  's/ Utilization//' |sed  's/: /:/'| paste -s )
@@ -68,6 +68,31 @@ else
   GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
 fi
 
+# Red load average if its higher than cpu core count
+CORE=$(nproc)
+AVERAGES=$(uptime | sed 's/.*: //g; s/ //g')
+
+AVERAGE_1=$(echo "$AVERAGES" | cut -d"," -f1)
+if (( $(echo  "$AVERAGE_1 > $CORE"  | bc -l) ))
+then
+  AVRG_1="<tt style=\"text-align:left; color:red\"> $AVERAGE_1</tt>"
+else
+  AVRG_1="$AVERAGE_1"
+fi
+AVERAGE_5=$(echo "$AVERAGES" | cut -d"," -f2)
+if (( $(echo  "$AVERAGE_5 > $CORE"  | bc -l) ))
+then
+  AVRG_5="<tt style=\"text-align:left; color:red\"> $AVERAGE_5</tt>"
+else
+  AVRG_5="$AVERAGE_5"
+fi
+AVERAGE_15=$(echo "$AVERAGES" | cut -d"," -f3)
+if (( $(echo  "$AVERAGE_15 > $CORE"  | bc -l) ))
+then
+  AVRG_15="<tt style=\"text-align:left; color:red\"> $AVERAGE_15</tt>"
+else
+  AVRG_15="$AVERAGE_15"
+fi
 
 # If number gpu installed is set in 1bash give a comparison
 if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
@@ -401,7 +426,7 @@ echo "Disk / Free Disk: " "<tt style=\"text-align:left; color:white\">" "$DISK /
 
 echo "Memory / Free Memory: " "<tt style=\"text-align:left; color:white\">" "$MEMORY / $FREE_MEMORY<br> </tt>"
 
-echo "Load Average: " "<tt style=\"text-align:left; color:white\">" "$LOAD_AVERAGE<br> </tt>"
+echo "Load Average: " "<tt style=\"text-align:left; color:white\">" "$AVRG_1, $AVRG_5, $AVRG_15 <br> </tt>"
 
 echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$NIVIDIA_VERSION <br> </tt>"
 
