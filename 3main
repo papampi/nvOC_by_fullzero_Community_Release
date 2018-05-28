@@ -211,7 +211,7 @@ then
   XORG="OK"
 fi
 
-if [[ $P106_100 == YES || $P104_P102 == YES]]
+if [[ $P106_100 == YES || $P104_P102 == YES ]]
 then
   XORG="OK"
 fi
