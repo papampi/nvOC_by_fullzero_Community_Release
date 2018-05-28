@@ -878,12 +878,6 @@ BCI_ADDRESS="replace_with_your_address"
 BCI_POOL="replace_with_your_BCI_POOL"
 BCI_PORT="replace_with_your_BCI_PORT"
 
-# BTCP Bitcoin Private ## No Need to add stratum+tcp:// to server address
-BTCP_WORKER="$WORKERNAME"
-BTCP_ADDRESS="replace_with_your_address"
-BTCP_POOL="replace_with_your_BTCP_POOL"
-BTCP_PORT="replace_with_your_BTCP_PORT"
-
 #FLM Folm ## No Need to add stratum+tcp:// to server address
 FLM_WORKER="$WORKERNAME"
 FLM_ADDRESS="replace_with_your_address"
