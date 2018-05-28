@@ -185,7 +185,7 @@ COIN="ZEC"                  # Choose manually the coin to mine (like ETH, ZEC ..
 
 AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
-AUTO_SWITCH="NO"       # NO, WTM_SWTICHING, SALFTER_NICEHASH_SWITCHING,
+AUTO_SWITCH="NO"       # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING,
                        # SALFTER_MPH_SWITCHING, SALFTER_PROGRAMATIC_SWITCHING
 
 #        - NO disables auto switching, mine previously selected COIN
