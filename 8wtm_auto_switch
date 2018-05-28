@@ -144,7 +144,7 @@ do
         sed -i '/^#/!s/'COIN=\"$CURRENT_COIN\"'/'COIN=\"$TOP_COIN\"/'' ${NVOC}/1bash
         grep "$(awk -F: '{print $1}' <  ${NVOC}/WTM_top_coin)" <  ${NVOC}/WTM_current_revenue |  awk -F: '{print $2}' >> ${NVOC}/WTM_24H_REV
         SYNC_COUNT=$(( 1440 / WTM_AUTO_SWITCH_SYNC_INTERVAL ))
-        echo "$(tail -$SYNC_COUNT WTM_24H_REV)" > ${NVOC}/WTM_24H_REV
+        echo "$(tail -$SYNC_COUNT ${NVOC}/WTM_24H_REV)" > ${NVOC}/WTM_24H_REV
         sed -i '/^$/d' ${NVOC}/WTM_24H_REV
 
         echo "Current Coin Algo: $CURRENT_COIN_ALGORITHM"

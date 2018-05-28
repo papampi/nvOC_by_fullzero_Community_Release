@@ -149,7 +149,7 @@ nvOC_1bash_ver="v0019-2.1.0026"   # Do not edit this
 #               Diamond Groestl, GROESTL, Myriad Groestl, Decred, SIA, X13, X16R, XEVAN
 
 # ALGO Mining with NiceHash (Auto converts to BTC)
-######### NICE_ETHASH,NICE_EQUIHASH, NICE_LYRA2REV2, NICE_NEOSCRYPT, NICE_CRYPTONIGHT, NICE_X11GOST, NICE_SKUNKHASH
+######### NICE-ETHASH,NICE-EQUIHASH, NICE-LYRA2REV2, NICE-NEOSCRYPT, NICE-CRYPTONIGHT, NICE-X11GOST, NICE-SKUNKHASH
 
 # ALGO Miningh with Zpool (Auto converts to BTC)
 ######### ZPOOL_LYRA2V2  ZPOOL_BLAKE2S  ZPOOL_EQUIHASH  ZPOOL_LBC  ZPOOL_NEOSCRYPT  ZPOOL_LBRY  ZPOOL_SKEIN
@@ -185,7 +185,7 @@ COIN="ZEC"                  # Choose manually the coin to mine (like ETH, ZEC ..
 
 AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
-AUTO_SWITCH="NO"       # NO, WTM_SWTICHING, SALFTER_NICEHASH_SWITCHING,
+AUTO_SWITCH="NO"       # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING,
                        # SALFTER_MPH_SWITCHING, SALFTER_PROGRAMATIC_SWITCHING
 
 #        - NO disables auto switching, mine previously selected COIN
@@ -878,12 +878,6 @@ BCI_ADDRESS="replace_with_your_address"
 BCI_POOL="replace_with_your_BCI_POOL"
 BCI_PORT="replace_with_your_BCI_PORT"
 
-# BTCP Bitcoin Private ## No Need to add stratum+tcp:// to server address
-BTCP_WORKER="$WORKERNAME"
-BTCP_ADDRESS="replace_with_your_address"
-BTCP_POOL="replace_with_your_BTCP_POOL"
-BTCP_PORT="replace_with_your_BTCP_PORT"
-
 #FLM Folm ## No Need to add stratum+tcp:// to server address
 FLM_WORKER="$WORKERNAME"
 FLM_ADDRESS="replace_with_your_address"
@@ -1053,11 +1047,6 @@ MPH_CRYPTONIGHTV7_PORT="17024"
 MPH_KECCAK_WORKER="$WORKERNAME"
 MPH_KECCAK_POOL="hub.miningpoolhub.com"
 MPH_KECCAK_PORT="17003"
-
-# MPH_MYR-GR
-MPH_MYR-GR_WORKER="$WORKERNAME"
-MPH_MYR-GR_POOL="hub.miningpoolhub.com"
-MPH_MYR-GR_PORT="17005"
 
 # MPH_GRS
 MPH_GRS_WORKER="$WORKERNAME"
@@ -1232,10 +1221,10 @@ X16R_POWERLIMIT_WATTS=100                  # Recomended value for some GTX-1060:
 X16R_CORE_OVERCLOCK=0                    # Recomended value for some GTX-1060: 100
 X16R_MEMORY_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
 
-# TIMETRAVEL10
-TIMETRAVEL10_POWERLIMIT_WATTS=100          # Recomended value for some GTX-1060: 65
-TIMETRAVEL10_CORE_OVERCLOCK=0            # Recomended value for some GTX-1060: 150
-TIMETRAVEL10_MEMORY_OVERCLOCK=0          # Recomended value for some GTX-1060: 800
+# BITCORE, TIMETRAVEL10
+BITCORE_POWERLIMIT_WATTS=100          # Recomended value for some GTX-1060: 65
+BITCORE_CORE_OVERCLOCK=0            # Recomended value for some GTX-1060: 150
+BITCORE_MEMORY_OVERCLOCK=0          # Recomended value for some GTX-1060: 800
 
 
 daggerhashimoto_POWERLIMIT_WATTS=100       # Recomended value for some GTX-1060: 76

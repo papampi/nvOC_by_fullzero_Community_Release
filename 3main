@@ -211,7 +211,7 @@ then
   XORG="OK"
 fi
 
-if [[ $P106_100 == YES || $P104_P102 == YES]]
+if [[ $P106_100 == YES || $P104_P102 == YES ]]
 then
   XORG="OK"
 fi
@@ -322,7 +322,7 @@ then
 elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE-LYRA2REV2 || $COIN == XVG || $COIN == MPH_LYRA2V2 || $COIN == ZPOOL_LYRA2V2 ]]
 then
   ALGO=LYRA2V2
-elif [[ $COIN == XMR || $COIN == KRB || $COIN == ETN || $COIN == NICE-CRYPTONIGHT ]]
+elif [[ $COIN == KRB || $COIN == ETN || $COIN == NICE-CRYPTONIGHT ]]
 then
   ALGO=CRYPTONIGHT
 elif [[ $COIN == ZCOIN || $COIN == MPH_LYRA2Z ]]
@@ -343,7 +343,7 @@ then
 elif [[ $COIN == MONERO || $COIN == MPH_CRYPTONIGHTV7 ]]
 then
   ALGO=CRYPTONIGHTV7
-elif [[ $COIN == LUX || $COIN == FLM ]]
+elif [[ $COIN == XMR || $COIN == LUX || $COIN == FLM ]]
 then
   ALGO=PHI
 elif [[ $COIN == PASC || $COIN == PASL ]]
@@ -872,7 +872,7 @@ EOF
   fi
 fi
 
-if [[ $OhGodAnETHlargementPill == YES && ALGO == ETHASH ]]
+if [[ $OhGodAnETHlargementPill == YES && $ALGO == ETHASH ]]
 then
   echo " Launching OhGodAnETHlargementPill"
   HCD="${NVOC}/OhGodAnETHlargementPill-r2"
