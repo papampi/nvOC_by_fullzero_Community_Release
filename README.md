@@ -29,3 +29,6 @@ The correct git revision is automatically selected, which is the default basic o
 You can refer to https://github.com/papampi/nvOC_miners README for more help on how to update or enrich your miner collection in future
 
 5. Edit nvOC configuration in 1bash file following contained instructions
+
+
+Latest stable version : https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/19.2
