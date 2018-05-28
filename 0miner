@@ -146,7 +146,7 @@ then
   then
     HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
-  "$LAUNCH" "$HCD"
+  $LAUNCH $HCD
 
 ## EQUIHASH
 elif [[ $ALGO == EQUIHASH ]];
@@ -161,26 +161,26 @@ then
   then
     HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
-  "$LAUNCH" "$HCD"
+  $LAUNCH $HCD
 
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMD-GR || $ALGO == GROESTL || $ALGO == MYR-GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 ]]
 then
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
-  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
-  "$LAUNCH" "$HCD" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
 then
   HCD="${NVOC}"/miners/pasc/sgminer
   UCCALGO="-k pascal"
-  "$LAUNCH" "$HCD" "$UCCALGO" -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
   ## CRYPTONIGHTV7
 elif [[ $ALGO == CRYPTONIGHTV7 ]];
@@ -199,7 +199,7 @@ then
     sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
   fi
   HCD=${NVOC}/miners/xmr-stak/build/bin/xmr-stak_miner
-  "$LAUNCH" "$HCD" --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
+  $LAUNCH $HCD --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$CCMINER_OPTS"
 
 else
   echo ""
