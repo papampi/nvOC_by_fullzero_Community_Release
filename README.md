@@ -26,7 +26,7 @@ wget -N https://www.dropbox.com/s/cyo86xoqotplges/nvOC-19-2-update
 bash /home/m1/Downloads/nvOC-19-2-update
 ```
 
-##Shrink Image:
+## Shrink Image:
 
 Mega.nz Download link: https://mega.nz/#!tYUFTAJa!bRsFjN2Yk0dS5V3r2qPn4Lg9Muprp5E9gu657nMcfnI
 
