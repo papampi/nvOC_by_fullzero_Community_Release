@@ -164,9 +164,9 @@ sleep $WATCHDOG_CYCLE
 
 if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
 then
-  echo "$(date) - [INFO] - Miner is running: going on watch" | tee -a ${LOG_FILE}
+  echo "$(date) - [INFO] - Miner is running: going on watch"
 else
-  echo "$(date) - [WARNING] - Miner not running, reinit nvOC from scratch" 
+  echo "$(date) - [WARNING] - Miner not running, reinit nvOC from scratch" | tee -a ${LOG_FILE}
   pkill -f 3main
   exit
 fi
