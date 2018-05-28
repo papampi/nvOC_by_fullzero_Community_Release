@@ -155,7 +155,7 @@ do
   # Info - display assigned values per GPU
   echo -e "${B}GPU $count:${N}  POWER LIMIT: ${B}${POWER_LIMIT[$count]}${N},  TARGET TEMP: ${B}${TARGET_TEMP[$count]}${N}"
 
-  $__CTL_ENABLE="${__CTL_ENABLE} -a [gpu:${count}]/GPUFanControlState=1"
+  __CTL_ENABLE="${__CTL_ENABLE} -a [gpu:${count}]/GPUFanControlState=1"
   (( count++ ))
 done
 
