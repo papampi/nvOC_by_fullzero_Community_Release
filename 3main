@@ -871,6 +871,8 @@ EOF
       echo "    "
     fi
   fi
+else
+  pkill -f 8wtm_auto_switch
 fi
 
 if [[ $OhGodAnETHlargementPill == YES && $ALGO == ETHASH ]]
