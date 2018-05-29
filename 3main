@@ -255,6 +255,7 @@ do
   if [[ ! -e "$HOME/www/cgi-bin/$webscript" ]]
   then
     ln -s "${NVOC}/www/cgi-bin/$webscript" "${HOME}/www/cgi-bin/$webscript"
+    chmod +x "${HOME}/www/cgi-bin/$webscript"
   fi
 done
 
