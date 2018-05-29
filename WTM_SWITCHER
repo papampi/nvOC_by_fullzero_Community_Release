@@ -54,11 +54,25 @@ def saveTopCoin(data):
     logFile.close()
     return
 
-#Get BTC exchange rate from blockchain.info
+#Get BTC exchange rate 
+try:
+    exchrate=float(json.loads(requests.get("http://api.coindesk.com/v1/bpi/currentprice.json").read())['bpi'][currency]['rate_float'])
+    print exchrate
+except:
+    print("Can not get data from coindesk.com")
+    print("Trying to get data from coinbase.com")
+try:
+    exchrate=float(json.loads(urllib2.urlopen("https://api.coinbase.com/v2/exchange-rates?currency=BTC").read())["data"]["rates"][currency])
+    print exchrate
+except:
+    print("Can not get data from coinbase.com")
+    print("Trying to get data from blockchain.info")
 try:
     exchrate=float(json.loads(urllib2.urlopen("https://blockchain.info/ticker").read())[currency]["last"])
+    print exchrate
 except:
     print("Can not get data from blockchain.info")
+    print("Failed to get BTC exchange rate"
     sys.exit()
     raise
 
