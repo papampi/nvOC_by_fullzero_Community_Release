@@ -20,11 +20,11 @@ Starting from nvOC 2.1+ you can clone different versions of nvOC in different fo
 
 Note that original nvOC startup method is based upon gnome-terminal profile. You can edit or disable this in termianl preferences.
 
-3. Navigate to miners subfolder and fetch that submodule
+3. Update the miners submodule
 
-The correct git revision is automatically selected, which is the default basic one for the main nvOC tree you cloned.
+Just do 'git submodule update --init --remote miners', the correct git revision is automatically selected, which is the one linked to the nvOC tree you cloned.
 
-4. Run the nvOC_mienr_update.sh script to install the standard nvOC miner suite.
+4. Run the nvOC_miner_update.sh script to install the standard nvOC miner suite.
 
 You can refer to https://github.com/papampi/nvOC_miners README for more help on how to update or enrich your miner collection in future
 
