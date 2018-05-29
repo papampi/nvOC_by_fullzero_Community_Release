@@ -2,6 +2,9 @@
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# Prevent no firstBOOT error
+touch  ${NVOC}/firstBOOT
+
 firstBOOT="NO"
 
 if grep -q "convert" ${NVOC}/firstBOOT;
