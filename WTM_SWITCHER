@@ -74,7 +74,6 @@ except:
     print("Can not get data from blockchain.info")
     print("Failed to get BTC exchange rate"
     sys.exit()
-    raise
 
 #BTC Rates for web, output, ...
 print "BTC PRICE: " + str(exchrate) + " " + str(currency)
