@@ -1050,6 +1050,13 @@ then
       fi
     fi
   fi
+  
+  ## If auto_switch is unknown, set it to no and continue mining
+  if [[ $AUTO_SWITCH != NO && $AUTO_SWITCH != WTM_SWITCHING && $AUTO_SWITCH != SALFTER_NICEHASH_SWITCHING && $AUTO_SWITCH != SALFTER_MPH_SWITCHING && $AUTO_SWITCH != SALFTER_PROGRAMATIC_SWITCHING ]]
+  then
+    echo "Unknown Auto Switch, Check 1bash, Setting it to NO"
+    AUTO_SWITCH="NO"
+  fi
 
   if [[ $AUTO_SWITCH == NO || $AUTO_SWITCH == WTM_SWITCHING ]]
   then
