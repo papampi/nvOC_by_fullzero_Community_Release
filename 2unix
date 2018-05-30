@@ -2,7 +2,10 @@
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-pkill -f 3main
+# Prevent no firstBOOT error
+touch  ${NVOC}/firstBOOT
+
+firstBOOT="NO"
 
 # make log folder, re/mount new one 
 mkdir -p "${NVOC}/nvoc_logs"
@@ -54,6 +57,5 @@ fi
 if [ $update == "YES" ] ; then
   echo "Update Available"
 fi
-
 
 bash "${NVOC}/3main"

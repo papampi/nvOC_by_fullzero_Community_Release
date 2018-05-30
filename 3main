@@ -246,6 +246,7 @@ do
   if [[ ! -e "$HOME/www/cgi-bin/$webscript" ]]
   then
     ln -s "${NVOC}/www/cgi-bin/$webscript" "${HOME}/www/cgi-bin/$webscript"
+    chmod +x "${HOME}/www/cgi-bin/$webscript"
   fi
 done
 
@@ -866,6 +867,8 @@ EOF
       echo "    "
     fi
   fi
+else
+  pkill -f 8wtm_auto_switch
 fi
 
 if [[ $OhGodAnETHlargementPill == YES && $ALGO == ETHASH ]]
@@ -1045,6 +1048,13 @@ then
         echo "process in screen wdog; 'nvOC wdog-log'"
       fi
     fi
+  fi
+  
+  ## If auto_switch is unknown, set it to no and continue mining
+  if [[ $AUTO_SWITCH != NO && $AUTO_SWITCH != WTM_SWITCHING && $AUTO_SWITCH != SALFTER_NICEHASH_SWITCHING && $AUTO_SWITCH != SALFTER_MPH_SWITCHING && $AUTO_SWITCH != SALFTER_PROGRAMATIC_SWITCHING ]]
+  then
+    echo "Unknown Auto Switch, Check 1bash, Setting it to NO"
+    AUTO_SWITCH="NO"
   fi
 
   if [[ $AUTO_SWITCH == NO || $AUTO_SWITCH == WTM_SWITCHING ]]

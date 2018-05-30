@@ -164,9 +164,9 @@ sleep $WATCHDOG_CYCLE
 
 if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
 then
-  echo "$(date) - [INFO] - Miner is running: going on watch" | tee -a ${LOG_FILE}
+  echo "$(date) - [INFO] - Miner is running: going on watch"
 else
-  echo "$(date) - [WARNING] - Miner not running, reinit nvOC from scratch" 
+  echo "$(date) - [WARNING] - Miner not running, reinit nvOC from scratch" | tee -a ${LOG_FILE}
   pkill -f 3main
   exit
 fi
@@ -224,7 +224,7 @@ do
         sudo reboot
       elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
-        echo "$(date) - [WARNING] - GPU$GPU under threshold - GPU$GPU UTILIZATION: $UTIL%" | tee -a ${LOG_FILE}
+        echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%"" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
@@ -244,7 +244,7 @@ do
         sudo reboot
       elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
-        echo "$(date) - [WARNING] - GPU${GPU} under threshold - GPU${GPU} UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
+        echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
