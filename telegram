@@ -146,10 +146,11 @@ then
   MSG=" Worker: $WORKERNAME $LF Boot Time: $SYSTEM_BOOT_TIME $LF System Up Time: $SYSTEM_UP_TIME $LF Miner Uptime: $MINER_UP_TIME $LF $CURRENT_COIN $LF $BTC_PRICE $LF Reboot Required: $REBOOT_REQUIRED $LF GPU Count: $GPU_COUNT $LF GPU Utilization: $LF $GPU_UTILIZATIONS $LF Temp, Fan, Power: $LF $TEMP_FAN_POWER $LF $LF Auto Switch: $LF$AUTO_SWITCH_TEXT $LF $LF $MINING_HISTORY $LF $LF$WTM_PROFIT $LF $LF $WTM_REV $LF $LF $WTM_AVERAGE_REV $WTM_CURRENCY $LF $WDOG_WARNINGS $LF $TEMP_WARNINGS"
 
   # Before send the telegram check if length >= 4096 UTF8 characters
-  # If so I just send the warning, no the full data
+  # If so send a warning, and not the full data
+  TELEGRAM_CURRENT_CHARS_LIMT=4096
   LENGTH_MSG=${#MSG}
 
-  if (( LENGTH_MSG > 4096 )); then
+  if (( LENGTH_MSG > TELEGRAM_CURRENT_CHARS_LIMT )); then
     TOO_MUCH_CHARS=$(( LENGTH_MSG - TELEGRAM_CURRENT_CHARS_LIMT ))
     MSG="${MSG:0:4025}$LF$LF🚧 Message truncated, exceeding $TOO_MUCH_CHARS characters not shown."
   fi
