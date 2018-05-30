@@ -151,7 +151,7 @@ then
 
   if (( LENGTH_MSG > 4096 )); then
     TOO_MUCH_CHARS=$(( LENGTH_MSG - TELEGRAM_CURRENT_CHARS_LIMT ))
-    MSG=${MSG:0:4025}$LF$LF🚧 Message truncated, exceeding $TOO_MUCH_CHARS characters not shown.
+    MSG="${MSG:0:4025}$LF$LF🚧 Message truncated, exceeding $TOO_MUCH_CHARS characters not shown."
   fi
   /usr/bin/curl -m 5 -s -X POST --output /dev/null https://api.telegram.org/bot${APIKEY}/sendMessage -d "text=${MSG:0:4096}" -d "chat_id=${CHATID}"
 fi
