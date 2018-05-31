@@ -224,7 +224,7 @@ do
         sudo reboot
       elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
-        echo "$(date) - [WARNING] - GPU$GPU under threshold - GPU$GPU UTILIZATION: $UTIL%" | tee -a ${LOG_FILE}
+        echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
@@ -244,7 +244,7 @@ do
         sudo reboot
       elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
-        echo "$(date) - [WARNING] - GPU${GPU} under threshold - GPU${GPU} UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
+        echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
         NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
       fi
