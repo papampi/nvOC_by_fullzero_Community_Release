@@ -292,7 +292,6 @@ while true; do
     NEW_FAN_SPEED=$CURRENT_FAN
 
     echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"
-    echo ""
 
     if [ "$CURRENT_TEMP" -gt "${TARGET_TEMP[${GPU}]}" ]; then
       # This can be far more advanced. For now if difference is more than 5 C multiply adjustement by 2
