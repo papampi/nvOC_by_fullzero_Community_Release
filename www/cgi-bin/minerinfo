@@ -87,8 +87,6 @@ then
     GPU_OC="GPU Specific not supported in webinfo"
     GPU_MC="GPU Specific not supported in webinfo"
   fi
-fi
-
 elif [[ $AUTO_SWITCH == SALFTER* ]]
 then 
     GPU_PL="Salfter Switcher not supported in webinfo"
