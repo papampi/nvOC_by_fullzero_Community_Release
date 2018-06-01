@@ -138,7 +138,7 @@ then
     HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
   elif [[ $ETHASH_MINER == ETHMINER ]]
   then
-    HCD="${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext} $ETHMINER_OPT"
+    HCD="${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext} $ETHMINER_OPTS"
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
     HCD="${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -dbg -1 ${!xext} $CLAYMORE_OPTS"
