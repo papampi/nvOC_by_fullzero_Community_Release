@@ -1,4 +1,8 @@
 #!/bin/bash
+# Safe Reboot Using Magic SysRq Key
+# Suggested by abdeldev in bitcointalk forum
+
+
 echo 1 > /proc/sys/kernel/sysrq
 
 # (un*R*aw) Takes back control of keyboard from X
