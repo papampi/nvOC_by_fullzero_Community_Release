@@ -167,20 +167,20 @@ elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $A
 then
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
-  $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS
+  $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
-  $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS
+  $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
 then
   HCD="${NVOC}"/miners/pasc/sgminer
   UCCALGO="-k pascal"
-  $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS
+  $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
   ## CRYPTONIGHTV7
 elif [[ $ALGO == CRYPTONIGHTV7 ]];
