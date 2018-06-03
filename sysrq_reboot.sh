@@ -6,13 +6,13 @@
 echo 1 > /proc/sys/kernel/sysrq
 
 # (un*R*aw) Takes back control of keyboard from X
-echo r > /proc/sysrq-trigger
+#echo r > /proc/sysrq-trigger
 
 # (t*E*rminate) Send SIGTERM to all processes. 
-echo e > /proc/sysrq-trigger
+#echo e > /proc/sysrq-trigger
 
 # (k*I*ll) Send SIGKILL to all processes.
-echo i > /proc/sysrq-trigger
+#echo i > /proc/sysrq-trigger
 
 # (*S*nc) Sync all cached disk operations to disk
 echo s > /proc/sysrq-trigger
