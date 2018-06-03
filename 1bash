@@ -565,161 +565,188 @@ ZEC_WORKER="$WORKERNAME"
 ZEC_ADDRESS="t1XfkZUZWME8FnRiFxHZQAQ2K1UdQMbshJp"
 ZEC_POOL="zec-us-east1.nanopool.org"
 ZEC_PORT="6666"
+ZEC_EXTENSION_ARGUMENTS=""
 
 # ZCL
 ZCL_WORKER="$WORKERNAME"
 ZCL_ADDRESS="replace_with_your_address"
 ZCL_POOL="us.zclmine.pro"
 ZCL_PORT="9009"
+ZCL_EXTENSION_ARGUMENTS=""
 
 # ZEN
 ZEN_WORKER="$WORKERNAME"
 ZEN_ADDRESS="replace_with_your_address"
 ZEN_POOL="luckpool.org"
 ZEN_PORT="3057"
+ZEN_EXTENSION_ARGUMENTS=""
 
 # ZDASH or HUSH
 HUSH_WORKER="$WORKERNAME"
 HUSH_ADDRESS="replace_with_your_address"
 HUSH_POOL="zdash.suprnova.cc"
 HUSH_PORT="4048"
+HUSH_EXTENSION_ARGUMENTS=""
 
 # BTG
 BTG_WORKER="$WORKERNAME"
 BTG_ADDRESS="replace_with_your_address"
 BTG_POOL="replace_with_your_BTG_POOL"
 BTG_PORT="replace_with_your_BTG_PORT"
+BTG_EXTENSION_ARGUMENTS=""
 
 # KMD
 KMD_WORKER="$WORKERNAME"
 KMD_ADDRESS="replace_with_your_address"
 KMD_POOL="luckpool.org"
 KMD_PORT="3857"
+KMD_EXTENSION_ARGUMENTS=""
 
 # RVN ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
 RVN_WORKER="$WORKERNAME"
 RVN_ADDRESS="replace_with_your_address"
 RVN_POOL="RVN_POOL_ADDRESS"
 RVN_PORT="RVN_POOL_PORT"
+RVN_EXTENSION_ARGUMENTS=""
 
 # BTCP
 BTCP_WORKER="$WORKERNAME"
 BTCP_ADDRESS="replace_with_your_address"
 BTCP_POOL="BTCP_POOL_ADDRESS"
 BTCP_PORT="BTCP_POOL_PORT"
+BTCP_EXTENSION_ARGUMENTS=""
 
 # BTX Bitcore ## No Need to add stratum+tcp:// to server address
 BTX_WORKER="$WORKERNAME"
 BTX_ADDRESS="replace_with_your_address"
 BTX_POOL="btx.suprnova.cc"
 BTX_PORT="3629"
+BTX_EXTENSION_ARGUMENTS=""
 
 # XZC or ZCOIN  ## No Need to add stratum+tcp:// to server address
 ZCOIN_WORKER="$WORKERNAME"
 ZCOIN_ADDRESS="replace_with_your_address"
 ZCOIN_POOL="xzc.suprnova.cc"
 ZCOIN_PORT="1569"
+ZCOIN_EXTENSION_ARGUMENTS=""
 
 # KRB ## No Need to add stratum+tcp:// to server address
 KRB_WORKER="$WORKERNAME"
 KRB_ADDRESS="replace_with_your_address"
 KRB_POOL="krb.sberex.com"
 KRB_PORT="5555"
+KRB_EXTENSION_ARGUMENTS=""
 
 # Electroneum(ETN) ## No Need to add stratum+tcp:// to server address
 ETN_WORKER="$WORKERNAME"
 ETN_ADDRESS="replace_with_your_address"
 ETN_POOL="ETN POOL"
 ETN_PORT="ETN PORT"
+ETN_EXTENSION_ARGUMENTS=""
 
 # SIGT ## No Need to add stratum+tcp:// to server address
 SIGT_WORKER="$WORKERNAME"
 SIGT_ADDRESS="replace_with_your_address"
 SIGT_POOL="us.hashbag.cc"
 SIGT_PORT="8644"
+SIGT_EXTENSION_ARGUMENTS=""
 
 # Altcommunity(ALTCOM) ## No Need to add stratum+tcp:// to server address
 ALTCOM_WORKER="$WORKERNAME"
 ALTCOM_ADDRESS="replace_with_your_address"
 ALTCOM_POOL="ALTCOM POOL"
 ALTCOM_PORT="ALTCOM PORT"
+ALTCOM_EXTENSION_ARGUMENTS=""
 
 # SIB ## No Need to add stratum+tcp:// to server address
 SIB_WORKER="$WORKERNAME"
 SIB_ADDRESS="replace_with_your_address"
 SIB_POOL="sib.suprnova.cc"
 SIB_PORT="3458"
+SIB_EXTENSION_ARGUMENTS=""
 
 # PXC ## No Need to add stratum+tcp:// to server address
 PXC_WORKER="$WORKERNAME"
 PXC_ADDRESS="replace_with_your_address"
 PXC_POOL="atlas.phoenixcoin.org:"
 PXC_PORT="10554"
+PXC_EXTENSION_ARGUMENTS=""
 
 # GRS ## No Need to add stratum+tcp:// to server address
 GRS_WORKER="$WORKERNAME"
 GRS_ADDRESS="replace_with_your_address"
 GRS_POOL="moria.dwarfpool.com"
 GRS_PORT="3345"
+GRS_EXTENSION_ARGUMENTS=""
 
 # XMY ## No Need to add stratum+tcp:// to server address
 XMY_WORKER="$WORKERNAME"
 XMY_ADDRESS="replace_with_your_address"
 XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
 XMY_PORT="20479"
+XMY_EXTENSION_ARGUMENTS=""
 
 # MONA ## No Need to add stratum+tcp:// to server address
 MONA_WORKER="$WORKERNAME"
 MONA_ADDRESS="replace_with_your_address"
 MONA_POOL="mona.suprnova.cc"
 MONA_PORT="2995"
+MONA_EXTENSION_ARGUMENTS=""
 
 # VTC ## No Need to add stratum+tcp:// to server address
 VTC_WORKER="$WORKERNAME"
 VTC_ADDRESS="replace_with_your_address"
 VTC_POOL="hub.miningpoolhub.com"
 VTC_PORT="20507"
+VTC_EXTENSION_ARGUMENTS=""
 
 # TZC ## No Need to add stratum+tcp:// to server address
 TZC_WORKER="$WORKERNAME"
 TZC_ADDRESS="TZC ADDRESS"
 TZC_POOL="TZC POOL"
 TZC_PORT="TZC PORT"
+TZC_EXTENSION_ARGUMENTS=""
 
 # DGB ## No Need to add stratum+tcp:// to server address
 DGB_WORKER="$WORKERNAME"
 DGB_ADDRESS="replace_with_your_address"
 DGB_POOL="hub.miningpoolhub.com"
 DGB_PORT="20527"
+DGB_EXTENSION_ARGUMENTS=""
 
 # LBC ## No Need to add stratum+tcp:// to server address
 LBC_WORKER="$WORKERNAME"
 LBC_ADDRESS="replace_with_your_address"
 LBC_POOL="lbry.suprnova.cc"
 LBC_PORT="6256"
+LBC_EXTENSION_ARGUMENTS=""
 
 # FTC ## No Need to add stratum+tcp:// to server address
 FTC_WORKER="$WORKERNAME"
 FTC_ADDRESS="replace_with_your_address"
 FTC_POOL="hub.miningpoolhub.com"
 FTC_PORT="20510"
+FTC_EXTENSION_ARGUMENTS=""
 
 # ORB ## No Need to add stratum+tcp:// to server address
 ORB_WORKER="$WORKERNAME"
 ORB_ADDRESS="Your DNB Account Name"
 ORB_POOL="strat.dnb.io"
 ORB_PORT="3031"
+ORB_EXTENSION_ARGUMENTS=""
 
 # VIVO ## No Need to add stratum+tcp:// to server address
 VIVO_WORKER="$WORKERNAME"
 VIVO_ADDRESS="VIVO ADDRESS"
 VIVO_POOL="VIVO POOL"
 VIVO_PORT="VIVO PORT"
+VIVO_EXTENSION_ARGUMENTS=""
 
 # ONION ## No Need to add stratum+tcp:// to server address
 ONION_ADDRESS="replace_with_your_ONION_address"
 ONION_POOL="kawaiipool.party"
 ONION_PORT="3633"
+ONION_EXTENSION_ARGUMENTS=""
 
 #Ellaism ELLA
 ELLA_WORKER="$WORKERNAME"
@@ -733,36 +760,42 @@ GBX_WORKER="$WORKERNAME"
 GBX_ADDRESS="replace_with_your_address"
 GBX_POOL="replace_with_pool_address"
 GBX_PORT="replace_with_pool_port"
+GBX_EXTENSION_ARGUMENTS=""
 
 #CrowdCoin (CRC) ##No Need to add add stratum+tcp:// to server address
 CRC_WORKER="$WORKERNAME"
 CRC_ADDRESS="replace_with_your_address"
 CRC_POOL="replace_with_pool_address"
 CRC_PORT="replace_with_pool_port"
+CRC_EXTENSION_ARGUMENTS=""
 
 #Verge-Lyra2REv2(XVG) ##No Need to add stratum+tcp:// to server address
 XVG_WORKER="$WORKERNAME"
 XVG_ADDRESS="replace_with_your_address"
 XVG_POOL="replace_with_pool_address"
 XVG_PORT="replace_with_pool_port"
+XVG_EXTENSION_ARGUMENTS=""
 
 #LUXCORE LUX ## No Need to add stratum+tcp:// to server address
 LUX_WORKER="$WORKERNAME"
 LUX_ADDRESS="Your Address"
 LUX_POOL="yiimp.eu"
 LUX_PORT="8333"
+LUX_EXTENSION_ARGUMENTS=""
 
 # Sumo Koin(SUMO) ## No Need to add stratum+tcp:// to server address
 SUMO_WORKER="$WORKERNAME"
 SUMO_ADDRESS="replace_with_your_address"
 SUMO_POOL="SUMO_POOL"
 SUMO_PORT="SUMO_PORT"
+SUMO_EXTENSION_ARGUMENTS=""
 
 # DSR ## No Need to add stratum+tcp:// to server address
 DSR_WORKER="$WORKERNAME"
 DSR_ADDRESS="replace_with_your_address"
 DSR_POOL="DSR_POOL"
 DSR_PORT="DSR_PORT"
+DSR_EXTENSION_ARGUMENTS=""
 
 # ETH
 ETH_WORKER="$WORKERNAME"
@@ -827,24 +860,28 @@ SC_POOL="sia-us-east1.nanopool.org"
 SC_PORT="7777"
 SC_GW_POOL="sia-us-east1.nanopool.org"
 SC_GW_PORT="9980"
+SC_EXTENSION_ARGUMENTS=""
 
 # DCR ## No Need to add stratum+tcp:// to server address
 DCR_WORKER="$WORKERNAME"
 DCR_ADDRESS="replace_with_your_DCR_address"
 DCR_POOL="yiimp.eu"
 DCR_PORT="3252"
+DCR_EXTENSION_ARGUMENTS=""
 
 # PASC ## No Need to add stratum+tcp:// to server address
 PASC_WORKER="$WORKERNAME"
 PASC_ADDRESS="replace_with_your_PASC_ACCOUNT"
 PASC_POOL="pasc-us-east1.nanopool.org"
 PASC_PORT="15555"
+PASC_EXTENSION_ARGUMENTS=""
 
 # PASL ## No Need to add stratum+tcp:// to server address
 PASL_WORKER="$WORKERNAME"
 PASL_ADDRESS="replace_with_your_PASL_ACCOUNT"
 PASL_POOL="mine.pasl.fairpool.xyz"
 PASL_PORT="4009"
+PASL_EXTENSION_ARGUMENTS=""
 
 # XMR : if plusCPU is "YES" replace with your XMR info
 ## No Need to add stratum+tcp:// to server address
@@ -852,43 +889,49 @@ XMR_WORKER="$WORKERNAME"
 XMR_ADDRESS="replace_with_your_XMR_address"
 XMR_POOL="xmr-us-east1.nanopool.org"
 XMR_PORT="14444"
+XMR_EXTENSION_ARGUMENTS=""
 
 # BTCZ
 BTCZ_WORKER="$WORKERNAME"
 BTCZ_ADDRESS="replace_with_your_address"
 BTCZ_POOL="btcz.suprnova.cc"
 BTCZ_PORT="5586"
+BTCZ_EXTENSION_ARGUMENTS=""
 
 # SMART ## No Need to add stratum+tcp:// to server address
 SMART_WORKER="$WORKERNAME"
 SMART_ADDRESS="replace_with_your_address"
 SMART_POOL="pool-eu.smartcash.cc"
 SMART_PORT="3333"
-SMART_INTENSITY="25"
+SMART_EXTENSION_ARGUMENTS=""
 
 #BSD Bitsend ## No Need to add stratum+tcp:// to server address
 BSD_WORKER="$WORKERNAME"
 BSD_ADDRESS="replace_with_your_address"
 BSD_POOL="bsd.suprnova.cc"
 BSD_PORT="8686"
+BSD_EXTENSION_ARGUMENTS=""
 
 # BCI Bitcoin Interest ## No Need to add stratum+tcp:// to server address
 BCI_WORKER="$WORKERNAME"
 BCI_ADDRESS="replace_with_your_address"
 BCI_POOL="replace_with_your_BCI_POOL"
 BCI_PORT="replace_with_your_BCI_PORT"
+BCI_EXTENSION_ARGUMENTS=""
 
 #FLM Folm ## No Need to add stratum+tcp:// to server address
 FLM_WORKER="$WORKERNAME"
 FLM_ADDRESS="replace_with_your_address"
 FLM_POOL="replace_with_your_FLM_POOL"
 FLM_PORT="replace_with_your_FLM_PORT"
+FLM_EXTENSION_ARGUMENTS=""
 
 #ETP Metaverse ## No Need to add stratum+tcp:// to server address
 ETP_WORKER="$WORKERNAME"
 ETP_ADDRESS="replace_with_your_address"
 ETP_POOL="replace_with_your_ETP_POOL"
 ETP_PORT="replace_with_your_ETP_PORT"
+ETP_EXTENSION_ARGUMENTS=""
 
 ###################################################
 # Claymore_Dual Mining                            #
@@ -976,31 +1019,37 @@ NICE_SKUNKHASH_WORKER="$WORKERNAME"
 ZPOOL_SKUNK_POOL="skunk.mine.zpool.ca"
 ZPOOL_SKUNK_PORT="8433"
 ZPOOL_SKUNK_WORKER="$WORKERNAME"
+ZPOOL_SKUNK_EXTENSION_ARGUMENTS=""
 
 # ZPOOL_LYRA2V2 ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_LYRA2V2_POOL="lyra2v2.mine.zpool.ca"
 ZPOOL_LYRA2V2_PORT="4533"
 ZPOOL_LYRA2V2_WORKER="$WORKERNAME"
+ZPOOL_LYRA2V2_EXTENSION_ARGUMENTS=""
 
 # ZPOOL_EQUIHASH ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_EQUIHASH_POOL="equihash.mine.zpool.ca"
 ZPOOL_EQUIHASH_PORT="2142"
 ZPOOL_EQUIHASH_WORKER="$WORKERNAME"
+ZPOOL_EQUIHASH_EXTENSION_ARGUMENTS=""
 
 # ZPOOL_LBRY ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_LBRY_POOL="lbc.mine.zpool.ca"
 ZPOOL_LBRY_PORT="3334"
 ZPOOL_LBRY_WORKER="$WORKERNAME"
+ZPOOL_LBRY_EXTENSION_ARGUMENTS=""
 
 # ZPOOL_NEOSCRYPT ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_NEOSCRYPT_POOL="neoscrypt.mine.zpool.ca"
 ZPOOL_NEOSCRYPT_PORT="4233"
 ZPOOL_NEOSCRYPT_WORKER="$WORKERNAME"
+ZPOOL_NEOSCRYPT_EXTENSION_ARGUMENTS=""
 
 # ZPOOL_SKEIN ## ZPOOL uses your BTC_ADDRESS ## No Need to add stratum+tcp:// to server address
 ZPOOL_SKEIN_POOL="skein.mine.zpool.ca"
 ZPOOL_SKEIN_PORT="4933"
 ZPOOL_SKEIN_WORKER="$WORKERNAME"
+ZPOOL_SKEIN_EXTENSION_ARGUMENTS=""
 
 ########################################################
 #                                                      #
@@ -1012,16 +1061,19 @@ ZPOOL_SKEIN_WORKER="$WORKERNAME"
 MPH_EQUIHASH_WORKER="$WORKERNAME"
 MPH_EQUIHASH_POOL="us-east.equihash-hub.miningpoolhub.com"
 MPH_EQUIHASH_PORT="17023"
+MPH_EQUIHASH_EXTENSION_ARGUMENTS=""
 
 # MPH_ETHASH
 MPH_ETHASH_WORKER="$WORKERNAME"
 MPH_ETHASH_POOL="us-east.ethash-hub.miningpoolhub.com"
 MPH_ETHASH_PORT="17020"
+MPH_ETHASH_EXTENSION_ARGUMENTS=""
 
 # MPH_SKEIN
 MPH_SKEIN_WORKER="$WORKERNAME"
 MPH_SKEIN_POOL="hub.miningpoolhub.com"
 MPH_SKEIN_PORT="17016"
+MPH_SKEIN_EXTENSION_ARGUMENTS=""
 
 # MPH_LYRA2Z
 MPH_LYRA2Z_WORKER="$WORKERNAME"
@@ -1032,26 +1084,31 @@ MPH_LYRA2Z_PORT="17025"
 MPH_NEOSCRYPT_WORKER="$WORKERNAME"
 MPH_NEOSCRYPT_POOL="hub.miningpoolhub.com"
 MPH_NEOSCRYPT_PORT="17012"
+MPH_NEOSCRYPT_EXTENSION_ARGUMENTS=""
 
 # MPH_LYRA2V2
 MPH_LYRA2V2_WORKER="$WORKERNAME"
 MPH_LYRA2V2_POOL="hub.miningpoolhub.com"
 MPH_LYRA2V2_PORT="17018"
+MPH_LYRA2V2_EXTENSION_ARGUMENTS=""
 
 # MPH_CRYPTONIGHTV7
 MPH_CRYPTONIGHTV7_WORKER="$WORKERNAME"
 MPH_CRYPTONIGHTV7_POOL="us-east.cryptonight-hub.miningpoolhub.com"
 MPH_CRYPTONIGHTV7_PORT="17024"
+MPH_CRYPTONIGHTV7_EXTENSION_ARGUMENTS=""
 
 # MPH_KECCAK
 MPH_KECCAK_WORKER="$WORKERNAME"
 MPH_KECCAK_POOL="hub.miningpoolhub.com"
 MPH_KECCAK_PORT="17003"
+MPH_KECCAK_EXTENSION_ARGUMENTS=""
 
 # MPH_GRS
 MPH_GRS_WORKER="$WORKERNAME"
 MPH_GRS_POOL="hub.miningpoolhub.com"
 MPH_GRS_PORT="17004"
+MPH_GRS_EXTENSION_ARGUMENTS=""
 
 
 #####################################################################
