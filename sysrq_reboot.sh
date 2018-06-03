@@ -17,7 +17,7 @@ echo 1 > /proc/sys/kernel/sysrq
 # (*S*nc) Sync all cached disk operations to disk
 echo s > /proc/sysrq-trigger
 
-# (*U*mount) Umounts all mounted partitions
+# (*U*mount) Umounts all mounted partitions ##
 echo u > /proc/sysrq-trigger
 
 # (re*B*oot) Reboots the system
