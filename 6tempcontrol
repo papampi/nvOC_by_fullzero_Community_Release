@@ -32,6 +32,8 @@
 #          MAXIMAL_FAN_SPEED
 # v=0005 : LukePicci
 #          Relocate nvOC to arbitrary install directory
+# v=0006 : papampi (suggestion by abdeldev)
+#          Use sysrq reboot, to prevent freeze/hang
 
 
 
@@ -42,7 +44,7 @@
 # DEV_VERSION=0005
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_temp_ver="v0019-2.1.0005"   # Do not edit this
+nvOC_temp_ver="v0019-2.1.0006"   # Do not edit this
 
 
 export DISPLAY=:0
@@ -255,7 +257,12 @@ while true; do
               bash "${NVOC}/telegram"
             fi
             sleep 3
-            sudo reboot
+            if [[ $SYSRQ_REBOOT == YES ]]  
+            then
+              sudo bash ${NVOC}/sysrq_reboot.sh
+            else
+              sudo reboot
+            fi
           fi
         done
       fi
@@ -281,7 +288,12 @@ while true; do
               bash "${NVOC}/telegram" &
             fi
             sleep 3
-            sudo reboot
+            if [[ $SYSRQ_REBOOT == YES ]]  
+            then
+              sudo bash ${NVOC}/sysrq_reboot.sh
+            else
+              sudo reboot
+            fi
           fi
         done
       fi

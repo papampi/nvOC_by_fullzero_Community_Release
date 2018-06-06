@@ -58,9 +58,12 @@
 #          Added tags to logs
 # v=0017 : LuKePicci,papampi
 #          Rework for salfter's switchers compatibility
+# v=0018 : papampi (suggestion by abdeldev)
+#          Use sysrq reboot, to prevent freeze/hang
+
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.0.017"   # Do not edit this
+nvOC_wdog_ver="v0019-2.0.018"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
@@ -221,8 +224,13 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        sudo reboot
-      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+        if [[ $SYSRQ_REBOOT == YES ]]  
+        then
+          sudo bash ${NVOC}/sysrq_reboot.sh
+        else
+          sudo reboot
+        fi
+	  elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
@@ -241,7 +249,12 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        sudo reboot
+        if [[ $SYSRQ_REBOOT == YES ]]  
+        then
+          sudo bash ${NVOC}/sysrq_reboot.sh
+        else
+          sudo reboot
+        fi
       elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
@@ -413,7 +426,12 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        sudo reboot
+        if [[ $SYSRQ_REBOOT == YES ]]  
+        then
+          sudo bash ${NVOC}/sysrq_reboot.sh
+        else
+          sudo reboot
+        fi
       fi
 
       echo "$(date) - [CRITICAL] - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE}
