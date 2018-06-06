@@ -257,7 +257,12 @@ while true; do
               bash "${NVOC}/telegram"
             fi
             sleep 3
-            sudo bash ${NVOC}/sysrq_reboot.sh
+            if [[ $SYSRQ_REBOOT == YES ]]  
+            then
+              sudo bash ${NVOC}/sysrq_reboot.sh
+            else
+              sudo reboot
+            fi
           fi
         done
       fi
@@ -283,7 +288,12 @@ while true; do
               bash "${NVOC}/telegram" &
             fi
             sleep 3
-            sudo bash ${NVOC}/sysrq_reboot.sh
+            if [[ $SYSRQ_REBOOT == YES ]]  
+            then
+              sudo bash ${NVOC}/sysrq_reboot.sh
+            else
+              sudo reboot
+            fi
           fi
         done
       fi
