@@ -36,7 +36,7 @@
 # v=0006 : Stubo
 #          changed calls of other external functions to internal subroutine calls
 #          papampi
-#          added wtm_auto_switch version   
+#          added wtm_auto_switch version
 #
 # v=0007 : papampi
 #          Changed ~/1bash to /home/m1/1bash for known reasons ...
@@ -79,175 +79,177 @@ fi
 ################################################################################
 
 ############################ Display Help on Usage #############################
-echo_usage()   
+echo_usage()
 {
-   echo ""
-   echo -e "${B}Usage:${N}  ${C}$0 clearlogs${N}"
-   echo "           clears out OS & nvOC logs"
-   echo -e "        ${C}$0 gpuinfo${N}"
-   echo "           displays GPU ID, infomation, settings, and status"
-   echo -e "        ${C}$0 gpumap${N}"
-   echo "           physically map (locate) your GPU's"
-   echo -e "        ${C}$0 report${N}"
-   echo "           create report about hardware and nvOC relevant settings"
-   echo -e "        ${C}$0 patch${N}"
-   echo "           stops nvOC and applies outstanding Ubuntu patches and "
-   echo "           Nvidia driver updates"
-   echo -e "        ${C}$0 reboot${N}"
-   echo "           reboots the host machine"
-   echo -e "        ${C}$0 stop${N}"
-   echo "           stops mining, watchdog and temperature control"
-   echo -e "        ${C}$0 start${N}"
-   echo "           starts normal nvOC mining operations"
-   echo -e "        ${C}$0 restart${N}"
-   echo "           restart nvOC mining operations"
-   echo -e "        ${C}$0 miner-log${N}"
-   echo "           display live miner output"
-   echo -e "        ${C}$0 wdog-log${N}"
-   echo "           display live watchdog output (Only for REMOTE)"
-   echo -e "        ${C}$0 temp-log${N}"
-   echo "           display live temp control output (Only for REMOTE)"
-   echo -e "        ${C}$0 wtm-log${N}"
-   echo "           display live wtm auto switch output"
-   echo -e "        ${C}$0 master-log${N}"
-   echo "           display live miner, watchdog, temp control and wtm auto switch output"
-
+  echo ""
+  echo -e "${B}Usage:${N}  ${C}$0 clearlogs${N}"
+  echo "           clears out OS & nvOC logs"
+  echo -e "        ${C}$0 gpuinfo${N}"
+  echo "           displays GPU ID, infomation, settings, and status"
+  echo -e "        ${C}$0 gpumap${N}"
+  echo "           physically map (locate) your GPU's"
+  echo -e "        ${C}$0 report${N}"
+  echo "           create report about hardware and nvOC relevant settings"
+  echo -e "        ${C}$0 patch${N}"
+  echo "           stops nvOC and applies outstanding Ubuntu patches and "
+  echo "           Nvidia driver updates"
+  echo -e "        ${C}$0 reboot${N}"
+  echo "           reboots the host machine"
+  echo -e "        ${C}$0 stop${N}"
+  echo "           stops mining, watchdog and temperature control"
+  echo -e "        ${C}$0 start${N}"
+  echo "           starts normal nvOC mining operations"
+  echo -e "        ${C}$0 restart${N}"
+  echo "           restart nvOC mining operations"
+  echo -e "        ${C}$0 miner-log${N}"
+  echo "           display live miner output"
+  echo -e "        ${C}$0 wdog-log${N}"
+  echo "           display live watchdog output (Only for REMOTE)"
+  echo -e "        ${C}$0 temp-log${N}"
+  echo "           display live temp control output (Only for REMOTE)"
+  echo -e "        ${C}$0 wtm-log${N}"
+  echo "           display live wtm auto switch output"
+  echo -e "        ${C}$0 master-log${N}"
+  echo "           display live miner, watchdog, temp control and wtm auto switch output"
+  echo -e "        ${C}$0 restore-xorg${N}"
+  echo "           Restore default nvOC xorg.conf"
 }
+
 
 ################################# Clearlogs ######################################
 Clearlogs()
 {
-   echo -e "${B}Clearing logs...${N}"
-   
-   # Must become root to clear these logs
-   sudo su -c "> /var/log/auth.log"
-   sudo su -c "> /var/log/dpkg.log"
-   sudo su -c "> /var/log/syslog"
-   sudo su -c "> /var/log/Xorg.0.log"
-   sudo su -c "> /var/log/kern.log"
+  echo -e "${B}Clearing logs...${N}"
 
-   echo "" > ${NVOC}/5_watchdoglog
-   echo "" > ${NVOC}/6_autotemplog
-   echo "" > ${NVOC}/current-profit
-   echo "" > ${NVOC}/algo-log
+  # Must become root to clear these logs
+  sudo su -c "> /var/log/auth.log"
+  sudo su -c "> /var/log/dpkg.log"
+  sudo su -c "> /var/log/syslog"
+  sudo su -c "> /var/log/Xorg.0.log"
+  sudo su -c "> /var/log/kern.log"
 
-   rm -r ${NVOC}/kk003_telegram_data > /dev/null 2>&1
-   
-   echo ""; echo "...done."
+  echo "" > ${NVOC}/5_watchdoglog
+  echo "" > ${NVOC}/6_autotemplog
+  echo "" > ${NVOC}/current-profit
+  echo "" > ${NVOC}/algo-log
+
+  rm -r ${NVOC}/kk003_telegram_data > /dev/null 2>&1
+
+  echo ""; echo "...done."
 }
 
 ################################# GPU Info ######################################
 GPUinfo()
 {
-   # Get device IDs
-   DEVICE_IDS=$(nvidia-smi --query-gpu=pci.sub_device_id --format=csv,noheader,nounits)
-   i=0
+  # Get device IDs
+  DEVICE_IDS=$(nvidia-smi --query-gpu=pci.sub_device_id --format=csv,noheader,nounits)
+  i=0
 
-   echo ""
-   INFO+="${B}ID,|,PS,|,T°,|,FAN,|,LOAD,|,POWER / LIMIT / MAX,|,GPUCLOCK,|,MEMCLOCK,|,VENDOR - MODEL\n"   
-   
-   for ID in $DEVICE_IDS
-   do
-      # Get vendor id substring
-      VENDOR_ID=${ID:6:5}
-      
-      # GPU Query, 3842=EVGA, 1462=MSI, 10DE=Nvidia, 19DA=Zotac, 807D=Asus, 1458=Gigabyte
-      case $VENDOR_ID in
-         3842) VENDOR_ID="EVGA";;
-         1462) VENDOR_ID="MSI";;
-         10DE) VENDOR_ID="NVIDIA";;
-         19DA) VENDOR_ID="ZOTAC";;
-         807D|1043) VENDOR_ID="ASUS";;
-         1458) VENDOR_ID="GIGABYTE";;
-         196E) VENDOR_ID="PNY";;
-         1569) VENDOR_ID="PALIT";;
-      esac
-      
-      # Get most GPU info here
-      { IFS=', ' read PSTATE CURRENT_TEMP CURRENT_FAN UTILIZATION PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $i --query-gpu=pstate,temperature.gpu,fan.speed,utilization.gpu,power.limit,power.draw --format=csv,noheader,nounits)
-      
-      # Some GPU info requires special tactics
-      MODEL=$(nvidia-smi -i $i --query-gpu=name --format=csv,noheader,nounits | tail -1)
-      POWERMAX=$(nvidia-smi -i $i -q|grep "Max Power"|cut -f 2 -d ":"|cut -f 2 -d " ")
-      GPUCLOCK=$(nvidia-smi -i $i -q -d CLOCK |grep Graphics |head -1|cut -f 2 -d ":"|cut -f 2 -d " ")
-      MEMCLOCK=$(nvidia-smi -i $i -q -d CLOCK |grep Memory |head -1|cut -f 2 -d ":"|cut -f 2 -d " ")
+  echo ""
+  INFO+="${B}ID,|,PS,|,T°,|,FAN,|,LOAD,|,POWER / LIMIT / MAX,|,GPUCLOCK,|,MEMCLOCK,|,VENDOR - MODEL\n"
 
-      # convert power values to integer
-      POWERDRAW=$(echo "$POWERDRAW/1" | bc)
-      PWRLIMIT=$(echo "$PWRLIMIT/1" | bc)
-      POWERMAX=$(echo "$PWRLIMIT/1" | bc)
-      
-      # Memory clock display on Nvidia X Server Settings is doubled
-      #   uncomment this line if you want it displayed that way 
-#      MEMCLOCK=$(($MEMCLOCK * 2))
+  for ID in $DEVICE_IDS
+  do
+    # Get vendor id substring
+    VENDOR_ID=${ID:6:5}
 
-      INFO+="$N$i,|,$PSTATE,|,$CURRENT_TEMP,|,$CURRENT_FAN,|,$UTILIZATION,|,$POWERDRAW / $PWRLIMIT / $POWERMAX,|,$GPUCLOCK,|,$MEMCLOCK,|,$VENDOR_ID - $MODEL\n"
+    # GPU Query, 3842=EVGA, 1462=MSI, 10DE=Nvidia, 19DA=Zotac, 807D=Asus, 1458=Gigabyte
+    case $VENDOR_ID in
+      3842) VENDOR_ID="EVGA";;
+      1462) VENDOR_ID="MSI";;
+      10DE) VENDOR_ID="NVIDIA";;
+      19DA) VENDOR_ID="ZOTAC";;
+      807D|1043) VENDOR_ID="ASUS";;
+      1458) VENDOR_ID="GIGABYTE";;
+      196E) VENDOR_ID="PNY";;
+      1569) VENDOR_ID="PALIT";;
+    esac
 
-      i=$(($i + 1))
-   done
-   echo -e $INFO | column -t -s,
+    # Get most GPU info here
+    { IFS=', ' read PSTATE CURRENT_TEMP CURRENT_FAN UTILIZATION PWRLIMIT POWERDRAW; } < <(nvidia-smi -i $i --query-gpu=pstate,temperature.gpu,fan.speed,utilization.gpu,power.limit,power.draw --format=csv,noheader,nounits)
+
+    # Some GPU info requires special tactics
+    MODEL=$(nvidia-smi -i $i --query-gpu=name --format=csv,noheader,nounits | tail -1)
+    POWERMAX=$(nvidia-smi -i $i -q|grep "Max Power"|cut -f 2 -d ":"|cut -f 2 -d " ")
+    GPUCLOCK=$(nvidia-smi -i $i -q -d CLOCK |grep Graphics |head -1|cut -f 2 -d ":"|cut -f 2 -d " ")
+    MEMCLOCK=$(nvidia-smi -i $i -q -d CLOCK |grep Memory |head -1|cut -f 2 -d ":"|cut -f 2 -d " ")
+
+    # convert power values to integer
+    POWERDRAW=$(echo "$POWERDRAW/1" | bc)
+    PWRLIMIT=$(echo "$PWRLIMIT/1" | bc)
+    POWERMAX=$(echo "$PWRLIMIT/1" | bc)
+
+    # Memory clock display on Nvidia X Server Settings is doubled
+    #   uncomment this line if you want it displayed that way
+    #      MEMCLOCK=$(($MEMCLOCK * 2))
+
+    INFO+="$N$i,|,$PSTATE,|,$CURRENT_TEMP,|,$CURRENT_FAN,|,$UTILIZATION,|,$POWERDRAW / $PWRLIMIT / $POWERMAX,|,$GPUCLOCK,|,$MEMCLOCK,|,$VENDOR_ID - $MODEL\n"
+
+    i=$(($i + 1))
+  done
+  echo -e $INFO | column -t -s,
 }
 
 ############################### Patch nvOC ####################################
 Patch()
 {
-   # Kill off the nv_OC processes
-   Stop
-  
-   echo -e "${B}Applying patches/updates...${N}"; echo ""
-   
-   # Apply patches
-   sudo dpkg --configure -a
-   sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
-   
-   echo ""; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
+  # Kill off the nv_OC processes
+  Stop
+
+  echo -e "${B}Applying patches/updates...${N}"; echo ""
+
+  # Apply patches
+  sudo dpkg --configure -a
+  sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
+
+  echo ""; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
 }
 
 ############################### Reboot host ###################################
 Reboot()
 {
-   # Reboots the host
-   echo -e "${B}${R}Warning: The host will reboot in 10 seconds, ctrl-c to cancel...${N}"
-   sleep 10
-   sudo su -c "shutdown -r now"
+  # Reboots the host
+  echo -e "${B}${R}Warning: The host will reboot in 10 seconds, ctrl-c to cancel...${N}"
+  sleep 10
+  sudo su -c "shutdown -r now"
 }
 
 ############################### Restart Miner ##################################
 Restart()
 {
-   # Reboots the host
-        Stop && Start
+  # Reboots the host
+  Stop && Start
 }
 ############################### Start nvOC ####################################
 Start()
 {
-   if [ $LOCALorREMOTE == "REMOTE" ]
-   then
-     export DISPLAY=:0
-   fi
-   if ps ax | grep "[g]nome-terminal"
-   then
-     echo "nvOC already running, use ./nvOC restart"
-   else
-     gnome-terminal --window-with-profile=mining
-     echo -e "${B}Miner Restart....${N}"; echo ""
-   fi
+  if [ $LOCALorREMOTE == "REMOTE" ]
+  then
+    export DISPLAY=:0
+  fi
+  if ps ax | grep "[g]nome-terminal"
+  then
+    echo "nvOC already running, use ./nvOC restart"
+  else
+    gnome-terminal --window-with-profile=mining
+    echo -e "${B}Miner Restart....${N}"; echo ""
+  fi
 }
 
 
 ############################### Stop nvOC #####################################
 Stop()
 {
-   echo -e "${B}Stopping nvOC processes...${N}"; echo ""
-   
-   # Kill off the nv_OC processes
-   pkill -f gnome-terminal
-   pkill -e screen
-   pkill -f 5watchdog 
-   pkill -f 7telegram
-   pkill -f 6tempcontrol
-   pkill -f 8wtm
-   echo ""; echo "...done."
+  echo -e "${B}Stopping nvOC processes...${N}"; echo ""
+
+  # Kill off the nv_OC processes
+  pkill -f gnome-terminal
+  pkill -e screen
+  pkill -f 5watchdog
+  pkill -f 7telegram
+  pkill -f 6tempcontrol
+  pkill -f 8wtm
+  echo ""; echo "...done."
 }
 
 
@@ -275,160 +277,136 @@ GPUmap()
 # Please note, due to driver limitation, LED lights can not be controlled
 # on each and every available model. Do not report this as bug ;)
 
-nvOC_gpumap_ver="v0019-2.0.002"   # Do not edit this
+  nvOC_gpumap_ver="v0019-2.0.002"   # Do not edit this
 
-NVD=nvidia-settings
+  NVD=nvidia-settings
 
 # Check if CUDA_DEVICE_ORDER=PCI_BUS_ID is set
-CUDA_ORDER="/etc/profile.d/cuda-device-order.sh"
-if [ -e "$CUDA_ORDER" ]; then
-  if [[ $(wc -l <$CUDA_ORDER) -gt 1 ]]; then
-    echo ""
-    echo "Fixing the CUDA_DEVICE_ORDER=PCI_BUS_ID"
-    sudo rm $CUDA_ORDER
+  CUDA_ORDER="/etc/profile.d/cuda-device-order.sh"
+  if [ -e "$CUDA_ORDER" ]
+  then
+    if [[ $(wc -l <$CUDA_ORDER) -gt 1 ]]
+    then
+      echo ""
+      echo "Fixing the CUDA_DEVICE_ORDER=PCI_BUS_ID"
+      sudo rm $CUDA_ORDER
+      sudo echo 'export CUDA_DEVICE_ORDER=PCI_BUS_ID' | sudo tee -a /etc/profile.d/cuda-device-order.sh
+    fi
+  else
+    echo "Setting the 'export CUDA_DEVICE_ORDER=PCI_BUS_ID'"
+    echo "in order to properly map GPU's"
+    echo "Please reboot for the changes to take effect"
     sudo echo 'export CUDA_DEVICE_ORDER=PCI_BUS_ID' | sudo tee -a /etc/profile.d/cuda-device-order.sh
+    echo ""
+    exit
   fi
-else
-  echo "Setting the 'export CUDA_DEVICE_ORDER=PCI_BUS_ID'"
-  echo "in order to properly map GPU's"
-  echo "Please reboot for the changes to take effect"
-  sudo echo 'export CUDA_DEVICE_ORDER=PCI_BUS_ID' | sudo tee -a /etc/profile.d/cuda-device-order.sh
-  echo ""
-  exit
-fi
 
 # Determine the number of available GPU's
-GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
-count=0
+  GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+  count=0
 
 # Display version info
-echo ""; echo ""
-for i in {16..21} ; do
-  echo -en "\e[48;5;${i}m "
-done
-echo -en "${B}gpumap $nvOC_gpumap_ver by leenoox${N}"  
-for i in {21..16} ; do
-  echo -en "\e[48;5;${i}m \e[0m"
-done
-echo ""; echo ""; echo ""
-sleep 0.5
-
-echo -e "${B}gpumap${N} will help you physically map your GPU's by spinning single"
-echo -e "GPU fan(s) only, one at a time and turning LED lights ON (if supported)."
-echo -e "It will also show some info about the GPU. Please follow prompts."
-echo ""; echo ""
-echo -e "${B}gpumap${N} has detected: ${B}$GPUS${N} GPU's"  
-echo ""; echo ""
-
-echo -e "${Y}To continue we have to temporary stop all mining processes."
-echo -e "Once finished, mining processes will resume.${N}${B}"
-echo ""
-read -r -n 1 -p "Continue (y/n)? " response
-echo -e "${N}"; echo ""
-
-if [[ $response =~ ^[Yy]$ ]]; then
-
-  echo -e "${Y}Stopping nvOC processes...${N}"
-   
-  # Kill off the nv_OC processes
-  Stop
-  
-  echo ""
-  echo "... done!"
-   
   echo ""; echo ""
-  echo -e "${Y}Turning all fans and LED lights OFF...${N}"
-  echo
-
-  # Turn everything OFF
-  while [ $count -lt $GPUS ]; do
-    ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
-    ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
-    ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
-    (( count++ ))
+  for i in {16..21}
+  do
+    echo -en "\e[48;5;${i}m "
   done
+  echo -en "${B}gpumap $nvOC_gpumap_ver by leenoox${N}"
+  for i in {21..16}
+  do
+    echo -en "\e[48;5;${i}m \e[0m"
+  done
+  echo ""; echo ""; echo ""
+  sleep 0.5
 
-  echo "... done!"
+  echo -e "${B}gpumap${N} will help you physically map your GPU's by spinning single"
+  echo -e "GPU fan(s) only, one at a time and turning LED lights ON (if supported)."
+  echo -e "It will also show some info about the GPU. Please follow prompts."
   echo ""; echo ""
-    
-  count=0
-   
-  # Turn fan/LED ON - one GPU at a time
-  while [ $count -lt $GPUS ]; do
-    ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=75 2>&1 >/dev/null
-    ${NVD} -a [gpu:${count}]/GPULogoBrightness=100 2>&1 >/dev/null
-    echo -e "${Y}Take a look at your rig for spinning fan now${N}"
+  echo -e "${B}gpumap${N} has detected: ${B}$GPUS${N} GPU's"
+  echo ""; echo ""
+
+  echo -e "${Y}To continue we have to temporary stop all mining processes."
+  echo -e "Once finished, mining processes will resume.${N}${B}"
+  echo ""
+  read -r -n 1 -p "Continue (y/n)? " response
+  echo -e "${N}"; echo ""
+
+  if [[ $response =~ ^[Yy]$ ]]
+  then
+    echo -e "${Y}Stopping nvOC processes...${N}"
+    # Kill off the nv_OC processes
+    Stop
     echo ""
-    echo -e "${B}GPU$count${N} fan and LED are ON. This is your ${B}GPU$count${N}."
-    echo ""
-    
-    # Stubo's Vendor detection
-    ID=$(nvidia-smi -i $count --query-gpu=pci.sub_device_id --format=csv,noheader,nounits)
-    VENDOR_ID=${ID:6:4}
-    case $VENDOR_ID in
-       3842) VENDOR_ID="EVGA";;
-       1462) VENDOR_ID="MSI";;
-       10DE) VENDOR_ID="NVIDIA";;
-       19DA) VENDOR_ID="ZOTAC";;
-       807D|1043) VENDOR_ID="ASUS";;
-       1458) VENDOR_ID="GIGABYTE";;
-       196E) VENDOR_ID="PNY";;
-       1569) VENDOR_ID="PALIT";;
-    esac
-    MODEL=$(nvidia-smi -i $count --query-gpu=name --format=csv,noheader,nounits | tail -1)
-    POWERMAX=$(nvidia-smi -i $count -q|grep "Max Power"|cut -f 2 -d ":"|cut -f 2 -d " ")
-    POWERMIN=$(nvidia-smi -i $count -q|grep "Min Power"|cut -f 2 -d ":"|cut -f 2 -d " ")
-    SLOWDOWN=$(nvidia-smi -i $count -q|grep "Slowdown Temp"|cut -f 2 -d ":"|cut -f 2 -d " ")
-    SHUTDOWN=$(nvidia-smi -i $count -q|grep "Shutdown Temp"|cut -f 2 -d ":"|cut -f 2 -d " ")
-    BUSID=$(nvidia-smi -i $count -q|grep "Bus Id"|cut -f 2- -d ":"|cut -f 2- -d " ")
-    echo -e "${B}GPU$count info:${N}"
-    echo "$VENDOR_ID $MODEL"
-    echo "Bus ID: $BUSID"
-    echo "Min Power Limit: $POWERMIN"
-    echo "Max Power Limit: $POWERMAX"
-    echo "GPU Slowdown Temp: $SLOWDOWN"
-    echo "GPU Shutdown Temp: $SHUTDOWN"
-    echo ""
-    echo ""
-        
-    # Move on to the next GPU
+    echo "... done!"
+    echo ""; echo ""
+    echo -e "${Y}Turning all fans and LED lights OFF...${N}"
+    echo
+    # Turn everything OFF
+    while [ $count -lt $GPUS ]
+    do
+      ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
+      ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
+      ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
+      (( count++ ))
+    done
+    echo "... done!"
+    echo ""; echo ""
+    count=0
+    # Turn fan/LED ON - one GPU at a time
+    while [ $count -lt $GPUS ]
+    do
+      ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=75 2>&1 >/dev/null
+      ${NVD} -a [gpu:${count}]/GPULogoBrightness=100 2>&1 >/dev/null
+      echo -e "${Y}Take a look at your rig for spinning fan now${N}"
+      echo ""
+      echo -e "${B}GPU$count${N} fan and LED are ON. This is your ${B}GPU$count${N}."
+      echo ""
+      # Stubo's Vendor detection
+      ID=$(nvidia-smi -i $count --query-gpu=pci.sub_device_id --format=csv,noheader,nounits)
+      VENDOR_ID=${ID:6:4}
+      case $VENDOR_ID in
+        3842) VENDOR_ID="EVGA";;
+        1462) VENDOR_ID="MSI";;
+        10DE) VENDOR_ID="NVIDIA";;
+        19DA) VENDOR_ID="ZOTAC";;
+        807D|1043) VENDOR_ID="ASUS";;
+        1458) VENDOR_ID="GIGABYTE";;
+        196E) VENDOR_ID="PNY";;
+        1569) VENDOR_ID="PALIT";;
+      esac
+      MODEL=$(nvidia-smi -i $count --query-gpu=name --format=csv,noheader,nounits | tail -1)
+      POWERMAX=$(nvidia-smi -i $count -q|grep "Max Power"|cut -f 2 -d ":"|cut -f 2 -d " ")
+      POWERMIN=$(nvidia-smi -i $count -q|grep "Min Power"|cut -f 2 -d ":"|cut -f 2 -d " ")
+      SLOWDOWN=$(nvidia-smi -i $count -q|grep "Slowdown Temp"|cut -f 2 -d ":"|cut -f 2 -d " ")
+      SHUTDOWN=$(nvidia-smi -i $count -q|grep "Shutdown Temp"|cut -f 2 -d ":"|cut -f 2 -d " ")
+      BUSID=$(nvidia-smi -i $count -q|grep "Bus Id"|cut -f 2- -d ":"|cut -f 2- -d " ")
+      echo -e "${B}GPU$count info:${N}"
+      echo "$VENDOR_ID $MODEL"
+      echo "Bus ID: $BUSID"
+      echo "Min Power Limit: $POWERMIN"
+      echo "Max Power Limit: $POWERMAX"
+      echo "GPU Slowdown Temp: $SLOWDOWN"
+      echo "GPU Shutdown Temp: $SHUTDOWN"
+      echo ""
+      echo ""
+      # Move on to the next GPU
       echo -e "${B}"
       read -r -n 1 -p "Continue (y/n)? " response
       echo -e "${N}"; echo ""
-
-    if [[ $response =~ ^[Yy]$ ]]; then
-      ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
-      ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
-    elif [[ $response =~ ^[Nn]$ ]]; then
-      ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
-      ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
-      echo -e "Acknowledged. Thank you for using ${B}gpumap${N}"
-      echo "Resuming mining operation now..."
-      echo ""
-      if [ $LOCALorREMOTE == "LOCAL" ];then
-        gnome-terminal
-        exit
-      else
-        echo "REMOTE setting in 1bash detected."
-        echo "To resume mining we have to reboot the rig"
-        Reboot
-      fi
-    else
-      echo "Neither y or n were pressed!"
-      echo "Lets try this again..."
-      read -r -n 1 -p "Continue (y/n)? " response
-      echo -e "${N}"; echo ""
-
-      if [[ $response =~ ^[Yy]$ ]]; then
+      if [[ $response =~ ^[Yy]$ ]]
+      then
         ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
         ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
-      else
-        echo "Neither y or n were pressed again!"
+      elif [[ $response =~ ^[Nn]$ ]]
+      then
         ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
         ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
-        echo -e "Thank you for using ${B}gpumap${N}"
-        echo "Resuming mining operation now."
-        if [ $LOCALorREMOTE == "LOCAL" ];then
+        echo -e "Acknowledged. Thank you for using ${B}gpumap${N}"
+        echo "Resuming mining operation now..."
+        echo ""
+        if [ $LOCALorREMOTE == "LOCAL" ]
+        then
           gnome-terminal
           exit
         else
@@ -436,32 +414,59 @@ if [[ $response =~ ^[Yy]$ ]]; then
           echo "To resume mining we have to reboot the rig"
           Reboot
         fi
+      else
+        echo "Neither y or n were pressed!"
+        echo "Lets try this again..."
+        read -r -n 1 -p "Continue (y/n)? " response
+        echo -e "${N}"; echo ""
+
+        if [[ $response =~ ^[Yy]$ ]]
+        then
+          ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
+          ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
+        else
+          echo "Neither y or n were pressed again!"
+          ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
+          ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
+          echo -e "Thank you for using ${B}gpumap${N}"
+          echo "Resuming mining operation now."
+          if [ $LOCALorREMOTE == "LOCAL" ]
+          then
+            gnome-terminal
+            exit
+          else
+            echo "REMOTE setting in 1bash detected."
+            echo "To resume mining we have to reboot the rig"
+            Reboot
+          fi
+        fi
       fi
-    fi
-    echo ""; echo "" 
-    (( count++ ))
-  done
-else
-  exit
-fi
-
-echo -e "${Y}All done, that was the last detected GPU.${N}"
-echo ""; echo ""
-echo -e "Thank you for using ${B}gpumap${N}"
-echo ""
-read -r -p "Resume mining operation now? (y/n + enter): " response
-echo -e "${N}"; echo ""
-
-if [[ $response =~ ^[Yy]$ ]]; then
-  if [ $LOCALorREMOTE == "LOCAL" ];then
-    gnome-terminal
-    exit
+      echo ""; echo ""
+      (( count++ ))
+    done
   else
-    echo "REMOTE setting in 1bash detected."
-    echo "To resume mining we have to reboot the rig"
-    Reboot
+    exit
   fi
-fi
+
+  echo -e "${Y}All done, that was the last detected GPU.${N}"
+  echo ""; echo ""
+  echo -e "Thank you for using ${B}gpumap${N}"
+  echo ""
+  read -r -p "Resume mining operation now? (y/n + enter): " response
+  echo -e "${N}"; echo ""
+
+  if [[ $response =~ ^[Yy]$ ]]
+  then
+    if [ $LOCALorREMOTE == "LOCAL" ]
+    then
+      gnome-terminal
+      exit
+    else
+      echo "REMOTE setting in 1bash detected."
+      echo "To resume mining we have to reboot the rig"
+      Reboot
+    fi
+  fi
 }
 
 ############################### report ########################################
@@ -502,7 +507,7 @@ Report()
 # * Check if CUDA_DEVICE_ORDER is set
 # * finish collection of data from whole 1bash (currently about 80%)
 # * add alias to .bashrc
-# * function to clean/replace any string matching the array, eg. AsusTek to Asus. Intel Corp. to Intel 
+# * function to clean/replace any string matching the array, eg. AsusTek to Asus. Intel Corp. to Intel
 # * way to determine exact number of cores and threads, right now cores+threads are
 #   reported together as a single number
 # * Works well on older version, not fully compatible with 19-2, need to change few queries, eg. nvOC version,
@@ -510,50 +515,52 @@ Report()
 
 
 
-REPORT_VER="v0019-2.0.002"
+  REPORT_VER="v0019-2.0.002"
 
-clear
+  clear
 
 # Display version info
-echo ""
-for i in {16..21} ; do
+  echo ""
+  for i in {16..21}
+  do
     echo -en "\e[48;5;${i}m "
-done
-echo -en "${B}Report generator $REPORT_VER by leenoox${N}"
-for i in {21..16} ; do
+  done
+  echo -en "${B}Report generator $REPORT_VER by leenoox${N}"
+  for i in {21..16}
+  do
     echo -en "\e[48;5;${i}m \e[0m"
-done
-echo ""
-echo ""
+  done
+  echo ""
+  echo ""
 
 # Collect info and ssign to variables
 #######################################
 
-nvidia_driver_ver=$(nvidia-smi -i 0 -q|grep "Driver Version"|cut -f 2 -d ":"|cut -f 2 -d " ")
-nvOC_ver_from_1bash=$(cat ${NVOC}/1bash | grep "nvOC v" | cut -d' ' -f 2- | head -n 1 | sed 's/   #################//');
-nvOC_ver_from_3main=$(head -n 100 ${NVOC}/3main | grep nvOC_ver= | sed 's/nvOC_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-nvOC_3main_ver=$(head -n 100 ${NVOC}/3main | grep nvOC_3main_ver= | sed 's/nvOC_3main_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-nvOC_wdog_ver=$(head -n 100 ${NVOC}/5watchdog | grep nvOC_wdog_ver= | sed 's/nvOC_wdog_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-nvOC_temp_ver=$(head -n 100 ${NVOC}/6tempcontrol | grep nvOC_temp_ver= | sed 's/nvOC_temp_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-nvOC_wtm_ver=$( head -n 100 ${NVOC}/8wtm_auto_switch | grep wtm_auto_switch_ver= | sed 's/wtm_auto_switch_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-kernel=$(cat /proc/version | cut -d' ' -f 3);
+  nvidia_driver_ver=$(nvidia-smi -i 0 -q|grep "Driver Version"|cut -f 2 -d ":"|cut -f 2 -d " ")
+  nvOC_ver_from_1bash=$(cat ${NVOC}/1bash | grep "nvOC v" | cut -d' ' -f 2- | head -n 1 | sed 's/   #################//');
+  nvOC_ver_from_3main=$(head -n 100 ${NVOC}/3main | grep nvOC_ver= | sed 's/nvOC_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+  nvOC_3main_ver=$(head -n 100 ${NVOC}/3main | grep nvOC_3main_ver= | sed 's/nvOC_3main_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+  nvOC_wdog_ver=$(head -n 100 ${NVOC}/5watchdog | grep nvOC_wdog_ver= | sed 's/nvOC_wdog_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+  nvOC_temp_ver=$(head -n 100 ${NVOC}/6tempcontrol | grep nvOC_temp_ver= | sed 's/nvOC_temp_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+  nvOC_wtm_ver=$( head -n 100 ${NVOC}/8wtm_auto_switch | grep wtm_auto_switch_ver= | sed 's/wtm_auto_switch_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+  kernel=$(cat /proc/version | cut -d' ' -f 3);
 # os_release=$(cat /usr/lib/os-release | grep PRETTY_NAME | sed 's/PRETTY_NAME=\"//' | sed 's/\"//');
 # os_release=$(cat /etc/lsb-release | grep DISTRIB_DESCRIPTION | sed 's/DISTRIB_DESCRIPTION=\"//' | sed 's/\"//');
-os_release=$(cat /etc/issue.net)
-system=$(cat /proc/version | cut -d' ' -f 5,7,9,10);
+  os_release=$(cat /etc/issue.net)
+  system=$(cat /proc/version | cut -d' ' -f 5,7,9,10);
 
-mbvendor=$(cat /sys/devices/virtual/dmi/id/board_vendor);
-mbmodel=$(cat /sys/devices/virtual/dmi/id/board_name);
-mbversion=$(cat /sys/devices/virtual/dmi/id/board_version);
-biosver=$(cat /sys/devices/virtual/dmi/id/bios_version);
-biosdate=$(cat /sys/devices/virtual/dmi/id/bios_date);
-cpu=$(cat /proc/cpuinfo | grep -m 1 "model name" | cut -d' ' -f 4-);
-cores=$(cat /proc/cpuinfo | grep "model name" | wc -l);
-memtotal=$(cat /proc/meminfo | grep MemTotal | cut -d' ' -f 2-);
-memfree=$(cat /proc/meminfo | grep MemFree | cut -d' ' -f 2-);
-swaptotal=$(cat /proc/meminfo | grep SwapTotal | cut -d' ' -f 2-);
-swapfree=$(cat /proc/meminfo | grep SwapFree | cut -d' ' -f 2-);
-ethernet=$(lspci | grep Ethernet | cut -d' ' -f 4-);
+  mbvendor=$(cat /sys/devices/virtual/dmi/id/board_vendor);
+  mbmodel=$(cat /sys/devices/virtual/dmi/id/board_name);
+  mbversion=$(cat /sys/devices/virtual/dmi/id/board_version);
+  biosver=$(cat /sys/devices/virtual/dmi/id/bios_version);
+  biosdate=$(cat /sys/devices/virtual/dmi/id/bios_date);
+  cpu=$(cat /proc/cpuinfo | grep -m 1 "model name" | cut -d' ' -f 4-);
+  cores=$(cat /proc/cpuinfo | grep "model name" | wc -l);
+  memtotal=$(cat /proc/meminfo | grep MemTotal | cut -d' ' -f 2-);
+  memfree=$(cat /proc/meminfo | grep MemFree | cut -d' ' -f 2-);
+  swaptotal=$(cat /proc/meminfo | grep SwapTotal | cut -d' ' -f 2-);
+  swapfree=$(cat /proc/meminfo | grep SwapFree | cut -d' ' -f 2-);
+  ethernet=$(lspci | grep Ethernet | cut -d' ' -f 4-);
 
 
 # Replace strings for better output:
@@ -562,233 +569,286 @@ ethernet=$(lspci | grep Ethernet | cut -d' ' -f 4-);
 # (Ethernet)    replace: "Intel Corporation Ethernet Connection (2)" with "Intel"
 
 # if echo "$mbvendor" | grep -q "ASUSTeK" ; then mbvendor="ASUS"; fi
-if [[ "$mbvendor" == ASUSTeK* ]]; then mbvendor="ASUS"; fi
-if echo "$ethernet" | grep -q "Realtek" ; then
+  if [[ "$mbvendor" == ASUSTeK* ]]
+  then
+    mbvendor="ASUS"
+  fi
+  if echo "$ethernet" | grep -q "Realtek"
+  then
     ethernet=$( echo $ethernet | sed 's/Realtek Semiconductor Co., Ltd./Realtek/g' )
-elif echo "$ethernet" | grep -q "Intel" ; then
+  elif
+  echo "$ethernet" | grep -q "Intel"
+  then
     ethernet=$( echo $ethernet | sed 's/Intel Corporation Ethernet Connection (2)/Intel/g' )
-fi
+  fi
 
 #######################################
 # Output on screen
 #######################################
-echo
-echo "[code]"
-echo -e \
-" 
-${B}Software info:${N} 
-Report ver    :  $REPORT_VER 
-nvOC (1bash)  :$nvOC_ver_from_1bash 
+  echo
+  echo "[code]"
+  echo -e \
+"
+${B}Software info:${N}
+Report ver    :  $REPORT_VER
+nvOC (1bash)  :$nvOC_ver_from_1bash
 nvOC (3main)  :  $nvOC_ver_from_3main
-1bash ver     :  $nvOC_1bash_ver 
-3main ver     :  $nvOC_3main_ver 
-5watchdog ver :  $nvOC_wdog_ver 
-6tempcontrol v:  $nvOC_temp_ver 
+1bash ver     :  $nvOC_1bash_ver
+3main ver     :  $nvOC_3main_ver
+5watchdog ver :  $nvOC_wdog_ver
+6tempcontrol v:  $nvOC_temp_ver
 wtm switch ver:  $nvOC_wtm_ver
-Kernel        :  $kernel 
-OS            :  $os_release 
-System        :  $system 
-nvidia driver :  $nvidia_driver_ver 
- 
-${B}Hardware info:${N} 
-Motherboard   :  $mbvendor $mbmodel  $mbversion 
-BIOS ver.     :  $biosver $biosdate 
-CPU Model     :  $cpu 
-CPU Cores     :  $cores (Cores + Threads) 
-Mem Total     :  $memtotal 
-Mem Free      : $memfree 
-Swap Total    :   $swaptotal 
-Swap Free     :  $swapfree 
-Ethernet      :  $ethernet"
+Kernel        :  $kernel
+OS            :  $os_release
+System        :  $system
+nvidia driver :  $nvidia_driver_ver
 
-echo
+${B}Hardware info:${N}
+Motherboard   :  $mbvendor $mbmodel  $mbversion
+BIOS ver.     :  $biosver $biosdate
+CPU Model     :  $cpu
+CPU Cores     :  $cores (Cores + Threads)
+Mem Total     :  $memtotal
+Mem Free      : $memfree
+Swap Total    :   $swaptotal
+Swap Free     :  $swapfree
+  Ethernet      :  $ethernet"
+
+  echo
 
 # HDD
 #######################################
-echo -e "${B}HDD and Partion info:${N}"
+  echo -e "${B}HDD and Partion info:${N}"
 # df -H
 # sudo fdisk -l -L=never | grep dev
-lsblk -o name,size,fstype,type,rota,hotplug,tran,vendor,model,rev,mountpoint
+  lsblk -o name,size,fstype,type,rota,hotplug,tran,vendor,model,rev,mountpoint
 
-echo
+  echo
 
 # VGA
 #######################################
-echo -e "${B}VGA info:${N}"
-lspci | grep VGA
+  echo -e "${B}VGA info:${N}"
+  lspci | grep VGA
 
-echo
+  echo
 
 # 1bash settings
 #######################################
-echo -e "${B}1bash settings:${N}"
+  echo -e "${B}1bash settings:${N}"
 # 1bash general
-echo "1bash version .............: $nvOC_1bash_ver"   # for pre 19.2 versions use $(cat ${NVOC}/1bash | grep "nvOC v" | cut -d' ' -f 2-)
-echo "LOCAL or REMOTE ...........: $LOCALorREMOTE"
-echo "TEAMVIEWER started ........: $TEAMVIEWER"
-echo "SSH daemon started ........: $SSH"
-echo "SLOW_USB_KEY_MODE .........: $SLOW_USB_KEY_MODE"
-echo "SRR .......................: $SRR"
+  echo "1bash version .............: $nvOC_1bash_ver"   # for pre 19.2 versions use $(cat ${NVOC}/1bash | grep "nvOC v" | cut -d' ' -f 2-)
+  echo "LOCAL or REMOTE ...........: $LOCALorREMOTE"
+  echo "TEAMVIEWER started ........: $TEAMVIEWER"
+  echo "SSH daemon started ........: $SSH"
+  echo "SLOW_USB_KEY_MODE .........: $SLOW_USB_KEY_MODE"
+  echo "SRR .......................: $SRR"
+  echo
+
 echo "Watchdog ..................: $MINER_WATCHDOG"
-echo
+  echo "SYSRQ Reboot ..............: $SYSRQ_REBOOT"
+  echo "Watchdog Cycle ............: $WATCHDOG_CYCLE"
+  echo "GPU Utilization Threshold .: $GPU_UTIL_THRESHOLD"
+  echo "Alternate Pool ............: $ALT_POOL"
+  echo
 
 # Temp control
-echo "Temp Control ..............: $MINER_TEMP_CONTROL"
-if [[ $MINER_TEMP_CONTROL == "YES" ]]; then
-echo "TARGET_TEMP ...............: $TARGET_TEMP"
-echo "__FAN_ADJUST ..............: $__FAN_ADJUST"
-echo "POWER_ADJUST ..............: $POWER_ADJUST"
-echo "ALLOWED_TEMP_DIFF .........: $ALLOWED_TEMP_DIFF"
-echo "RESTORE_POWER_LIMIT .......: $RESTORE_POWER_LIMIT"
-echo "MINIMAL_FAN_SPEED .........: $MINIMAL_FAN_SPEED"
-fi
-echo
+  echo "Temp Control ..............: $MINER_TEMP_CONTROL"
+  echo "MANUAL_FAN ................: $MANUAL_FAN"
+  if [[ $MANUAL_FAN == "YES" ]]
+  then
+    echo "MANUAL FAN_SPEED ..........: $FAN_SPEED"
+  fi
+  if [[ $MINER_TEMP_CONTROL == "YES" ]]
+  then
+    echo "TARGET_TEMP ...............: $TARGET_TEMP"
+    echo "__FAN_ADJUST ..............: $__FAN_ADJUST"
+    echo "POWER_ADJUST ..............: $POWER_ADJUST"
+    echo "ALLOWED_TEMP_DIFF .........: $ALLOWED_TEMP_DIFF"
+    echo "RESTORE_POWER_LIMIT .......: $RESTORE_POWER_LIMIT"
+    echo "MINIMAL_FAN_SPEED .........: $MINIMAL_FAN_SPEED"
+    echo "MAXIMAL_FAN_SPEED .........: $MAXIMAL_FAN_SPEED"
+  fi
+  echo
 
 # 1bash maintenance
-echo "CLEAR_LOGS_ON_BOOT ........: $CLEAR_LOGS_ON_BOOT"
-echo "AUTO_UPDATE ...............: $AUTO_UPDATE"
-echo "AUTO_REBOOT ...............: $AUTO_REBOOT"
-if [[ $AUTO_REBOOT == "YES" ]]; then
-echo "REBOOT_TIMEOUT_IN_MINUTES .: $REBOOT_TIMEOUT_IN_MINUTES"
-fi
-echo "_Parallax_MODE (upPaste)...: $_Parallax_MODE"
-if [[ $_Parallax_MODE == "YES" ]]; then
-echo "pasteBASH .................: $pasteBASH"
-echo "upPASTE_TIMEOUT_IN_MINUTES.: $upPASTE_TIMEOUT_IN_MINUTES"
-fi
-echo
+  echo "CLEAR_LOGS_ON_BOOT ........: $CLEAR_LOGS_ON_BOOT"
+  echo "AUTO_UPDATE ...............: $AUTO_UPDATE"
+  echo "AUTO_REBOOT ...............: $AUTO_REBOOT"
+  if [[ $AUTO_REBOOT == "YES" ]]
+  then
+    echo "REBOOT_TIMEOUT_IN_MINUTES .: $REBOOT_TIMEOUT_IN_MINUTES"
+  fi
+  echo "_Parallax_MODE (upPaste)...: $_Parallax_MODE"
+  if [[ $_Parallax_MODE == "YES" ]]
+  then
+    echo "pasteBASH .................: $pasteBASH"
+    echo "upPASTE_TIMEOUT_IN_MINUTES.: $upPASTE_TIMEOUT_IN_MINUTES"
+  fi
+  echo
 
 # 1bash telegram
-echo "TELEGRAM_MESSAGES .: $TELEGRAM_MESSAGES"
-echo "TELEGRAM_ALERTS .: $TELEGRAM_ALERTS"
-if [[ $TELEGRAM_MESSAGES == "YES" ]] || [[ $TELEGRAM_ALERTS == "YES" ]]; then
-echo "TELEGRAM_TYPE .............: $TELEGRAM_TYPE"
-echo "TELEGRAM_TIMEOUT_IN_MINUTES: $TELEGRAM_TIMEOUT_IN_MINUTES"
-echo "TELEGRAM_CHATID ...........: CHATID_NOT_SHOWN"
-echo "TELEGRAM_APIKEY ...........: APIKEY_NOT_SHOWN"
-fi
-echo
+  echo "TELEGRAM_MESSAGES .: $TELEGRAM_MESSAGES"
+  echo "TELEGRAM_ALERTS ...: $TELEGRAM_ALERTS"
+  if [[ $TELEGRAM_MESSAGES == "YES" ]] || [[ $TELEGRAM_ALERTS == "YES" ]]
+  then
+    echo "TELEGRAM_TYPE .............: $TELEGRAM_TYPE"
+    echo "TELEGRAM_TIMEOUT_IN_MINUTES: $TELEGRAM_TIMEOUT_IN_MINUTES"
+    echo "TELEGRAM_CHATID ...........: CHATID_NOT_SHOWN"
+    echo "TELEGRAM_APIKEY ...........: APIKEY_NOT_SHOWN"
+  fi
+  echo
+
+  echo "HEADLESS MODE:.............: $HEADLESS_MODE"
+  echo "GPUPowerMizerMode_Adjust...: $GPUPowerMizerMode_Adjust"
+  if [[ $GPUPowerMizerMode_Adjust == "YES" ]]
+  then
+    echo "GPUPowerMizerMode .........: $GPUPowerMizerMode"
+  fi
+  echo "ETH Pill ..................: $OhGodAnETHlargementPill"
+  echo
 
 # 1bash OC
-echo "P106_100_FULL_HEADLESS_MODE: $P106_100_FULL_HEADLESS_MODE"
-echo "GPUPowerMizerMode_Adjust...: $GPUPowerMizerMode_Adjust"
-if [[ $GPUPowerMizerMode_Adjust == "YES" ]]; then
-echo "GPUPowerMizerMode .........: $GPUPowerMizerMode"
-fi
-echo "POWERLIMIT (global) .......: $POWERLIMIT"
-if [[ $POWERLIMIT == "YES" ]]; then
-echo "POWERLIMIT_WATTS ..........: $_POWERLIMIT_WATTS"
-fi
-echo "CORE_OVERCLOCK (global)....: $_CORE_OVERCLOCK"
-echo "MEMORY_OVERCLOCK (global) .: $_MEMORY_OVERCLOCK"
-echo "MANUAL_FAN ................: $MANUAL_FAN"
-if [[ $MANUAL_FAN == "YES" ]]; then
-echo "MANUAL FAN_SPEED ..........: $FAN_SPEED"
-fi
-echo "ALGO_SPECIFIC_OC ..........: $ALGO_SPECIFIC_OC"
-echo
+  echo "POWERLIMIT MODE ...........: $POWERLIMIT_MODE"
+  if [[ $POWERLIMIT_MODE == "GLOBAL" ]]
+  then
+    echo "Power Limit WATTS .........: $_POWERLIMIT_WATTS"
+  elif [[ $POWERLIMIT_MODE == "ALGO_SPECIFIC" ]];
+  then
+    eval 'ALGO_PL=${ALGO}_POWERLIMIT_WATTS'
+    echo "Power Limit WATTS .........: ${!ALGO_PL}"
+  fi
+
+  echo "OVERCLOCK MODE ............: $OVERCLOCK_MODE"
+  if [[ $OVERCLOCK_MODE == GLOBAL ]]
+  then
+    echo "Memory Overclock ..........: $_MEMORY_OVERCLOCK"
+    echo "Core Overclock ............: $_CORE_OVERCLOCK"
+  elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
+  then
+    eval 'ALGO_OC=${ALGO}_CORE_OVERCLOCK'
+    eval 'ALGO_MC=${ALGO}_MEMORY_OVERCLOCK'
+    echo "Core Overclock ............: ${!ALGO_OC}"
+    echo "Memory Overclock ..........: ${!ALGO_MC}"
+  fi
+  echo
 
 # 1bash mining
-echo "GLOBAL_WORKERNAME .........: $GLOBAL_WORKERNAME"
-echo "AUTO_WORKERNAME ...........: $AUTO_WORKERNAME"
-if [[ $AUTO_WORKERNAME == "CUSTOM" ]]; then
-echo "CUSTOM_WORKERNAME .........: $CUSTOM_WORKERNAME"
-elif [[ $AUTO_WORKERNAME == "HOST" ]]; then
-echo "WORKERNAME ................: $IP_AS_WORKER"
-elif [[ $AUTO_WORKERNAME == "MAC" ]]; then
-WORKERNAME=$(echo $MAC_AS_WORKER | cut -d'_' -f 5-)
-echo "WORKERNAME ................: hidden_$WORKERNAME"
-fi
-echo "plusCPU ...................: $plusCPU"
-if [[ $plusCPU == "YES" ]]; then
-echo "threadCOUNT ...............: $threadCOUNT"
-fi
-echo
+  echo "GLOBAL WORKERNAME .........: $GLOBAL_WORKERNAME"
+  echo "AUTO WORKERNAME ...........: $AUTO_WORKERNAME"
+  if [[ $AUTO_WORKERNAME == "CUSTOM" || $AUTO_WORKERNAME == "HOST" ]];
+  then
+    echo "WORKERNAME ................: $WORKERNAME"
+  elif [[ $AUTO_WORKERNAME == "MAC" ]];
+  then
+    WORKERNAME=$(echo $MAC_AS_WORKER | cut -d'_' -f 5-)
+    echo "WORKERNAME ................: hidden_$WORKERNAME"
+  fi
+  echo "plusCPU ...................: $plusCPU"
+  if [[ $plusCPU == "YES" ]];
+  then
+    echo "threadCOUNT ...............: $threadCOUNT"
+  fi
+  echo
 
-# 1bash miners
-echo "Equihash Miner ................: $EQUIHASH_MINER"
-if [[ $EQUIHASH_MINER == "EWBF" ]]; then
-echo "EWBF_VERSION ..............: $EWBF_VERSION"
-echo "EWBF_PERCENT ..............: $EWBF_PERCENT"
-fi
-echo
-echo "Ethash Miner ..................: $ETHASH_MINER"
-echo
-# 1bash coin, pool, port, address
-echo "COIN ......................: $COIN"
-if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]]; then
-echo "ZPOOLPASS .................: hidden_pass...,"$(echo $ZPOOLPASS | cut -d',' -f 2-)
-fi
-eval COIN_WORKER_TMP='$'${COIN}_WORKER
-echo $COIN"_WORKER ................:" $COIN_WORKER_TMP
-eval COIN_ADDRESS_TMP='$'${COIN}_ADDRESS
-echo $COIN"_ADDRESS ...............:" ${COIN_ADDRESS_TMP::8}...
-eval COIN_POOL_TMP='$'${COIN}_POOL
-echo $COIN"_POOL ..................:" $COIN_POOL_TMP
-eval COIN_PORT_TMP='$'${COIN}_PORT
-if ! [[ $COIN_PORT_TMP == "" ]]; then
-echo $COIN"_PORT ..................:" $COIN_PORT_TMP
-fi
-eval COIN_INTENSITY_TMP='$'${COIN}_INTENSITY
-if ! [[ $COIN_INTENSITY_TMP == "" ]]; then
-echo $COIN"_INTENSITY .............:" $COIN_INTENSITY_TMP
-fi
-eval COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
-if ! [[ $COIN_AUTOCONVERT_TO_BTC_TMP == "" ]]; then
-echo $COIN"_AUTOCONVERT_TO_BTC ....:" $COIN_AUTOCONVERT_TO_BTC_TMP
-fi
 
-echo
-echo "[/code]"
-echo
-echo
-echo "WORK IN PROGRESS! Report script (beta release)"
-echo
-echo "*** If posting the Report on bitcointalk.org forum please copy everything"
-echo "    between the [code] and [/code] including the [code] and [\code] tags."
-echo "    This will ensure proper alignment when posting the Report."
-echo
-echo
+# 1bash coin, miner, pool, port, address
+  echo "COIN ......................: $COIN"
+  echo "ALGO ......................: $ALGO"
+  eval MINER=${ALGO}_MINER
+  echo "MINER .....................: ${!MINER}"
+  if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]];
+  then
+    echo "ZPOOLPASS .................: hidden_pass...,"$(echo $ZPOOLPASS | cut -d',' -f 2-)
+  fi
+  eval COIN_WORKER_TMP=${COIN}_WORKER
+  echo $COIN "WORKER ................:" ${!COIN_WORKER_TMP}
+  eval COIN_ADDRESS_TMP=${COIN}_ADDRESS
+  echo $COIN "ADDRESS ...............:" ${!COIN_ADDRESS_TMP::8}...
+  eval COIN_POOL_TMP=${COIN}_POOL
+  echo $COIN "POOL ..................:" ${!COIN_POOL_TMP}
+  eval COIN_PORT_TMP=${COIN}_PORT
+  if ! [[ $COIN_PORT_TMP == "" ]];
+  then
+    echo $COIN "PORT ..................:" ${!COIN_PORT_TMP}
+  fi
+  eval ALGO_INTENSITY_TMP=${ALGO}_INTENSITY
+  if ! [[ $ALGO_INTENSITY_TMP == "" ]];
+  then
+    echo $ALGO "INTENSITY ..........:" ${!ALGO_INTENSITY_TMP}
+  fi
+  eval COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
+  if ! [[ $COIN_AUTOCONVERT_TO_BTC_TMP == "" ]];
+  then
+    echo $COIN"_AUTOCONVERT_TO_BTC ....:" $COIN_AUTOCONVERT_TO_BTC_TMP
+  fi
+
+  echo
+  echo "[/code]"
+  echo
+  echo
+  echo "WORK IN PROGRESS! Report script (beta release)"
+  echo
+  echo "*** If posting the Report on bitcointalk.org forum please copy everything"
+  echo "    between the [code] and [/code] including the [code] and [\code] tags."
+  echo "    This will ensure proper alignment when posting the Report."
+  echo
+  echo
 }
 
 
 ################################# miner-log ######################################
 miner-log()
 {
-tail -f ${NVOC}/nvoc_logs/screenlog.0
+  tail -f ${NVOC}/nvoc_logs/screenlog.0
 }
 
 ################################# wdog-log ######################################
 wdog-log()
 {
-if [ $LOCALorREMOTE == "REMOTE" ];then
-tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0
-else
-echo "Only for REMOTE"
-fi
+  if [ $LOCALorREMOTE == "REMOTE" ]
+  then
+    tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0
+  else
+    echo "Only for REMOTE"
+  fi
 }
 
 ################################# temp-log ######################################
 temp-log()
 {
-if [ $LOCALorREMOTE == "REMOTE" ];then
-tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0
-else
-echo "Only for REMOTE"
-fi
+  if [ $LOCALorREMOTE == "REMOTE" ]
+  then
+    tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0
+  else
+    echo "Only for REMOTE"
+  fi
 }
 
 
 ################################# wtm-log ######################################
 wtm-log()
 {
-tail -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog
+  tail -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog
 }
 
 ################################# master-log ######################################
 master-log()
 {
-tail -f ${NVOC}/nvoc_logs/screenlog.0 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 ${NVOC}/nvoc_logs/watchdog-screenlog.0 ${NVOC}/nvoc_logs/8_wtmautoswitchlog
+  tail -f ${NVOC}/nvoc_logs/screenlog.0 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 ${NVOC}/nvoc_logs/watchdog-screenlog.0 ${NVOC}/nvoc_logs/8_wtmautoswitchlog
+}
+
+################################# Restore xorg ######################################
+restore-xorg()
+{
+  echo -e "${B}Restoring default nvOC xorg.conf ...${N}"
+  touch "${NVOC}/xorg_flag"
+  echo "" > "${NVOC}/xorg_flag"
+  sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf -O /etc/X11/xorg.conf.default
+  sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
+  echo "Default xorg.conf restored, Rebooting system in 5 sec."
+  echo "System may reboot again if HEADLESS_MODE=YES"; echo ""
+  sleep 5
+  sudo reboot
 }
 
 
@@ -796,7 +856,7 @@ tail -f ${NVOC}/nvoc_logs/screenlog.0 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0 
 ################################# Main Logic ##################################
 ###############################################################################
 
-# This could be annoying: 
+# This could be annoying:
 # Clear the screen and simulate the prompt and the command they ran
 prompt="$USER@$HOSTNAME:~$"
 clear
@@ -804,23 +864,24 @@ echo "$prompt$0 $1"
 
 # Handle the command line parameters
 case $# in
-   0) echo_usage;;
-   1) case $1 in
-         clearlogs)    Clearlogs;;
-         gpuinfo)      GPUinfo;;
-         gpumap)       GPUmap;;
-         report)       Report;;
-         patch)        Patch;;
-         reboot)       Reboot;;
-         start)        Start;;
-         stop)         Stop;;
-         restart)      Restart;;
-         miner-log)    miner-log;;
-         wdog-log)     wdog-log;;
-         temp-log)     temp-log;;
-         wtm-log)      wtm-log;;
-         master-log)   master-log;;  
-         *)            echo_usage;;
-      esac;;
-   *) echo_usage;;
-esac  
+  0) echo_usage;;
+  1) case $1 in
+      clearlogs)     Clearlogs;;
+      gpuinfo)       GPUinfo;;
+      gpumap)        GPUmap;;
+      report)        Report;;
+      patch)         Patch;;
+      reboot)        Reboot;;
+      start)         Start;;
+      stop)          Stop;;
+      restart)       Restart;;
+      miner-log)     miner-log;;
+      wdog-log)      wdog-log;;
+      temp-log)      temp-log;;
+      wtm-log)       wtm-log;;
+      master-log)    master-log;;
+	  restore-xorg)  restore-xorg;;
+      *)             echo_usage;;
+  esac;;
+  *) echo_usage;;
+esac
