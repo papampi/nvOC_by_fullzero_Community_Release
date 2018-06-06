@@ -224,8 +224,13 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        sudo bash ${NVOC}/sysrq_reboot.sh
-      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+        if [[ $SYSRQ_REBOOT == YES ]]  
+        then
+          sudo bash ${NVOC}/sysrq_reboot.sh
+        else
+          sudo reboot
+        fi
+	  elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
@@ -244,7 +249,12 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        sudo bash ${NVOC}/sysrq_reboot.sh
+        if [[ $SYSRQ_REBOOT == YES ]]  
+        then
+          sudo bash ${NVOC}/sysrq_reboot.sh
+        else
+          sudo reboot
+        fi
       elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
@@ -416,7 +426,12 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        sudo bash ${NVOC}/sysrq_reboot.sh
+        if [[ $SYSRQ_REBOOT == YES ]]  
+        then
+          sudo bash ${NVOC}/sysrq_reboot.sh
+        else
+          sudo reboot
+        fi
       fi
 
       echo "$(date) - [CRITICAL] - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE}
