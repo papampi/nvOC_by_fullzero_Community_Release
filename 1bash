@@ -267,6 +267,9 @@ LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OF
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
+SYSRQ_REBOOT="NO"           # YES or NO # Use sys request reboot or normal reboot. 
+                            # Set "YES", watchdog and tempcontrol use sysrq reboot to prevent kernel panic and freeze if GPU drops off the bus
+
 WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU utilization
 
 WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
