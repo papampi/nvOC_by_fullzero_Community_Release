@@ -53,12 +53,46 @@ DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
 MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
 FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
 CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
-GPU_OC=$_CORE_OVERCLOCK
-GPU_MC=$_MEMORY_OVERCLOCK
-GPU_PL=$_POWERLIMIT_WATTS
 MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
 MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 eval 'COIN_POOL=${COIN}_POOL'
+
+# OC, MC, PL
+if [[ $AUTO_SWITCH != SALFTER* ]]
+then
+  if [[ $POWERLIMIT_MODE == GLOBAL ]]
+  then
+    GPU_PL=$_POWERLIMIT_WATTS
+  elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
+  then
+    eval 'ALGO_PL=${ALGO}_POWERLIMIT_WATTS'
+    GPU_PL=${!ALGO_PL}
+  elif [[ $POWERLIMIT_MODE == *_with_GPU_OFFSET || $POWERLIMIT_MODE == GPU_SPECIFIC ]]
+  then
+    GPU_PL="GPU Specific not supported in webinfo"
+  fi
+
+  if [[ $OVERCLOCK_MODE == GLOBAL ]]
+  then
+    GPU_OC=$_CORE_OVERCLOCK
+        GPU_MC=$_MEMORY_OVERCLOCK
+  elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
+  then
+    eval 'ALGO_OC=${ALGO}_CORE_OVERCLOCK'
+    eval 'ALGO_MC=${ALGO}_MEMORY_OVERCLOCK'
+    GPU_OC=${!ALGO_OC}
+    GPU_MC=${!ALGO_MC}
+  elif [[ $OVERCLOCK_MODE == *_with_GPU_OFFSET || $POWERLIMIT_MODE == GPU_SPECIFIC ]]
+  then
+    GPU_OC="GPU Specific not supported in webinfo"
+    GPU_MC="GPU Specific not supported in webinfo"
+  fi
+elif [[ $AUTO_SWITCH == SALFTER* ]]
+then 
+    GPU_PL="Salfter Switcher not supported in webinfo"
+    GPU_OC="Salfter Switcher not supported in webinfo"
+	GPU_MC="Salfter Switcher not supported in webinfo"
+fi
 
 # Reduce nvidia-smi query by trying to read from watchdog log first
 if ps ax | grep -q "[5]watchdog"
@@ -305,11 +339,11 @@ fi
 
 if [[ $ALGO == ETHASH ]]
 then
-  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5eth_hr%5D=[0-9]*' | cut -f2- -d=)
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Beth_hr%5D=[0-9]*' | cut -f2- -d=)
 
 elif [[ $ALGO == EQUIHASH ]]
 then
-  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Beth_hr%5D=[0-9]*' | cut -f2- -d=)
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Beq_hr%5D=[0-9]*' | cut -f2- -d=)
 
 elif [[ $ALGO == NEOSCRYPT ]]
 then
@@ -402,7 +436,9 @@ echo "Gpu Count: " "<tt style=\"text-align:left; color:white\">" "$GPU_COUNT <br
 
 echo "GPU Utilization: "  "<tt style=\"text-align:left; color:white\">" "$GPU_UTILIZATIONS <br> </tt>"
 
-echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
+echo "Currently Mining Coin: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
+
+echo "Currently Mining ALGO: " "<tt style=\"text-align:left; color:white\">" "$ALGO <br> </tt>"
 
 echo "Average Hash Rate: " "<tt style=\"text-align:left; color:white\">" "$HASH_AVERAGE <br> </tt>"
 if [[ $AUTO_SWITCH == WTM_SWITCHING ]]
@@ -432,11 +468,15 @@ echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$
 
 echo "Reboot Required: "  "<tt style=\"text-align:left; color:white\">" "$REBOOT_REQUIRED <br> </tt>"
 
-echo "Global GPU PL: " "<tt style=\"text-align:left; color:white\">" "$GPU_PL <br> </tt>"
+echo "Power Limit Mode: " "<tt style=\"text-align:left; color:white\">" "$POWERLIMIT_MODE <br> </tt>"
 
-echo "Global GPU OC: " "<tt style=\"text-align:left; color:white\">" "$GPU_OC <br> </tt>"
+echo "Over Clock Mode: " "<tt style=\"text-align:left; color:white\">" "$OVERCLOCK_MODE <br> </tt>"
 
-echo "Global GPU MC: " "<tt style=\"text-align:left; color:white\">" "$GPU_MC <br> </tt>"
+echo "Power Limit: " "<tt style=\"text-align:left; color:white\">" "$GPU_PL <br> </tt>"
+
+echo "Core Over Clock: " "<tt style=\"text-align:left; color:white\">" "$GPU_OC <br> </tt>"
+
+echo "Memory Over Clock: " "<tt style=\"text-align:left; color:white\">" "$GPU_MC <br> </tt>"
 
 echo "GPU Target Temp: "  "<tt style=\"text-align:left; color:white\">" "$TARGET_TEMP <br> </tt>"
 
