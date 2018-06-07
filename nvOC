@@ -54,6 +54,7 @@ export DISPLAY=:0
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
+source ${NVOC}/0algo_id
 
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
