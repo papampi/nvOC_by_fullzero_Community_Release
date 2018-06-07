@@ -32,10 +32,10 @@ then
 elif [[ $COIN == SIB  || $COIN == NICE_X11GHOST ]]
 then
   ALGO=SIB
-elif [[ $COIN == MONERO || $COIN == MPH_CRYPTONIGHTV7 || $COIN == NICE_CRYPTONIGHTV7 ]]
+elif [[ $COIN == XMR || $COIN == MPH_CRYPTONIGHTV7 || $COIN == NICE_CRYPTONIGHTV7 ]]
 then
   ALGO=CRYPTONIGHTV7
-elif [[ $COIN == XMR || $COIN == LUX || $COIN == FLM ]]
+elif [[ $COIN == LUX || $COIN == FLM ]]
 then
   ALGO=PHI
 elif [[ $COIN == PASC || $COIN == PASL ]]
@@ -50,10 +50,10 @@ then
 elif [[ $COIN == GRS || $COIN == MPH_GRS ]]
 then
   ALGO=GRS
-elif [[ $COIN == XMY ]]
+elif [[ $COIN == XMY || $COIN == MPH_MYR-GR ]]
 then
   ALGO=MYR-GR
-elif [[ $COIN == DCR || $COIN == MPH_MYR-GR ]]
+elif [[ $COIN == DCR ]]
 then
   ALGO=DECRED
 elif [[ $COIN == SIA ]]
