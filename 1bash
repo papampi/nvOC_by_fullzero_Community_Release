@@ -942,7 +942,7 @@ ETP_EXTENSION_ARGUMENTS=""
 
 ###################################################
 # Claymore_Dual Mining                            #
-# Set COIN="Claymore_Dual"                        #  
+# Set COIN="CLAYMORE_DUAL"                        #  
 ###################################################
 
 ###You can use variables like this for both ECOIN and DCOIN (If use variables remeber to set correct values in the coin section above):
