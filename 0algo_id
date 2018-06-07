@@ -29,7 +29,7 @@ then
 elif [[ $COIN == BTX ]]
 then
   ALGO=BITCORE
-elif [[ $COIN == SIB  || $COIN == NICE-X11GHOST ]]
+elif [[ $COIN == SIB  || $COIN == NICE_X11GHOST ]]
 then
   ALGO=SIB
 elif [[ $COIN == MONERO || $COIN == MPH_CRYPTONIGHTV7 || $COIN == NICE_CRYPTONIGHTV7]]
