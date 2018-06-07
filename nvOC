@@ -644,7 +644,7 @@ Swap Free     :  $swapfree
   echo "SRR .......................: $SRR"
   echo
 
-echo "Watchdog ..................: $MINER_WATCHDOG"
+  echo "Watchdog ..................: $MINER_WATCHDOG"
   echo "SYSRQ Reboot ..............: $SYSRQ_REBOOT"
   echo "Watchdog Cycle ............: $WATCHDOG_CYCLE"
   echo "GPU Utilization Threshold .: $GPU_UTIL_THRESHOLD"
@@ -714,17 +714,28 @@ echo "Watchdog ..................: $MINER_WATCHDOG"
   if [[ $POWERLIMIT_MODE == "GLOBAL" ]]
   then
     echo "Power Limit WATTS .........: $_POWERLIMIT_WATTS"
-  elif [[ $POWERLIMIT_MODE == "ALGO_SPECIFIC" ]];
+  elif [[ $POWERLIMIT_MODE == "ALGO_SPECIFIC" ]]
   then
     eval 'ALGO_PL=${ALGO}_POWERLIMIT_WATTS'
     echo "Power Limit WATTS .........: ${!ALGO_PL}"
-  elif [[ $POWERLIMIT_MODE == "GPU_SPECIFIC" ]];
+  elif [[ $POWERLIMIT_MODE == "GPU_SPECIFIC" ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
       echo "GPU$i Power Limit ..........: $((INDIVIDUAL_POWERLIMIT_$i))"
     done
-
+  elif [[ $POWERLIMIT_MODE == "GLOBAL_with_GPU_OFFSET" ]]
+  then
+    for i in $(seq 0 $((GPUS-1)))
+    do
+      echo "GPU$i Power Limit ..........: $(( _POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i ))"
+    done
+  elif [[ $POWERLIMIT_MODE == "ALGO_SPECIFIC_with_GPU_OFFSET" ]]
+  then
+    for i in $(seq 0 $((GPUS-1)))
+    do
+      echo "GPU$i Power Limit ..........: $(( ${ALGO}_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i ))"
+    done
   fi
 
   echo "OVERCLOCK MODE ............: $OVERCLOCK_MODE"
@@ -745,7 +756,20 @@ echo "Watchdog ..................: $MINER_WATCHDOG"
       echo "GPU$i Core Overclock ........: $((__CORE_OVERCLOCK_$i))"
       echo "GPU$i Memory Overclock ......: $((MEMORY_OVERCLOCK_$i))"
     done
-
+  elif [[ $OVERCLOCK_MODE == "GLOBAL_with_GPU_OFFSET" ]]
+  then
+    for i in $(seq 0 $((GPUS-1)))
+    do
+      echo "GPU$i Core Overclock ........: $(( _CORE_OVERCLOCK + __CORE_OVERCLOCK_$i )) "
+      echo "GPU$i Memory Overclock ......: $(( _MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))"
+    done
+  elif [[ $OVERCLOCK_MODE == "ALGO_SPECIFIC_with_GPU_OFFSET" ]]
+  then
+    for i in $(seq 0 $((GPUS-1)))
+    do
+      echo "GPU$i Core Overclock ........: $(( ${ALGO}_CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))"
+      echo "GPU$i Memory Overclock ......: $(( ${ALGO}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))"
+    done
   fi
   echo
 
@@ -898,7 +922,7 @@ case $# in
       temp-log)      temp-log;;
       wtm-log)       wtm-log;;
       master-log)    master-log;;
-	  restore-xorg)  restore-xorg;;
+      restore-xorg)  restore-xorg;;
       *)             echo_usage;;
   esac;;
   *) echo_usage;;
