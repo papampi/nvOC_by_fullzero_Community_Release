@@ -347,7 +347,7 @@ then
 
 elif [[ $ALGO == NEOSCRYPT ]]
 then
-  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5ns_hr%5D=[0-9]*' | cut -f2- -d=)
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bns_hr%5D=[0-9]*' | cut -f2- -d=)
 
 elif [[ $ALGO == CRYPTONIGHTV7 ]] 
 then
