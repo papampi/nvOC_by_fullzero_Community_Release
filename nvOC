@@ -707,6 +707,8 @@ echo "Watchdog ..................: $MINER_WATCHDOG"
   echo "ETH Pill ..................: $OhGodAnETHlargementPill"
   echo
 
+  GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+
 # 1bash OC
   echo "POWERLIMIT MODE ...........: $POWERLIMIT_MODE"
   if [[ $POWERLIMIT_MODE == "GLOBAL" ]]
@@ -716,6 +718,13 @@ echo "Watchdog ..................: $MINER_WATCHDOG"
   then
     eval 'ALGO_PL=${ALGO}_POWERLIMIT_WATTS'
     echo "Power Limit WATTS .........: ${!ALGO_PL}"
+  elif [[ $POWERLIMIT_MODE == "GPU_SPECIFIC" ]];
+  then
+    for i in $(seq 0 $((GPUS-1)))
+    do
+      echo "GPU$i Power Limit ..........: $((INDIVIDUAL_POWERLIMIT_$i))"
+    done
+
   fi
 
   echo "OVERCLOCK MODE ............: $OVERCLOCK_MODE"
@@ -729,8 +738,17 @@ echo "Watchdog ..................: $MINER_WATCHDOG"
     eval 'ALGO_MC=${ALGO}_MEMORY_OVERCLOCK'
     echo "Core Overclock ............: ${!ALGO_OC}"
     echo "Memory Overclock ..........: ${!ALGO_MC}"
+  elif [[ $OVERCLOCK_MODE == "GPU_SPECIFIC" ]];
+  then
+    for i in $(seq 0 $((GPUS-1)))
+    do
+      echo "GPU$i Core Overclock ........: $((__CORE_OVERCLOCK_$i))"
+      echo "GPU$i Memory Overclock ......: $((MEMORY_OVERCLOCK_$i))"
+    done
+
   fi
   echo
+
 
 # 1bash mining
   echo "GLOBAL WORKERNAME .........: $GLOBAL_WORKERNAME"
