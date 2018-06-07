@@ -2,7 +2,7 @@
 if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE_NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX || $COIN == MPH_NEOSCRYPT || $COIN == ZPOOL_NEOSCRYPT ]]
 then
   ALGO=NEOSCRYPT
-elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == CLO || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE_ETHASH || $COIN == ETP || $COIN ==Claymore_Dual ]]
+elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == CLO || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE_ETHASH || $COIN == ETP || $COIN == CLAYMORE_DUAL  ]]
 then
   ALGO=ETHASH
 elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE_EQUIHASH || $COIN == VOTE   || $COIN == BTCP  || $COIN == BCI ]]
