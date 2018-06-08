@@ -35,7 +35,7 @@ then
 elif [[ $COIN == XMR || $COIN == MPH_CRYPTONIGHTV7 || $COIN == NICE_CRYPTONIGHTV7 ]]
 then
   ALGO=CRYPTONIGHTV7
-elif [[ $COIN == LUX || $COIN == FLM ]]
+elif [[ $COIN == LUX || $COIN == FLM || $COIN == SERA ]]
 then
   ALGO=PHI
 elif [[ $COIN == PASC || $COIN == PASL ]]
