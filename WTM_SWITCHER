@@ -108,7 +108,7 @@ except:
 # filter WTM coins by user selection only
 for i in data:
     if data[i]["tag"] == "NICEHASH":
-       data[i]["tag"] = "NICE-" + data[i]["algorithm"].upper()
+       data[i]["tag"] = "NICE_" + data[i]["algorithm"].upper()
 
 for i in filter(lambda x: data[x]["tag"] not in includedCoins, data):
     data.pop(i)
