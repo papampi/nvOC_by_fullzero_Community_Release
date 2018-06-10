@@ -221,17 +221,20 @@ do
   else
     AVRG_15="OK"
   fi
-
-  if [[ $AVRG_1 == HIGH ]] && [[ $AVRG_5 == HIGH ]] && [[ $AVRG_15 == HIGH ]]
+  
+  if [[ plusCPU == "NO" ]]
   then
-    echo "WARNING: $(date) - Load Averages are too high" | tee -a ${LOG_FILE}
+    if [[ $AVRG_1 == HIGH ]] && [[ $AVRG_5 == HIGH ]] && [[ $AVRG_15 == HIGH ]]
+    then
+      echo "WARNING: $(date) - Load Averages are too high" | tee -a ${LOG_FILE}
+    fi
     if [[ $TELEGRAM_ALERTS == "YES" ]]
-    then  
+    then
       bash "${NVOC}/telegram"
     fi
   fi
-
-  # Set/increment vars
+  
+    # Set/increment vars
   NUM_GPU_BLW_THRSHLD=0              # Track how many GPU are below threshold
   REBOOTRESET=$((REBOOTRESET + 1))
 
