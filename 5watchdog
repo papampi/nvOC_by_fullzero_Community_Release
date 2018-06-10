@@ -225,6 +225,10 @@ do
   if [[ $AVRG_1 == HIGH ]] && [[ $AVRG_5 == HIGH ]] && [[ $AVRG_15 == HIGH ]]
   then
     echo "WARNING: $(date) - Load Averages are too high" | tee -a ${LOG_FILE}
+    if [[ $TELEGRAM_ALERTS == "YES" ]]
+    then  
+      bash "${NVOC}/telegram"
+    fi
   fi
 
   # Set/increment vars
