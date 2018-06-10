@@ -222,7 +222,7 @@ do
     AVRG_15="OK"
   fi
   
-  if [[ plusCPU == "NO" ]]
+  if [[ $plusCPU == "NO" ]]
   then
     if [[ $AVRG_1 == HIGH ]] && [[ $AVRG_5 == HIGH ]] && [[ $AVRG_15 == HIGH ]]
     then
