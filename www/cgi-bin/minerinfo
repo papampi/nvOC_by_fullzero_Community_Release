@@ -37,10 +37,40 @@ echo '</style>'
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
 LSB_RELEASE=$(lsb_release -s -d)
 UNAME=$(uname -r)
-
 SYSTEM_BOOT_TIME=$(uptime -s)
 SYSTEM_UP_TIME=$(uptime -p)
-GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+
+# If number gpu installed is set in 1bash give a comparison
+# Reduce nvidia-smi query by trying to read from watchdog log first
+if ps ax | grep -q "[5]watchdog"
+then
+  DETECTED_GPUS=$(( $(tail -30 ${NVOC}/nvoc_logs/watchdog-screenlog.0 | grep -o "GPU[0-9]*" | sed 's/GPU//' | sort -nr | head -1) + 1 ))
+  if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
+  then
+    if [[ $DETECTED_GPUS -ne $NUMBER_GPUS_INSTALLED ]]
+    then
+      GPU_COUNT="<tt style=\"text-align:left; color:red\"> $DETECTED_GPUS</tt>"
+    else
+      GPU_COUNT=$DETECTED_GPUS
+    fi
+  else
+    GPU_COUNT=$DETECTED_GPUS
+  fi
+else
+  if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
+  then
+    DETECTED_GPUS=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+    if [[ $DETECTED_GPUS -ne $NUMBER_GPUS_INSTALLED ]]
+    then
+      GPU_COUNT="<tt style=\"text-align:left; color:red\">$DETECTED_GPUS</tt>"
+    else
+      GPU_COUNT=$DETECTED_GPUS
+    fi
+  else
+    GPU_COUNT=$DETECTED_GPUS
+  fi
+fi
+
 TAIL_GPU_COUNT=$(( $GPU_COUNT + 3 ))
 REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
 MINER_PID=$(pgrep -f -o  miner)
@@ -48,7 +78,7 @@ MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 TEMP_FAN_POWER=$(tail  -50 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
 TEMP_ALERT_LOG=$(cat ${NVOC}/6_autotemplog | awk '{print $0,"<br>"}')
 WDOG_ALERT_LOG=$(cat ${NVOC}/5_watchdoglog | awk '{print $0,"<br>"}')
-NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
+NIVIDIA_VERSION=$(nvidia-smi -i 0 --query-gpu=driver_version --format=csv,noheader)
 DISK=$(df -h / | awk '{ a = $2 } END { print a }')
 DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
 MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
@@ -427,6 +457,8 @@ echo "NVOC root path: " "<tt style=\"text-align:left; color:white\">" "${NVOC} <
 
 echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_TIME<br> </tt>"
 
+echo "Load Average: " "<tt style=\"text-align:left; color:white\">" "$AVRG_1, $AVRG_5, $AVRG_15 <br> </tt>"
+
 echo "Auto Temp Control: "  "<tt style=\"text-align:left; color:white\">" "$AUTO_TEMPERATURE_CONTROL$TEMP_CHECK$TEMP_WARNING <br> </tt>"
 
 echo "Watch Dog: "  "<tt style=\"text-align:left; color:white\">" "$WATCHDOG$WDOG_CHECK$WATCHDOG_WARNING <br> </tt>"
@@ -462,8 +494,6 @@ echo "CPU: " "<tt style=\"text-align:left; color:white\">" "$CPU<br> </tt>"
 echo "Disk / Free Disk: " "<tt style=\"text-align:left; color:white\">" "$DISK / $DISK_FREE<br> </tt>"
 
 echo "Memory / Free Memory: " "<tt style=\"text-align:left; color:white\">" "$MEMORY / $FREE_MEMORY<br> </tt>"
-
-echo "Load Average: " "<tt style=\"text-align:left; color:white\">" "$AVRG_1, $AVRG_5, $AVRG_15 <br> </tt>"
 
 echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$NIVIDIA_VERSION <br> </tt>"
 
