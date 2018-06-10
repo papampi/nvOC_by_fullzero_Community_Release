@@ -12,6 +12,8 @@
 # v=0004 : Papampi    : Added NiceHash with Rumo and CryptAtomeTrader44 help
 # v=0005 : LuKePicci  : Refactor, cleanup and minor modifications to switching …
 # v=0006 : papampi    : Comment out some output logs to prevent conflicts with 8wtm_auto_switch
+# v=0007 : papampi    : Added more sources to get BTC exchange rate
+# v=0008 : papampi    : NICE* prefix compatibility
 
 
 from collections import OrderedDict
