@@ -64,9 +64,13 @@
 #          AUTO_SWITCH generalized implementetion
 # v=0026 : papampi, sizzlephizzle
 #          Algo mining unification 
+# v=0027 : LuKePicci
+#          Separate algo_id
+
+
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0026"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0027"   # Do not edit this
 
 # fullzero:     nvOC creator
 
@@ -938,7 +942,7 @@ ETP_EXTENSION_ARGUMENTS=""
 
 ###################################################
 # Claymore_Dual Mining                            #
-# Set COIN="Claymore_Dual"                        #  
+# Set COIN="CLAYMORE_DUAL"                        #  
 ###################################################
 
 ###You can use variables like this for both ECOIN and DCOIN (If use variables remeber to set correct values in the coin section above):
@@ -1282,9 +1286,14 @@ X16R_CORE_OVERCLOCK=0                    # Recomended value for some GTX-1060: 1
 X16R_MEMORY_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
 
 # BITCORE, TIMETRAVEL10
-BITCORE_POWERLIMIT_WATTS=100          # Recomended value for some GTX-1060: 65
+BITCORE_POWERLIMIT_WATTS=100        # Recomended value for some GTX-1060: 65
 BITCORE_CORE_OVERCLOCK=0            # Recomended value for some GTX-1060: 150
 BITCORE_MEMORY_OVERCLOCK=0          # Recomended value for some GTX-1060: 800
+
+# PHI1612, PHI
+PHI_POWERLIMIT_WATTS=100           # 
+PHI_CORE_OVERCLOCK=0               # 
+PHI_MEMORY_OVERCLOCK=0             # 
 
 
 daggerhashimoto_POWERLIMIT_WATTS=100       # Recomended value for some GTX-1060: 76
@@ -1409,76 +1418,3 @@ WORKER_NAME="$WORKERNAME"
 PROFIT_CHECK_TIMEOUT=600
 
 # ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed
-
-## IDENTIFY MINING ALGORITHM START
-if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE-NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX || $COIN == MPH_NEOSCRYPT || $COIN == ZPOOL_NEOSCRYPT ]]
-then
-  ALGO=NEOSCRYPT
-elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == CLO || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE-ETHASH || $COIN == ETP ]]
-then
-  ALGO=ETHASH
-elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE-EQUIHASH || $COIN == VOTE   || $COIN == BTCP  || $COIN == BCI ]]
-then
-  ALGO=EQUIHASH
-elif [[ $COIN == SIGT || $COIN == ZPOOL_SKUNK || $COIN == ALTCOM || $COIN == NICE-SKUNKHASH ]]
-then
-  ALGO=SKUNK
-elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE-LYRA2REV2 || $COIN == XVG || $COIN == MPH_LYRA2V2 || $COIN == ZPOOL_LYRA2V2 ]]
-then
-  ALGO=LYRA2V2
-elif [[ $COIN == KRB || $COIN == ETN || $COIN == NICE-CRYPTONIGHT ]]
-then
-  ALGO=CRYPTONIGHT
-elif [[ $COIN == ZCOIN || $COIN == MPH_LYRA2Z ]]
-then
-  ALGO=LYRA2Z
-elif [[ $COIN == BSD ]]
-then
-  ALGO=XEVAN
-elif [[ $COIN == RVN ]]
-then
-  ALGO=X16R
-elif [[ $COIN == BTX ]]
-then
-  ALGO=BITCORE
-elif [[ $COIN == SIB  || $COIN == NICE-X11GHOST ]]
-then
-  ALGO=SIB
-elif [[ $COIN == MONERO || $COIN == MPH_CRYPTONIGHTV7 ]]
-then
-  ALGO=CRYPTONIGHTV7
-elif [[ $COIN == XMR || $COIN == LUX || $COIN == FLM ]]
-then
-  ALGO=PHI
-elif [[ $COIN == PASC || $COIN == PASL ]]
-then
-  ALGO=PASCAL
-elif [[ $COIN == LBC || $COIN == ZPOOL_LBRY ]]
-then
-  ALGO=LBRY
-elif [[ $COIN == DMD ]]
-then
-  ALGO=DMD-GR
-elif [[ $COIN == GRS || $COIN == MPH_GRS ]]
-then
-  ALGO=GRS
-elif [[ $COIN == XMY ]]
-then
-  ALGO=MYR-GR
-elif [[ $COIN == DCR || $COIN == MPH_MYR-GR ]]
-then
-  ALGO=DECRED
-elif [[ $COIN == SIA ]]
-then
-  ALGO=SIA
-elif [[ $COIN == ONION ]]
-then
-  ALGO=X13
-elif [[ $COIN == ZPOOL_SKEIN || $COIN == MPH_SKEIN ]]
-then
-  ALGO=SKEIN
-else
-  ALGO=UNDEFINED
-fi
-export ALGO
-## IDENTIFY ALGORITHM END

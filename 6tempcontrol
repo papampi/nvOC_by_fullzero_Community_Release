@@ -58,6 +58,7 @@ sudo renice -n -15 -p $$ && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
 sleep 1
 
 source ${NVOC}/1bash
+source ${NVOC}/0algo_id
 sleep 1
 
 NVD=nvidia-settings
