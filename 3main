@@ -63,10 +63,13 @@
 #          AUTO_SWITCH generalized implementetion
 # v=0021 : papampi
 #          Algo identification edits for Algo mining unification
+# v=0022 : LuKePicci
+#          Reworked OC PerfLevel detection, 0algo_id
 
 source ${NVOC}/1bash
+
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.1.0021"                  # Do not edit this
+nvOC_3main_ver="v0019-2.1.0022"                  # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -155,31 +158,18 @@ then
   fi
 fi
 
-___1050_or_1050ti="NO"
-
-NORMAL="NO"
-
-P106_100="NO"
-P104_P102="NO"
-
-
 nvidia-smi -L > /tmp/tempa
 
-if grep -q "1050" /tmp/tempa; then
-  ___1050_or_1050ti="YES"
-fi
-
-if grep -q 'P106' /tmp/tempa; then
-  ___1050_or_1050ti="YES"
-  P106_100="YES"
-fi
-
 if grep -q -E 'P104|P102' /tmp/tempa; then
-  P104_P102="YES"
+  GPU_OC_PROFILE="1 ${GPU_OC_PROFILE}"
+fi
+
+if grep -q -E "1050|P106" /tmp/tempa; then
+  GPU_OC_PROFILE="2 ${GPU_OC_PROFILE}"
 fi
 
 if grep -q -E '1060|1070|1080' /tmp/tempa; then
-  NORMAL="YES"
+  GPU_OC_PROFILE="3 ${GPU_OC_PROFILE}"
 fi
 
 rm /tmp/tempa
@@ -306,6 +296,8 @@ if [[ $CONTROL_GPU_LED == YES ]]
 then
   ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
 fi
+
+source ${NVOC}/0algo_id
 
 if [[ $POWERLIMIT_MODE == GLOBAL ]]
 then
@@ -867,27 +859,6 @@ else
   fi
 fi
 
-TI="3"
-
-if [[ $___1050_or_1050ti == YES ]]
-then
-  TI="2"
-  if [[ $NORMAL == YES ]]
-  then
-    TI="2 3"
-  fi
-fi
-
-if [[ $P104_P102 == YES ]]
-then
-  TI="1"
-  if [[ $NORMAL == YES ]]
-  then
-    TI="1 3"
-  fi
-fi
-
-
 if [[ $SLOW_USB_KEY_MODE == YES ]]
 then
   sleep 6
@@ -916,7 +887,7 @@ fi
 gpu=0
 while (( gpu < GPUS ))
 do
-  for j in $TI
+  for j in ${GPU_OC_PROFILE}
   do
     CORE=${__CORE_OVERCLOCK[${gpu}]}
     MEM=${MEMORY_OVERCLOCK[${gpu}]}
