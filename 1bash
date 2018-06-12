@@ -364,6 +364,9 @@ POWER_ADJUST=5                # Adjustment size in watts. If the target temp can
 
 RESTORE_POWER_LIMIT=85        # Restore original Power Limit if fan speed is lower than this percentage. Recommended: 10% less than Maximum fan speed
 
+WARN_PL_DROPS="NO"            # Gives a Warning every time an auto-adjustment occurs and Powerlimit gets dropped
+
+USE_COLOR="YES"               # YES or NO, enables Text output beautifier, use bold text and colors
 
 ########################################################
 #                                                      #
@@ -378,7 +381,7 @@ RESTORE_POWER_LIMIT=85        # Restore original Power Limit if fan speed is low
 
 TELEGRAM_MESSAGES="NO"               # YES or NO # Set to YES if you want to receive Telegram Periodic Messages
 
-TELEGRAM_ALERTS="NO"                 # YES or NO # Set to No if you Dont want to get Telegram Alerts
+TELEGRAM_ALERTS="NO"                 # YES or NO # Set to No if you Dont want to get Telegram Alerts on warnings
 
 TELEGRAM_TYPE="papampi"              # kk003 or papampi or damNmad or BaliMiner # There are 4 versions. Please choose one
 
