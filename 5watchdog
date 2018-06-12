@@ -224,14 +224,20 @@ do
   
   if [[ $plusCPU == "NO" ]]
   then
-    if [[ $AVRG_1 == HIGH ]] && [[ $AVRG_5 == HIGH ]] && [[ $AVRG_15 == HIGH ]]
+    if [[ $AVRG_1 == "HIGH" ]] && [[ $AVRG_5 == "HIGH" ]] && [[ $AVRG_15 == "HIGH" ]]
     then
       echo "WARNING: $(date) - Load Averages are too high" | tee -a ${LOG_FILE}
-    fi
-    if [[ $TELEGRAM_ALERTS == "YES" ]]
-    then
-      bash "${NVOC}/telegram"
-    fi
+      if [[ $TELEGRAM_ALERTS == "YES" ]]
+      then
+        bash "${NVOC}/telegram"
+      fi
+      if [[ $HIGH_LOAD_REBOOT  == "YES" ]]
+      then
+        echo "WARNING: $(date) - Rebooting system in 5 sec" | tee -a ${LOG_FILE}
+        sleep 5
+        sudo bash ${NVOC}/sysrq_reboot.sh
+      fi
+    fi  
   fi
   
     # Set/increment vars
