@@ -851,7 +851,7 @@ Swap Free     :  $swapfree
 ################################# install-service ##############################
 install-service()
 {
-  echo Reinstalling nvOC service for ${NVOC}
+  echo "Reinstalling nvOC service for ${NVOC}"
   sudo cat <<EOF > /etc/systemd/system/nvoc.service
 [Unit]
 Description=nvOC Service
@@ -877,8 +877,13 @@ EOF
 
   if sudo systemd-analyze verify nvoc.service
   then
-    echo "Done. This service has autostart enabled."
+    echo "Setting ACL for 'nvoc' service user write access to NVOC path..."
+    sudo setfacl -m user:nvoc:rw ${NVOC}
+    
     sudo systemctl enable nvoc
+    echo "${W}Done.${N} This service has autostart enabled."
+  else
+    echo "Service installation failed"
   fi
 }
 
