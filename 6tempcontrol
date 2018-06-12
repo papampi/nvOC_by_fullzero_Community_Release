@@ -32,6 +32,8 @@
 #          MAXIMAL_FAN_SPEED
 # v=0005 : LukePicci
 #          Relocate nvOC to arbitrary install directory
+# v=0006 : papampi (suggestion by abdeldev)
+#          Use sysrq reboot, to prevent freeze/hang
 
 
 
@@ -42,7 +44,7 @@
 # DEV_VERSION=0005
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_temp_ver="v0019-2.1.0005"   # Do not edit this
+nvOC_temp_ver="v0019-2.1.0006"   # Do not edit this
 
 
 export DISPLAY=:0
@@ -56,6 +58,7 @@ sudo renice -n -15 -p $$ && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
 sleep 1
 
 source ${NVOC}/1bash
+source ${NVOC}/0algo_id
 sleep 1
 
 NVD=nvidia-settings
@@ -249,7 +252,12 @@ do
               bash "${NVOC}/telegram"
             fi
             sleep 3
-            sudo reboot
+            if [[ $SYSRQ_REBOOT == YES ]]  
+            then
+              sudo bash ${NVOC}/sysrq_reboot.sh
+            else
+              sudo reboot
+            fi
           fi
         done
       fi
@@ -275,7 +283,12 @@ do
               bash "${NVOC}/telegram" &
             fi
             sleep 3
-            sudo reboot
+            if [[ $SYSRQ_REBOOT == YES ]]  
+            then
+              sudo bash ${NVOC}/sysrq_reboot.sh
+            else
+              sudo reboot
+            fi
           fi
         done
       fi
@@ -286,7 +299,6 @@ do
     NEW_FAN_SPEED=$CURRENT_FAN
 
     echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"
-    echo ""
 
     if [ "$CURRENT_TEMP" -gt "${TARGET_TEMP[${GPU}]}" ]; then
       # This can be far more advanced. For now if difference is more than 5 C multiply adjustement by 2

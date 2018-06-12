@@ -12,6 +12,8 @@
 # v=0004 : Papampi    : Added NiceHash with Rumo and CryptAtomeTrader44 help
 # v=0005 : LuKePicci  : Refactor, cleanup and minor modifications to switching …
 # v=0006 : papampi    : Comment out some output logs to prevent conflicts with 8wtm_auto_switch
+# v=0007 : papampi    : Added more sources to get BTC exchange rate
+# v=0008 : papampi    : NICE* prefix compatibility
 
 
 from collections import OrderedDict
@@ -54,13 +56,26 @@ def saveTopCoin(data):
     logFile.close()
     return
 
-#Get BTC exchange rate from blockchain.info
+#Get BTC exchange rate 
 try:
-    exchrate=float(json.loads(urllib2.urlopen("https://blockchain.info/ticker").read())[currency]["last"])
+    exchrate=float(json.loads(requests.get("http://api.coindesk.com/v1/bpi/currentprice.json").read())['bpi'][currency]['rate_float'])
+    print exchrate
 except:
-    print("Can not get data from blockchain.info")
-    sys.exit()
-    raise
+        try:
+            print("Can not get data from coindesk.com")
+            print("Trying to get data from coinbase.com")
+            exchrate=float(json.loads(urllib2.urlopen("https://api.coinbase.com/v2/exchange-rates?currency=BTC").read())["data"]["rates"][currency])
+            print exchrate
+        except:
+            try:
+                print("Can not get data from coinbase.com")
+                print("Trying to get data from blockchain.info")
+                exchrate=float(json.loads(urllib2.urlopen("https://blockchain.info/ticker").read())[currency]["last"])
+                print exchrate
+            except:
+                print("Can not get data from blockchain.info")
+                print("Failed to get BTC exchange rate")
+                sys.exit()
 
 #BTC Rates for web, output, ...
 print "BTC PRICE: " + str(exchrate) + " " + str(currency)
@@ -95,7 +110,7 @@ except:
 # filter WTM coins by user selection only
 for i in data:
     if data[i]["tag"] == "NICEHASH":
-       data[i]["tag"] = "NICE-" + data[i]["algorithm"].upper()
+       data[i]["tag"] = "NICE_" + data[i]["algorithm"].upper()
 
 for i in filter(lambda x: data[x]["tag"] not in includedCoins, data):
     data.pop(i)
