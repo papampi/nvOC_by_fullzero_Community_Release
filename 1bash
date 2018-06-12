@@ -280,9 +280,9 @@ WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
 
 GPU_UTIL_THRESHOLD="70"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recomended values 70-90) 
 			    
-HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want watchdog reboot the rig. 
-                            # When all load averages (1 min, 5 min and 15 min) goes over double the CPU cores.
+HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want watchdog reboot when all load averages (1 min, 5 min and 15 min) goes over double the CPU cores.
                             # This option uses sysrq_reboot to reboot the rig.
+			    # Works only if not using plusCPU.
 
 ALT_POOL="NO"               # YES or NO, Set to YES if you want to enable  poolswitch. 
                             # Switch to alternate pool if main pool goes down.
