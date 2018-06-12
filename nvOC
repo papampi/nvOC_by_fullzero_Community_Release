@@ -112,7 +112,7 @@ echo_usage()
   echo -e "        ${C}$0 stop-service${N}"
   echo "           stop the running nvOC service"
   echo -e "        ${C}$0 main-log${N}"
-  echo "           display nvOC startup output"
+  echo "           display nvOC startup output (Only for nvOC running as a service)"
   echo -e "        ${C}$0 miner-log${N}"
   echo "           display live miner output"
   echo -e "        ${C}$0 wdog-log${N}"
