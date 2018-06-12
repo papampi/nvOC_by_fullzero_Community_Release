@@ -66,11 +66,12 @@
 #          Algo mining unification 
 # v=0027 : LuKePicci
 #          Separate algo_id
-
+# v=0028 : LuKePicci
+#          More tempcontrol alert color and verbosity options
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0027"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0028"   # Do not edit this
 
 # fullzero:     nvOC creator
 
