@@ -297,8 +297,6 @@ then
   ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
 fi
 
-source ${NVOC}/0algo_id
-
 if [[ $POWERLIMIT_MODE == GLOBAL ]]
 then
   sudo nvidia-smi -pl "$_POWERLIMIT_WATTS"
