@@ -308,17 +308,16 @@ do
       if [ $NEW_FAN_SPEED -gt $MAXIMAL_FAN_SPEED ]; then
         NEW_FAN_SPEED=$MAXIMAL_FAN_SPEED
         # Fan speed reached MAXIMAL_FAN_SPEED, we have to drop the power limit
-		if [[ $WARN_PL_DROPS == YES ]]; then
-		  echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Fan speed reached $MAXIMAL_FAN_SPEED, dropping Power Limit in order to maintain the desired temp${N}" | tee -a ${LOG_FILE}
-		  if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-		  	bash "${NVOC}/telegram" &
-		  fi
-		  NEW_POWER_LIMIT=$(($POWERLIMIT - $POWER_ADJUST))
-		  echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a ${LOG_FILE}
-		else
-		  echo -e "${B}INFO: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}"
-		fi
-		echo ""
+        NEW_POWER_LIMIT=$(($POWERLIMIT - $POWER_ADJUST))
+        if [[ $WARN_PL_DROPS == YES ]]; then
+          echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a ${LOG_FILE}
+          if [[ $TELEGRAM_ALERTS == "YES" ]]; then
+            bash "${NVOC}/telegram" &
+          fi
+        else
+          echo -e "${B}INFO: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}"
+        fi
+        echo ""
         sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
       fi
     else
