@@ -531,11 +531,6 @@ LBRY_MINER="SPccminer"
 LBRY_INTENSITY=""
 LBRY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
-## Diamond Groestl
-DMDGR_MINER="TPccminer"
-DMDGR_INTENSITY=""
-DMDGR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
 ## GROESTL
 GROESTL_MINER="TPccminer"
 GROESTL_INTENSITY=""
@@ -609,12 +604,19 @@ KMD_POOL="luckpool.org"
 KMD_PORT="3857"
 KMD_EXTENSION_ARGUMENTS=""
 
-# RVN ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
+# Raven(RVN) ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
 RVN_WORKER="$WORKERNAME"
 RVN_ADDRESS="replace_with_your_address"
 RVN_POOL="RVN_POOL_ADDRESS"
 RVN_PORT="RVN_POOL_PORT"
 RVN_EXTENSION_ARGUMENTS=""
+
+# Motion(XMN) ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
+XMN_WORKER="$WORKERNAME"
+XMN_ADDRESS="replace_with_your_address"
+XMN_POOL="XMN_POOL_ADDRESS"
+XMN_PORT="XMN_POOL_PORT"
+XMN_EXTENSION_ARGUMENTS=""
 
 # BTCP
 BTCP_WORKER="$WORKERNAME"
@@ -1417,4 +1419,58 @@ WORKER_NAME="$WORKERNAME"
 
 PROFIT_CHECK_TIMEOUT=600
 
-# ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed
+# ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed with salfter switcher
+
+
+################################################################
+#                                                              #
+# Coin/Algo identification                                     #
+#                                                              #
+################################################################
+
+BITCORE_COINS="BTX"
+CRYPTONIGHTV7_COINS="XMR,MPH_CRYPTONIGHTV7,NICE_CRYPTONIGHTV7"
+CRYPTONIGHT_COINS="KRB,ETN,NICE_CRYPTONIGHT"
+DECRED_COINS="DCR"
+EQUIHASH_COINS="BTG,ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
+ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
+GRS_COINS="GRS,MPH_GRS"
+LBRY_COINS="LBC,ZPOOL_LBRY"
+LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
+LYRA2Z_COINS="ZCOIN,MPH_LYRA2Z"
+MYR_GR_COINS="XMY,MPH_MYR-GR"
+NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
+PASCAL_COINS="PASC,PASL"
+PHI_COINS="LUX,FLM,SERA"
+SIA_COINS="SIA"
+SIB_COINS="SIB,NICE_X11GHOST"
+SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
+SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
+X13_COINS="ONION"
+X16R_COINS="RVN,XMN"
+XEVAN_COINS="BSD"
+
+
+if [[ "$BITCORE_COINS" =~ "$COIN" ]] ; then ALGO="BITCORE" 
+elif [[ "$CRYPTONIGHTV7_COINS" =~ "$COIN" ]] ; then ALGO="CRYPTONIGHTV7" 
+elif [[ "$CRYPTONIGHT_COINS" =~ "$COIN" ]] ; then ALGO="CRYPTONIGHT" 
+elif [[ "$DECRED_COINS" =~ "$COIN" ]] ; then ALGO="DECRED" 
+elif [[ "$EQUIHASH_COINS" =~ "$COIN" ]] ; then ALGO="EQUIHASH" 
+elif [[ "$ETHASH_COINS" =~ "$COIN" ]] ; then ALGO="ETHASH"
+elif [[ "$GRS_COINS" =~ "$COIN" ]] ; then ALGO="GRS"
+elif [[ "$LBRY_COINS" =~ "$COIN" ]] ; then ALGO="LBRY"
+elif [[ "$LYRA2V2_COINS" =~ "$COIN" ]] ; then ALGO="LYRA2V2"
+elif [[ "$LYRA2Z_COINS" =~ "$COIN" ]] ; then ALGO="LYRA2Z"
+elif [[ "$MYR_GR_COINS" =~ "$COIN" ]] ; then ALGO="MYR_GR"
+elif [[ "$NEOSCRIPT_COINS" =~ "$COIN" ]] ; then ALGO="NEOSCRIPT"
+elif [[ "$PASCAL_COINS" =~ "$COIN" ]] ; then ALGO="PASCAL"
+elif [[ "$PHI_COINS" =~ "$COIN" ]] ; then ALGO="PHI"
+elif [[ "$SIA_COINS" =~ "$COIN" ]] ; then ALGO="SIA"
+elif [[ "$SIB_COINS" =~ "$COIN" ]] ; then ALGO="SIB"
+elif [[ "$SKEIN_COINS" =~ "$COIN" ]] ; then ALGO="SKEIN"
+elif [[ "$SKUNK_COINS" =~ "$COIN" ]] ; then ALGO="SKUNK"
+elif [[ "$X13_COINS" =~ "$COIN" ]] ; then ALGO="X13"
+elif [[ "$X16R_COINS" =~ "$COIN" ]] ; then ALGO="X16R" 
+elif [[ "$XEVAN_COINS" =~ "$COIN" ]] ; then ALGO="XEVAN" 
+else ALGO="UNDEFINED "
+fi

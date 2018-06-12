@@ -29,7 +29,6 @@ echo '<html>'
 echo '<head>'
 echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8\n\n">'
 source ${NVOC}/1bash
-source ${NVOC}/0algo_id
 
 echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
 echo '</style>'
