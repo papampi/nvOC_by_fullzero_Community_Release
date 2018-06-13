@@ -14,7 +14,7 @@ then
 elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE_LYRA2REV2 || $COIN == XVG || $COIN == MPH_LYRA2V2 || $COIN == ZPOOL_LYRA2V2 ]]
 then
   ALGO=LYRA2V2
-elif [[ $COIN == KRB || $COIN == ETN || $COIN == NICE_CRYPTONIGHT ]]
+elif [[ $COIN == KRB || $COIN == NICE_CRYPTONIGHT ]]
 then
   ALGO=CRYPTONIGHT
 elif [[ $COIN == ZCOIN || $COIN == MPH_LYRA2Z ]]
@@ -32,7 +32,7 @@ then
 elif [[ $COIN == SIB  || $COIN == NICE_X11GHOST ]]
 then
   ALGO=SIB
-elif [[ $COIN == XMR || $COIN == MPH_CRYPTONIGHTV7 || $COIN == NICE_CRYPTONIGHTV7 ]]
+elif [[ $COIN == XMR || $COIN == MPH_CRYPTONIGHTV7 || $COIN == NICE_CRYPTONIGHTV7 || $COIN == ETN ]]
 then
   ALGO=CRYPTONIGHTV7
 elif [[ $COIN == LUX || $COIN == FLM || $COIN == SERA ]]
