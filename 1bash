@@ -560,6 +560,7 @@ X13_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 ##### No Need to add stratum+tcp:// to your pool addresses #####
 ################################################################
 
+## If you added any coins in the section bellow dont forget to add it to "Coin/Algo identification" section too
 
 # ZEC
 ZEC_WORKER="$WORKERNAME"
