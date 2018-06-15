@@ -66,11 +66,12 @@
 #          Algo mining unification 
 # v=0027 : LuKePicci
 #          Separate algo_id
-
+# v=0028 : LuKePicci
+#          More tempcontrol alert color and verbosity options
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0027"   # Do not edit this
+nvOC_1bash_ver="v0019-2.1.0028"   # Do not edit this
 
 # fullzero:     nvOC creator
 
@@ -279,7 +280,7 @@ WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU uti
 WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
 
 GPU_UTIL_THRESHOLD="70"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recomended values 70-90) 
-			    
+	    
 HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want watchdog reboot when all load averages (1 min, 5 min and 15 min) goes over double the CPU cores.
                             # This option uses sysrq_reboot to reboot the rig.
 			    # Works only if not using plusCPU.
@@ -368,6 +369,9 @@ POWER_ADJUST=5                # Adjustment size in watts. If the target temp can
 
 RESTORE_POWER_LIMIT=85        # Restore original Power Limit if fan speed is lower than this percentage. Recommended: 10% less than Maximum fan speed
 
+WARN_PL_DROPS="NO"            # Gives a Warning every time an auto-adjustment occurs and Powerlimit gets dropped
+
+USE_COLOR="YES"               # YES or NO, enables Text output beautifier, use bold text and colors
 
 ########################################################
 #                                                      #
@@ -382,7 +386,7 @@ RESTORE_POWER_LIMIT=85        # Restore original Power Limit if fan speed is low
 
 TELEGRAM_MESSAGES="NO"               # YES or NO # Set to YES if you want to receive Telegram Periodic Messages
 
-TELEGRAM_ALERTS="NO"                 # YES or NO # Set to No if you Dont want to get Telegram Alerts
+TELEGRAM_ALERTS="NO"                 # YES or NO # Set to No if you Dont want to get Telegram Alerts on warnings
 
 TELEGRAM_TYPE="papampi"              # kk003 or papampi or damNmad or BaliMiner # There are 4 versions. Please choose one
 
@@ -462,113 +466,109 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 
 ## NEOSCRYPT
 NEOSCRYPT_MINER="KTccminer"                    
-NEOSCRYPT_INTENSITY=""                        
+NEOSCRYPT_INTENSITY="0"                        
 NEOSCRYPT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LYRA2V2
 LYRA2V2_MINER="TPccminer"                      
-LYRA2V2_INTENSITY=""                          
+LYRA2V2_INTENSITY="0"                          
 LYRA2V2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## SKUNK
 SKUNK_MINER="TPccminer"                        
-SKUNK_INTENSITY=""                            
+SKUNK_INTENSITY="0"                            
 SKUNK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## SKEIN
 SKEIN_MINER="TPccminer"                         
-SKEIN_INTENSITY=""                            
+SKEIN_INTENSITY="0"                            
 SKEIN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## BITCORE, TIMETRAVEL10
 BITCORE_MINER="ZENEMYminer"
-BITCORE_INTENSITY=""
+BITCORE_INTENSITY="0"
 BITCORE_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X16R
 X16R_MINER="ZENEMYminer"
-X16R_INTENSITY=""
+X16R_INTENSITY="0"
 X16R_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## XEVAN
 XEVAN_MINER="ZENEMYminer"
-XEVAN_INTENSITY=""
+XEVAN_INTENSITY="0"
 XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## KECCAK
 KECCAK_MINER="TPccminer"
-KECCAK_INTENSITY=""
+KECCAK_INTENSITY="0"
 KECCAK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LYRA2Z
 LYRA2Z_MINER="TPccminer"
-LYRA2Z_INTENSITY=""
+LYRA2Z_INTENSITY="0"
 LYRA2Z_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X11GHOST, SIB
 X11GHOST_MINER="SPccminer"
-X11GHOST_INTENSITY=""
+X11GHOST_INTENSITY="0"
 X11GHOST_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT
 CRYPTONIGHT_MINER="TPccminer"
-CRYPTONIGHT_INTENSITY=""
+CRYPTONIGHT_INTENSITY="0"
 CRYPTONIGHT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT-V7
 CRYPTONIGHTV7_MINER="xmr-stak"
-CRYPTONIGHTV7_INTENSITY=""
+CRYPTONIGHTV7_INTENSITY="0"
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 #PHI1612
 PHI_MINER="ANXccminer"
-PHI_INTENSITY=""
+PHI_INTENSITY="0"
 PHI_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PASCAL
 PASCAL_MINER="TPccminer"
-PASCAL_INTENSITY=""
+PASCAL_INTENSITY="0"
 PASCAL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LBRY
 LBRY_MINER="SPccminer"
-LBRY_INTENSITY=""
+LBRY_INTENSITY="0"
 LBRY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## Diamond Groestl
-DMDGR_MINER="TPccminer"
-DMDGR_INTENSITY=""
-DMDGR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## GROESTL
 GROESTL_MINER="TPccminer"
-GROESTL_INTENSITY=""
+GROESTL_INTENSITY="0"
 GROESTL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Myriad Groestl
 MYR_GR_MINER="TPccminer"
-MYR_GR_INTENSITY=""
+MYR_GR_INTENSITY="0"
 MYR_GR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Decred
 DCR_MINER="TPccminer"
-DCR_INTENSITY=""
+DCR_INTENSITY="0"
 DCR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## SIA
 SIA_MINER="SPccminer"
-SIA_INTENSITY=""
+SIA_INTENSITY="0"
 SIA_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X13
 X13_MINER="TPccminer"
-X13_INTENSITY=""
+X13_INTENSITY="0"
 X13_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ################################################################
 ##### No Need to add stratum+tcp:// to your pool addresses #####
 ################################################################
 
+## If you added any coins in the section bellow dont forget to add it to "Coin/Algo identification" section too
 
 # ZEC
 ZEC_WORKER="$WORKERNAME"
@@ -613,12 +613,19 @@ KMD_POOL="luckpool.org"
 KMD_PORT="3857"
 KMD_EXTENSION_ARGUMENTS=""
 
-# RVN ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
+# Raven(RVN) ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
 RVN_WORKER="$WORKERNAME"
 RVN_ADDRESS="replace_with_your_address"
 RVN_POOL="RVN_POOL_ADDRESS"
 RVN_PORT="RVN_POOL_PORT"
 RVN_EXTENSION_ARGUMENTS=""
+
+# Motion(XMN) ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
+XMN_WORKER="$WORKERNAME"
+XMN_ADDRESS="replace_with_your_address"
+XMN_POOL="XMN_POOL_ADDRESS"
+XMN_PORT="XMN_POOL_PORT"
+XMN_EXTENSION_ARGUMENTS=""
 
 # BTCP
 BTCP_WORKER="$WORKERNAME"
@@ -1121,6 +1128,33 @@ MPH_GRS_POOL="hub.miningpoolhub.com"
 MPH_GRS_PORT="17004"
 MPH_GRS_EXTENSION_ARGUMENTS=""
 
+################################################################
+#                                                              #
+# Coin/Algo identification                                     #
+#                                                              #
+################################################################
+
+BITCORE_COINS="BTX"
+CRYPTONIGHTV7_COINS="XMR,MPH_CRYPTONIGHTV7,NICE_CRYPTONIGHTV7,ETN"
+CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
+DECRED_COINS="DCR"
+EQUIHASH_COINS="BTG,ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
+ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
+GRS_COINS="GRS,MPH_GRS"
+LBRY_COINS="LBC,ZPOOL_LBRY"
+LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
+LYRA2Z_COINS="ZCOIN,MPH_LYRA2Z"
+MYR_GR_COINS="XMY,MPH_MYR-GR"
+NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
+PASCAL_COINS="PASC,PASL"
+PHI_COINS="LUX,FLM,SERA"
+SIA_COINS="SIA"
+SIB_COINS="SIB,NICE_X11GHOST"
+SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
+SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
+X13_COINS="ONION"
+X16R_COINS="RVN,XMN"
+XEVAN_COINS="BSD"
 
 #####################################################################
 #                                                                   #
@@ -1421,4 +1455,4 @@ WORKER_NAME="$WORKERNAME"
 
 PROFIT_CHECK_TIMEOUT=600
 
-# ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed
+# ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed with salfter switcher
