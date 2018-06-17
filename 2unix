@@ -2,11 +2,6 @@
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Prevent no firstBOOT error
-touch  ${NVOC}/firstBOOT
-
-firstBOOT="NO"
-
 # make log folder, re/mount new one 
 mkdir -p "${NVOC}/nvoc_logs"
 if ! mountpoint -q "${NVOC}/nvoc_logs"
@@ -17,45 +12,8 @@ then
   fi
 fi
 
-if grep -q "convert" ${NVOC}/firstBOOT
-then
-  echo "First Boot, Copying 1bash and Expanding root partition"
-  sleep 5
-  echo "" > ${NVOC}/firstBOOT
-  if [ -e /media/m1/12D3-A869/1bash ]
-  then
-    echo "Copying 1bash"
-    sudo cp '/media/m1/12D3-A869/1bash' "${NVOC}/1bash"
-    echo "wait 15 seconds to minimize errors"
-    sudo dos2unix ${NVOC}/1bash
-    sleep 15
-  else
-    echo "Mounting fat partition"
-    sudo mkdir -p /media/m1/12D3-A869/
-    sudo mount /dev/sda1 /media/m1/12D3-A869
-    echo "Copying 1bash from fat partition"
-    sudo cp '/media/m1/12D3-A869/1bash' "${NVOC}/1bash"
-    echo "wait 5 seconds to minimize errors"
-    sudo dos2unix ${NVOC}/1bash
-    sleep 5
-  fi
-  echo "Expanding root partition"
-  sleep 1
-  sudo bash ${NVOC}/expand_rootfs.sh
-  echo "Root Partition expanded, reboot in 5 seconds"
-  sleep 5
-  sudo reboot
-fi
+# TODO: check 1bash minimum required revision
 
-update="YES"
-
-if grep -q "v0019-2.1" ${NVOC}/1bash; then
-  update="NO"
-  echo "nvOC v0019-2.1 - Community Release"
-fi
-
-if [ $update == "YES" ] ; then
-  echo "Update Available"
-fi
+# TODO: check updates on current git branch, give warning, start pre-fetching in background, do not pull them automatically
 
 bash "${NVOC}/3main"

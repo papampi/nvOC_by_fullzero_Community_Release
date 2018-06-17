@@ -956,7 +956,7 @@ restore-xorg()
   echo -e "${B}Restoring default nvOC xorg.conf ...${N}"
   touch "${NVOC}/xorg_flag"
   echo "" > "${NVOC}/xorg_flag"
-  sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf -O /etc/X11/xorg.conf.default
+  sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf.default -O /etc/X11/xorg.conf.default
   sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   echo "Default xorg.conf restored, Rebooting system in 5 sec."
   echo "System may reboot again if HEADLESS_MODE=YES"; echo ""
