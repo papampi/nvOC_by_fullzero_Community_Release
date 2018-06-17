@@ -27,11 +27,11 @@ fi
 
 # check 1bash revision mismatch
 source "${NVOC}/1bash"
-1bash_current="$nvOC_1bash_ver"
+current_1bash_ver="$nvOC_1bash_ver"
 source "${NVOC}/1bash.template"
-1bash_template="$nvOC_1bash_ver"
+template_1bash_ver="$nvOC_1bash_ver"
 
-if [[ ${1bash_current} != ${1bash_template} ]]
+if [[ ${current_1bash_ver} != ${template_1bash_ver} ]]
 then
   echo "################################################################################"
   echo " !!  Your 1bash settings file revision is different from the template one."
