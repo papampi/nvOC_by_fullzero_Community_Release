@@ -1,5 +1,5 @@
 # nvOC easy-to-use Linux Nvidia Mining OS
-## Community Edition v2.1 (Beta Testing)
+## Community Edition - Quick start how-to
 You can get nvOC running on your mining rig in two ways:
 - Picking and burning a pre-built whole disk OS image (recommended)
 - Cloning this repo on existing OS installations
