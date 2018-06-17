@@ -12,8 +12,37 @@ then
   fi
 fi
 
-# TODO: check 1bash minimum required revision
+# check 1bash for errors
+if [[ ! -e "${NVOC}/1bash" || "$(which shellcheck)" != "" && $(shellcheck -e 2034 -f gcc "${NVOC}/1bash" | grep -c error) != 0 ]]
+then
+  echo "################################################################################"
+  echo " !!  There is something wrong with your 1bash settings file, nvOC can't start."
+  echo "     Check if it exists or contains errors. SSH access is now being enabled to"
+  echo "     let you debug. This program will restart in a minute from now..."
+  echo ""
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
+  sleep 60
+  exit
+fi
 
-# TODO: check updates on current git branch, give warning, start pre-fetching in background, do not pull them automatically
+# check 1bash revision mismatch
+source "${NVOC}/1bash"
+1bash_current="$nvOC_1bash_ver"
+source "${NVOC}/1bash.template"
+1bash_template="$nvOC_1bash_ver"
+
+if [[ ${1bash_current} != ${1bash_template} ]]
+then
+  echo "################################################################################"
+  echo " !!  Your 1bash settings file revision is different from the template one."
+  echo "     This could potentially cause errors. SSH access is now being enabled to"
+  echo "     let you debug. Please, update your 1bash to comply with the template."
+  echo "     nvOC will now try to run anyway in 10 seconds from now..."
+  echo ""
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
+  sleep 10
+fi
+
+# TODO: if this is a git repo, check updates on current git branch, give warning, start pre-fetching in background, do not pull them automatically
 
 bash "${NVOC}/3main"

@@ -396,9 +396,9 @@ TELEGRAM_APIKEY="Your Telegram API"  # Enter your API Key here
 # GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section                    #
 ########################################################################################
 IPW=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
-IP_AS_WORKER=$(echo -n $IPW | tail -c -3 | sed 'y/./0/')
+IP_AS_WORKER=$(echo -n "$IPW" | tail -c -3 | sed 'y/./0/')
 MAC=$(ifconfig -a | grep -Po 'HWaddr \K.*$')
-MAC_AS_WORKER=$(echo -n $MAC | sed 'y/:/_/')
+MAC_AS_WORKER=$(echo -n "$MAC" | sed 'y/:/_/')
 if [ $GLOBAL_WORKERNAME == "YES" ]; then
   if [ $AUTO_WORKERNAME == "HOST" ]; then
     WORKERNAME=$IP_AS_WORKER
