@@ -5,6 +5,7 @@
 # Rev 0004: papampi, Average Hash rate for zm and ethminer
 # Rev 0005: LukePicci, Relocate nvOC to arbitrary install directory
 # Rev 0006: papampi, More average Hash rate and reported hash rate to WTM
+# Rev 0007: papampi, Wait for watchdog to get gpu count
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -44,17 +45,23 @@ SYSTEM_UP_TIME=$(uptime -p)
 # Reduce nvidia-smi query by trying to read from watchdog log first
 if ps ax | grep -q "[5]watchdog"
 then
-  DETECTED_GPUS=$(( $(tail -30 ${NVOC}/nvoc_logs/watchdog-screenlog.0 | grep -o "GPU[0-9]*" | sed 's/GPU//' | sort -nr | head -1) + 1 ))
-  if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
+  # Wait 3min for Watchdog to not give false info
+  if [[ if $(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep 5watchdog | head -1 | awk '{print $2}') | awk '{print $2}') -ge 180 ]]
   then
-    if [[ $DETECTED_GPUS -ne $NUMBER_GPUS_INSTALLED ]]
+    DETECTED_GPUS=$(( $(tail -30 ${NVOC}/nvoc_logs/watchdog-screenlog.0 | grep -o "GPU[0-9]*" | sed 's/GPU//' | sort -nr | head -1) + 1 ))
+    if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
     then
-      GPU_COUNT="<tt style=\"text-align:left; color:red\"> $DETECTED_GPUS</tt>"
+      if [[ $DETECTED_GPUS -ne $NUMBER_GPUS_INSTALLED ]]
+      then
+        GPU_COUNT="<tt style=\"text-align:left; color:red\"> $DETECTED_GPUS</tt>"
+      else
+        GPU_COUNT=$DETECTED_GPUS
+      fi
     else
       GPU_COUNT=$DETECTED_GPUS
     fi
   else
-    GPU_COUNT=$DETECTED_GPUS
+    echo "Waiting for Watchdog info"
   fi
 else
   if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
@@ -106,7 +113,7 @@ then
   if [[ $OVERCLOCK_MODE == GLOBAL ]]
   then
     GPU_OC=$_CORE_OVERCLOCK
-        GPU_MC=$_MEMORY_OVERCLOCK
+    GPU_MC=$_MEMORY_OVERCLOCK
   elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
   then
     eval 'ALGO_OC=${ALGO}_CORE_OVERCLOCK'
@@ -119,10 +126,10 @@ then
     GPU_MC="GPU Specific not supported in webinfo"
   fi
 elif [[ $AUTO_SWITCH == SALFTER* ]]
-then 
-    GPU_PL="Salfter Switcher not supported in webinfo"
-    GPU_OC="Salfter Switcher not supported in webinfo"
-	GPU_MC="Salfter Switcher not supported in webinfo"
+then
+  GPU_PL="Salfter Switcher not supported in webinfo"
+  GPU_OC="Salfter Switcher not supported in webinfo"
+  GPU_MC="Salfter Switcher not supported in webinfo"
 fi
 
 # Reduce nvidia-smi query by trying to read from watchdog log first
@@ -340,7 +347,7 @@ elif  ps ax | grep -q "[T]Pccminer"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
-  HASH_AVERAGE=$((total_hash * 1000 / hash_count)) 
+  HASH_AVERAGE=$((total_hash * 1000 / hash_count))
 
 elif  ps ax | grep -q "[s]uprminer"
 then
@@ -353,7 +360,7 @@ then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
-  
+
 elif  ps ax | grep -q  "[Z]ENEMYminer" ;then
   if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"; then
     total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[M]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]*MH/s" | sed 's:MH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
@@ -380,11 +387,11 @@ elif [[ $ALGO == NEOSCRYPT ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bns_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [[ $ALGO == CRYPTONIGHTV7 ]] 
+elif [[ $ALGO == CRYPTONIGHTV7 ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcn7_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [[ $ALGO == CRYPTONIGHT ]] 
+elif [[ $ALGO == CRYPTONIGHT ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcn_hr%5D=[0-9]*' | cut -f2- -d=)
 
@@ -422,7 +429,7 @@ then
   MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
   REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
 
-elif  ps ax |  grep -q "[c]laymore" 
+elif  ps ax |  grep -q "[c]laymore"
 then
   MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
   if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
@@ -431,7 +438,7 @@ then
   fi
 
 else
- MINER_ERROR="Send us your miner error logs to add"
+  MINER_ERROR="Send us your miner error logs to add"
 fi
 
 ###################################################################
@@ -441,7 +448,7 @@ echo '<body style="background-color:black; color:#ffff66;font-size: 16px ">' ; e
 echo "<button>"; echo '<a href="minerinfo" class="button">Refresh Miner Info</a>' ;echo "</button>" ;echo "<button>" ; echo '<a href="minerinfo?clearalerts" class="button">Clear Alerts</a>'; echo "</button>"
 if [[ $1 == clearalerts ]]
 then
- echo "<tt style=\"text-align:left; color:green\">Alert history cleared <br/> </tt>"
+  echo "<tt style=\"text-align:left; color:green\">Alert history cleared <br/> </tt>"
 fi
 echo '<title>Worker: '$WORKERNAME'</title>'
 echo '</head>'
@@ -541,7 +548,7 @@ echo "</button>"
 
 if [[ $1 == clearalerts ]]
 then
- echo "<tt style=\"text-align:left; color:green\">Alert history cleared <br/> </tt>"
+  echo "<tt style=\"text-align:left; color:green\">Alert history cleared <br/> </tt>"
 fi
 echo '<br/>' "<tt style=\"text-align:left; color:red\">" "$WDOG_ALERT_LOG <br> </tt>"
 
