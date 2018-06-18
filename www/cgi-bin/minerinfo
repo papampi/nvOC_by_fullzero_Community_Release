@@ -46,7 +46,7 @@ SYSTEM_UP_TIME=$(uptime -p)
 if ps ax | grep -q "[5]watchdog"
 then
   # Wait 3min for Watchdog to not give false info
-  if [[ if $(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep 5watchdog | head -1 | awk '{print $2}') | awk '{print $2}') -ge 180 ]]
+  if [[ $(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep 5watchdog | head -1 | awk '{print $2}') | awk '{print $2}') -ge 180 ]]
   then
     DETECTED_GPUS=$(( $(tail -30 ${NVOC}/nvoc_logs/watchdog-screenlog.0 | grep -o "GPU[0-9]*" | sed 's/GPU//' | sort -nr | head -1) + 1 ))
     if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
