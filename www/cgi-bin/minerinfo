@@ -61,7 +61,7 @@ then
       GPU_COUNT=$DETECTED_GPUS
     fi
   else
-    echo "Waiting for Watchdog info"
+    GPU_COUNT="Waiting for Watchdog info"
   fi
 else
   if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
