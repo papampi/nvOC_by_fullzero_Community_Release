@@ -1019,9 +1019,9 @@ elif [[ $AUTO_START_MINER == NO ]]
 then
   echo "    "
   echo "    "
-  echo "Auto Start Miner is set to NO"
+  echo -e "\e[1m \e[31m    Auto Start Miner is set to NO \e[0m"
   echo "    "
-  echo "Miner is not starting"
+  echo -e "\e[1m \e[31m    Miner is not starting \e[0m"
   echo "    "
   echo "    "
 fi
