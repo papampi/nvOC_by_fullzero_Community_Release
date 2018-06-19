@@ -418,6 +418,11 @@ then
 elif [[ $ALGO == GROESTL ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bgro_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
+elif [[ $ALGO == LYRA2Z ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bl2z_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
 else
   WTM_HASH="Not Available"
 fi
