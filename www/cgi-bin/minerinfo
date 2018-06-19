@@ -358,12 +358,12 @@ then
   then
     total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
     hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
-    HASH_AVERAGE="$((total_hash * 1000 / hash_count)) MH/s"
+    HASH_AVERAGE="$((total_hash / hash_count)) MH/s"
   elif tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[k]H/s"
   then
     total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* kH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
     hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
-    HASH_AVERAGE="$((total_hash * 1000 / hash_count)) kH/s"
+    HASH_AVERAGE="$((total_hash / hash_count)) kH/s"
   fi
 
 elif  ps ax | grep -q "[s]uprminer"
