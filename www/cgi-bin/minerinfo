@@ -470,7 +470,7 @@ echo "Auto Temp Control: "  "<tt style=\"text-align:left; color:white\">" "$AUTO
 
 echo "Watch Dog: "  "<tt style=\"text-align:left; color:white\">" "$WATCHDOG$WDOG_CHECK$WATCHDOG_WARNING <br> </tt>"
 
-echo "Auto Switcher: " "<tt style=\"text-align:left; color:white\">" "$AUTO_SWITCH <br></tt>"
+echo "Auto Switcher: " "<tt style=\"text-align:left; color:white\">" "$AUTO_SWITCH_TEXT <br></tt>"
 
 echo "Gpu Count: " "<tt style=\"text-align:left; color:white\">" "$GPU_COUNT <br> </tt>"
 
