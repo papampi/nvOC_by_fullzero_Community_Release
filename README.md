@@ -7,7 +7,7 @@ You can get nvOC running on your mining rig in some different ways:
 - Cloning this repo on existing OS installations
 
 ### Noob-proof: Pre-built images
-Download the latest full nvOC OS image, then:
+Download the latest full nvOC OS image (links below), then:
 1. Write the image with your favourite HDD image writer of choicce
 2. Browse to the small fat partition you can see on the drive. Download the latest nvOC configuration file named '1bash.template' from latest 'release' [here](https://github.com/papampi/nvOC_by_fullzero_Community_Release/raw/release/1bash.tamplate) and save it there as '1bash'.
 3. Edit this file with all your settings. The same file contains settings descriptions that will help you completing the setup.
@@ -38,3 +38,18 @@ Just do 'git submodule update --init --remote miners', the correct git revision 
 You can refer to https://github.com/papampi/nvOC_miners README for more help on how to update or enrich your miner collection in future
 
 5. Edit nvOC configuration in 1bash file following contained instructions
+
+## Download pre-built OS images
+
+### nvOC_V19-2.1beta_U16.04_N390_D180619
+Version: beta testing snapshot branch [19-2.1@a3e92bd976997327fc971b549066f8a566781538](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/a3e92bd976997327fc971b549066f8a566781538)
+
+| host | size   | download                                                                       |
+|------|--------|--------------------------------------------------------------------------------|
+| MEGA | 3,43GB | [link](https://mega.nz/#!dNVTBIAC!7GGJpn9F-kehJOd1gW60CcR28BHTR3WMJxS7K-hd6Tg) |
+
+Checksums:
+| file                                         | type   | value                                                            |
+|----------------------------------------------|--------|------------------------------------------------------------------|
+| nvOC_V19-2.1beta_U16.04_N390_D180619.img.zip | sha256 | 7700dfdfc1cabab8a1dd9816a6322d6653c89943cb63afa59e79f88cfe14a6a9 |
+| nvOC_V19-2.1beta_U16.04_N390_D180619.img     | sha256 | cb607c8e028d3bc0a0e274c34b4e0def0c71330053f0c8328120a717e0029938 |
