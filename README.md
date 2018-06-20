@@ -17,7 +17,7 @@ Download the latest full nvOC OS image, then:
 1. Write the image with your favourite HDD image writer of choicce
 2. Browse to the small fat partition you can see on the drive. Download the latest nvOC configuration file named '1bash.template' from your branch of choice in this repo and save it there as '1bash'.
 3. Edit this file with all your settings. The same file contains settings descriptions that will help you completing the setup.
-4. Edit the nvoc.version file in that same folder and put your selected branch name in place of the default release branch.
+4. Edit the firstboot.json file in that same folder and put your selected branch name in place of the default release branch.
 
 ### For experts: Clone this repo
 You can find all files needed to run nvOC in this repo but it's recommended you run nvOC from inside a pre-built nvOC image for optimal support. You may have issues trying to setup nvOC from repo on generic Ubuntu or other Linux distro installations.
