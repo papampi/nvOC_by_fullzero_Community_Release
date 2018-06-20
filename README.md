@@ -5,7 +5,12 @@ You can get nvOC running on your mining rig in two ways:
 - Cloning this repo on existing OS installations
 
 ### Pre-built images
-Still no pre-built images available with nvOC 2.1+ (will come in future)
+Beta testing 19-2.1 image:
+
+nvOC_V19-2.1beta_U16.04_N390_D180619
+
+Download link: https://mega.nz/#!dNVTBIAC!7GGJpn9F-kehJOd1gW60CcR28BHTR3WMJxS7K-hd6Tg
+
 You can use old 2.0 images as base OS meanwhile and follow instructions in the section below to get nvOC 2.1+ installed. All needed instructions and links are on the old README for nvOC 2.0
 1. Write the image with your favourite HDD image writer of choicce
 2. Edit the nvOC configuration file named 1bash you can find in the small fat partition of rhe drive before booting for the first time. The same file contains settings descriptions that will help you completing the setup.
