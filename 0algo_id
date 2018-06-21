@@ -1,70 +1,16 @@
+#!/bin/bash
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${NVOC}/1bash"
+ALGO="UNDEFINED"
 
-if [[ $COIN == FTC || $COIN == ORB || $COIN == PXC || $COIN == VIVO || $COIN == TZC || $COIN == NICE_NEOSCRYPT || $COIN == DSR || $COIN == CRC || $COIN == GBX || $COIN == MPH_NEOSCRYPT || $COIN == ZPOOL_NEOSCRYPT ]]
-then
-  ALGO=NEOSCRYPT
-elif [[ $COIN == ETH || $COIN == ETC || $COIN == EXP || $COIN == UBQ || $COIN == CLO || $COIN == MUSIC || $COIN == SOIL || $COIN == MPH_ETHASH || $COIN == PIRL || $COIN == NICE_ETHASH || $COIN == ETP || $COIN == CLAYMORE_DUAL  ]]
-then
-  ALGO=ETHASH
-elif [[ $COIN == BTG || $COIN == ZEC || $COIN == ZEN || $COIN == HUSH || $COIN == ZCL || $COIN == BTCP || $COIN == KMD || $COIN == ZPOOL_EQUIHASH || $COIN == MPH_EQUIHASH || $COIN == NICE_EQUIHASH || $COIN == VOTE   || $COIN == BTCP  || $COIN == BCI ]]
-then
-  ALGO=EQUIHASH
-elif [[ $COIN == SIGT || $COIN == ZPOOL_SKUNK || $COIN == ALTCOM || $COIN == NICE_SKUNKHASH ]]
-then
-  ALGO=SKUNK
-elif [[ $COIN == MONA || $COIN == VTC || $COIN == NICE_LYRA2REV2 || $COIN == XVG || $COIN == MPH_LYRA2V2 || $COIN == ZPOOL_LYRA2V2 ]]
-then
-  ALGO=LYRA2V2
-elif [[ $COIN == KRB || $COIN == ETN || $COIN == NICE_CRYPTONIGHT ]]
-then
-  ALGO=CRYPTONIGHT
-elif [[ $COIN == ZCOIN || $COIN == MPH_LYRA2Z ]]
-then
-  ALGO=LYRA2Z
-elif [[ $COIN == BSD ]]
-then
-  ALGO=XEVAN
-elif [[ $COIN == RVN ]]
-then
-  ALGO=X16R
-elif [[ $COIN == BTX ]]
-then
-  ALGO=BITCORE
-elif [[ $COIN == SIB  || $COIN == NICE_X11GHOST ]]
-then
-  ALGO=SIB
-elif [[ $COIN == XMR || $COIN == MPH_CRYPTONIGHTV7 || $COIN == NICE_CRYPTONIGHTV7 ]]
-then
-  ALGO=CRYPTONIGHTV7
-elif [[ $COIN == LUX || $COIN == FLM || $COIN == SERA ]]
-then
-  ALGO=PHI
-elif [[ $COIN == PASC || $COIN == PASL ]]
-then
-  ALGO=PASCAL
-elif [[ $COIN == LBC || $COIN == ZPOOL_LBRY ]]
-then
-  ALGO=LBRY
-elif [[ $COIN == DMD ]]
-then
-  ALGO=DMD-GR
-elif [[ $COIN == GRS || $COIN == MPH_GRS ]]
-then
-  ALGO=GRS
-elif [[ $COIN == XMY || $COIN == MPH_MYR-GR ]]
-then
-  ALGO=MYR-GR
-elif [[ $COIN == DCR ]]
-then
-  ALGO=DECRED
-elif [[ $COIN == SIA ]]
-then
-  ALGO=SIA
-elif [[ $COIN == ONION ]]
-then
-  ALGO=X13
-elif [[ $COIN == ZPOOL_SKEIN || $COIN == MPH_SKEIN ]]
-then
-  ALGO=SKEIN
-else
-  ALGO=UNDEFINED
-fi
+ALGOS="NEOSCRYPT ETHASH EQUIHASH SKUNK LYRA2V2 CRYPTONIGHT LYRA2Z XEVAN X16R BITCORE SIB CRYPTONIGHTV7 PHI PASCAL LBRY GRS MYR_GR DECRED SIA X13 SKEIN"
+
+for a in $ALGOS
+do
+  eval 'ALGO_COINS=${a}_COINS'
+  if [[ "${!ALGO_COINS}"  =~ "$COIN" ]]
+  then
+    ALGO="$a" 
+    #echo "$a"
+  fi
+done

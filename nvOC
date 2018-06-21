@@ -43,11 +43,14 @@
 #
 # v=0008 : LukePicci
 #          Relocate nvOC to arbitrary install directory
+#
+# v=0009 : LuKePicci
+#          added main-log, install- start- and stop-service 
 
-# DEV_VERSION=0007
+# DEV_VERSION=0009
 
 nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.0.007"                   # Do not edit this
+nvOC_nvOC_ver="v0019-2.0.009"                   # Do not edit this
 
 
 export DISPLAY=:0
@@ -102,6 +105,14 @@ echo_usage()
   echo "           starts normal nvOC mining operations"
   echo -e "        ${C}$0 restart${N}"
   echo "           restart nvOC mining operations"
+  echo -e "        ${C}$0 install-service${N}"
+  echo "           (re)install nvOC service for this nvOC tree"
+  echo -e "        ${C}$0 start-service${N}"
+  echo "           manually start the nvOC service"
+  echo -e "        ${C}$0 stop-service${N}"
+  echo "           stop the running nvOC service"
+  echo -e "        ${C}$0 main-log${N}"
+  echo "           display nvOC startup output (Only for nvOC running as a service)"
   echo -e "        ${C}$0 miner-log${N}"
   echo "           display live miner output"
   echo -e "        ${C}$0 wdog-log${N}"
@@ -215,12 +226,6 @@ Reboot()
   sudo su -c "shutdown -r now"
 }
 
-############################### Restart Miner ##################################
-Restart()
-{
-  # Reboots the host
-  Stop && Start
-}
 ############################### Start nvOC ####################################
 Start()
 {
@@ -232,11 +237,10 @@ Start()
   then
     echo "nvOC already running, use ./nvOC restart"
   else
+    echo -e "${B}Restarting nvOC tasks....${N}"; echo ""
     gnome-terminal --window-with-profile=mining
-    echo -e "${B}Miner Restart....${N}"; echo ""
   fi
 }
-
 
 ############################### Stop nvOC #####################################
 Stop()
@@ -245,14 +249,20 @@ Stop()
 
   # Kill off the nv_OC processes
   pkill -f gnome-terminal
-  pkill -e screen
   pkill -f 5watchdog
   pkill -f 7telegram
   pkill -f 6tempcontrol
   pkill -f 8wtm
+  pkill -e screen
   echo ""; echo "...done."
 }
 
+############################### Restart Miner ##################################
+Restart()
+{
+   # Restart nvOC from scratch
+   Stop && Start
+}
 
 ############################### gpumap ########################################
 GPUmap()
@@ -838,6 +848,66 @@ Swap Free     :  $swapfree
   echo
 }
 
+################################# install-service ##############################
+install-service()
+{
+  echo "Reinstalling nvOC service for ${NVOC}"
+  sudo cat <<EOF > /etc/systemd/system/nvoc.service
+[Unit]
+Description=nvOC Service
+
+[Service]
+Type=forking
+User=nvoc
+
+Environment=GPU_FORCE_64BIT_PTR=0
+Environment=GPU_MAX_HEAP_SIZE=100
+Environment=GPU_USE_SYNC_OBJECTS=1
+Environment=GPU_MAX_ALLOC_PERCENT=100
+Environment=GPU_SINGLE_ALLOC_PERCENT=100
+
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=${HOME}/.Xauthority
+Environment=NVOC=${NVOC}
+
+WorkingDirectory=${NVOC}
+ExecStart=/usr/bin/screen -c ${NVOC}/screenrc-main -dmSL main /bin/bash "${NVOC}/2unix"
+Restart=always
+EOF
+
+  if sudo systemd-analyze verify nvoc.service
+  then
+    echo "Setting ACL for 'nvoc' service user write access to NVOC path..."
+    sudo setfacl -m user:nvoc:rw ${NVOC}
+    
+    sudo systemctl enable nvoc
+    echo "${W}Done.${N} This service has autostart enabled."
+  else
+    echo "Service installation failed"
+  fi
+}
+
+################################# start-service ################################
+start-service()
+{
+  echo "Starting nvOC service.."
+  sudo systemctl start nvoc
+  sleep 2
+  systemctl status nvoc
+}
+
+################################# stop-service #################################
+stop-service()
+{
+  echo "Stopping nvOC service.."
+  sudo systemctl stop nvoc
+}
+
+################################# main-log ######################################
+main-log()
+{
+tail -f ${NVOC}/nvoc_logs/main-screenlog.0
+}
 
 ################################# miner-log ######################################
 miner-log()
@@ -909,22 +979,26 @@ echo "$prompt$0 $1"
 case $# in
   0) echo_usage;;
   1) case $1 in
-      clearlogs)     Clearlogs;;
-      gpuinfo)       GPUinfo;;
-      gpumap)        GPUmap;;
-      report)        Report;;
-      patch)         Patch;;
-      reboot)        Reboot;;
-      start)         Start;;
-      stop)          Stop;;
-      restart)       Restart;;
-      miner-log)     miner-log;;
-      wdog-log)      wdog-log;;
-      temp-log)      temp-log;;
-      wtm-log)       wtm-log;;
-      master-log)    master-log;;
-      restore-xorg)  restore-xorg;;
-      *)             echo_usage;;
+      clearlogs)           Clearlogs;;
+      gpuinfo)             GPUinfo;;
+      gpumap)              GPUmap;;
+      report)              Report;;
+      patch)               Patch;;
+      reboot)              Reboot;;
+      start)               Start;;
+      stop)                Stop;;
+      restart)             Restart;;
+      install-service)     install-service;;
+      start-service)       start-service;;
+      stop-service)        stop-service;;
+      main-log)            main-log;;
+      miner-log)           miner-log;;
+      wdog-log)            wdog-log;;
+      temp-log)            temp-log;;
+      wtm-log)             wtm-log;;
+      master-log)          master-log;;
+      restore-xorg)        restore-xorg;;
+      *)                   echo_usage;;
   esac;;
   *) echo_usage;;
 esac
