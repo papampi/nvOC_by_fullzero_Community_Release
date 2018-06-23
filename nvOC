@@ -49,8 +49,8 @@
 
 # DEV_VERSION=0009
 
-nvOC_ver="nvOC v0019-2.0 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.0.009"                   # Do not edit this
+nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
+nvOC_nvOC_ver="v0019-2.1.009"                   # Do not edit this
 
 
 export DISPLAY=:0
