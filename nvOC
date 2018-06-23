@@ -602,7 +602,8 @@ Report()
 "
 ${B}Software info:${N}
 Report ver    :  $REPORT_VER
-nvOC (1bash)  :$nvOC_ver_from_1bash
+nvOC path     :  ${NVOC}
+nvOC (1bash)  :  $nvOC_ver_from_1bash
 nvOC (3main)  :  $nvOC_ver_from_3main
 1bash ver     :  $nvOC_1bash_ver
 3main ver     :  $nvOC_3main_ver
@@ -640,6 +641,15 @@ Swap Free     :  $swapfree
 #######################################
   echo -e "${B}VGA info:${N}"
   lspci | grep VGA
+
+  echo
+
+# Git
+  echo -e "${B}Local git branch and submodules status:${N}"
+  git -C ${NVOC} status -s -b -uno --ignore-submodules=all
+  git -C ${NVOC} submodule status
+  git -C ${NVOC}/miners status -s -b -uno --ignore-submodules=all
+  git -C ${NVOC}/miners submodule status
 
   echo
 
@@ -842,7 +852,7 @@ Swap Free     :  $swapfree
   echo "WORK IN PROGRESS! Report script (beta release)"
   echo
   echo "*** If posting the Report on bitcointalk.org forum please copy everything"
-  echo "    between the [code] and [/code] including the [code] and [\code] tags."
+  echo "    between the [code] and [/code] including the [code] and [/code] tags."
   echo "    This will ensure proper alignment when posting the Report."
   echo
   echo
