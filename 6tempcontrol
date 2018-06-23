@@ -28,7 +28,7 @@
 #          queried from nvidia-smi (a.k.a. bleed issue of power.draw)
 # v=0003 : Papampi: Telegram alerts
 #
-# v=0004 : Papampi: 
+# v=0004 : Papampi:
 #          MAXIMAL_FAN_SPEED
 # v=0005 : LukePicci
 #          Relocate nvOC to arbitrary install directory
@@ -249,7 +249,7 @@ do
               bash "${NVOC}/telegram"
             fi
             sleep 3
-            if [[ $SYSRQ_REBOOT == YES ]]  
+            if [[ $SYSRQ_REBOOT == YES ]]
             then
               sudo bash ${NVOC}/sysrq_reboot.sh
             else
@@ -280,7 +280,7 @@ do
               bash "${NVOC}/telegram" &
             fi
             sleep 3
-            if [[ $SYSRQ_REBOOT == YES ]]  
+            if [[ $SYSRQ_REBOOT == YES ]]
             then
               sudo bash ${NVOC}/sysrq_reboot.sh
             else
@@ -294,13 +294,14 @@ do
     POWERLIMIT=${PWRLIMIT%%.*}
     TEMP_DIFF=$((${TARGET_TEMP[${GPU}]} - $CURRENT_TEMP))
     NEW_FAN_SPEED=$CURRENT_FAN
+    HIGH_TEMP_DIFF=$(( ALLOWED_TEMP_DIFF * 2 ))
 
     echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"
 
     if [ "$CURRENT_TEMP" -gt "${TARGET_TEMP[${GPU}]}" ]; then
-      # This can be far more advanced. For now if difference is more than 5 C multiply adjustement by 2
-      if [ $TEMP_DIFF -lt "-5" ]; then
-        FAN_ADJUST_CALCULATED=$(($FAN_ADJUST * 2))
+      # If temp difference is more than double the allowed, multiply adjustement by 2
+      if [ $TEMP_DIFF -lt "-$HIGH_TEMP_DIFF" ]; then
+        FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
       else
         FAN_ADJUST_CALCULATED=$FAN_ADJUST
       fi
@@ -322,9 +323,19 @@ do
       fi
     else
       # Current temp is lower than target, so we can relax fan speed, and restore original power limit if applicable
-      if [ $TEMP_DIFF -gt $ALLOWED_TEMP_DIFF ]; then
-        # This can be far more advanced too
-        NEW_FAN_SPEED=$(($CURRENT_FAN - $FAN_ADJUST))
+      if [ $TEMP_DIFF -gt $ALLOWED_TEMP_DIFF ]
+      then
+        # Faster restore fan speed. This can be far more advanced too
+        FAN_ADJUST_CALCULATED=$FAN_ADJUST
+        if [ $TEMP_DIFF -gt $HIGH_TEMP_DIFF ]
+        then
+          FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
+          if [ $TEMP_DIFF -gt $(( HIGH_TEMP_DIFF * 2 )) ]
+          then
+            FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 4 ))`
+          fi
+        fi
+        NEW_FAN_SPEED=$(($CURRENT_FAN - $FAN_ADJUST_CALCULATED))
         # Set to minimal fan speed if calculated is below
         if [ $NEW_FAN_SPEED -lt $MINIMAL_FAN_SPEED ]; then
           NEW_FAN_SPEED=$MINIMAL_FAN_SPEED
