@@ -60,10 +60,12 @@
 #          Rework for salfter's switchers compatibility
 # v=0018 : papampi (suggestion by abdeldev)
 #          Use sysrq reboot, to prevent freeze/hang
+# v=0019 : papampi
+#          Load average check, notify, reboot (1bash setting)
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.0.018"   # Do not edit this
+nvOC_wdog_ver="v0019-2.1.019"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
