@@ -50,12 +50,14 @@
 #          Detailed OC,PL report, some more fixes for 19-2.1
 # v=0011 : LuKePicci
 #          Git repo and submodules status report
+# v=0012 : LuKePicci
+#          cuda version, service status, upgrade cmdlets
 
 
-# DEV_VERSION=0011
+# DEV_VERSION=0012
 
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.1.0011"                   # Do not edit this
+nvOC_nvOC_ver="v0019-2.1.0012"                   # Do not edit this
 
 
 export DISPLAY=:0
@@ -99,6 +101,10 @@ echo_usage()
   echo "           physically map (locate) your GPU's"
   echo -e "        ${C}$0 report${N}"
   echo "           create report about hardware and nvOC relevant settings"
+  echo -e "        ${C}$0 nvoc-upgrade${N}"
+  echo "           upgrade to latest nvOC revision for your current branch"
+  echo -e "        ${C}$0 nvoc-miners-upgrade${N}"
+  echo "           upgrade nvOC miners collection with latest changes and intall them"
   echo -e "        ${C}$0 patch${N}"
   echo "           stops nvOC and applies outstanding Ubuntu patches and "
   echo "           Nvidia driver updates"
@@ -529,10 +535,8 @@ Report()
 # * Works well on older version, not fully compatible with 19-2, need to change few queries, eg. nvOC version,
 #   change new naming scheme for watchdog, temp control...
 
-
-
   REPORT_VER="$nvOC_nvOC_ver"
-
+ 
   clear
 
 # Display version info
@@ -608,7 +612,7 @@ Report()
 ${B}Software info:${N}
 Report ver    :  $REPORT_VER
 nvOC path     :  ${NVOC}
-nvOC (1bash)  :  $nvOC_ver_from_1bash
+nvOC (1bash)  :$nvOC_ver_from_1bash
 nvOC (3main)  :  $nvOC_ver_from_3main
 1bash ver     :  $nvOC_1bash_ver
 3main ver     :  $nvOC_3main_ver
@@ -629,7 +633,27 @@ Mem Total     :  $memtotal
 Mem Free      : $memfree
 Swap Total    :   $swaptotal
 Swap Free     :  $swapfree
-  Ethernet      :  $ethernet"
+Ethernet      :  $ethernet"
+
+  echo
+
+# CUDA
+#######################################
+  echo -e "${B}CUDA SDK version${N}"
+  echo "nvcc path     : $(which nvcc)"
+  nvcc --version
+
+  echo
+
+# nvoc.service
+#######################################
+  if [[ -e /etc/systemd/system/nvoc.service ]]
+  then
+    echo -e "${B}nvoc.service systemd's log${N}"
+    service nvoc status | cat
+  else
+    echo "nvOC is not installed as a service"
+  fi
 
   echo
 
@@ -650,6 +674,7 @@ Swap Free     :  $swapfree
   echo
 
 # Git
+#######################################
   echo -e "${B}Local git branch and submodules status:${N}"
   git -C ${NVOC} status -s -b -uno --ignore-submodules=all
   git -C ${NVOC} submodule status
@@ -863,8 +888,42 @@ Swap Free     :  $swapfree
   echo
 }
 
-################################# install-service ##############################
-install-service()
+################################# Pull nvOC commits ##############################
+Upgrade()
+{
+  echo "${Y}Warnings${N}:"
+  echo " - your customized 1bash settings won't be affected, but you will have"
+  echo "   have to create a new one starting from ${B}1bash.template${N} if it gets"
+  echo "   updated during this upgrade, otherwise you will get a warning each"
+  echo "   time nvOC restarts"
+  echo " - the upgrade will fail safely if you made conflicting customizations"
+  echo "   to any other nvOC script: if it happens you need either to run this"
+  echo "   script with ${C}nvoc-reset${N} option or manually manage this by git commands."
+  echo
+  read -p "Do you want to continue (y/N)?  " -n 1 ans
+  if [[ ${ans,,} != y ]]
+  then
+    exit 0
+  fi
+
+  echo "Checking for nvOC miners updates..."
+  git -C ${NVOC} pull
+}
+
+################################# Pull and install miners submodule ##############################
+MinersUpgrade()
+{
+  echo "Fetching nvOC miners updates..."
+  git -C ${NVOC} submodule update --init --depth 1 --remote miners
+
+  echo "Running updates installer"
+  pushd .
+  bash ${NVOC}/miners/nvOC_miner_update.sh
+  popd
+}
+
+################################# install systemd nvoc.service template ##############################
+InstallService()
 {
   echo "Reinstalling nvOC service for ${NVOC}"
   sudo cat <<EOF > /etc/systemd/system/nvoc.service
@@ -902,8 +961,8 @@ EOF
   fi
 }
 
-################################# start-service ################################
-start-service()
+################################# start nvoc systemd service ################################
+StartService()
 {
   echo "Starting nvOC service.."
   sudo systemctl start nvoc
@@ -911,8 +970,8 @@ start-service()
   systemctl status nvoc
 }
 
-################################# stop-service #################################
-stop-service()
+################################# stop nvoc systemd service #################################
+StopService()
 {
   echo "Stopping nvOC service.."
   sudo systemctl stop nvoc
@@ -1003,9 +1062,11 @@ case $# in
       start)               Start;;
       stop)                Stop;;
       restart)             Restart;;
-      install-service)     install-service;;
-      start-service)       start-service;;
-      stop-service)        stop-service;;
+      nvoc-upgrade)        Upgrade;;
+      nvoc-miners-upgrade) MinersUpgrade;;
+      install-service)     InstallService;;
+      start-service)       StartService;;
+      stop-service)        StopService;;
       main-log)            main-log;;
       miner-log)           miner-log;;
       wdog-log)            wdog-log;;
