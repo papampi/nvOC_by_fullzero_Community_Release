@@ -146,10 +146,10 @@ do
     POWER_LIMIT[$count]=$_POWERLIMIT_WATTS
   fi
 
-  if [ $INDIVIDUAL_TARGET_TEMPS == "YES" ]
+  if [[ $INDIVIDUAL_TARGET_TEMPS == YES ]]
   then
     TARGET_TEMP[$count]=$(( TARGET_TEMP_$count ))
-  elif [ $INDIVIDUAL_TARGET_TEMPS == "NO" ]
+  elif [[ $INDIVIDUAL_TARGET_TEMPS == NO ]]
   then
     TARGET_TEMP[$count]=$TARGET_TEMP
   fi
