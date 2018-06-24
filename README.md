@@ -49,6 +49,7 @@ Version: beta testing snapshot branch [19-2.1@a3e92bd976997327fc971b549066f8a566
 | MEGA | 3,43GB | [link](https://mega.nz/#!dNVTBIAC!7GGJpn9F-kehJOd1gW60CcR28BHTR3WMJxS7K-hd6Tg) |
 
 Checksums:
+
 | file                                         | type   | value                                                            |
 |----------------------------------------------|--------|------------------------------------------------------------------|
 | nvOC_V19-2.1beta_U16.04_N390_D180619.img.zip | sha256 | 7700dfdfc1cabab8a1dd9816a6322d6653c89943cb63afa59e79f88cfe14a6a9 |
