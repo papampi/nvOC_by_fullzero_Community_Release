@@ -891,16 +891,17 @@ Ethernet      :  $ethernet"
 ################################# Pull nvOC commits ##############################
 Upgrade()
 {
-  echo "${Y}Warnings${N}:"
-  echo " - your customized 1bash settings won't be affected, but you will have"
-  echo "   have to create a new one starting from ${B}1bash.template${N} if it gets"
-  echo "   updated during this upgrade, otherwise you will get a warning each"
-  echo "   time nvOC restarts"
-  echo " - the upgrade will fail safely if you made conflicting customizations"
-  echo "   to any other nvOC script: if it happens you need either to run this"
-  echo "   script with ${C}nvoc-reset${N} option or manually manage this by git commands."
-  echo
+  echo -e "${Y}Warnings${N}:
+- your customized 1bash settings won't be affected, but you will have
+  have to create a new one starting from ${B}1bash.template${N} if it gets
+  updated during this upgrade, otherwise you will get a warning each
+  time nvOC restarts
+- the upgrade will fail safely if you made conflicting customizations
+  to any other nvOC script: if it happens you need either to run this
+  script with ${C}nvoc-reset${N} option or manually manage this by git commands.
+"
   read -p "Do you want to continue (y/N)?  " -n 1 ans
+  echo
   if [[ ${ans,,} != y ]]
   then
     exit 0
