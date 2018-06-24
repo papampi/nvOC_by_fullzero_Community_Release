@@ -2,11 +2,6 @@
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Prevent no firstBOOT error
-touch  ${NVOC}/firstBOOT
-
-firstBOOT="NO"
-
 # make log folder, re/mount new one 
 mkdir -p "${NVOC}/nvoc_logs"
 if ! mountpoint -q "${NVOC}/nvoc_logs"
@@ -17,45 +12,37 @@ then
   fi
 fi
 
-if grep -q "convert" ${NVOC}/firstBOOT
+# check 1bash for errors
+if [[ ! -e "${NVOC}/1bash" || "$(which shellcheck)" != "" && $(shellcheck -e 2034 -f gcc "${NVOC}/1bash" | grep -c error) != 0 ]]
 then
-  echo "First Boot, Copying 1bash and Expanding root partition"
-  sleep 5
-  echo "" > ${NVOC}/firstBOOT
-  if [ -e /media/m1/12D3-A869/1bash ]
-  then
-    echo "Copying 1bash"
-    sudo cp '/media/m1/12D3-A869/1bash' "${NVOC}/1bash"
-    echo "wait 15 seconds to minimize errors"
-    sudo dos2unix ${NVOC}/1bash
-    sleep 15
-  else
-    echo "Mounting fat partition"
-    sudo mkdir -p /media/m1/12D3-A869/
-    sudo mount /dev/sda1 /media/m1/12D3-A869
-    echo "Copying 1bash from fat partition"
-    sudo cp '/media/m1/12D3-A869/1bash' "${NVOC}/1bash"
-    echo "wait 5 seconds to minimize errors"
-    sudo dos2unix ${NVOC}/1bash
-    sleep 5
-  fi
-  echo "Expanding root partition"
-  sleep 1
-  sudo bash ${NVOC}/expand_rootfs.sh
-  echo "Root Partition expanded, reboot in 5 seconds"
-  sleep 5
-  sudo reboot
+  echo "################################################################################"
+  echo " !!  There is something wrong with your 1bash settings file, nvOC can't start."
+  echo "     Check if it exists or contains errors. SSH access is now being enabled to"
+  echo "     let you debug. This program will restart in a minute from now..."
+  echo ""
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
+  sleep 60
+  exit
 fi
 
-update="YES"
+# check 1bash revision mismatch
+source "${NVOC}/1bash"
+current_1bash_ver="$nvOC_1bash_ver"
+source "${NVOC}/1bash.template"
+template_1bash_ver="$nvOC_1bash_ver"
 
-if grep -q "v0019-2.1" ${NVOC}/1bash; then
-  update="NO"
-  echo "nvOC v0019-2.1 - Community Release"
+if [[ ${current_1bash_ver} != ${template_1bash_ver} ]]
+then
+  echo "################################################################################"
+  echo " !!  Your 1bash settings file revision is different from the template one."
+  echo "     This could potentially cause errors. SSH access is now being enabled to"
+  echo "     let you debug. Please, update your 1bash to comply with the template."
+  echo "     nvOC will now try to run anyway in 10 seconds from now..."
+  echo ""
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
+  sleep 10
 fi
 
-if [ $update == "YES" ] ; then
-  echo "Update Available"
-fi
+# TODO: if this is a git repo, check updates on current git branch, give warning, start pre-fetching in background, do not pull them automatically
 
 bash "${NVOC}/3main"

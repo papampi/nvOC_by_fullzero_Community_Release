@@ -47,13 +47,15 @@
 # v=0009 : LuKePicci
 #          added main-log, install- start- and stop-service 
 # v=0010 : papampi
-#          Detailed OC,PL report, some more fixes for 19-2.1 
+#          Detailed OC,PL report, some more fixes for 19-2.1
+# v=0011 : LuKePicci
+#          Git repo and submodules status report
 
 
-# DEV_VERSION=0010
+# DEV_VERSION=0011
 
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.1.0010"                   # Do not edit this
+nvOC_nvOC_ver="v0019-2.1.0011"                   # Do not edit this
 
 
 export DISPLAY=:0
@@ -605,7 +607,8 @@ Report()
 "
 ${B}Software info:${N}
 Report ver    :  $REPORT_VER
-nvOC (1bash)  :$nvOC_ver_from_1bash
+nvOC path     :  ${NVOC}
+nvOC (1bash)  :  $nvOC_ver_from_1bash
 nvOC (3main)  :  $nvOC_ver_from_3main
 1bash ver     :  $nvOC_1bash_ver
 3main ver     :  $nvOC_3main_ver
@@ -643,6 +646,15 @@ Swap Free     :  $swapfree
 #######################################
   echo -e "${B}VGA info:${N}"
   lspci | grep VGA
+
+  echo
+
+# Git
+  echo -e "${B}Local git branch and submodules status:${N}"
+  git -C ${NVOC} status -s -b -uno --ignore-submodules=all
+  git -C ${NVOC} submodule status
+  git -C ${NVOC}/miners status -s -b -uno --ignore-submodules=all
+  git -C ${NVOC}/miners submodule status
 
   echo
 
@@ -845,7 +857,7 @@ Swap Free     :  $swapfree
   echo "WORK IN PROGRESS! Report script (beta release)"
   echo
   echo "*** If posting the Report on bitcointalk.org forum please copy everything"
-  echo "    between the [code] and [/code] including the [code] and [\code] tags."
+  echo "    between the [code] and [/code] including the [code] and [/code] tags."
   echo "    This will ensure proper alignment when posting the Report."
   echo
   echo
@@ -959,7 +971,7 @@ restore-xorg()
   echo -e "${B}Restoring default nvOC xorg.conf ...${N}"
   touch "${NVOC}/xorg_flag"
   echo "" > "${NVOC}/xorg_flag"
-  sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf -O /etc/X11/xorg.conf.default
+  sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf.default -O /etc/X11/xorg.conf.default
   sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   echo "Default xorg.conf restored, Rebooting system in 5 sec."
   echo "System may reboot again if HEADLESS_MODE=YES"; echo ""
