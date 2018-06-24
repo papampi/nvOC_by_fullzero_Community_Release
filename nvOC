@@ -101,6 +101,8 @@ echo_usage()
   echo "           physically map (locate) your GPU's"
   echo -e "        ${C}$0 report${N}"
   echo "           create report about hardware and nvOC relevant settings"
+  echo -e "        ${C}$0 restore${N}"
+  echo "           restore nvOC files to their unmodified version"
   echo -e "        ${C}$0 upgrade${N}"
   echo "           upgrade to latest nvOC revision for your current branch"
   echo -e "        ${C}$0 miners-upgrade${N}"
@@ -898,7 +900,7 @@ Upgrade()
   time nvOC restarts
 - the upgrade will fail safely if you made conflicting customizations
   to any other nvOC script: if it happens you need either to run this
-  script with ${C}nvoc-reset${N} option or manually manage this by git commands.
+  script with ${C}restore${N} command or manually manage this by git commands.
 "
   read -p "Do you want to continue (y/N)?  " -n 1 ans
   echo
@@ -907,14 +909,25 @@ Upgrade()
     exit 0
   fi
 
-  echo "Checking for nvOC miners updates..."
+  echo "Checking for nvOC updates..."
   git -C ${NVOC} pull
+}
+
+################################# Restore working tree ##############################
+Reset()
+{
+  echo "Checking for modified contents..."
+  git -C ${NVOC} status -s -uno --ignore-submodules=all
+  echo "Stashing nvOC tree modifications"
+  git -C ${NVOC} stash
+  echo -e "${B}Done.${N} Your modified contents has been restored. You can now ${C}upgrade${N}."
+  echo "If you just made a mistake you can still recover your mods, see '${B}git stash --help${N}'."
 }
 
 ################################# Pull and install miners submodule ##############################
 MinersUpgrade()
 {
-  echo "Fetching nvOC miners updates..."
+  echo "Checking for nvOC miners updates..."
   git -C ${NVOC} submodule update --init --depth 1 --remote miners
 
   echo "Running updates installer"
@@ -1063,6 +1076,7 @@ case $# in
       start)               Start;;
       stop)                Stop;;
       restart)             Restart;;
+      restore)             Restore;;
       upgrade)             Upgrade;;
       miners-upgrade)      MinersUpgrade;;
       install-service)     InstallService;;
