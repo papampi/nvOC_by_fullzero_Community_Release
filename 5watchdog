@@ -60,10 +60,12 @@
 #          Rework for salfter's switchers compatibility
 # v=0018 : papampi (suggestion by abdeldev)
 #          Use sysrq reboot, to prevent freeze/hang
+# v=0019 : papampi
+#          Load average check, notify, reboot (1bash setting)
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.0.018"   # Do not edit this
+nvOC_wdog_ver="v0019-2.1.019"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
@@ -195,7 +197,52 @@ do
     fi
   fi
 
-  # Set/increment vars
+  # If 1, 5 and 15 min load average are more than double cpu core give warning
+  HIGH_AVERAGE=$(( $(nproc) * 2 ))
+  AVERAGES=$(uptime | sed 's/.*: //g; s/,//g')
+  echo "Load Average: $AVERAGES"
+
+  AVERAGE_1=$(echo "$AVERAGES" | cut -d"," -f1)
+  if [[ "$AVERAGE_1" > "$HIGH_AVERAGE"  ]]
+  then
+    AVRG_1="HIGH"
+  else
+    AVRG_1="OK"
+  fi
+  AVERAGE_5=$(echo "$AVERAGES" | cut -d"," -f2)
+  if [[ "$AVERAGE_5" > "$HIGH_AVERAGE"  ]]
+  then
+    AVRG_5="HIGH"
+  else
+    AVRG_5="OK"
+  fi
+  AVERAGE_15=$(echo "$AVERAGES" | cut -d"," -f3)
+  if [[ "$AVERAGE_15" > "$HIGH_AVERAGE"  ]]
+  then
+    AVRG_15="HIGH"
+  else
+    AVRG_15="OK"
+  fi
+  
+  if [[ $plusCPU == "NO" ]]
+  then
+    if [[ $AVRG_1 == "HIGH" ]] && [[ $AVRG_5 == "HIGH" ]] && [[ $AVRG_15 == "HIGH" ]]
+    then
+      echo "WARNING: $(date) - Load Averages are too high" | tee -a ${LOG_FILE}
+      if [[ $TELEGRAM_ALERTS == "YES" ]]
+      then
+        bash "${NVOC}/telegram"
+      fi
+      if [[ $HIGH_LOAD_REBOOT  == "YES" ]]
+      then
+        echo "WARNING: $(date) - Rebooting system in 5 sec" | tee -a ${LOG_FILE}
+        sleep 5
+        sudo bash ${NVOC}/sysrq_reboot.sh
+      fi
+    fi  
+  fi
+  
+    # Set/increment vars
   NUM_GPU_BLW_THRSHLD=0              # Track how many GPU are below threshold
   REBOOTRESET=$((REBOOTRESET + 1))
 
