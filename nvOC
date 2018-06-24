@@ -101,9 +101,9 @@ echo_usage()
   echo "           physically map (locate) your GPU's"
   echo -e "        ${C}$0 report${N}"
   echo "           create report about hardware and nvOC relevant settings"
-  echo -e "        ${C}$0 nvoc-upgrade${N}"
+  echo -e "        ${C}$0 upgrade${N}"
   echo "           upgrade to latest nvOC revision for your current branch"
-  echo -e "        ${C}$0 nvoc-miners-upgrade${N}"
+  echo -e "        ${C}$0 miners-upgrade${N}"
   echo "           upgrade nvOC miners collection with latest changes and intall them"
   echo -e "        ${C}$0 patch${N}"
   echo "           stops nvOC and applies outstanding Ubuntu patches and "
@@ -1063,8 +1063,8 @@ case $# in
       start)               Start;;
       stop)                Stop;;
       restart)             Restart;;
-      nvoc-upgrade)        Upgrade;;
-      nvoc-miners-upgrade) MinersUpgrade;;
+      upgrade)             Upgrade;;
+      miners-upgrade)      MinersUpgrade;;
       install-service)     InstallService;;
       start-service)       StartService;;
       stop-service)        StopService;;
