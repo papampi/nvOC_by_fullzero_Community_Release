@@ -47,13 +47,15 @@
 # v=0009 : LuKePicci
 #          added main-log, install- start- and stop-service 
 # v=0010 : papampi
-#          Detailed OC,PL report, some more fixes for 19-2.1 
+#          Detailed OC,PL report, some more fixes for 19-2.1
+# v=0011 : LuKePicci
+#          Git repo and submodules status report
 
 
-# DEV_VERSION=0010
+# DEV_VERSION=0011
 
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.1.0010"                   # Do not edit this
+nvOC_nvOC_ver="v0019-2.1.0011"                   # Do not edit this
 
 
 export DISPLAY=:0
