@@ -237,7 +237,7 @@ do
         # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
         while (( ERR_TIMER > 0 ))
         do
-          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
+          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a "$LOG_FILE"
           if [[ $TELEGRAM_ALERTS == "YES" ]]
           then
             bash "${NVOC}/telegram" &
@@ -253,7 +253,7 @@ do
           fi
           if (( ERR_TIMER < 0 ))
           then
-            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a ${LOG_FILE} ${WD_LOG_FILE}
+            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
             if [[ $TELEGRAM_ALERTS == "YES" ]]
             then
               bash "${NVOC}/telegram"
@@ -274,7 +274,7 @@ do
         # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
         while (( ERR_TIMER > 0 ))
         do
-          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a ${LOG_FILE}
+          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a "$LOG_FILE"
           if [[ $TELEGRAM_ALERTS == "YES" ]]
           then
             bash "${NVOC}/telegram" &
@@ -290,7 +290,7 @@ do
           fi
           if (( ERR_TIMER < 0 ))
           then
-            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a ${LOG_FILE} ${WD_LOG_FILE}
+            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
             if [[ $TELEGRAM_ALERTS == "YES" ]]
             then
               bash "${NVOC}/telegram" &
@@ -331,7 +331,7 @@ do
         NEW_POWER_LIMIT=$((POWERLIMIT - POWER_ADJUST))
         if [[ $WARN_PL_DROPS == YES ]]
         then
-          echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a ${LOG_FILE}
+          echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a "$LOG_FILE"
           if [[ $TELEGRAM_ALERTS == "YES" ]]
           then
             bash "${NVOC}/telegram" &
