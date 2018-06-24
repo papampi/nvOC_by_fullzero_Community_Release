@@ -251,7 +251,7 @@ do
             ERR_TIMER=$ERR_TIMER_BRK
             break
           fi
-          if (( ERR_TIMER < 0 ))
+          if (( ERR_TIMER <= 0 ))
           then
             echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
             if [[ $TELEGRAM_ALERTS == "YES" ]]
@@ -288,7 +288,7 @@ do
             ERR_TIMER=$ERR_TIMER_BRK
             break
           fi
-          if (( ERR_TIMER < 0 ))
+          if (( ERR_TIMER <= 0 ))
           then
             echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
             if [[ $TELEGRAM_ALERTS == "YES" ]]
@@ -308,16 +308,16 @@ do
     fi
 
     POWERLIMIT=${PWRLIMIT%%.*}
-    TEMP_DIFF=$((${TARGET_TEMP[${GPU}]} - CURRENT_TEMP))
+    TEMP_DIFF=$(( TARGET_TEMP[GPU] - CURRENT_TEMP ))
     NEW_FAN_SPEED=$CURRENT_FAN
     HIGH_TEMP_DIFF=$(( ALLOWED_TEMP_DIFF * 2 ))
 
     echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"
 
-    if (( CURRENT_TEMP > "${TARGET_TEMP[${GPU}]}" ))
+    if (( CURRENT_TEMP > TARGET_TEMP[GPU] ))
     then
       # If temp difference is more than double the allowed, multiply adjustement by 2
-      if (( TEMP_DIFF < "-$HIGH_TEMP_DIFF" ))
+      if (( TEMP_DIFF < - HIGH_TEMP_DIFF ))
       then
         FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
       else
