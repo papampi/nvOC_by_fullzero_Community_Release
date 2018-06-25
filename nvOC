@@ -798,7 +798,7 @@ Ethernet      :  $ethernet"
     eval 'ALGO_MC=${ALGO}_MEMORY_OVERCLOCK'
     echo "Core Overclock ............: ${!ALGO_OC}"
     echo "Memory Overclock ..........: ${!ALGO_MC}"
-  elif [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]];
+  elif [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
@@ -826,16 +826,16 @@ Ethernet      :  $ethernet"
 # 1bash mining
   echo "GLOBAL WORKERNAME .........: $GLOBAL_WORKERNAME"
   echo "AUTO WORKERNAME ...........: $AUTO_WORKERNAME"
-  if [[ $AUTO_WORKERNAME == CUSTOM || $AUTO_WORKERNAME == HOST ]];
+  if [[ $AUTO_WORKERNAME == CUSTOM || $AUTO_WORKERNAME == HOST ]]
   then
     echo "WORKERNAME ................: $WORKERNAME"
-  elif [[ $AUTO_WORKERNAME == MAC ]];
+  elif [[ $AUTO_WORKERNAME == MAC ]]
   then
     WORKERNAME=$(echo $MAC_AS_WORKER | cut -d'_' -f 5-)
     echo "WORKERNAME ................: hidden_$WORKERNAME"
   fi
   echo "plusCPU ...................: $plusCPU"
-  if [[ $plusCPU == YES ]];
+  if [[ $plusCPU == YES ]]
   then
     echo "threadCOUNT ...............: $threadCOUNT"
   fi
@@ -847,7 +847,7 @@ Ethernet      :  $ethernet"
   echo "ALGO ......................: $ALGO"
   eval MINER=${ALGO}_MINER
   echo "MINER .....................: ${!MINER}"
-  if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]];
+  if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]]
   then
     echo "ZPOOLPASS .................: hidden_pass...,"$(echo $ZPOOLPASS | cut -d',' -f 2-)
   fi
@@ -858,17 +858,17 @@ Ethernet      :  $ethernet"
   eval COIN_POOL_TMP=${COIN}_POOL
   echo $COIN "POOL ..................:" ${!COIN_POOL_TMP}
   eval COIN_PORT_TMP=${COIN}_PORT
-  if ! [[ $COIN_PORT_TMP == "" ]];
+  if [[ $COIN_PORT_TMP != "" ]]
   then
     echo $COIN "PORT ..................:" ${!COIN_PORT_TMP}
   fi
   eval ALGO_INTENSITY_TMP=${ALGO}_INTENSITY
-  if ! [[ $ALGO_INTENSITY_TMP == "" ]];
+  if [[ $ALGO_INTENSITY_TMP != "" ]]
   then
     echo $ALGO "INTENSITY ..........:" ${!ALGO_INTENSITY_TMP}
   fi
   eval COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
-  if ! [[ $COIN_AUTOCONVERT_TO_BTC_TMP == "" ]];
+  if [[ $COIN_AUTOCONVERT_TO_BTC_TMP != "" ]]
   then
     echo "${COIN}_AUTOCONVERT_TO_BTC ....:" $COIN_AUTOCONVERT_TO_BTC_TMP
   fi
