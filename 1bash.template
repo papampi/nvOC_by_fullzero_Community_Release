@@ -462,7 +462,7 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 
 
 # Miner, Intensity and wallet address format for different algos 
-# "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer" , xmr-stak
+# "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr-stak"
 # Test intensity on your rig and edit it or miner will set default values
 
 ## NEOSCRYPT
