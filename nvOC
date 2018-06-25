@@ -940,7 +940,7 @@ MinersUpgrade()
 InstallService()
 {
   echo "Reinstalling nvOC service for ${NVOC}"
-  sudo cat <<EOF > /etc/systemd/system/nvoc.service
+  sudo bash -c 'cat > /etc/systemd/system/nvoc.service' << EOF
 [Unit]
 Description=nvOC Service
 
@@ -969,7 +969,7 @@ EOF
     sudo setfacl -m user:nvoc:rw ${NVOC}
     
     sudo systemctl enable nvoc
-    echo "${W}Done.${N} This service has autostart enabled."
+    echo -e "${W}Done.${N} This service has autostart enabled."
   else
     echo "Service installation failed"
   fi
