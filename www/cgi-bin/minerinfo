@@ -45,8 +45,8 @@ SYSTEM_UP_TIME=$(uptime -p)
 # Reduce nvidia-smi query by trying to read from watchdog log first
 if ps ax | grep -q "[5]watchdog"
 then
-  # Wait 3min for Watchdog to not give false info
-  if [[ $(ps -eo pid,etimes | grep $(ps -ef | grep SCREEN | grep 5watchdog | head -1 | awk '{print $2}') | awk '{print $2}') -ge 180 ]]
+  # Wait for Watchdog log to not give false info
+  if tail -10 ${NVOC}/nvoc_logs/watchdog-screenlog.0 | grep -q "[U]tilization:"
   then
     DETECTED_GPUS=$(( $(tail -30 ${NVOC}/nvoc_logs/watchdog-screenlog.0 | grep -o "GPU[0-9]*" | sed 's/GPU//' | sort -nr | head -1) + 1 ))
     if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
@@ -78,7 +78,13 @@ else
   fi
 fi
 
-TAIL_GPU_COUNT=$(( $GPU_COUNT + 3 ))
+if [[ $GPU_COUNT =~ ^[0-9.]+$ ]]
+then
+  TAIL_GPU_COUNT=$(( GPU_COUNT + 3 ))
+else
+  TAIL_GPU_COUNT="10"
+fi
+
 REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
 MINER_PID=$(pgrep -f -o  miner)
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
