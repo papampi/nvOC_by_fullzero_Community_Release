@@ -965,11 +965,11 @@ EOF
 
   if sudo systemd-analyze verify nvoc.service
   then
-    echo "Setting ACL for 'nvoc' service user write access to NVOC path..."
+    echo -e "Setting ACL for '${B}nvoc${N}' user write access to NVOC path..."
     sudo setfacl -m user:nvoc:rw ${NVOC}
     
     sudo systemctl enable nvoc
-    echo -e "${W}Done.${N} This service has autostart enabled."
+    echo -e "${B}Done.${N} This service has autostart enabled."
   else
     echo "Service installation failed"
   fi
