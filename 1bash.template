@@ -465,492 +465,496 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 # "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr-stak"
 # Test intensity on your rig and edit it or miner will set default values
 
-## NEOSCRYPT
-NEOSCRYPT_MINER="KTccminer"                    
-NEOSCRYPT_INTENSITY="0"                        
-NEOSCRYPT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## LYRA2V2
-LYRA2V2_MINER="TPccminer"                      
-LYRA2V2_INTENSITY="0"                          
-LYRA2V2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## SKUNK
-SKUNK_MINER="TPccminer"                        
-SKUNK_INTENSITY="0"                            
-SKUNK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## SKEIN
-SKEIN_MINER="TPccminer"                         
-SKEIN_INTENSITY="0"                            
-SKEIN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## BITCORE, TIMETRAVEL10
-BITCORE_MINER="ZENEMYminer"
 BITCORE_INTENSITY="0"
+BITCORE_MINER="ZENEMYminer"
 BITCORE_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
-## X16R
-X16R_MINER="ZENEMYminer"
-X16R_INTENSITY="0"
-X16R_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## XEVAN
-XEVAN_MINER="ZENEMYminer"
-XEVAN_INTENSITY="0"
-XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## KECCAK
-KECCAK_MINER="TPccminer"
-KECCAK_INTENSITY="0"
-KECCAK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## LYRA2Z
-LYRA2Z_MINER="TPccminer"
-LYRA2Z_INTENSITY="0"
-LYRA2Z_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## X11GHOST, SIB
-X11GHOST_MINER="SPccminer"
-X11GHOST_INTENSITY="0"
-X11GHOST_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
 ## CRYPTONIGHT
-CRYPTONIGHT_MINER="TPccminer"
 CRYPTONIGHT_INTENSITY="0"
+CRYPTONIGHT_MINER="TPccminer"
 CRYPTONIGHT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT-V7
-CRYPTONIGHTV7_MINER="xmr-stak"
 CRYPTONIGHTV7_INTENSITY="0"
+CRYPTONIGHTV7_MINER="xmr-stak"
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
-#PHI1612
-PHI_MINER="ANXccminer"
-PHI_INTENSITY="0"
-PHI_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## PASCAL
-PASCAL_MINER="TPccminer"
-PASCAL_INTENSITY="0"
-PASCAL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## LBRY
-LBRY_MINER="SPccminer"
-LBRY_INTENSITY="0"
-LBRY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## GROESTL
-GROESTL_MINER="TPccminer"
-GROESTL_INTENSITY="0"
-GROESTL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-## Myriad Groestl
-MYR_GR_MINER="TPccminer"
-MYR_GR_INTENSITY="0"
-MYR_GR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
 ## Decred
-DCR_MINER="TPccminer"
 DCR_INTENSITY="0"
+DCR_MINER="TPccminer"
 DCR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+## GROESTL
+GROESTL_INTENSITY="0"
+GROESTL_MINER="TPccminer"
+GROESTL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## KECCAK
+KECCAK_INTENSITY="0"
+KECCAK_MINER="TPccminer"
+KECCAK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## LBRY
+LBRY_INTENSITY="0"
+LBRY_MINER="SPccminer"
+LBRY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## LYRA2REV2
+LYRA2V2_INTENSITY="0"
+LYRA2V2_MINER="TPccminer"
+LYRA2V2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## LYRA2Z
+LYRA2Z_INTENSITY="0"
+LYRA2Z_MINER="TPccminer"
+LYRA2Z_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## Myriad Groestl
+MYR_GR_INTENSITY="0"
+MYR_GR_MINER="TPccminer"
+MYR_GR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## Neoscrypt
+NEOSCRYPT_INTENSITY="0"
+NEOSCRYPT_MINER="KTccminer"
+NEOSCRYPT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## PASCAL
+PASCAL_INTENSITY="0"
+PASCAL_MINER="TPccminer"
+PASCAL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## PHI1612
+PHI_INTENSITY="0"
+PHI_MINER="ANXccminer"
+PHI_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
 ## SIA
-SIA_MINER="SPccminer"
 SIA_INTENSITY="0"
+SIA_MINER="SPccminer"
 SIA_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+## SKEIN
+SKEIN_INTENSITY="0"
+SKEIN_MINER="TPccminer"
+SKEIN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## SKUNK
+SKUNK_INTENSITY="0"
+SKUNK_MINER="TPccminer"
+SKUNK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## X11GHOST, SIB
+X11GHOST_INTENSITY="0"
+X11GHOST_MINER="SPccminer"
+X11GHOST_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
 ## X13
-X13_MINER="TPccminer"
 X13_INTENSITY="0"
+X13_MINER="TPccminer"
 X13_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+## X16R
+X16R_INTENSITY="0"
+X16R_MINER="ZENEMYminer"
+X16R_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## XEVAN
+XEVAN_INTENSITY="0"
+XEVAN_MINER="ZENEMYminer"
+XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
 ################################################################
-##### No Need to add stratum+tcp:// to your pool addresses #####
+#####                                                      #####
+##### COIN, POOL, PORT info section, sorted alphabetically #####
+#####                                                      #####
 ################################################################
 
-## If you added any coins in the section bellow dont forget to add it to "Coin/Algo identification" section too
+## Set your coins info 
+## No Need to add stratum+tcp:// to pool addresses
+## If you added any new coins in the section bellow dont forget to add it to "Coin/Algo identification" section too
 
-# ZEC
-ZEC_WORKER="$WORKERNAME"
-# replace_with_your_ZEC_address
-ZEC_ADDRESS="t1XfkZUZWME8FnRiFxHZQAQ2K1UdQMbshJp"
-ZEC_POOL="zec-us-east1.nanopool.org"
-ZEC_PORT="6666"
-ZEC_EXTENSION_ARGUMENTS=""
-
-# ZCL
-ZCL_WORKER="$WORKERNAME"
-ZCL_ADDRESS="replace_with_your_address"
-ZCL_POOL="us.zclmine.pro"
-ZCL_PORT="9009"
-ZCL_EXTENSION_ARGUMENTS=""
-
-# ZEN
-ZEN_WORKER="$WORKERNAME"
-ZEN_ADDRESS="replace_with_your_address"
-ZEN_POOL="luckpool.org"
-ZEN_PORT="3057"
-ZEN_EXTENSION_ARGUMENTS=""
-
-# ZDASH or HUSH
-HUSH_WORKER="$WORKERNAME"
-HUSH_ADDRESS="replace_with_your_address"
-HUSH_POOL="zdash.suprnova.cc"
-HUSH_PORT="4048"
-HUSH_EXTENSION_ARGUMENTS=""
-
-# BTG
-BTG_WORKER="$WORKERNAME"
-BTG_ADDRESS="replace_with_your_address"
-BTG_POOL="replace_with_your_BTG_POOL"
-BTG_PORT="replace_with_your_BTG_PORT"
-BTG_EXTENSION_ARGUMENTS=""
-
-# KMD
-KMD_WORKER="$WORKERNAME"
-KMD_ADDRESS="replace_with_your_address"
-KMD_POOL="luckpool.org"
-KMD_PORT="3857"
-KMD_EXTENSION_ARGUMENTS=""
-
-# Raven(RVN) ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
-RVN_WORKER="$WORKERNAME"
-RVN_ADDRESS="replace_with_your_address"
-RVN_POOL="RVN_POOL_ADDRESS"
-RVN_PORT="RVN_POOL_PORT"
-RVN_EXTENSION_ARGUMENTS=""
-
-# Motion(XMN) ## No need to add stratum+tcp:// to server address - set MINER_PWD above if needed for YIMP
-XMN_WORKER="$WORKERNAME"
-XMN_ADDRESS="replace_with_your_address"
-XMN_POOL="XMN_POOL_ADDRESS"
-XMN_PORT="XMN_POOL_PORT"
-XMN_EXTENSION_ARGUMENTS=""
-
-# BTCP
-BTCP_WORKER="$WORKERNAME"
-BTCP_ADDRESS="replace_with_your_address"
-BTCP_POOL="BTCP_POOL_ADDRESS"
-BTCP_PORT="BTCP_POOL_PORT"
-BTCP_EXTENSION_ARGUMENTS=""
-
-# BTX Bitcore ## No Need to add stratum+tcp:// to server address
-BTX_WORKER="$WORKERNAME"
-BTX_ADDRESS="replace_with_your_address"
-BTX_POOL="btx.suprnova.cc"
-BTX_PORT="3629"
-BTX_EXTENSION_ARGUMENTS=""
-
-# XZC or ZCOIN  ## No Need to add stratum+tcp:// to server address
-XZC_WORKER="$WORKERNAME"
-XZC_ADDRESS="replace_with_your_address"
-XZC_POOL="xzc.suprnova.cc"
-XZC_PORT="1569"
-XZC_EXTENSION_ARGUMENTS=""
-
-# KRB ## No Need to add stratum+tcp:// to server address
-KRB_WORKER="$WORKERNAME"
-KRB_ADDRESS="replace_with_your_address"
-KRB_POOL="krb.sberex.com"
-KRB_PORT="5555"
-KRB_EXTENSION_ARGUMENTS=""
-
-# Electroneum(ETN) ## No Need to add stratum+tcp:// to server address
-ETN_WORKER="$WORKERNAME"
-ETN_ADDRESS="replace_with_your_address"
-ETN_POOL="ETN POOL"
-ETN_PORT="ETN PORT"
-ETN_EXTENSION_ARGUMENTS=""
-
-# SIGT ## No Need to add stratum+tcp:// to server address
-SIGT_WORKER="$WORKERNAME"
-SIGT_ADDRESS="replace_with_your_address"
-SIGT_POOL="us.hashbag.cc"
-SIGT_PORT="8644"
-SIGT_EXTENSION_ARGUMENTS=""
-
-# Altcommunity(ALTCOM) ## No Need to add stratum+tcp:// to server address
-ALTCOM_WORKER="$WORKERNAME"
+# ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
+ALTCOM_EXTENSION_ARGUMENTS=""
 ALTCOM_POOL="ALTCOM POOL"
 ALTCOM_PORT="ALTCOM PORT"
-ALTCOM_EXTENSION_ARGUMENTS=""
+ALTCOM_WORKER="$WORKERNAME"
 
-# SIB ## No Need to add stratum+tcp:// to server address
-SIB_WORKER="$WORKERNAME"
-SIB_ADDRESS="replace_with_your_address"
-SIB_POOL="sib.suprnova.cc"
-SIB_PORT="3458"
-SIB_EXTENSION_ARGUMENTS=""
-
-# PXC ## No Need to add stratum+tcp:// to server address
-PXC_WORKER="$WORKERNAME"
-PXC_ADDRESS="replace_with_your_address"
-PXC_POOL="atlas.phoenixcoin.org:"
-PXC_PORT="10554"
-PXC_EXTENSION_ARGUMENTS=""
-
-# GRS ## No Need to add stratum+tcp:// to server address
-GRS_WORKER="$WORKERNAME"
-GRS_ADDRESS="replace_with_your_address"
-GRS_POOL="moria.dwarfpool.com"
-GRS_PORT="3345"
-GRS_EXTENSION_ARGUMENTS=""
-
-# XMY ## No Need to add stratum+tcp:// to server address
-XMY_WORKER="$WORKERNAME"
-XMY_ADDRESS="replace_with_your_address"
-XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
-XMY_PORT="20479"
-XMY_EXTENSION_ARGUMENTS=""
-
-# MONA ## No Need to add stratum+tcp:// to server address
-MONA_WORKER="$WORKERNAME"
-MONA_ADDRESS="replace_with_your_address"
-MONA_POOL="mona.suprnova.cc"
-MONA_PORT="2995"
-MONA_EXTENSION_ARGUMENTS=""
-
-# VTC ## No Need to add stratum+tcp:// to server address
-VTC_WORKER="$WORKERNAME"
-VTC_ADDRESS="replace_with_your_address"
-VTC_POOL="hub.miningpoolhub.com"
-VTC_PORT="20507"
-VTC_EXTENSION_ARGUMENTS=""
-
-# TZC ## No Need to add stratum+tcp:// to server address
-TZC_WORKER="$WORKERNAME"
-TZC_ADDRESS="TZC ADDRESS"
-TZC_POOL="TZC POOL"
-TZC_PORT="TZC PORT"
-TZC_EXTENSION_ARGUMENTS=""
-
-# DGB ## No Need to add stratum+tcp:// to server address
-DGB_WORKER="$WORKERNAME"
-DGB_ADDRESS="replace_with_your_address"
-DGB_POOL="hub.miningpoolhub.com"
-DGB_PORT="20527"
-DGB_EXTENSION_ARGUMENTS=""
-
-# LBC ## No Need to add stratum+tcp:// to server address
-LBC_WORKER="$WORKERNAME"
-LBC_ADDRESS="replace_with_your_address"
-LBC_POOL="lbry.suprnova.cc"
-LBC_PORT="6256"
-LBC_EXTENSION_ARGUMENTS=""
-
-# FTC ## No Need to add stratum+tcp:// to server address
-FTC_WORKER="$WORKERNAME"
-FTC_ADDRESS="replace_with_your_address"
-FTC_POOL="hub.miningpoolhub.com"
-FTC_PORT="20510"
-FTC_EXTENSION_ARGUMENTS=""
-
-# ORB ## No Need to add stratum+tcp:// to server address
-ORB_WORKER="$WORKERNAME"
-ORB_ADDRESS="Your DNB Account Name"
-ORB_POOL="strat.dnb.io"
-ORB_PORT="3031"
-ORB_EXTENSION_ARGUMENTS=""
-
-# VIVO ## No Need to add stratum+tcp:// to server address
-VIVO_WORKER="$WORKERNAME"
-VIVO_ADDRESS="VIVO ADDRESS"
-VIVO_POOL="VIVO POOL"
-VIVO_PORT="VIVO PORT"
-VIVO_EXTENSION_ARGUMENTS=""
-
-# ONION ## No Need to add stratum+tcp:// to server address
-ONION_ADDRESS="replace_with_your_ONION_address"
-ONION_POOL="kawaiipool.party"
-ONION_PORT="3633"
-ONION_EXTENSION_ARGUMENTS=""
-
-#Ellaism ELLA
-ELLA_WORKER="$WORKERNAME"
-ELLA_ADDRESS="replace_with_your_address"
-ELLA_POOL="replace_with_pool_address"
-ELLA_PORT="replace_with_pool_port"
-ELLA_EXTENSION_ARGUMENTS=""    # add any additional Claymore miner arguments here
-
-#GoByte(GBX) ##No Need to add add stratum+tcp:// to server address
-GBX_WORKER="$WORKERNAME"
-GBX_ADDRESS="replace_with_your_address"
-GBX_POOL="replace_with_pool_address"
-GBX_PORT="replace_with_pool_port"
-GBX_EXTENSION_ARGUMENTS=""
-
-#CrowdCoin (CRC) ##No Need to add add stratum+tcp:// to server address
-CRC_WORKER="$WORKERNAME"
-CRC_ADDRESS="replace_with_your_address"
-CRC_POOL="replace_with_pool_address"
-CRC_PORT="replace_with_pool_port"
-CRC_EXTENSION_ARGUMENTS=""
-
-#Verge-Lyra2REv2(XVG) ##No Need to add stratum+tcp:// to server address
-XVG_WORKER="$WORKERNAME"
-XVG_ADDRESS="replace_with_your_address"
-XVG_POOL="replace_with_pool_address"
-XVG_PORT="replace_with_pool_port"
-XVG_EXTENSION_ARGUMENTS=""
-
-#LUXCORE LUX ## No Need to add stratum+tcp:// to server address
-LUX_WORKER="$WORKERNAME"
-LUX_ADDRESS="Your Address"
-LUX_POOL="yiimp.eu"
-LUX_PORT="8333"
-LUX_EXTENSION_ARGUMENTS=""
-
-# Sumo Koin(SUMO) ## No Need to add stratum+tcp:// to server address
-SUMO_WORKER="$WORKERNAME"
-SUMO_ADDRESS="replace_with_your_address"
-SUMO_POOL="SUMO_POOL"
-SUMO_PORT="SUMO_PORT"
-SUMO_EXTENSION_ARGUMENTS=""
-
-# DSR ## No Need to add stratum+tcp:// to server address
-DSR_WORKER="$WORKERNAME"
-DSR_ADDRESS="replace_with_your_address"
-DSR_POOL="DSR_POOL"
-DSR_PORT="DSR_PORT"
-DSR_EXTENSION_ARGUMENTS=""
-
-# ETH
-ETH_WORKER="$WORKERNAME"
-ETH_ADDRESS="replace_with_your_address"
-ETH_POOL="europe.ethash-hub.miningpoolhub.com"
-ETH_PORT="20535"
-ETH_EXTENSION_ARGUMENTS=""    # add any additional Claymore miner arguments here
-
-# ETC
-ETC_WORKER="$WORKERNAME"
-ETC_ADDRESS="replace_with_your_address"
-ETC_POOL="europe.ethash-hub.miningpoolhub.com"
-ETC_PORT="20555"
-ETC_EXTENSION_ARGUMENTS=""    # add any additional Claymore miner arguments here
-
-# EXP
-EXP_WORKER="$WORKERNAME"
-EXP_ADDRESS="replace_with_your_EXP_address"
-EXP_POOL="exp-us.dwarfpool.com:"
-EXP_PORT="81"
-EXP_EXTENSION_ARGUMENTS=""   # add any additional Claymore miner arguments here
-
-# UBQ
-UBQ_WORKER="$WORKERNAME"
-UBQ_ADDRESS="replace_with_your_UBIQ_address"
-UBQ_POOL="us.ubiqpool.io"
-UBQ_PORT="8008"
-UBQ_EXTENSION_ARGUMENTS=""   # add any additional Claymore miner arguments here
-
-# PIRL
-PIRL_WORKER="$WORKERNAME"
-PIRL_ADDRESS="replace_with_your_PIRL_address"
-PIRL_POOL="PIRL POOL"
-PIRL_PORT="PIRL PORT"
-PIRL_EXTENSION_ARGUMENTS=""   # add any additional Claymore miner arguments here
-
-# MUSIC
-MUSIC_WORKER="$WORKERNAME"
-MUSIC_ADDRESS="replace_with_your_MUSIC_address"
-MUSIC_POOL="eus.gmc.epool.io"
-MUSIC_PORT="8008"
-MUSIC_EXTENSION_ARGUMENTS=""   # add any additional Claymore miner arguments here
-
-#CLO
-CLO_WORKER="$WORKERNAME"
-CLO_ADDRESS="0x4b0153e08e682d2be1bee100f51f8841dc41382c"
-CLO_POOL="clo.2miners.com"
-CLO_PORT="3030"
-CLO_EXTENSION_ARGUMENTS="-allcoins 1 -allpools 1"   # add any additional Claymore miner arguments here
-
-# SOIL
-SOIL_WORKER="$WORKERNAME"
-SOIL_ADDRESS="replace_with_your_SOIL_address"
-SOIL_POOL="soil.pool.sexy"
-SOIL_PORT="9009"
-SOIL_EXTENSION_ARGUMENTS=""   # add any additional Claymore miner arguments here
-
-# SIA
-SC_WORKER="$WORKERNAME"
-SC_ADDRESS="replace_with_your_address"
-SC_POOL="sia-us-east1.nanopool.org"
-SC_PORT="7777"
-SC_GW_POOL="sia-us-east1.nanopool.org"
-SC_GW_PORT="9980"
-SC_EXTENSION_ARGUMENTS=""
-
-# DCR ## No Need to add stratum+tcp:// to server address
-DCR_WORKER="$WORKERNAME"
-DCR_ADDRESS="replace_with_your_DCR_address"
-DCR_POOL="yiimp.eu"
-DCR_PORT="3252"
-DCR_EXTENSION_ARGUMENTS=""
-
-# PASC ## No Need to add stratum+tcp:// to server address
-PASC_WORKER="$WORKERNAME"
-PASC_ADDRESS="replace_with_your_PASC_ACCOUNT"
-PASC_POOL="pasc-us-east1.nanopool.org"
-PASC_PORT="15555"
-PASC_EXTENSION_ARGUMENTS=""
-
-# PASL ## No Need to add stratum+tcp:// to server address
-PASL_WORKER="$WORKERNAME"
-PASL_ADDRESS="replace_with_your_PASL_ACCOUNT"
-PASL_POOL="mine.pasl.fairpool.xyz"
-PASL_PORT="4009"
-PASL_EXTENSION_ARGUMENTS=""
-
-# XMR : if plusCPU is "YES" replace with your XMR info
-## No Need to add stratum+tcp:// to server address
-XMR_WORKER="$WORKERNAME"
-XMR_ADDRESS="replace_with_your_XMR_address"
-XMR_POOL="xmr-us-east1.nanopool.org"
-XMR_PORT="14444"
-XMR_EXTENSION_ARGUMENTS=""
-
-# BTCZ
-BTCZ_WORKER="$WORKERNAME"
-BTCZ_ADDRESS="replace_with_your_address"
-BTCZ_POOL="btcz.suprnova.cc"
-BTCZ_PORT="5586"
-BTCZ_EXTENSION_ARGUMENTS=""
-
-# SMART ## No Need to add stratum+tcp:// to server address
-SMART_WORKER="$WORKERNAME"
-SMART_ADDRESS="replace_with_your_address"
-SMART_POOL="pool-eu.smartcash.cc"
-SMART_PORT="3333"
-SMART_EXTENSION_ARGUMENTS=""
-
-#BSD Bitsend ## No Need to add stratum+tcp:// to server address
-BSD_WORKER="$WORKERNAME"
-BSD_ADDRESS="replace_with_your_address"
-BSD_POOL="bsd.suprnova.cc"
-BSD_PORT="8686"
-BSD_EXTENSION_ARGUMENTS=""
-
-# BCI Bitcoin Interest ## No Need to add stratum+tcp:// to server address
-BCI_WORKER="$WORKERNAME"
+# Bitcoin Interest (BCI)
 BCI_ADDRESS="replace_with_your_address"
+BCI_EXTENSION_ARGUMENTS=""
 BCI_POOL="replace_with_your_BCI_POOL"
 BCI_PORT="replace_with_your_BCI_PORT"
-BCI_EXTENSION_ARGUMENTS=""
+BCI_WORKER="$WORKERNAME"
 
-#FLM Folm ## No Need to add stratum+tcp:// to server address
-FLM_WORKER="$WORKERNAME"
-FLM_ADDRESS="replace_with_your_address"
-FLM_POOL="replace_with_your_FLM_POOL"
-FLM_PORT="replace_with_your_FLM_PORT"
-FLM_EXTENSION_ARGUMENTS=""
+# Bitsend (BSD)
+BSD_ADDRESS="replace_with_your_address"
+BSD_EXTENSION_ARGUMENTS=""
+BSD_POOL="bsd.suprnova.cc"
+BSD_PORT="8686"
+BSD_WORKER="$WORKERNAME"
 
-#ETP Metaverse ## No Need to add stratum+tcp:// to server address
-ETP_WORKER="$WORKERNAME"
+# Bitcoin Private (BTCP)
+BTCP_ADDRESS="replace_with_your_address"
+BTCP_EXTENSION_ARGUMENTS=""
+BTCP_POOL="BTCP_POOL_ADDRESS"
+BTCP_PORT="BTCP_POOL_PORT"
+BTCP_WORKER="$WORKERNAME"
+
+# Bitcoinz (BTCZ)
+BTCZ_ADDRESS="replace_with_your_address"
+BTCZ_EXTENSION_ARGUMENTS=""
+BTCZ_POOL="btcz.suprnova.cc"
+BTCZ_PORT="5586"
+BTCZ_WORKER="$WORKERNAME"
+
+# Bitcoin Gold (BTG)
+BTG_ADDRESS="replace_with_your_address"
+BTG_EXTENSION_ARGUMENTS=""
+BTG_POOL="replace_with_your_BTG_POOL"
+BTG_PORT="replace_with_your_BTG_PORT"
+BTG_WORKER="$WORKERNAME"
+
+# Bitcore (BTX)
+BTX_ADDRESS="replace_with_your_address"
+BTX_EXTENSION_ARGUMENTS=""
+BTX_POOL="btx.suprnova.cc"
+BTX_PORT="3629"
+BTX_WORKER="$WORKERNAME"
+
+# Callisto (CLO)
+CLO_ADDRESS="replace_with_your_address"
+CLO_EXTENSION_ARGUMENTS=""   
+CLO_POOL="clo.2miners.com"
+CLO_PORT="3030"
+CLO_WORKER="$WORKERNAME"
+
+# CrowdCoin (CRC)
+CRC_ADDRESS="replace_with_your_address"
+CRC_EXTENSION_ARGUMENTS=""
+CRC_POOL="replace_with_pool_address"
+CRC_PORT="replace_with_pool_port"
+CRC_WORKER="$WORKERNAME"
+
+# Decred (DCR)
+DCR_ADDRESS="replace_with_your_address"
+DCR_EXTENSION_ARGUMENTS=""
+DCR_POOL="yiimp.eu"
+DCR_PORT="3252"
+DCR_WORKER="$WORKERNAME"
+
+# Digibyte (DGB)
+DGB_ADDRESS="replace_with_your_address"
+DGB_EXTENSION_ARGUMENTS=""
+DGB_POOL="hub.miningpoolhub.com"
+DGB_PORT="20527"
+DGB_WORKER="$WORKERNAME"
+
+# Desire (DSR)
+DSR_ADDRESS="replace_with_your_address"
+DSR_EXTENSION_ARGUMENTS=""
+DSR_POOL="DSR_POOL"
+DSR_PORT="DSR_PORT"
+DSR_WORKER="$WORKERNAME"
+
+#Ellaism (ELLA)
+ELLA_ADDRESS="replace_with_your_address"
+ELLA_EXTENSION_ARGUMENTS=""    
+ELLA_POOL="replace_with_pool_address"
+ELLA_PORT="replace_with_pool_port"
+ELLA_WORKER="$WORKERNAME"
+
+# Ethereum Classic (ETC)
+ETC_ADDRESS="replace_with_your_address"
+ETC_EXTENSION_ARGUMENTS=""    
+ETC_POOL="europe.ethash-hub.miningpoolhub.com"
+ETC_PORT="20555"
+ETC_WORKER="$WORKERNAME"
+
+# Ethereum (ETH)
+ETH_ADDRESS="replace_with_your_address"
+ETH_EXTENSION_ARGUMENTS=""    
+ETH_POOL="europe.ethash-hub.miningpoolhub.com"
+ETH_PORT="20535"
+ETH_WORKER="$WORKERNAME"
+
+# Electroneum(ETN) 
+ETN_ADDRESS="replace_with_your_address"
+ETN_EXTENSION_ARGUMENTS=""
+ETN_POOL="ETN POOL"
+ETN_PORT="ETN PORT"
+ETN_WORKER="$WORKERNAME"
+
+# Metaverse (ETP)
 ETP_ADDRESS="replace_with_your_address"
+ETP_EXTENSION_ARGUMENTS=""
 ETP_POOL="replace_with_your_ETP_POOL"
 ETP_PORT="replace_with_your_ETP_PORT"
-ETP_EXTENSION_ARGUMENTS=""
+ETP_WORKER="$WORKERNAME"
+
+# Expanse (EXP)
+EXP_ADDRESS="replace_with_your_address"
+EXP_EXTENSION_ARGUMENTS=""   
+EXP_POOL="exp-us.dwarfpool.com:"
+EXP_PORT="81"
+EXP_WORKER="$WORKERNAME"
+
+# Folm (FLM)
+FLM_ADDRESS="replace_with_your_address"
+FLM_EXTENSION_ARGUMENTS=""
+FLM_POOL="replace_with_your_FLM_POOL"
+FLM_PORT="replace_with_your_FLM_PORT"
+FLM_WORKER="$WORKERNAME"
+
+# FeatherCoin (FTC)
+FTC_ADDRESS="replace_with_your_address"
+FTC_EXTENSION_ARGUMENTS=""
+FTC_POOL="hub.miningpoolhub.com"
+FTC_PORT="20510"
+FTC_WORKER="$WORKERNAME"
+
+# GoByte (GBX)
+GBX_ADDRESS="replace_with_your_address"
+GBX_EXTENSION_ARGUMENTS=""
+GBX_POOL="replace_with_pool_address"
+GBX_PORT="replace_with_pool_port"
+GBX_WORKER="$WORKERNAME"
+
+Groestl (GRS)
+GRS_ADDRESS="replace_with_your_address"
+GRS_EXTENSION_ARGUMENTS=""
+GRS_POOL="moria.dwarfpool.com"
+GRS_PORT="3345"
+GRS_WORKER="$WORKERNAME"
+
+# Hush (HUSH)
+HUSH_ADDRESS="replace_with_your_address"
+HUSH_EXTENSION_ARGUMENTS=""
+HUSH_POOL="zdash.suprnova.cc"
+HUSH_PORT="4048"
+HUSH_WORKER="$WORKERNAME"
+
+# Komodo (KMD)
+KMD_ADDRESS="replace_with_your_address"
+KMD_EXTENSION_ARGUMENTS=""
+KMD_POOL="luckpool.org"
+KMD_PORT="3857"
+KMD_WORKER="$WORKERNAME"
+
+# Karbo (KRB)
+KRB_ADDRESS="replace_with_your_address"
+KRB_EXTENSION_ARGUMENTS=""
+KRB_POOL="krb.sberex.com"
+KRB_PORT="5555"
+KRB_WORKER="$WORKERNAME"
+
+# LBRY (LBC) 
+LBC_ADDRESS="replace_with_your_address"
+LBC_EXTENSION_ARGUMENTS=""
+LBC_POOL="lbry.suprnova.cc"
+LBC_PORT="6256"
+LBC_WORKER="$WORKERNAME"
+
+# Lux Coin (LUX)
+LUX_ADDRESS="replace_with_your_address"
+LUX_EXTENSION_ARGUMENTS=""
+LUX_POOL="yiimp.eu"
+LUX_PORT="8333"
+LUX_WORKER="$WORKERNAME"
+
+# Mona Coin (MONA)
+MONA_ADDRESS="replace_with_your_address"
+MONA_EXTENSION_ARGUMENTS=""
+MONA_POOL="mona.suprnova.cc"
+MONA_PORT="2995"
+MONA_WORKER="$WORKERNAME"
+
+# Music Coin (MUSIC)
+MUSIC_ADDRESS="replace_with_your_address"
+MUSIC_EXTENSION_ARGUMENTS=""   
+MUSIC_POOL="eus.gmc.epool.io"
+MUSIC_PORT="8008"
+MUSIC_WORKER="$WORKERNAME"
+
+# DeepOnion (ONION)
+ONION_ADDRESS="replace_with_your_address"
+ONION_EXTENSION_ARGUMENTS=""
+ONION_POOL="kawaiipool.party"
+ONION_PORT="3633"
+
+# Orbitcoin (ORB)
+ORB_ADDRESS="replace_with_your_address"
+ORB_EXTENSION_ARGUMENTS=""
+ORB_POOL="strat.dnb.io"
+ORB_PORT="3031"
+ORB_WORKER="$WORKERNAME"
+
+# Pascal Coin (PASC)
+PASC_ADDRESS="replace_with_your_address"
+PASC_EXTENSION_ARGUMENTS=""
+PASC_POOL="pasc-us-east1.nanopool.org"
+PASC_PORT="15555"
+PASC_WORKER="$WORKERNAME"
+
+# Pascal Lite (PASL)
+PASL_ADDRESS="replace_with_your_address"
+PASL_EXTENSION_ARGUMENTS=""
+PASL_POOL="mine.pasl.fairpool.xyz"
+PASL_PORT="4009"
+PASL_WORKER="$WORKERNAME"
+
+# Pirl Coin (PIRL)
+PIRL_ADDRESS="replace_with_your_address"
+PIRL_EXTENSION_ARGUMENTS=""   
+PIRL_POOL="PIRL POOL"
+PIRL_PORT="PIRL PORT"
+PIRL_WORKER="$WORKERNAME"
+
+# Phoenixcoin (PXC)
+PXC_ADDRESS="replace_with_your_address"
+PXC_EXTENSION_ARGUMENTS=""
+PXC_POOL="atlas.phoenixcoin.org:"
+PXC_PORT="10554"
+PXC_WORKER="$WORKERNAME"
+
+# Raven Coin (RVN)
+RVN_ADDRESS="replace_with_your_address"
+RVN_EXTENSION_ARGUMENTS=""
+RVN_POOL="RVN_POOL_ADDRESS"
+RVN_PORT="RVN_POOL_PORT"
+RVN_WORKER="$WORKERNAME"
+
+# Siacoin (SC)
+SC_ADDRESS="replace_with_your_address"
+SC_EXTENSION_ARGUMENTS=""
+SC_GW_POOL="sia-us-east1.nanopool.org"
+SC_GW_PORT="9980"
+SC_POOL="sia-us-east1.nanopool.org"
+SC_PORT="7777"
+SC_WORKER="$WORKERNAME"
+
+# Sib Coin (SIB)
+SIB_ADDRESS="replace_with_your_address"
+SIB_EXTENSION_ARGUMENTS=""
+SIB_POOL="sib.suprnova.cc"
+SIB_PORT="3458"
+SIB_WORKER="$WORKERNAME"
+
+# Signatum (SIGT)
+SIGT_ADDRESS="replace_with_your_address"
+SIGT_EXTENSION_ARGUMENTS=""
+SIGT_POOL="us.hashbag.cc"
+SIGT_PORT="8644"
+SIGT_WORKER="$WORKERNAME"
+
+# Smart Coin (SMART)
+SMART_ADDRESS="replace_with_your_address"
+SMART_EXTENSION_ARGUMENTS=""
+SMART_POOL="pool-eu.smartcash.cc"
+SMART_PORT="3333"
+SMART_WORKER="$WORKERNAME"
+
+# SOILcoin (SOIL)
+SOIL_ADDRESS="replace_with_your_address"
+SOIL_EXTENSION_ARGUMENTS=""   
+SOIL_POOL="soil.pool.sexy"
+SOIL_PORT="9009"
+SOIL_WORKER="$WORKERNAME"
+
+# Sumokoin (SUMO)
+SUMO_ADDRESS="replace_with_your_address"
+SUMO_EXTENSION_ARGUMENTS=""
+SUMO_POOL="SUMO_POOL"
+SUMO_PORT="SUMO_PORT"
+SUMO_WORKER="$WORKERNAME"
+
+# TrezarCoin (TZC)
+TZC_ADDRESS="replace_with_your_address"
+TZC_EXTENSION_ARGUMENTS=""
+TZC_POOL="TZC POOL"
+TZC_PORT="TZC PORT"
+TZC_WORKER="$WORKERNAME"
+
+# Ubiq (UBQ)
+UBQ_ADDRESS="replace_with_your_address"
+UBQ_EXTENSION_ARGUMENTS=""   
+UBQ_POOL="us.ubiqpool.io"
+UBQ_PORT="8008"
+UBQ_WORKER="$WORKERNAME"
+
+# VIVO (VIVO)
+VIVO_ADDRESS="replace_with_your_address"
+VIVO_EXTENSION_ARGUMENTS=""
+VIVO_POOL="VIVO POOL"
+VIVO_PORT="VIVO PORT"
+VIVO_WORKER="$WORKERNAME"
+
+# Vertcoin (VTC)
+VTC_ADDRESS="replace_with_your_address"
+VTC_EXTENSION_ARGUMENTS=""
+VTC_POOL="hub.miningpoolhub.com"
+VTC_PORT="20507"
+VTC_WORKER="$WORKERNAME"
+
+# Motion (XMN)
+XMN_ADDRESS="replace_with_your_address"
+XMN_EXTENSION_ARGUMENTS=""
+XMN_POOL="XMN_POOL_ADDRESS"
+XMN_PORT="XMN_POOL_PORT"
+XMN_WORKER="$WORKERNAME"
+
+# Monero (XMR)
+XMR_ADDRESS="replace_with_your_address"
+XMR_EXTENSION_ARGUMENTS=""
+XMR_POOL="xmr-us-east1.nanopool.org"
+XMR_PORT="14444"
+XMR_WORKER="$WORKERNAME"
+
+# Myriad (XMY)
+XMY_ADDRESS="replace_with_your_address"
+XMY_EXTENSION_ARGUMENTS=""
+XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
+XMY_PORT="20479"
+XMY_WORKER="$WORKERNAME"
+
+# Verge (XVG)
+XVG_ADDRESS="replace_with_your_address"
+XVG_EXTENSION_ARGUMENTS=""
+XVG_POOL="replace_with_pool_address"
+XVG_PORT="replace_with_pool_port"
+XVG_WORKER="$WORKERNAME"
+
+# ZCoin (XZC)
+XZC_ADDRESS="replace_with_your_address"
+XZC_EXTENSION_ARGUMENTS=""
+XZC_POOL="xzc.suprnova.cc"
+XZC_PORT="1569"
+XZC_WORKER="$WORKERNAME"
+
+# ZClassic (ZCL)
+ZCL_ADDRESS="replace_with_your_address"
+ZCL_EXTENSION_ARGUMENTS=""
+ZCL_POOL="us.zclmine.pro"
+ZCL_PORT="9009"
+ZCL_WORKER="$WORKERNAME"
+
+# Zcash (ZEC)
+ZEC_ADDRESS="t1XfkZUZWME8FnRiFxHZQAQ2K1UdQMbshJp" # replace_with_your_address
+ZEC_EXTENSION_ARGUMENTS=""
+ZEC_POOL="zec-us-east1.nanopool.org"
+ZEC_PORT="6666"
+ZEC_WORKER="$WORKERNAME"
+
+# Zencash (ZEN)
+ZEN_ADDRESS="replace_with_your_address"
+ZEN_EXTENSION_ARGUMENTS=""
+ZEN_POOL="luckpool.org"
+ZEN_PORT="3057"
+ZEN_WORKER="$WORKERNAME"
+
 
 ###################################################
 # Claymore_Dual Mining                            #
@@ -1143,8 +1147,8 @@ MPH_GRS_EXTENSION_ARGUMENTS=""
 ################################################################
 
 BITCORE_COINS="BTX"
-CRYPTONIGHTV7_COINS="XMR,MPH_CRYPTONIGHTV7,NICE_CRYPTONIGHTV7,ETN"
 CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
+CRYPTONIGHTV7_COINS="XMR,MPH_CRYPTONIGHTV7,NICE_CRYPTONIGHTV7,ETN"
 DECRED_COINS="DCR"
 EQUIHASH_COINS="BTG,ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
 ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
@@ -1152,7 +1156,7 @@ GRS_COINS="GRS,MPH_GRS"
 LBRY_COINS="LBC,ZPOOL_LBRY"
 LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
 LYRA2Z_COINS="XZC,MPH_LYRA2Z"
-MYR_GR_COINS="XMY,MPH_MYR-GR"
+MYR_GR_COINS="XMY,MPH_MYR_GR"
 NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
 PASCAL_COINS="PASC,PASL"
 PHI_COINS="LUX,FLM,SERA"
@@ -1163,6 +1167,7 @@ SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN"
 XEVAN_COINS="BSD"
+
 
 #####################################################################
 #                                                                   #
@@ -1457,7 +1462,7 @@ MINIMUM_PROFIT=0.0
 
 MPH_USERNAME="$MPH_ADDRESS"
 
-PAYMENT_ADDRESS="$BTC_ADDRESS"
+PAYMENT_ADDRESS="$NICE_ADDRESS"
 
 WORKER_NAME="$WORKERNAME"
 
