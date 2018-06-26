@@ -69,7 +69,8 @@ source ${NVOC}/0algo_id
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
 
-if [ $USE_COLOR == "YES" ]; then
+if [[ $USE_COLOR == YES ]]
+then
   N='\e[0m'     # Normal
   B='\e[1m'     # Bold
   R='\e[31m'    # Red
@@ -77,12 +78,7 @@ if [ $USE_COLOR == "YES" ]; then
   C='\e[36m'    # Cyan
   Y='\e[33m'    # Yellow
 else
-  N=""
-  B=""
-  R=""
-  G=""
-  C=""
-  Y=""
+  unset N B R G C Y
 fi
 
 ################################################################################
@@ -153,14 +149,14 @@ Clearlogs()
   sudo su -c "> /var/log/Xorg.0.log"
   sudo su -c "> /var/log/kern.log"
 
-  echo "" > ${NVOC}/5_watchdoglog
-  echo "" > ${NVOC}/6_autotemplog
-  echo "" > ${NVOC}/current-profit
-  echo "" > ${NVOC}/algo-log
+  echo > ${NVOC}/5_watchdoglog
+  echo > ${NVOC}/6_autotemplog
+  echo > ${NVOC}/current-profit
+  echo > ${NVOC}/algo-log
 
   rm -r ${NVOC}/kk003_telegram_data > /dev/null 2>&1
 
-  echo ""; echo "...done."
+  echo; echo "...done."
 }
 
 ################################# GPU Info ######################################
@@ -210,7 +206,7 @@ GPUinfo()
 
     INFO+="$N$i,|,$PSTATE,|,$CURRENT_TEMP,|,$CURRENT_FAN,|,$UTILIZATION,|,$POWERDRAW / $PWRLIMIT / $POWERMAX,|,$GPUCLOCK,|,$MEMCLOCK,|,$VENDOR_ID - $MODEL\n"
 
-    i=$(($i + 1))
+    (( i++ ))
   done
   echo -e $INFO | column -t -s,
 }
@@ -221,13 +217,13 @@ Patch()
   # Kill off the nv_OC processes
   Stop
 
-  echo -e "${B}Applying patches/updates...${N}"; echo ""
+  echo -e "${B}Applying patches/updates...${N}"; echo
 
   # Apply patches
   sudo dpkg --configure -a
   sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
 
-  echo ""; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
+  echo; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
 }
 
 ############################### Reboot host ###################################
@@ -242,7 +238,7 @@ Reboot()
 ############################### Start nvOC ####################################
 Start()
 {
-  if [ $LOCALorREMOTE == "REMOTE" ]
+  if [[ $LOCALorREMOTE == REMOTE ]]
   then
     export DISPLAY=:0
   fi
@@ -250,7 +246,7 @@ Start()
   then
     echo "nvOC already running, use ./nvOC restart"
   else
-    echo -e "${B}Restarting nvOC tasks....${N}"; echo ""
+    echo -e "${B}Restarting nvOC tasks....${N}"; echo
     gnome-terminal --window-with-profile=mining
   fi
 }
@@ -258,7 +254,7 @@ Start()
 ############################### Stop nvOC #####################################
 Stop()
 {
-  echo -e "${B}Stopping nvOC processes...${N}"; echo ""
+  echo -e "${B}Stopping nvOC processes...${N}"; echo
 
   # Kill off the nv_OC processes
   pkill -f gnome-terminal
@@ -267,7 +263,7 @@ Stop()
   pkill -f 6tempcontrol
   pkill -f 8wtm
   pkill -e screen
-  echo ""; echo "...done."
+  echo; echo "...done."
 }
 
 ############################### Restart Miner ##################################
@@ -307,11 +303,11 @@ GPUmap()
 
 # Check if CUDA_DEVICE_ORDER=PCI_BUS_ID is set
   CUDA_ORDER="/etc/profile.d/cuda-device-order.sh"
-  if [ -e "$CUDA_ORDER" ]
+  if [[ -e "$CUDA_ORDER" ]]
   then
-    if [[ $(wc -l <$CUDA_ORDER) -gt 1 ]]
+    if (( $(wc -l <$CUDA_ORDER) > 1 ))
     then
-      echo ""
+      echo
       echo "Fixing the CUDA_DEVICE_ORDER=PCI_BUS_ID"
       sudo rm $CUDA_ORDER
       sudo echo 'export CUDA_DEVICE_ORDER=PCI_BUS_ID' | sudo tee -a /etc/profile.d/cuda-device-order.sh
@@ -321,7 +317,7 @@ GPUmap()
     echo "in order to properly map GPU's"
     echo "Please reboot for the changes to take effect"
     sudo echo 'export CUDA_DEVICE_ORDER=PCI_BUS_ID' | sudo tee -a /etc/profile.d/cuda-device-order.sh
-    echo ""
+    echo
     exit
   fi
 
@@ -330,7 +326,7 @@ GPUmap()
   count=0
 
 # Display version info
-  echo ""; echo ""
+  echo; echo
   for i in {16..21}
   do
     echo -en "\e[48;5;${i}m "
@@ -340,52 +336,52 @@ GPUmap()
   do
     echo -en "\e[48;5;${i}m \e[0m"
   done
-  echo ""; echo ""; echo ""
+  echo; echo; echo
   sleep 0.5
 
   echo -e "${B}gpumap${N} will help you physically map your GPU's by spinning single"
   echo -e "GPU fan(s) only, one at a time and turning LED lights ON (if supported)."
   echo -e "It will also show some info about the GPU. Please follow prompts."
-  echo ""; echo ""
+  echo; echo
   echo -e "${B}gpumap${N} has detected: ${B}$GPUS${N} GPU's"
-  echo ""; echo ""
+  echo; echo
 
   echo -e "${Y}To continue we have to temporary stop all mining processes."
   echo -e "Once finished, mining processes will resume.${N}${B}"
-  echo ""
+  echo
   read -r -n 1 -p "Continue (y/n)? " response
-  echo -e "${N}"; echo ""
+  echo -e "${N}"; echo
 
   if [[ $response =~ ^[Yy]$ ]]
   then
     echo -e "${Y}Stopping nvOC processes...${N}"
     # Kill off the nv_OC processes
     Stop
-    echo ""
+    echo
     echo "... done!"
-    echo ""; echo ""
+    echo; echo
     echo -e "${Y}Turning all fans and LED lights OFF...${N}"
     echo
     # Turn everything OFF
-    while [ $count -lt $GPUS ]
+    while (( count < GPUS ))
     do
       ${NVD} -a [gpu:${count}]/GPUFanControlState=1 >/dev/null 2>&1
-      ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
-      ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
+      ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 >/dev/null 2>&1
+      ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 >/dev/null 2>&1
       (( count++ ))
     done
     echo "... done!"
-    echo ""; echo ""
+    echo; echo
     count=0
     # Turn fan/LED ON - one GPU at a time
-    while [ $count -lt $GPUS ]
+    while (( count < GPUS ))
     do
-      ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=75 2>&1 >/dev/null
-      ${NVD} -a [gpu:${count}]/GPULogoBrightness=100 2>&1 >/dev/null
+      ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=75 >/dev/null 2>&1
+      ${NVD} -a [gpu:${count}]/GPULogoBrightness=100 >/dev/null 2>&1
       echo -e "${Y}Take a look at your rig for spinning fan now${N}"
-      echo ""
+      echo
       echo -e "${B}GPU$count${N} fan and LED are ON. This is your ${B}GPU$count${N}."
-      echo ""
+      echo
       # Stubo's Vendor detection
       ID=$(nvidia-smi -i $count --query-gpu=pci.sub_device_id --format=csv,noheader,nounits)
       VENDOR_ID=${ID:6:4}
@@ -412,24 +408,24 @@ GPUmap()
       echo "Max Power Limit: $POWERMAX"
       echo "GPU Slowdown Temp: $SLOWDOWN"
       echo "GPU Shutdown Temp: $SHUTDOWN"
-      echo ""
-      echo ""
+      echo
+      echo
       # Move on to the next GPU
       echo -e "${B}"
       read -r -n 1 -p "Continue (y/n)? " response
-      echo -e "${N}"; echo ""
+      echo -e "${N}"; echo
       if [[ $response =~ ^[Yy]$ ]]
       then
-        ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
-        ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
+        ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 >/dev/null 2>&1
+        ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 >/dev/null 2>&1
       elif [[ $response =~ ^[Nn]$ ]]
       then
-        ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
-        ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
+        ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 >/dev/null 2>&1
+        ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 >/dev/null 2>&1
         echo -e "Acknowledged. Thank you for using ${B}gpumap${N}"
         echo "Resuming mining operation now..."
         echo ""
-        if [ $LOCALorREMOTE == "LOCAL" ]
+        if [[ $LOCALorREMOTE == LOCAL ]]
         then
           gnome-terminal
           exit
@@ -446,15 +442,15 @@ GPUmap()
 
         if [[ $response =~ ^[Yy]$ ]]
         then
-          ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
-          ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
+          ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 >/dev/null 2>&1
+          ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 >/dev/null 2>&1
         else
           echo "Neither y or n were pressed again!"
-          ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 2>&1 >/dev/null
-          ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 2>&1 >/dev/null
+          ${NVD} -a [fan:${count}]/GPUTargetFanSpeed=0 >/dev/null 2>&1
+          ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 >/dev/null 2>&1
           echo -e "Thank you for using ${B}gpumap${N}"
           echo "Resuming mining operation now."
-          if [ $LOCALorREMOTE == "LOCAL" ]
+          if [[ $LOCALorREMOTE == LOCAL ]]
           then
             gnome-terminal
             exit
@@ -465,7 +461,7 @@ GPUmap()
           fi
         fi
       fi
-      echo ""; echo ""
+      echo; echo
       (( count++ ))
     done
   else
@@ -473,15 +469,15 @@ GPUmap()
   fi
 
   echo -e "${Y}All done, that was the last detected GPU.${N}"
-  echo ""; echo ""
+  echo; echo
   echo -e "Thank you for using ${B}gpumap${N}"
-  echo ""
+  echo
   read -r -p "Resume mining operation now? (y/n + enter): " response
   echo -e "${N}"; echo ""
 
   if [[ $response =~ ^[Yy]$ ]]
   then
-    if [ $LOCALorREMOTE == "LOCAL" ]
+    if [[ $LOCALorREMOTE == LOCAL ]]
     then
       gnome-terminal
       exit
@@ -542,7 +538,7 @@ Report()
   clear
 
 # Display version info
-  echo ""
+  echo
   for i in {16..21}
   do
     echo -en "\e[48;5;${i}m "
@@ -552,8 +548,8 @@ Report()
   do
     echo -en "\e[48;5;${i}m \e[0m"
   done
-  echo ""
-  echo ""
+  echo
+  echo
 
 # Collect info and ssign to variables
 #######################################
@@ -591,7 +587,7 @@ Report()
 # (Ethernet)    replace: "Intel Corporation Ethernet Connection (2)" with "Intel"
 
 # if echo "$mbvendor" | grep -q "ASUSTeK" ; then mbvendor="ASUS"; fi
-  if [[ "$mbvendor" == ASUSTeK* ]]
+  if [[ $mbvendor == ASUSTeK* ]]
   then
     mbvendor="ASUS"
   fi
@@ -707,11 +703,11 @@ Ethernet      :  $ethernet"
 # Temp control
   echo "Temp Control ..............: $MINER_TEMP_CONTROL"
   echo "MANUAL_FAN ................: $MANUAL_FAN"
-  if [[ $MANUAL_FAN == "YES" ]]
+  if [[ $MANUAL_FAN == YES ]]
   then
     echo "MANUAL FAN_SPEED ..........: $FAN_SPEED"
   fi
-  if [[ $MINER_TEMP_CONTROL == "YES" ]]
+  if [[ $MINER_TEMP_CONTROL == YES ]]
   then
     echo "TARGET_TEMP ...............: $TARGET_TEMP"
     echo "__FAN_ADJUST ..............: $__FAN_ADJUST"
@@ -727,12 +723,12 @@ Ethernet      :  $ethernet"
   echo "CLEAR_LOGS_ON_BOOT ........: $CLEAR_LOGS_ON_BOOT"
   echo "AUTO_UPDATE ...............: $AUTO_UPDATE"
   echo "AUTO_REBOOT ...............: $AUTO_REBOOT"
-  if [[ $AUTO_REBOOT == "YES" ]]
+  if [[ $AUTO_REBOOT == YES ]]
   then
     echo "REBOOT_TIMEOUT_IN_MINUTES .: $REBOOT_TIMEOUT_IN_MINUTES"
   fi
   echo "_Parallax_MODE (upPaste)...: $_Parallax_MODE"
-  if [[ $_Parallax_MODE == "YES" ]]
+  if [[ $_Parallax_MODE == YES ]]
   then
     echo "pasteBASH .................: $pasteBASH"
     echo "upPASTE_TIMEOUT_IN_MINUTES.: $upPASTE_TIMEOUT_IN_MINUTES"
@@ -742,7 +738,7 @@ Ethernet      :  $ethernet"
 # 1bash telegram
   echo "TELEGRAM_MESSAGES .: $TELEGRAM_MESSAGES"
   echo "TELEGRAM_ALERTS ...: $TELEGRAM_ALERTS"
-  if [[ $TELEGRAM_MESSAGES == "YES" ]] || [[ $TELEGRAM_ALERTS == "YES" ]]
+  if [[ $TELEGRAM_MESSAGES == YES || $TELEGRAM_ALERTS == YES ]]
   then
     echo "TELEGRAM_TYPE .............: $TELEGRAM_TYPE"
     echo "TELEGRAM_TIMEOUT_IN_MINUTES: $TELEGRAM_TIMEOUT_IN_MINUTES"
@@ -753,7 +749,7 @@ Ethernet      :  $ethernet"
 
   echo "HEADLESS MODE:.............: $HEADLESS_MODE"
   echo "GPUPowerMizerMode_Adjust...: $GPUPowerMizerMode_Adjust"
-  if [[ $GPUPowerMizerMode_Adjust == "YES" ]]
+  if [[ $GPUPowerMizerMode_Adjust == YES ]]
   then
     echo "GPUPowerMizerMode .........: $GPUPowerMizerMode"
   fi
@@ -764,26 +760,26 @@ Ethernet      :  $ethernet"
 
 # 1bash OC
   echo "POWERLIMIT MODE ...........: $POWERLIMIT_MODE"
-  if [[ $POWERLIMIT_MODE == "GLOBAL" ]]
+  if [[ $POWERLIMIT_MODE == GLOBAL ]]
   then
     echo "Power Limit WATTS .........: $_POWERLIMIT_WATTS"
-  elif [[ $POWERLIMIT_MODE == "ALGO_SPECIFIC" ]]
+  elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
   then
     eval 'ALGO_PL=${ALGO}_POWERLIMIT_WATTS'
     echo "Power Limit WATTS .........: ${!ALGO_PL}"
-  elif [[ $POWERLIMIT_MODE == "GPU_SPECIFIC" ]]
+  elif [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
       echo "GPU$i Power Limit ..........: $((INDIVIDUAL_POWERLIMIT_$i))"
     done
-  elif [[ $POWERLIMIT_MODE == "GLOBAL_with_GPU_OFFSET" ]]
+  elif [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
       echo "GPU$i Power Limit ..........: $(( _POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i ))"
     done
-  elif [[ $POWERLIMIT_MODE == "ALGO_SPECIFIC_with_GPU_OFFSET" ]]
+  elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
@@ -802,21 +798,21 @@ Ethernet      :  $ethernet"
     eval 'ALGO_MC=${ALGO}_MEMORY_OVERCLOCK'
     echo "Core Overclock ............: ${!ALGO_OC}"
     echo "Memory Overclock ..........: ${!ALGO_MC}"
-  elif [[ $OVERCLOCK_MODE == "GPU_SPECIFIC" ]];
+  elif [[ $OVERCLOCK_MODE == GPU_SPECIFIC ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
       echo "GPU$i Core Overclock ........: $((__CORE_OVERCLOCK_$i))"
       echo "GPU$i Memory Overclock ......: $((MEMORY_OVERCLOCK_$i))"
     done
-  elif [[ $OVERCLOCK_MODE == "GLOBAL_with_GPU_OFFSET" ]]
+  elif [[ $OVERCLOCK_MODE == GLOBAL_with_GPU_OFFSET ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
       echo "GPU$i Core Overclock ........: $(( _CORE_OVERCLOCK + __CORE_OVERCLOCK_$i )) "
       echo "GPU$i Memory Overclock ......: $(( _MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))"
     done
-  elif [[ $OVERCLOCK_MODE == "ALGO_SPECIFIC_with_GPU_OFFSET" ]]
+  elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
   then
     for i in $(seq 0 $((GPUS-1)))
     do
@@ -830,16 +826,16 @@ Ethernet      :  $ethernet"
 # 1bash mining
   echo "GLOBAL WORKERNAME .........: $GLOBAL_WORKERNAME"
   echo "AUTO WORKERNAME ...........: $AUTO_WORKERNAME"
-  if [[ $AUTO_WORKERNAME == "CUSTOM" || $AUTO_WORKERNAME == "HOST" ]];
+  if [[ $AUTO_WORKERNAME == CUSTOM || $AUTO_WORKERNAME == HOST ]]
   then
     echo "WORKERNAME ................: $WORKERNAME"
-  elif [[ $AUTO_WORKERNAME == "MAC" ]];
+  elif [[ $AUTO_WORKERNAME == MAC ]]
   then
     WORKERNAME=$(echo $MAC_AS_WORKER | cut -d'_' -f 5-)
     echo "WORKERNAME ................: hidden_$WORKERNAME"
   fi
   echo "plusCPU ...................: $plusCPU"
-  if [[ $plusCPU == "YES" ]];
+  if [[ $plusCPU == YES ]]
   then
     echo "threadCOUNT ...............: $threadCOUNT"
   fi
@@ -851,7 +847,7 @@ Ethernet      :  $ethernet"
   echo "ALGO ......................: $ALGO"
   eval MINER=${ALGO}_MINER
   echo "MINER .....................: ${!MINER}"
-  if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]];
+  if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]]
   then
     echo "ZPOOLPASS .................: hidden_pass...,"$(echo $ZPOOLPASS | cut -d',' -f 2-)
   fi
@@ -862,19 +858,19 @@ Ethernet      :  $ethernet"
   eval COIN_POOL_TMP=${COIN}_POOL
   echo $COIN "POOL ..................:" ${!COIN_POOL_TMP}
   eval COIN_PORT_TMP=${COIN}_PORT
-  if ! [[ $COIN_PORT_TMP == "" ]];
+  if [[ $COIN_PORT_TMP != "" ]]
   then
     echo $COIN "PORT ..................:" ${!COIN_PORT_TMP}
   fi
   eval ALGO_INTENSITY_TMP=${ALGO}_INTENSITY
-  if ! [[ $ALGO_INTENSITY_TMP == "" ]];
+  if [[ $ALGO_INTENSITY_TMP != "" ]]
   then
     echo $ALGO "INTENSITY ..........:" ${!ALGO_INTENSITY_TMP}
   fi
   eval COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
-  if ! [[ $COIN_AUTOCONVERT_TO_BTC_TMP == "" ]];
+  if [[ $COIN_AUTOCONVERT_TO_BTC_TMP != "" ]]
   then
-    echo $COIN"_AUTOCONVERT_TO_BTC ....:" $COIN_AUTOCONVERT_TO_BTC_TMP
+    echo "${COIN}_AUTOCONVERT_TO_BTC ....:" $COIN_AUTOCONVERT_TO_BTC_TMP
   fi
 
   echo
@@ -940,7 +936,7 @@ MinersUpgrade()
 InstallService()
 {
   echo "Reinstalling nvOC service for ${NVOC}"
-  sudo cat <<EOF > /etc/systemd/system/nvoc.service
+  sudo bash -c 'cat > /etc/systemd/system/nvoc.service' << EOF
 [Unit]
 Description=nvOC Service
 
@@ -965,11 +961,11 @@ EOF
 
   if sudo systemd-analyze verify nvoc.service
   then
-    echo "Setting ACL for 'nvoc' service user write access to NVOC path..."
+    echo -e "Setting ACL for '${B}nvoc${N}' user write access to NVOC path..."
     sudo setfacl -m user:nvoc:rw ${NVOC}
     
     sudo systemctl enable nvoc
-    echo "${W}Done.${N} This service has autostart enabled."
+    echo -e "${B}Done.${N} This service has autostart enabled."
   else
     echo "Service installation failed"
   fi
@@ -1006,7 +1002,7 @@ miner-log()
 ################################# wdog-log ######################################
 wdog-log()
 {
-  if [ $LOCALorREMOTE == "REMOTE" ]
+  if [[ $LOCALorREMOTE == REMOTE ]]
   then
     tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0
   else
@@ -1017,7 +1013,7 @@ wdog-log()
 ################################# temp-log ######################################
 temp-log()
 {
-  if [ $LOCALorREMOTE == "REMOTE" ]
+  if [[ $LOCALorREMOTE == REMOTE ]]
   then
     tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0
   else
@@ -1043,11 +1039,11 @@ restore-xorg()
 {
   echo -e "${B}Restoring default nvOC xorg.conf ...${N}"
   touch "${NVOC}/xorg_flag"
-  echo "" > "${NVOC}/xorg_flag"
+  echo > "${NVOC}/xorg_flag"
   sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf.default -O /etc/X11/xorg.conf.default
   sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   echo "Default xorg.conf restored, Rebooting system in 5 sec."
-  echo "System may reboot again if HEADLESS_MODE=YES"; echo ""
+  echo "System may reboot again if HEADLESS_MODE=YES"; echo
   sleep 5
   sudo reboot
 }
