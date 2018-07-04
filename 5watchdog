@@ -158,8 +158,25 @@ fi
 ## Check internet before starting main loop
 while ! nc -vzw1 google.com 443;
 do
-  echo "$(date) - [WARNING] - Internet is down, checking again in 10 seconds..."
+  DNS=0
+  echo "$(date) - [WARNING] - Internet is down, checking ..."
   sleep 10
+  if ping -c1 8.8.8.8 &> /dev/null
+  then
+    echo "$(date) - [WARNING] - Ping ok, but problem in name resolution: checking every 30 sec" | tee -a ${LOG_FILE}
+    while  ! nc -vzw1 google.com 443  && (( DNS < 20 ))
+    do
+      sleep 30
+      DNS=$((DNS + 1))
+    done
+    if ping -c1 8.8.8.8 &> /dev/null && ! nc -vzw1 google.com 443
+    then
+      echo " Name resolution problem while ping is ok, waited 10 minutes, restarting system"
+      sudo reboot
+    else
+      echo "Ping and DNS are OK"
+    fi
+  fi
 done
 
 ## Before starting to check GPU utilization in main loop check if miner start was successful or not
