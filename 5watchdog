@@ -166,12 +166,14 @@ do
     echo "$(date) - [WARNING] - Ping ok, but problem in name resolution: checking every 30 sec" | tee -a ${LOG_FILE}
     while  ! nc -vzw1 google.com 443  && (( DNS < 20 ))
     do
+      echo "Name resolution not succeful yet"
       sleep 30
       DNS=$((DNS + 1))
     done
     if ping -c1 8.8.8.8 &> /dev/null && ! nc -vzw1 google.com 443
     then
-      echo " Name resolution problem while ping is ok, waited 10 minutes, restarting system"
+      echo " Name resolution problem while ping is ok, waited 10 minutes, restarting system in 10 sec"
+      sleep 10
       sudo reboot
     elif ping -c1 8.8.8.8 &> /dev/null && nc -vzw1 google.com 443
     then
