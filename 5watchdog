@@ -173,7 +173,8 @@ do
     then
       echo " Name resolution problem while ping is ok, waited 10 minutes, restarting system"
       sudo reboot
-    else
+    elif ping -c1 8.8.8.8 &> /dev/null && nc -vzw1 google.com 443
+    then
       echo "Ping and DNS are OK"
     fi
   fi
