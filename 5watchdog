@@ -328,13 +328,13 @@ do
       do
         echo "$(date) - [WARNING] - Internet is down, checking again in 30 seconds..."
         sleep 30
-      ## While name resolution not working check ping and restart 3main if ping is ok.
-      if ping -c1 8.8.8.8 &> /dev/null
-      then
-        echo "$(date) - [WARNING] - Ping ok, but problem in name resolution: restarting 3main" | tee -a ${LOG_FILE}
-        pkill -f 3main
-	exit
-      fi
+        ## While name resolution not working check ping and restart 3main if ping is ok.
+        if ping -c1 8.8.8.8 &> /dev/null
+        then
+          echo "$(date) - [WARNING] - Ping ok, but problem in name resolution: restarting 3main" | tee -a ${LOG_FILE}
+          pkill -f 3main
+          exit
+        fi
       done
     else
       echo "Internet ok"
