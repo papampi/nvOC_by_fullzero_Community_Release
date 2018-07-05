@@ -62,10 +62,12 @@
 #          Use sysrq reboot, to prevent freeze/hang
 # v=0019 : papampi
 #          Load average check, notify, reboot (1bash setting)
+# v=0020 : papampi
+#          Check Ping if Network couldnt resolve 
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.1.019"   # Do not edit this
+nvOC_wdog_ver="v0019-2.1.020"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
@@ -154,31 +156,22 @@ then
   echo ""
 fi
 
-
 ## Check internet before starting main loop
+DNS=0
 while ! nc -vzw1 google.com 443;
 do
-  DNS=0
+  if (( DNS >= 20 ))
+  then
+    echo " Name resolution problem while ping is ok, waited 10 minutes, restarting system" | tee -a ${LOG_FILE}
+    sleep 10
+	sudo reboot
+  fi
   echo "$(date) - [WARNING] - Internet is down, checking ..."
-  sleep 10
+  sleep 30
   if ping -c1 8.8.8.8 &> /dev/null
   then
     echo "$(date) - [WARNING] - Ping ok, but problem in name resolution: checking every 30 sec" | tee -a ${LOG_FILE}
-    while  ! nc -vzw1 google.com 443  && (( DNS < 20 ))
-    do
-      echo "Name resolution not succeful yet"
-      sleep 30
-      DNS=$((DNS + 1))
-    done
-    if ping -c1 8.8.8.8 &> /dev/null && ! nc -vzw1 google.com 443
-    then
-      echo " Name resolution problem while ping is ok, waited 10 minutes, restarting system in 10 sec"
-      sleep 10
-      sudo reboot
-    elif ping -c1 8.8.8.8 &> /dev/null && nc -vzw1 google.com 443
-    then
-      echo "Ping and DNS are OK"
-    fi
+    (( DNS++ ))
   fi
 done
 
