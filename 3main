@@ -545,7 +545,7 @@ then
 }
 EOF
 
-  AUTO_SWITCH_CMD="python2.7 \"${NVOC}/nice_switch\" \"${NVOC}/nice_conf.json\""
+  AUTO_SWITCH_CMD="python2.7 ${NVOC}/nice_switch ${NVOC}/nice_conf.json"
 fi
 # END SALFTER_NICEHASH_SWITCHING #
 
@@ -652,7 +652,7 @@ then
 }
 EOF
 
-  AUTO_SWITCH_CMD="python2.7 \"${NVOC}/mph_switch\" \"${NVOC}/mph_conf.json\""
+  AUTO_SWITCH_CMD="python2.7 ${NVOC}/mph_switch ${NVOC}/mph_conf.json"
 fi
 # END SALFTER_MPH_SWITCHING #
 
@@ -746,7 +746,7 @@ then
 }
 EOF
 
-  AUTO_SWITCH_CMD="python2.7 \"${NVOC}/programatic_switch\" \"${NVOC}/programatic_conf.json\""
+  AUTO_SWITCH_CMD="python2.7 ${NVOC}/programatic_switch ${NVOC}/programatic_conf.json"
 fi
 # END SALFTER_PROGRAMATIC_SWITCHING #
 
