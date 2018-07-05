@@ -942,7 +942,7 @@ ZCL_PORT="9009"
 ZCL_WORKER="$WORKERNAME"
 
 # Zcash (ZEC)
-ZEC_ADDRESS="t1XfkZUZWME8FnRiFxHZQAQ2K1UdQMbshJp" # replace_with_your_address
+ZEC_ADDRESS="replace_with_your_address" # replace_with_your_address
 ZEC_EXTENSION_ARGUMENTS=""
 ZEC_POOL="zec-us-east1.nanopool.org"
 ZEC_PORT="6666"
