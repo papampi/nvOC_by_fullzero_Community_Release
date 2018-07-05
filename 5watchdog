@@ -164,7 +164,7 @@ do
   then
     echo " Name resolution problem while ping is ok, waited 10 minutes, restarting system" | tee -a ${LOG_FILE}
     sleep 10
-	sudo reboot
+    sudo reboot
   fi
   echo "$(date) - [WARNING] - Internet is down, checking ..."
   sleep 30
