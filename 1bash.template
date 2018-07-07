@@ -189,7 +189,7 @@ nvOC_1bash_ver="v0019-2.1.0029"   # Do not edit this
 COIN="ZEC"                  # Choose manually the coin to mine (like ETH, ZEC ...)
                             # or pick an automatic profit-based switcher below
 
-AUTO_START_MINER="YES"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
+AUTO_START_MINER="NO"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
 AUTO_SWITCH="NO"       # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING,
                        # SALFTER_MPH_SWITCHING, SALFTER_PROGRAMATIC_SWITCHING
