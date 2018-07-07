@@ -924,7 +924,7 @@ Reset()
 MinersUpgrade()
 {
   echo "Checking for nvOC miners updates..."
-  git -C ${NVOC} submodule update --init --depth 1 --remote miners
+  git -C ${NVOC} submodule update --init --force --depth 1 --remote miners
 
   echo "Running updates installer"
   pushd .

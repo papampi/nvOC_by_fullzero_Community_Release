@@ -10,16 +10,16 @@
 
 # DEV Mod Log:
 #
-# v=0001 : Stubo: 
+# v=0001 : Stubo:
 #          Initial Revision
-# v=0002 : Papampi: 
+# v=0002 : Papampi:
 #          Add dynamic wait times, Not send telegram for every switch,
 #          compare installed GPU counts and check for miner at start of watchdog
-# v=0003 : Stubo: 
+# v=0003 : Stubo:
 #          Bug Fix - changed numtest='^[0-9]+$' to numtest='^[0-9.]+$'
-# v=0004 : Stubo: 
+# v=0004 : Stubo:
 #          Enhancement - reduced sleep time in GPU utilization test loop from 0.5 to 0.2
-# v=0005 : Papampi: 
+# v=0005 : Papampi:
 #          Add wtm python check, add if internet is down to prevent too many logs, add $COUNT
 #          to (Low Utilization Detected: 3main will reinit if there are $COUNT ...)
 #          added source 1bash to read installed GPUs
@@ -33,28 +33,28 @@
 #          added telegram check, only send telegrams if set to "YES" in 1bash
 #          moved sleep=10 until next cycle to the end of the loop
 #          changed all backticks `...` to $(...)
-# v=0007 : Stubo: 
+# v=0007 : Stubo:
 #          Added echo of utilization and gpu counts as user feedback
-# v=0008 : Papampi: 
+# v=0008 : Papampi:
 #          Removed MINER_TIME to comply with changes in 3main (Moving watchdog before miner starts)
 #          Added check and restart miner after internet comes back online
-# v=0009 : leenoox: 
+# v=0009 : leenoox:
 #          Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
-# v=0010 : Stubo: 
+# v=0010 : Stubo:
 #          Added secondary fix for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is
 #          queried from nvidia-smi (a.k.a. bleed issue of power.draw)
-# v=0011 : Papampi 
+# v=0011 : Papampi
 #          Telegram Changes
-# v=0012 : Papampi 
+# v=0012 : Papampi
 #          Pool check
-# v=0013 : Papampi 
+# v=0013 : Papampi
 #          Alternate Pool switch with 9poolswitch
-# v=0014 : Papampi 
+# v=0014 : Papampi
 #          Check internet and miner before starting main loop
 # v=0015 : LukePicci
 #          Relocate nvOC to arbitrary install directory
-# v=0016 : Papampi 
-#          Code cleanup, lower nvidia-smi queries, cycle and threshold variables in 1bash 
+# v=0016 : Papampi
+#          Code cleanup, lower nvidia-smi queries, cycle and threshold variables in 1bash
 #          Added tags to logs
 # v=0017 : LuKePicci,papampi
 #          Rework for salfter's switchers compatibility
@@ -62,10 +62,12 @@
 #          Use sysrq reboot, to prevent freeze/hang
 # v=0019 : papampi
 #          Load average check, notify, reboot (1bash setting)
+# v=0020 : papampi
+#          Check Ping if Network couldnt resolve 
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.1.019"   # Do not edit this
+nvOC_wdog_ver="v0019-2.1.020"   # Do not edit this
 
 echo "Watchdog for $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
@@ -154,12 +156,23 @@ then
   echo ""
 fi
 
-
 ## Check internet before starting main loop
+DNS=0
 while ! nc -vzw1 google.com 443;
 do
-  echo "$(date) - [WARNING] - Internet is down, checking again in 10 seconds..."
-  sleep 10
+  if (( DNS >= 20 ))
+  then
+    echo " Name resolution problem while ping is ok, waited 10 minutes, restarting system" | tee -a ${LOG_FILE}
+    sleep 10
+    sudo reboot
+  fi
+  echo "$(date) - [WARNING] - Internet is down, checking ..."
+  sleep 30
+  if ping -c1 8.8.8.8 &> /dev/null
+  then
+    echo "$(date) - [WARNING] - Ping ok, but problem in name resolution: checking every 30 sec" | tee -a ${LOG_FILE}
+    (( DNS++ ))
+  fi
 done
 
 ## Before starting to check GPU utilization in main loop check if miner start was successful or not
@@ -223,7 +236,7 @@ do
   else
     AVRG_15="OK"
   fi
-  
+
   if [[ $plusCPU == "NO" ]]
   then
     if [[ $AVRG_1 == "HIGH" ]] && [[ $AVRG_5 == "HIGH" ]] && [[ $AVRG_15 == "HIGH" ]]
@@ -239,10 +252,10 @@ do
         sleep 5
         sudo bash ${NVOC}/sysrq_reboot.sh
       fi
-    fi  
+    fi
   fi
-  
-    # Set/increment vars
+
+  # Set/increment vars
   NUM_GPU_BLW_THRSHLD=0              # Track how many GPU are below threshold
   REBOOTRESET=$((REBOOTRESET + 1))
 
@@ -250,7 +263,7 @@ do
   for (( GPU=0; GPU < GPU_COUNT; GPU++))
   do
     { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
-    # echo utilization 
+    # echo utilization
     echo "$(date) - [INFO] - GPU$GPU Utilization: $UTIL%"
 
     # Numeric check: if any are not numeric, we have a mining problem
@@ -271,13 +284,13 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        if [[ $SYSRQ_REBOOT == YES ]]  
+        if [[ $SYSRQ_REBOOT == YES ]]
         then
           sudo bash ${NVOC}/sysrq_reboot.sh
         else
           sudo reboot
         fi
-	  elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
@@ -296,7 +309,7 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        if [[ $SYSRQ_REBOOT == YES ]]  
+        if [[ $SYSRQ_REBOOT == YES ]]
         then
           sudo bash ${NVOC}/sysrq_reboot.sh
         else
@@ -318,126 +331,138 @@ do
   then
     #echo "$(date) - Debug: NUM_GPU_BLW_THRSHLD=$NUM_GPU_BLW_THRSHLD, COUNT=$COUNT, RESTART=$RESTART, REBOOTRESET=$REBOOTRESET" | tee -a ${LOG_FILE}
 
-    #Check for Internet and wait if down
-    echo "$(date) - [WARNING] - GPU under threshold, Checking Internet"
-    if ! nc -vzw1 google.com 443;
+  # Check Internet and pool only if all GPU utilizations are bellow threshold
+    if (( NUM_GPU_BLW_THRSHLD = GPU_COUNT ))
     then
-      echo "$(date) - [WARNING] - Internet is down, checking..." | tee -a ${LOG_FILE}
-      INTERNET=0
-      while ! nc -vzw1 google.com 443;
-      do
-        echo "$(date) - [WARNING] - Internet is down, checking again in 30 seconds..."
-        sleep 30
-      done
-    else
-      echo "Internet ok"
-      INTERNET=1
-    fi
 
-    #When internet comes up, reset to skip additional checks until the next time through the loop
-    if  nc -vzw1 google.com 443  && [[ $INTERNET == 0 ]]
-    then
-      echo "$(date) - [INFO] - Internet was down, Now it's ok" | tee -a ${LOG_FILE}
-      REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); INTERNET=1
-      #### Now that internet comes up check miner and restart 3main if needed
-      if [[ -z $(ps ax | grep -i screen | grep miner) ]]
+      #Check for Internet and wait if down
+      echo "$(date) - [WARNING] - GPU under threshold, Checking Internet"
+      if ! nc -vzw1 google.com 443;
       then
-        echo "$(date) - [INFO] - miner is not running: restarting 3main"
-        pkill -f 3main
-        #wait for miner to start hashing
-        sleep $SLEEP_TIME
-      else
-        echo "$(date) - [INFO] - miner is running: waiting $SLEEP_TIME seconds before going 'on watch'"
-        sleep $SLEEP_TIME
-      fi
-    fi
-
-    ######################## Beginning Pool Check
-
-    source ${NVOC}/1bash
-
-    if [[ $COIN == *DUAL* ]] ;   then
-      COIN=$(echo $COIN| sed 's/DUAL_//' | cut -d _ -f 1)
-      COIN_POOL=${COIN}_POOL
-      COIN_PORT=${COIN}_PORT
-      echo "$(date) - [INFO] - Dual Mining, Check main pool, ${!COIN_POOL}:${!COIN_PORT}"
-      if ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
-        echo "$(date) - [WARNING] - ${!COIN_POOL}:${!COIN_PORT} is Down" # | tee -a $LOG_FILE
-        POOL=0
-        while ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;    do
-          echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
+        echo "$(date) - [WARNING] - Internet is down, checking..." | tee -a ${LOG_FILE}
+        INTERNET=0
+        while ! nc -vzw1 google.com 443;
+        do
+          echo "$(date) - [WARNING] - Internet is down, checking again in 30 seconds..."
           sleep 30
+          ## While name resolution not working check ping and restart 3main if ping is ok.
+          if ping -c1 8.8.8.8 &> /dev/null
+          then
+            echo "$(date) - [WARNING] - Ping ok, but problem in name resolution: restarting 3main" | tee -a ${LOG_FILE}
+            pkill -f 3main
+            exit
+          fi
         done
       else
-        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up"
-        POOL=1
+        echo "Internet ok"
+        INTERNET=1
       fi
-      #If pool is up but was down before check if miner is running and give time out or start if not
-      if  nc -vzw1 ${!COIN_POOL}t2 ${!COIN_PORT} && [[ $POOL == 0 ]] ;  then
-        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  # | tee -a $LOG_FILE
-        #When pool comes up, reset counters to skip additional checks until the next time through the loop
-        REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); POOL=1
-        if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]] ;    then
-          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
-        elif  [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
-          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running: restarting 3main"
+
+      #When internet comes up, reset to skip additional checks until the next time through the loop
+      if  nc -vzw1 google.com 443  && [[ $INTERNET == 0 ]]
+      then
+        echo "$(date) - [INFO] - Internet was down, Now it's ok" | tee -a ${LOG_FILE}
+        REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); INTERNET=1
+        #### Now that internet comes up check miner and restart 3main if needed
+        if [[ -z $(ps ax | grep -i screen | grep miner) ]]
+        then
+          echo "$(date) - [INFO] - miner is not running: restarting 3main"
           pkill -f 3main
+          #wait for miner to start hashing
+          sleep $SLEEP_TIME
+        else
+          echo "$(date) - [INFO] - miner is running: waiting $SLEEP_TIME seconds before going 'on watch'"
           sleep $SLEEP_TIME
         fi
       fi
 
-    elif [[ ${AUTO_SWITCH:0:7} == SALFTER ]]
-    then
-      #Need Stubo check server codes
-      echo ""
+      ######################## Beginning Pool Check
 
-    elif [[ $COIN == *NICE* ]]
-    then
-      #Need Stubo check server codes
-      echo ""
-
-    else
       source ${NVOC}/1bash
-      COIN_POOL=${COIN}_POOL
-      COIN_PORT=${COIN}_PORT
-      COIN_POOL_2=${COIN}_POOL_2
-      COIN_PORT_2=${COIN}_PORT_2
-      echo "$(date) - [INFO] - Check mining pool, ${!COIN_POOL}:${!COIN_PORT}"
-      if  !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
-        echo "$(date) - [WARNING] - ${!COIN_POOL}:${!COIN_PORT} is Down"  | tee -a $LOG_FILE
-        POOL=0
-        if [[ $ALT_POOL == YES ]] && [[ -n ${!COIN_POOL_2} ]] 
-        then
-          guake -n 9poolswitch -r POOL_SWITCH -e "bash ${NVOC}/9poolswitch"
-          sleep 300
-        else
-          while !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   do
+
+      if [[ $COIN == *DUAL* ]] ;   then
+        COIN=$(echo $COIN| sed 's/DUAL_//' | cut -d _ -f 1)
+        COIN_POOL=${COIN}_POOL
+        COIN_PORT=${COIN}_PORT
+        echo "$(date) - [INFO] - Dual Mining, Check main pool, ${!COIN_POOL}:${!COIN_PORT}"
+        if ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
+          echo "$(date) - [WARNING] - ${!COIN_POOL}:${!COIN_PORT} is Down" # | tee -a $LOG_FILE
+          POOL=0
+          while ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;    do
             echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
             sleep 30
           done
+        else
+          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up"
+          POOL=1
         fi
-      else
-        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up"
-        POOL=1
-      fi
-      #If pool is up but was down before, check if miner is running and give time out or start if not
-      if nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} && [[ $POOL == 0 ]] ;   then
-        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  | tee -a $LOG_FILE
-        #When pool comes up, reset counters to skip additional checks until the next time through the loop
-        REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); POOL=1
-        if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]]
-        then
-          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
-        elif [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]]
-        then
-          echo "$(date) - [WARNING] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running: restarting 3main"
-          pkill -f 3main
-          sleep $SLEEP_TIME
+        #If pool is up but was down before check if miner is running and give time out or start if not
+        if  nc -vzw1 ${!COIN_POOL}t2 ${!COIN_PORT} && [[ $POOL == 0 ]] ;  then
+          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  # | tee -a $LOG_FILE
+          #When pool comes up, reset counters to skip additional checks until the next time through the loop
+          REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); POOL=1
+          if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]] ;    then
+            echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
+          elif  [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
+            echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running: restarting 3main"
+            pkill -f 3main
+            sleep $SLEEP_TIME
+          fi
         fi
-      fi
-    fi
 
-    ######################## End of Pool Check
+      elif [[ ${AUTO_SWITCH:0:7} == SALFTER ]]
+      then
+        #Need Stubo check server codes
+        echo ""
+
+      elif [[ $COIN == *NICE* ]]
+      then
+        #Need Stubo check server codes
+        echo ""
+
+      else
+        source ${NVOC}/1bash
+        COIN_POOL=${COIN}_POOL
+        COIN_PORT=${COIN}_PORT
+        COIN_POOL_2=${COIN}_POOL_2
+        COIN_PORT_2=${COIN}_PORT_2
+        echo "$(date) - [INFO] - Check mining pool, ${!COIN_POOL}:${!COIN_PORT}"
+        if  !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   then
+          echo "$(date) - [WARNING] - ${!COIN_POOL}:${!COIN_PORT} is Down"  | tee -a $LOG_FILE
+          POOL=0
+          if [[ $ALT_POOL == YES ]] && [[ -n ${!COIN_POOL_2} ]]
+          then
+            guake -n 9poolswitch -r POOL_SWITCH -e "bash ${NVOC}/9poolswitch"
+            sleep 300
+          else
+            while !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   do
+              echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
+              sleep 30
+            done
+          fi
+        else
+          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up"
+          POOL=1
+        fi
+        #If pool is up but was down before, check if miner is running and give time out or start if not
+        if nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} && [[ $POOL == 0 ]] ;   then
+          echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  | tee -a $LOG_FILE
+          #When pool comes up, reset counters to skip additional checks until the next time through the loop
+          REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); POOL=1
+          if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]]
+          then
+            echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
+          elif [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]]
+          then
+            echo "$(date) - [WARNING] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running: restarting 3main"
+            pkill -f 3main
+            sleep $SLEEP_TIME
+          fi
+        fi
+      fi
+
+      ######################## End of Pool Check
+    fi
 
     # Look for no miner screen and get right to miner restart
     if ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
@@ -473,7 +498,7 @@ do
           bash "${NVOC}/telegram"
         fi
         sleep 10
-        if [[ $SYSRQ_REBOOT == YES ]]  
+        if [[ $SYSRQ_REBOOT == YES ]]
         then
           sudo bash ${NVOC}/sysrq_reboot.sh
         else
