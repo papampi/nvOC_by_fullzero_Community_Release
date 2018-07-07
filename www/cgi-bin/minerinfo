@@ -6,6 +6,8 @@
 # Rev 0005: LukePicci, Relocate nvOC to arbitrary install directory
 # Rev 0006: papampi, More average Hash rate and reported hash rate to WTM
 # Rev 0007: papampi, Wait for watchdog to get gpu count
+# Rev 0008: papampi, Individual PL, OC, MC
+
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -112,9 +114,6 @@ then
   then
     eval 'ALGO_PL=${ALGO}_POWERLIMIT_WATTS'
     GPU_PL=${!ALGO_PL}
-  elif [[ $POWERLIMIT_MODE == *_with_GPU_OFFSET || $POWERLIMIT_MODE == GPU_SPECIFIC ]]
-  then
-    GPU_PL="GPU Specific not supported in webinfo"
   fi
 
   if [[ $OVERCLOCK_MODE == GLOBAL ]]
@@ -127,10 +126,6 @@ then
     eval 'ALGO_MC=${ALGO}_MEMORY_OVERCLOCK'
     GPU_OC=${!ALGO_OC}
     GPU_MC=${!ALGO_MC}
-  elif [[ $OVERCLOCK_MODE == *_with_GPU_OFFSET || $POWERLIMIT_MODE == GPU_SPECIFIC ]]
-  then
-    GPU_OC="GPU Specific not supported in webinfo"
-    GPU_MC="GPU Specific not supported in webinfo"
   fi
 elif [[ $AUTO_SWITCH == SALFTER* ]]
 then
@@ -538,13 +533,55 @@ echo "Reboot Required: "  "<tt style=\"text-align:left; color:white\">" "$REBOOT
 
 echo "Power Limit Mode: " "<tt style=\"text-align:left; color:white\">" "$POWERLIMIT_MODE <br> </tt>"
 
+if [[ $POWERLIMIT_MODE == "GPU_SPECIFIC" ]]
+then
+  for i in $(seq 0 $((GPU_COUNT-1)))
+  do
+    echo "GPU$i Power Limit: " "<tt style=\"text-align:left; color:white\">" "$((INDIVIDUAL_POWERLIMIT_$i)) <br> </tt>"
+  done
+elif [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $((GPU_COUNT-1)))
+  do
+    echo "GPU$i Power Limit: " "<tt style=\"text-align:left; color:white\">" "$(( _POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i )) <br> </tt>"
+  done
+elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $((GPU_COUNT-1)))
+  do
+    echo "GPU$i Power Limit: " "<tt style=\"text-align:left; color:white\">" "$(( ${ALGO}_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i ))<br> </tt>"
+  done
+else
+  echo "Power Limit: " "<tt style=\"text-align:left; color:white\">" "$GPU_PL <br> </tt>"
+fi
+
 echo "Over Clock Mode: " "<tt style=\"text-align:left; color:white\">" "$OVERCLOCK_MODE <br> </tt>"
 
-echo "Power Limit: " "<tt style=\"text-align:left; color:white\">" "$GPU_PL <br> </tt>"
-
-echo "Core Over Clock: " "<tt style=\"text-align:left; color:white\">" "$GPU_OC <br> </tt>"
-
-echo "Memory Over Clock: " "<tt style=\"text-align:left; color:white\">" "$GPU_MC <br> </tt>"
+if [[ $OVERCLOCK_MODE == "GPU_SPECIFIC" ]]
+then
+  for i in $(seq 0 $((GPU_COUNT-1)))
+  do
+    echo "GPU$i Core Overclock: " "<tt style=\"text-align:left; color:white\">" "$((__CORE_OVERCLOCK_$i)) <br> </tt>"
+    echo "GPU$i Memory Overclock: " "<tt style=\"text-align:left; color:white\">" "$((MEMORY_OVERCLOCK_$i)) <br> </tt>"
+  done
+elif [[ $OVERCLOCK_MODE == "GLOBAL_with_GPU_OFFSET" ]]
+then
+  for i in $(seq 0 $((GPU_COUNT-1)))
+  do
+    echo "GPU$i Core Overclock: " "<tt style=\"text-align:left; color:white\">" "$(( _CORE_OVERCLOCK + __CORE_OVERCLOCK_$i)) <br> </tt>"
+    echo "GPU$i Memory Overclock: " "<tt style=\"text-align:left; color:white\">" "$(( _MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i )) <br> </tt>"
+done
+elif [[ $OVERCLOCK_MODE == "ALGO_SPECIFIC_with_GPU_OFFSET" ]]
+then
+  for i in $(seq 0 $((GPU_COUNT-1)))
+  do
+    echo "GPU$i Core Overclock: " "<tt style=\"text-align:left; color:white\">" "$(( ${ALGO}_CORE_OVERCLOCK + __CORE_OVERCLOCK_$i )) <br> </tt>"
+    echo "GPU$i Memory Overclock: " "<tt style=\"text-align:left; color:white\">" "$(( ${ALGO}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i )) <br> </tt>"
+done
+else
+  echo "Core Over Clock: " "<tt style=\"text-align:left; color:white\">" "$GPU_OC <br> </tt>"
+  echo "Memory Over Clock: " "<tt style=\"text-align:left; color:white\">" "$GPU_MC <br> </tt>"
+fi
 
 echo "GPU Target Temp: "  "<tt style=\"text-align:left; color:white\">" "$TARGET_TEMP <br> </tt>"
 
