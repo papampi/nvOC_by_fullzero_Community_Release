@@ -216,7 +216,7 @@ then
     sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   else
     echo "Downloading default xorg.conf"
-    wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf -O /tmp/xorg.conf.default
+    wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf.default -O /tmp/xorg.conf.default
     echo "Restore default xorg.conf"
     sudo cp /tmp/xorg.conf.default /etc/X11/xorg.conf.default
 	sudo cp /tmp/xorg.conf.default /etc/X11/xorg.conf
