@@ -46,11 +46,12 @@
 # v=0017 : sizzlephizzle
 #	         Unification of EQUIHASH & ETHASH mining by ALGO.
 # v=0018 : papampi, sizzlephizzle
-#	 Algo Unification for all algorithms
-
+#	         Algo Unification for all algorithms
+# v=0019 : papampi
+#          Crytponight Heavy
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0018" # Do not edit this
+nvOC_0miner_ver="v0019-2.0.0019" # Do not edit this
 
 source "${NVOC}/1bash"
 source "${NVOC}/0algo_id"
@@ -184,7 +185,7 @@ then
   $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
   ## CRYPTONIGHTV7
-elif [[ $ALGO == CRYPTONIGHTV7 ]];
+elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
 then
 # Remove nvidia.txt if cards count changed
   if [ -f ~/nvidia.txt ]

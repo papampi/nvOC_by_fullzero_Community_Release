@@ -113,5 +113,5 @@ if (current==0):
 
   subprocess.call(nv_settings.split(" "))
   # launch new miner
-  subprocess.call(("screen -c "+str(output_dir)+"/nvoc_logs/screenlog.0 -dmS miner "+performance[max_profit_algo]["cmd"]).split(" "))
+  subprocess.call(("screen -c "+str(outputDir)+"/nvoc_logs/screenlog.0 -dmS miner "+performance[max_profit_algo]["cmd"]).split(" "))
 
