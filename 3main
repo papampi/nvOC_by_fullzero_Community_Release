@@ -170,7 +170,6 @@ then
   if ! grep -q "XORG_UPDATED" ${NVOC}/xorg_flag;
   then
     sudo nvidia-xconfig -a --enable-all-gpus --allow-empty-initial-configuration --cool-bits=28
-    cd ${NVOC}
     echo XORG_UPDATED > "${NVOC}/xorg_flag"
     sleep 4
     echo "XORG UPDATED"
@@ -180,17 +179,11 @@ then
     echo "disconnect monitor if connected"
     sleep 5
     sudo reboot
-  else
-    XORG="OK"
   fi
-fi
-
-if grep -q "28800" /etc/X11/xorg.conf;
-then
   XORG="OK"
 fi
 
-if [[ $P106_100 == YES || $P104_P102 == YES ]]
+if grep -q "28800" /etc/X11/xorg.conf;
 then
   XORG="OK"
 fi
@@ -209,17 +202,17 @@ then
   echo ""
   echo "Restoring Xorg"
   echo ""
-  if [ -e /etc/X11/xorg.conf.default ]
+  if [[ -e ${NVOC}/xorg.conf.default ]]
   then
     echo "Restore default xorg.conf"
-    sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
+    sudo cp ${NVOC}/xorg.conf.default /etc/X11/xorg.conf.default
   else
     echo "Downloading default xorg.conf"
     wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf.default -O /tmp/xorg.conf.default
     echo "Restore default xorg.conf"
     sudo cp /tmp/xorg.conf.default /etc/X11/xorg.conf.default
-	sudo cp /tmp/xorg.conf.default /etc/X11/xorg.conf
   fi
+  sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   echo "Rebooting in 5 seconds"
   sleep 5
   sudo reboot
