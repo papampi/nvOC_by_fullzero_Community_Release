@@ -518,27 +518,27 @@ then
    "daggerhashimoto": {
      "speed": 0.087, "power": 0.397,
      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
-     "cmd": "${NVOC}/eth/ethminer/latest/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
+     "cmd": "${NVOC}/miners/ethminer/latest/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
    },
    "equihash": {
      "speed": 0.000001140, "power": 0.397,
      "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
-     "cmd": "${NVOC}/zec/v3_4/miner --eexit 3 --fee 0 --pec --server equihash.usa.nicehash.com --user {ADDR}.{MINER} --pass z --port 3357"
+     "cmd": "${NVOC}/miners/ewbf/3_4/miner --eexit 3 --fee 0 --pec --server equihash.usa.nicehash.com --user {ADDR}.{MINER} --pass z --port 3357"
    },
    "neoscrypt": {
      "speed": 0.002160, "power": 0.397,
      "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
-     "cmd": "${NVOC}/KTccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/KTccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
    },
    "lyra2rev2": {
      "speed": 0.081, "power": 0.386,
      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
-     "cmd": "${NVOC}/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
    },
    "lbry": {
      "speed": 0.639, "power": 0.392,
      "power_limit": $pwr_lim_lbry, "gpu_oc": $gpu_clks_lbry, "mem_oc": $mem_clks_lbry, "fan": 0,
-     "cmd": "${NVOC}/SPccminer/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/SPccminer/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
    }
  }
 }
@@ -565,85 +565,85 @@ then
   {
     "Blake-Vanilla":
     {
-      "bin": "${NVOC}/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_blake_vanilla, "gpu_oc": $gpu_clks_blake_vanilla, "mem_oc": $mem_clks_blake_vanilla, "fan": 0,
       "speed": 12.3, "power": 0.389
     },
     "Cryptonight":
     {
-      "bin": "${NVOC}/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0,
       "speed": 0.000002, "power": 0.325
     },
     "Equihash":
     {
-      "bin": "${NVOC}/zec/v3_4/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",
+      "bin": "${NVOC}/miners/ewbf/3_4/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",
       "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
       "speed": 0.000001140, "power": 0.397
     },
     "Ethash":
     {
-      "bin": "${NVOC}/eth/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "bin": "${NVOC}/miners/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
       "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
       "speed": 0.087, "power": 0.397
     },
     "Groestl":
     {
-      "bin": "${NVOC}/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0,
       "speed": 0.0853, "power": 0.392
     },
     "Keccak":
     {
-      "bin": "${NVOC}/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0,
       "speed": 1.45, "power": 0.391
     },
     "Lyra2RE2":
     {
-      "bin": "${NVOC}/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners//SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
       "speed": 0.081, "power": 0.386
     },
     "Myriad-Groestl":
     {
-      "bin": "${NVOC}/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0,
       "speed": 0.158, "power": 0.391
     },
     "NeoScrypt":
     {
-      "bin": "${NVOC}/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
       "speed": 0.002160, "power": 0.397
     },
     "Qubit":
     {
-      "bin": "${NVOC}/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0,
       "speed": 0.0509, "power": 0.382
     },
     "Scrypt":
     {
-      "bin": "${NVOC}/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0,
       "speed": 0.00224, "power": 0.403
     },
     "Sia":
     {
-      "bin": "${NVOC}/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0,
       "speed": 3.700, "power": 0.403
     },
     "Skein":
     {
-      "bin": "${NVOC}/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0,
       "speed": 0.835, "power": 0.383
     },
     "X11":
     {
-      "bin": "${NVOC}/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_x11, "gpu_oc": $gpu_clks_x11, "mem_oc": $mem_clks_x11, "fan": 0,
       "speed": 0.0327, "power": 0.403
     }
@@ -678,7 +678,7 @@ then
     },
     "Cryptonight-Heavy":
     {
-      "bin": "${NVOC}/miners/xmr/xmrig-nvidia/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
+      "bin": "${NVOC}/miners/xmrig-nvidia/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
       "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0
     },
     "Equihash":
