@@ -453,11 +453,12 @@ CLAYMORE_OPTS=""                                 # Claymore optional arguments. 
 EQUIHASH_MINER="DSTM"                            # Choose "DSTM" or "EWBF" or "BMINER"
 EQUIHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"  # Chose the format your pool requires 
 DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
-EWBF_VERSION="3_4"                               # choose 3_3  or  3_4 or new v0_3# EWBF ZEC Miner version
-                                                 # If the new v0_3 version selected you need to add new parameters to COIN_EXTENSION_ARGUMENTS
-						 # For example add "--algo 144_5 --pers BgoldPoW" for BitcoinGold
+
 EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
-EWBF_OPTS=""                                     # EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
+EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
+EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" or new "v0_3" # EWBF Equihash Miner version
+                                                 # If the new "v0_3" version selected you need to add new parameters to COIN_EXTENSION_ARGUMENTS
+						 # For example add "--algo 144_5 --pers BgoldPoW" for BitcoinGold
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
