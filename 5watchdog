@@ -157,24 +157,26 @@ fi
 
 ## Check internet before starting main loop
 DNS=0
+PING=0
 while ! nc -vzw1 google.com 443;
 do
-  if (( DNS >= 20 ))
+  if (( PING >= 20 ))
   then
     echo "$(date) - [WARNING] - Name resolution problem while ping is ok, waited 10 minutes, restarting system" | tee -a ${LOG_FILE}
     sleep 10
     sudo reboot
   fi
   echo "$(date) - [WARNING] - Internet is down, checking ..."
-  sleep 30
   if ping -c1 8.8.8.8 &> /dev/null
   then
     echo "$(date) - [WARNING] - Ping ok, but problem in name resolution: check again in 30 sec" | tee -a ${LOG_FILE}
-    (( DNS++ ))
+    (( PING++ ))
   fi
+  sleep 30
+  (( DNS++ ))
 done
 
-if (( DNS > 0 ))
+if [[ $DNS > 0 || $PING > 0 ]]
 then
   echo "$(date) - [INFO] - There was a problem with network, now its ok" | tee -a ${LOG_FILE}
 fi  
@@ -348,7 +350,6 @@ do
         while ! nc -vzw1 google.com 443;
         do
           echo "$(date) - [WARNING] - Internet is down, checking again in 30 seconds..."
-          sleep 30
           ## While name resolution not working check ping and restart 3main if ping is ok.
           if ping -c1 8.8.8.8 &> /dev/null
           then
@@ -356,6 +357,7 @@ do
             pkill -f 3main
             exit
           fi
+          sleep 30
         done
       else
         echo "Internet ok"
