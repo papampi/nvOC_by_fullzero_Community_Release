@@ -61,6 +61,9 @@ if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; then
   ps ax | grep SCREEN | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
 fi
 
+# Define cuda runtime paths
+CUDA_ENV="PATH=/usr/local/cuda/bin:$PATH LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+
 # Set MINER_PWD if unset
 if [ -z "${MINER_PWD+x}" ]
 then
@@ -76,6 +79,7 @@ UEXT="_EXTENSION_ARGUMENTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
+UCUDA="_CUDA"
 
 xpool=$COIN$UPOOL
 xport=$COIN$UPORT
@@ -85,8 +89,14 @@ xext=$COIN$UEXT
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
+xcuda=$ALGO$UCUDA
 
-LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
+if [[ ${!xcuda} != "" ]]
+then
+  CUDA_ENV=${CUDA_ENV/cuda/${!xcuda}}
+fi
+
+LAUNCH="$CUDA_ENV screen -c ${NVOC}/screenrc-miner -dmSL miner"
 
 ## Unify COIN End
 
