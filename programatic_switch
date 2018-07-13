@@ -61,6 +61,11 @@ if (current==0):
   subprocess.call(["pkill", "-f","miner"])
   time.sleep(3)
   
+  if "cuda_ver" in miner:
+    cudaVer=miner["cuda_ver"]
+  else:
+    cudaVer="cuda"
+  
   if card_type=="nvidia": # update card settings
     cards=int(subprocess.check_output("nvidia-smi --query-gpu=count --format=csv,noheader,nounits".split(" ")).split("\n")[-2])
     nv_settings="nvidia-settings"
@@ -83,4 +88,4 @@ if (current==0):
 
     subprocess.call(nv_settings.split(" "))
   # launch new miner
-  subprocess.call(("screen -c "+str(outputDir)+"/nvoc_logs/screenlog.0 -dmS miner "+coin).split(" "))
+  subprocess.call("PATH=/usr/local/"+str(cudaVer)+"/bin:$PATH LD_LIBRARY_PATH=/usr/local/"+str(cudaVer)+"/lib64:$LD_LIBRARY_PATH screen -c "+str(outputDir)+"/nvoc_logs/screenlog.0 -dmS miner "+coin, shell=True)
