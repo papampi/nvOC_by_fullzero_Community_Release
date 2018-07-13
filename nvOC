@@ -910,7 +910,7 @@ Upgrade()
 }
 
 ################################# Restore working tree ##############################
-Reset()
+Restore()
 {
   echo "Checking for modified contents..."
   git -C ${NVOC} status -s -uno --ignore-submodules=all
