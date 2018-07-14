@@ -905,7 +905,7 @@ Upgrade()
     exit 0
   fi
 
-  echo "Checking for nvOC updates..."
+  echo "Checking for nvOC updates...  (target: '${NVOC}')"
   git -C ${NVOC} pull
 }
 
