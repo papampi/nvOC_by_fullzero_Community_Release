@@ -1390,11 +1390,15 @@ lbry_MEMORY_OVERCLOCK=0                  # Recomended value for some GTX-1060: 1
 
 blake_vanilla_POWERLIMIT_WATTS=100         # Recomended value for some GTX-1060: 120
 blake_vanilla_CORE_OVERCLOCK=0           # Recomended value for some GTX-1060: 100
-blake_vanilla_MEMORY_OVERCLOCK=100         # Recomended value for some GTX-1060: 100
+blake_vanilla_MEMORY_OVERCLOCK=100       # Recomended value for some GTX-1060: 100
 
 cryptonight_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
 cryptonight_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
 cryptonight_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
+
+cryptonight_monero_POWERLIMIT_WATTS=100    # Recomended value for some GTX-1060: 62
+cryptonight_monero_CORE_OVERCLOCK=0      # Recomended value for some GTX-1060: 155
+cryptonight_monero_MEMORY_OVERCLOCK=0    # Recomended value for some GTX-1060: -300
 
 groestl_POWERLIMIT_WATTS=100               # Recomended value for some GTX-1060: 120
 groestl_CORE_OVERCLOCK=0                 # Recomended value for some GTX-1060: 100

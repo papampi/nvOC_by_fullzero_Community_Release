@@ -66,11 +66,13 @@
 #          Reworked OC PerfLevel detection, 0algo_id
 # v=0023 : papampi
 #          Fix XMR cpu miner
+# v=0024 : LuKePicci
+#          Support CUDA version selection
 
 source ${NVOC}/1bash
 
 nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.1.0023"                  # Do not edit this
+nvOC_3main_ver="v0019-2.1.0024"                  # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -438,7 +440,7 @@ fi
 
 if [[ ${AUTO_SWITCH:0:7} == SALFTER ]]
 then
-  for a in daggerhashimoto equihash neoscrypt lyra2rev2 lbry blake_vanilla cryptonight groestl keccak myriad_groestl qubit scrypt sia skein x11
+  for a in daggerhashimoto equihash neoscrypt lyra2rev2 lbry blake_vanilla cryptonight cryptonight_monero groestl keccak myriad_groestl qubit scrypt sia skein x11
   do
     if [[ $OVERCLOCK_MODE == NO ]]
     then
@@ -564,10 +566,10 @@ then
       "power_limit": $pwr_lim_blake_vanilla, "gpu_oc": $gpu_clks_blake_vanilla, "mem_oc": $mem_clks_blake_vanilla, "fan": 0,
       "speed": 12.3, "power": 0.389
     },
-    "Cryptonight":
+    "Cryptonight-Monero":
     {
-      "bin": "${NVOC}/miners/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0,
+      "bin": "${NVOC}/miners/xmr-stak/xmr-stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
+      "power_limit": $pwr_lim_cryptonight_monero, "gpu_oc": $gpu_clks_cryptonight_monero, "mem_oc": $mem_clks_cryptonight_monero, "fan": 0,
       "speed": 0.000002, "power": 0.325
     },
     "Equihash":
@@ -670,6 +672,11 @@ then
     {
       "bin": "${NVOC}/miners/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
       "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0
+    },
+    "Cryptonight-Monero":
+    {
+      "bin": "${NVOC}/miners/xmr-stak/xmr-stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
+      "power_limit": $pwr_lim_cryptonight_monero, "gpu_oc": $gpu_clks_cryptonight_monero, "mem_oc": $mem_clks_cryptonight_monero, "fan": 0
     },
     "Cryptonight-Heavy":
     {
