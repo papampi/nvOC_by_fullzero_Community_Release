@@ -91,6 +91,10 @@ if (current==0):
     for algo in performance:
       subprocess.call(["pkill", "-f", "^"+performance[algo]["cmd"].replace("+", "\\+")])
     time.sleep(3)
+  if "cuda_ver" in performance[max_profit_algo]:
+    cudaVer=performance[max_profit_algo]["cuda_ver"]
+  else:
+    cudaVer="cuda"
   # update card settings
   cards=int(subprocess.check_output("nvidia-smi --query-gpu=count --format=csv,noheader,nounits".split(" ")).split("\n")[-2])
   nv_settings="nvidia-settings"
@@ -113,5 +117,5 @@ if (current==0):
 
   subprocess.call(nv_settings.split(" "))
   # launch new miner
-  subprocess.call(("screen -c "+str(outputDir)+"/nvoc_logs/screenlog.0 -dmS miner "+performance[max_profit_algo]["cmd"]).split(" "))
+  subprocess.call("PATH=/usr/local/"+str(cudaVer)+"/bin:$PATH LD_LIBRARY_PATH=/usr/local/"+str(cudaVer)+"/lib64:$LD_LIBRARY_PATH screen -c "+str(outputDir)+"/nvoc_logs/screenlog.0 -dmS miner "+str(performance[max_profit_algo]["cmd"]), shell=True)
 

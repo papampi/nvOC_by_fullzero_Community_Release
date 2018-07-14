@@ -41,6 +41,20 @@ You can refer to https://github.com/papampi/nvOC_miners README for more help on 
 
 ## Download pre-built OS images
 
+### nvOC_V19-2.1beta_U16.04_N390_D180707 (for nvOC >= 2.1)
+Version: always the latest, from configurable branch (default: [release](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/release))
+
+| host | size   | download                                                                       |
+|------|--------|--------------------------------------------------------------------------------|
+| MEGA | 3,50GB | [link](https://mega.nz/#!od1HGYjZ!kMp4ihj2TK81hNz6GkBR1--UkPhNf-JmdGHHEeDw3Ig) |
+
+Checksums:
+
+| file                                         | type   | value                                                            |
+|----------------------------------------------|--------|------------------------------------------------------------------|
+| nvOC_V19-2.1beta_U16.04_N390_D180707.img.zip | sha256 | 6334067606176ed90191b3e4980b21102d14a9c8f14ec63508669d1cb27d6e33 |
+| nvOC_V19-2.1beta_U16.04_N390_D180707.img     | sha256 | f1f02c1cd704d3a33c954f64c5b6856f3a75612243b68d66da2fc9acd7bea8a5 |
+
 ### nvOC_V19-2.1beta_U16.04_N390_D180619
 Version: beta testing snapshot branch [19-2.1@a3e92bd976997327fc971b549066f8a566781538](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/a3e92bd976997327fc971b549066f8a566781538)
 
