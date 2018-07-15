@@ -55,10 +55,12 @@
 # v=0020 : LukePicci: Relocate nvOC to arbitrary install directory
 #
 # v=0021 : LuKePicci: Flexible OC settings policies
+#
+# v=0022 : papampi: Fix no top_coin on first run
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-wtm_auto_switch_ver="v0019-2.1.0021"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.1.0022"   # Do not edit this
 
 echo ""
 echo ""
@@ -78,9 +80,18 @@ if [[ -e "$WTM_HISTORY" ]] ; then
   echo "$(cat $WTM_HISTORY | tail -n 100)" > $WTM_HISTORY
 fi
 
-# Check last top coin and change if not in coin list any more
 FIRST_COIN="$(echo "$WTM_AUTO_SWITCH_COINS" | awk -F'[_;]' '{print $1}')"
-TOP_COIN=$(sed 's/:[0-9]*//' < ${NVOC}/WTM_top_coin)
+
+# Prevent first run error on no top_coin
+if [[ ! -e ${NVOC}/WTM_top_coin ]]
+then
+  echo "$FIRST_COIN:100" > ${NVOC}/WTM_top_coin
+  TOP_COIN=$FIRST_COIN
+else
+  TOP_COIN=$(sed 's/:[0-9]*//' < ${NVOC}/WTM_top_coin)
+fi
+
+# Check last top coin and change if not in coin list any more
 if [ ! $(echo "$WTM_AUTO_SWITCH_COINS" | grep "$TOP_COIN") ]
 then
   echo "Last top coin not in current coin list any more, Switch to 1st coin"
