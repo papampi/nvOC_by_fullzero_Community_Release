@@ -82,7 +82,7 @@ fi
 
 FIRST_COIN="$(echo "$WTM_AUTO_SWITCH_COINS" | awk -F'[_;]' '{print $1}')"
 
-# Prevent first run error on no top coin
+# Prevent first run error on no top_coin
 if [[ ! -e ${NVOC}/WTM_top_coin ]]
 then
   echo "$FIRST_COIN:100" > ${NVOC}/WTM_top_coin
