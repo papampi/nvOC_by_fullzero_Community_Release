@@ -55,10 +55,12 @@
 # v=0020 : LukePicci: Relocate nvOC to arbitrary install directory
 #
 # v=0021 : LuKePicci: Flexible OC settings policies
+#
+# v=0022 : papampi: Fix no top_coin on first run
 
 
 nvOC_Ver="nvOC v0019-2.1 - Community Release"
-wtm_auto_switch_ver="v0019-2.1.0021"   # Do not edit this
+wtm_auto_switch_ver="v0019-2.1.0022"   # Do not edit this
 
 echo ""
 echo ""
