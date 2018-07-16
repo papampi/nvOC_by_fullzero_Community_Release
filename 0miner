@@ -168,15 +168,15 @@ then
     HCD="${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $DSTM_OPTS ${!xext}"
   elif [[ $EQUIHASH_MINER == EWBF ]]
   then
-    HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
-  elif [[ $EQUIHASH_MINER == BMINER ]]
-  then
     if [[ EWBF_VERSION == 3_4 || EWBF_VERSION == 3_3 ]]
     then
       HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
     else
       HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --fee $EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
-    fi
+  elif [[ $EQUIHASH_MINER == BMINER ]]
+  then
+    HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
+  fi
   eval $LAUNCH $HCD
 
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
