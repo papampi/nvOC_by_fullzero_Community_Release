@@ -899,7 +899,7 @@ then
   gpu=0
   while (( gpu < GPUS ))
   do
-    NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=\"${GPUPowerMizerMode}\""
+    NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=${GPUPowerMizerMode}"
     gpu=$((gpu+1))
   done
 fi
