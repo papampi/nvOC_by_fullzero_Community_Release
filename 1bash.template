@@ -62,21 +62,19 @@
 #          HEADLEASS_MODE
 # v=0025 : LuKePicci
 #          AUTO_SWITCH generalized implementetion
-# v=0026 : papampi, sizzlephizzle
-#          Algo mining unification 
-# v=0027 : LuKePicci
-#          Separate algo_id
-# v=0028 : LuKePicci
-#          More tempcontrol alert color and verbosity options
-# v=0029 : papampi
-#          Nice Algo extension arguments 
-# v=0030 : papampi
-#          CryptoNightHeavy  
-# v=0031 : papampi
-#          New EWBF v0.3  
+v0026="papampi, sizzlephizzle; Algo mining unification" 
+v0027="LuKePicci; Separate algo_id"
+v0028="LuKePicci; More tempcontrol alert color and verbosity options"
+v0029="papampi; Nice Algo extension arguments"
+v0030="papampi;CryptoNightHeavy"  
+v0031="papampi;New EWBF v0.3"  
+v0032="papampi;Version numbering"
 
-nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0031"   # Do not edit this
+
+# Do not edit these lines
+nvOC_Ver="v0019-2.1" 
+nvOC_1bash_ver="0032"
+nvOC_1bash_last_compatible="0029"
 
 # fullzero:     nvOC creator
 
