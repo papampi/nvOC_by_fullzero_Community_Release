@@ -70,7 +70,7 @@ source ${NVOC}/1bash
 nvOC_wdog_Dev="0020"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
 
-echo "Watchdog for $nvOC_Ver"
+echo "Watchdog for nvOC $nvOC_Ver"
 echo "Version: $nvOC_wdog_ver"
 echo ""
 
