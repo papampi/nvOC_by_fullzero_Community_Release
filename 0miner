@@ -61,6 +61,9 @@ if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; then
   ps ax | grep SCREEN | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
 fi
 
+# Define cuda runtime paths
+CUDA_ENV="PATH=/usr/local/cuda/bin:$PATH LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+
 # Set MINER_PWD if unset
 if [ -z "${MINER_PWD+x}" ]
 then
@@ -76,6 +79,7 @@ UEXT="_EXTENSION_ARGUMENTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
+UCUDA="_CUDA"
 
 xpool=$COIN$UPOOL
 xport=$COIN$UPORT
@@ -85,8 +89,14 @@ xext=$COIN$UEXT
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
+xcuda=$ALGO$UCUDA
 
-LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
+if [[ ${!xcuda} != "" ]]
+then
+  CUDA_ENV=${CUDA_ENV/cuda/${!xcuda}}
+fi
+
+LAUNCH="$CUDA_ENV screen -c ${NVOC}/screenrc-miner -dmSL miner"
 
 ## Unify COIN End
 
@@ -148,7 +158,7 @@ then
   then
     HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
-  $LAUNCH $HCD
+  eval $LAUNCH $HCD
 
 ## EQUIHASH
 elif [[ $ALGO == EQUIHASH ]];
@@ -158,36 +168,35 @@ then
     HCD="${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $DSTM_OPTS ${!xext}"
   elif [[ $EQUIHASH_MINER == EWBF ]]
   then
+    HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
+  elif [[ $EQUIHASH_MINER == BMINER ]]
+  then
     if [[ EWBF_VERSION == 3_4 || EWBF_VERSION == 3_3 ]]
     then
       HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
     else
       HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --fee $EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
     fi
-  elif [[ $EQUIHASH_MINER == BMINER ]]
-  then
-    HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
-  fi
-  $LAUNCH $HCD
+  eval $LAUNCH $HCD
 
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
 then
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
-  $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
-  $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  eval $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
 then
   HCD="${NVOC}"/miners/pasc/sgminer
   UCCALGO="-k pascal"
-  $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
   ## CRYPTONIGHTV7
 elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
@@ -209,7 +218,7 @@ then
     fi
   fi
   HCD=${NVOC}/miners/xmr-stak/xmr-stak_miner
-  $LAUNCH $HCD --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
+  eval $LAUNCH $HCD --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
 else
   echo ""
   echo "COIN/ALGO not found, Check your settings"
