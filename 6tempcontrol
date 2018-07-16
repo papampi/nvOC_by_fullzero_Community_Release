@@ -42,8 +42,8 @@ nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
 
-echo "Temp Control for $nvOC_Ver"
-echo "Version: :$nvOC_temp_ver"
+echo "Temp Control for nvOC $nvOC_Ver"
+echo "Version: $nvOC_temp_ver"
 echo ""
 
 # Set higher process and disk I/O priorities because we are essential service
