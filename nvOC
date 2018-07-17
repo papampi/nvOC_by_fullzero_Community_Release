@@ -613,7 +613,7 @@ nvidia driver :  $nvidia_driver_ver
 ${B}nvOC info:${N}
 nvOC path     :  ${NVOC}
 nvOC          :  $nvOC_ver_from_1bash
-Report        :  $REPORT_VER
+Report        :  $nvOC_nvOC_Dev
 1bash         :  $nvOC_1bash_ver
 3main         :  $nvOC_3main_ver
 5watchdog     :  $nvOC_wdog_ver
