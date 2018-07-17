@@ -8,6 +8,7 @@
 # Rev 0007: papampi, Wait for watchdog to get gpu count
 # Rev 0008: papampi, Individual PL, OC, MC
 
+nvOC_minerinfo_Dev="0008"
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
