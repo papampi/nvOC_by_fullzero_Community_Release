@@ -88,4 +88,4 @@ if (current==0):
 
     subprocess.call(nv_settings.split(" "))
   # launch new miner
-  subprocess.call("PATH=/usr/local/"+str(cudaVer)+"/bin:$PATH LD_LIBRARY_PATH=/usr/local/"+str(cudaVer)+"/lib64:$LD_LIBRARY_PATH screen -c "+str(outputDir)+"/nvoc_logs/screenlog.0 -dmS miner "+coin, shell=True)
+  subprocess.call("PATH=/usr/local/"+str(cudaVer)+"/bin:$PATH LD_LIBRARY_PATH=/usr/local/"+str(cudaVer)+"/lib64:$LD_LIBRARY_PATH screen -c "+str(outputDir)+"/screenrc-miner -dmSL miner "+coin, shell=True)
