@@ -966,7 +966,7 @@ then
     fi
 
     echo ""
-    echo "LAUNCHING:  MINER"
+    echo "LAUNCHING:  MINER (coin: $COIN, algo: $ALGO)"
     echo "    "
     bash ${NVOC}/0miner
     echo "    "
