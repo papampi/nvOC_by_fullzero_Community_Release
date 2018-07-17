@@ -721,7 +721,6 @@ Ethernet      :  $ethernet"
 
 # 1bash maintenance
   echo "CLEAR_LOGS_ON_BOOT ........: $CLEAR_LOGS_ON_BOOT"
-  echo "AUTO_UPDATE ...............: $AUTO_UPDATE"
   echo "AUTO_REBOOT ...............: $AUTO_REBOOT"
   if [[ $AUTO_REBOOT == YES ]]
   then
@@ -841,36 +840,43 @@ Ethernet      :  $ethernet"
   fi
   echo
 
+# 1bash auto switching
+  echo "AUTO_SWITCH ...............: $AUTO_SWITCH"
+  if [[ $AUTO_SWITCH == WTM_SWITCHING ]]
+  then
+    echo "WTM_AUTO_SWITCH_COINS .....: $WTM_AUTO_SWITCH_COINS"
+    echo "WTM_AUTO_SWITCH_URL .......: ${WTM_AUTO_SWITCH_URL:0:49}"
+  fi
 
 # 1bash coin, miner, pool, port, address
   echo "COIN ......................: $COIN"
   echo "ALGO ......................: $ALGO"
-  eval MINER=${ALGO}_MINER
+  MINER=${ALGO}_MINER
   echo "MINER .....................: ${!MINER}"
-  if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]]
+  if [[ ${COIN:0:5} == ZPOOL ]]
   then
     echo "ZPOOLPASS .................: hidden_pass...,"$(echo $ZPOOLPASS | cut -d',' -f 2-)
   fi
-  eval COIN_WORKER_TMP=${COIN}_WORKER
+  COIN_WORKER_TMP=${COIN}_WORKER
   echo $COIN "WORKER ................:" ${!COIN_WORKER_TMP}
-  eval COIN_ADDRESS_TMP=${COIN}_ADDRESS
+  COIN_ADDRESS_TMP=${COIN}_ADDRESS
   echo $COIN "ADDRESS ...............:" ${!COIN_ADDRESS_TMP::8}...
-  eval COIN_POOL_TMP=${COIN}_POOL
+  COIN_POOL_TMP=${COIN}_POOL
   echo $COIN "POOL ..................:" ${!COIN_POOL_TMP}
-  eval COIN_PORT_TMP=${COIN}_PORT
-  if [[ $COIN_PORT_TMP != "" ]]
+  COIN_PORT_TMP=${COIN}_PORT
+  if [[ ${!COIN_PORT_TMP} != "" ]]
   then
     echo $COIN "PORT ..................:" ${!COIN_PORT_TMP}
   fi
-  eval ALGO_INTENSITY_TMP=${ALGO}_INTENSITY
-  if [[ $ALGO_INTENSITY_TMP != "" ]]
+  ALGO_INTENSITY_TMP=${ALGO}_INTENSITY
+  if [[ ${!ALGO_INTENSITY_TMP} != "" ]]
   then
     echo $ALGO "INTENSITY ..........:" ${!ALGO_INTENSITY_TMP}
   fi
-  eval COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
-  if [[ $COIN_AUTOCONVERT_TO_BTC_TMP != "" ]]
+  COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
+  if [[ ${!COIN_AUTOCONVERT_TO_BTC_TMP} != "" ]]
   then
-    echo "${COIN}_AUTOCONVERT_TO_BTC ....:" $COIN_AUTOCONVERT_TO_BTC_TMP
+    echo "${COIN}_AUTOCONVERT_TO_BTC ....:" ${!COIN_AUTOCONVERT_TO_BTC_TMP}
   fi
 
   echo

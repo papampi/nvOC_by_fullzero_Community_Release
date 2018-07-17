@@ -5,12 +5,17 @@ ALGO="UNDEFINED"
 
 ALGOS="NEOSCRYPT ETHASH EQUIHASH SKUNK LYRA2V2 CRYPTONIGHT LYRA2Z XEVAN X16R BITCORE SIB CRYPTONIGHTV7 PHI PASCAL LBRY GRS MYR_GR DECRED SIA X13 SKEIN CRYPTONIGHTHEAVY "
 
+if [[ $COIN == "" ]]
+then
+  COIN="none"
+fi
+
 for a in $ALGOS
 do
-  eval 'ALGO_COINS=${a}_COINS'
-  if [[ "${!ALGO_COINS}"  =~ "$COIN" ]]
+  ALGO_COINS=${a}_COINS
+  if [[ ${!ALGO_COINS} =~ $COIN ]]
   then
-    ALGO="$a" 
-    #echo "$a"
+    ALGO=$a
+    break
   fi
 done
