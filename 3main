@@ -330,7 +330,7 @@ fi
 
 if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
 then
-  HCD="${NVOC}/cpuOPT/cpuminer"
+  HCD="${NVOC}/miners/cpuOPT/cpuminer"
   XMRADDR="$XMR_ADDRESS.$XMR_WORKER"
   echo ""
   echo ""
