@@ -4,8 +4,8 @@
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
-nvOC_Ver_Dev="0001"
-log_rotate_ver="$nvOC_Ver.log_rotate_Dev"
+nvOC_log_rotate_Dev="0001"
+log_rotate_ver="$nvOC_Ver.$nvOC_log_rotate_Dev"
 
 echo "Log Rotate for nvOC $nvOC_Ver"
 echo "Version: $log_rotate_ver" 
