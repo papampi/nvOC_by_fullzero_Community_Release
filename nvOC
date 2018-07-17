@@ -558,6 +558,8 @@ Report()
   nvOC_wtm_ver=$( head -n 100 ${NVOC}/8wtm_auto_switch | grep wtm_auto_switch_Dev= | sed 's/wtm_auto_switch_Dev=//' | sed 's/\"//' | sed 's/\"//')
   nvOC_wtm_p_ver=$( head -n 100 ${NVOC}/8wtm_profit_check | grep wtm_profit_check_Dev= | sed 's/wtm_profit_check_Dev=//' | sed 's/\"//' | sed 's/\"//')
   nvOC_pools_switch_ver=$( head -n 100 ${NVOC}/9poolswitch | grep nvOC_poolswitch_Dev= | sed 's/nvOC_poolswitch_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_minerinfo_ver=$( head -n 100 ${NVOC}/www/cgi-bin/minerinfo | grep nvOC_minerinfo_Dev= | sed 's/nvOC_minerinfo_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  
   kernel=$(cat /proc/version | cut -d' ' -f 3);
 # os_release=$(cat /usr/lib/os-release | grep PRETTY_NAME | sed 's/PRETTY_NAME=\"//' | sed 's/\"//');
 # os_release=$(cat /etc/lsb-release | grep DISTRIB_DESCRIPTION | sed 's/DISTRIB_DESCRIPTION=\"//' | sed 's/\"//');
@@ -621,6 +623,7 @@ Report        :  $nvOC_nvOC_Dev
 wtm switch    :  $nvOC_wtm_ver
 wtm profit    :  $nvOC_wtm_p_ver
 pool switch   :  $nvOC_pools_switch_ver
+minerinfo     :  $nvOC_minerinfo_ver
 
 ${B}Hardware info:${N}
 Motherboard   :  $mbvendor $mbmodel  $mbversion
