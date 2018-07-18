@@ -425,15 +425,7 @@ GPUmap()
         echo -e "Acknowledged. Thank you for using ${B}gpumap${N}"
         echo "Resuming mining operation now..."
         echo ""
-        if [[ $LOCALorREMOTE == LOCAL ]]
-        then
-          gnome-terminal
-          exit
-        else
-          echo "REMOTE setting in 1bash detected."
-          echo "To resume mining we have to reboot the rig"
-          Reboot
-        fi
+        Restart
       else
         echo "Neither y or n were pressed!"
         echo "Lets try this again..."
@@ -450,15 +442,7 @@ GPUmap()
           ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 >/dev/null 2>&1
           echo -e "Thank you for using ${B}gpumap${N}"
           echo "Resuming mining operation now."
-          if [[ $LOCALorREMOTE == LOCAL ]]
-          then
-            gnome-terminal
-            exit
-          else
-            echo "REMOTE setting in 1bash detected."
-            echo "To resume mining we have to reboot the rig"
-            Reboot
-          fi
+          Restart
         fi
       fi
       echo; echo
@@ -477,15 +461,7 @@ GPUmap()
 
   if [[ $response =~ ^[Yy]$ ]]
   then
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      gnome-terminal
-      exit
-    else
-      echo "REMOTE setting in 1bash detected."
-      echo "To resume mining we have to reboot the rig"
-      Reboot
-    fi
+    Restart
   fi
 }
 
