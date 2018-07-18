@@ -22,7 +22,7 @@ do
     if ! ps ax | grep -q "[2]unix"
     then
       echo "$(date) - 2unix stopped running, restarting it"  | tee -a  ${NVOC}/nvoc_logs/5_watchdoglog
-      bash ${NVOC}/bash nvOC restart
+      bash ${NVOC}/nvOC restart
     fi
   else
     echo "3main running"
