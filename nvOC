@@ -251,7 +251,7 @@ StartGnomeTerminal()
   fi
 }
 
-############################### Stop nvOC #####################################
+############################### Stop nvOC in gnome-terminal ###################
 StopGnomeTerminal()
 {
   echo -e "${B}Stopping nvOC processes...${N}"; echo
