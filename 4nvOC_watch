@@ -96,6 +96,7 @@ do
     if ps ax | grep -q "[8]wtm_auto_switch"
     then
       pkill -f 8wtm_auto_switch
+    fi
   fi
   
   echo "Check again in 5 min"
