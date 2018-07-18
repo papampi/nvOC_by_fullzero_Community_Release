@@ -437,7 +437,7 @@ do
           POOL=0
           if [[ $ALT_POOL == YES ]] && [[ -n ${!COIN_POOL_2} ]]
           then
-            guake -n 9poolswitch -r POOL_SWITCH -e "bash ${NVOC}/9poolswitch"
+            guake -n 9poolswitch -r POOL_SWITCH -e "bash ${NVOC}/9poolswitch" &
             sleep 300
           else
             while !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   do
