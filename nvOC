@@ -946,6 +946,9 @@ Environment=NVOC=${NVOC}
 WorkingDirectory=${NVOC}
 ExecStart=/usr/bin/screen -c ${NVOC}/screenrc-main -dmSL main /bin/bash "${NVOC}/2unix"
 Restart=always
+
+[Install]
+WantedBy=graphical.target
 EOF
 
   if sudo systemd-analyze verify nvoc.service
