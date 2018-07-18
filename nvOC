@@ -270,14 +270,14 @@ StopGnomeTerminal()
 Restart()
 {
    # Restart nvOC from scratch
-   # if systemctl is-enabled nvoc.service
-   # then
-   # # nvOC as systemd service
-   # StopService && StartService
-   # else
-   # # nvOC in gnome-terminal
-   StopGnomeTerminal && StartGnomeTerminal
-   # fi
+   if systemctl is-enabled nvoc.service
+   then
+     # nvOC as systemd service
+     StopService && StartService
+   else
+     # nvOC in gnome-terminal
+     StopGnomeTerminal && StartGnomeTerminal
+   fi
 }
 
 ############################### gpumap ########################################
