@@ -35,28 +35,7 @@ then
   echo "1bash updated from paste: $pasteBASH"
   echo ""
   sleep 2
-  if [ $LOCALorREMOTE == "LOCAL" ];then
-     # Kill off the nv_OC processes
-     pkill -f gnome-terminal
-     pkill -f 5watchdog
-     pkill -f 6tempcontrol
-     pkill -f 7telegram
-     pkill -e screen
-     pkill -f 8wtm
-     gnome-terminal -e "bash ${NVOC}/3main"
-     echo -e "${B}Miner Restart....${N}"; echo ""
-  else
-     # Kill off the nv_OC processes
-     pkill -f gnome-terminal
-     pkill -f 5watchdog
-     pkill -f 7telegram
-     pkill -f 6tempcontrol
-     pkill -e screen
-     pkill -f 8wtm
-     export DISPLAY=:0
-     gnome-terminal -e "bash ${NVOC}/3main"
-     echo -e "${B}Miner Restart....${N}"; echo ""
-  fi
+  bash ${NVOC}/nvOC restart
 fi
 
 if [ $change == "NO" ]

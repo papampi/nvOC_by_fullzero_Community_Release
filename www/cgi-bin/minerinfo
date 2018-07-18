@@ -8,6 +8,7 @@
 # Rev 0007: papampi, Wait for watchdog to get gpu count
 # Rev 0008: papampi, Individual PL, OC, MC
 
+nvOC_minerinfo_Dev="0008"
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -37,7 +38,7 @@ source ${NVOC}/0algo_id
 echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
 echo '</style>'
 
-nvOC_Ver="nvOC v0019-2.1 - Community Release"
+#nvOC_Ver="nvOC v0019-2.1 - Community Release"
 LSB_RELEASE=$(lsb_release -s -d)
 UNAME=$(uname -r)
 SYSTEM_BOOT_TIME=$(uptime -s)
@@ -478,7 +479,7 @@ fi
 echo '<title>Worker: '$WORKERNAME'</title>'
 echo '</head>'
 echo '<body>'
-echo '<h3>'  "$nvOC_Ver"
+echo '<h3>'  "nvOC $nvOC_Ver - Community Release"
 echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "</tt>"  '</h4>'
 
 echo "Boot Time: " "<tt style=\"text-align:left; color:white; \">" "$SYSTEM_BOOT_TIME <br> </tt>"

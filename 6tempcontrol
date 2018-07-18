@@ -34,30 +34,20 @@
 # v=0006 : papampi (suggestion by abdeldev)
 #          Use sysrq reboot, to prevent freeze/hang
 
+source ${NVOC}/1bash
+source ${NVOC}/0algo_id
 
-
-# TODO:
-# Telegram implementation # Done
-# Further code optimization
-#
-# DEV_VERSION=0005
-
-nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_temp_ver="v0019-2.1.0006"   # Do not edit this
-
+nvOC_temp_Dev="0006"
+nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
 
-echo "Temp Control for $nvOC_Ver"
-echo "Version: :$nvOC_temp_ver"
+echo "Temp Control for nvOC $nvOC_Ver"
+echo "Version: $nvOC_temp_ver"
 echo ""
 
 # Set higher process and disk I/O priorities because we are essential service
 sudo renice -n -15 -p $$ && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
-sleep 1
-
-source ${NVOC}/1bash
-source ${NVOC}/0algo_id
 sleep 1
 
 NVD="nvidia-settings"

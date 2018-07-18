@@ -3,80 +3,9 @@
 ##########################################################################
 ##########################################################################
 #################   nvOC v0019-2.1 - Community Release   #################
-##############        by papampi, Stubo and leenoox         ##############
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
-# v=0001 : Community Release
-#
-# v=0002 : Papampi
-#          Telegram changes
-#
-# v=0003 : Papampi
-#          WTM_MINIMUM_MINING_TIME
-#
-# v=0004 : Papampi
-#          More NiceHash mining algos
-#
-# v=0005 : damNmad
-#          New Coins LUX, SUMO, DSR
-#
-# v=0006 : Papampi
-#          New Coins ELLA, XVG, GBX, CRC
-#
-# v=0007 : Papampi
-#          EQUIHASH_MINER, ETHASH_MINER, bminer,
-# v=0008 : Papampi
-#          Nicehash bug fixes
-# v=0009 : papampi
-#          Added P104 and changed P106 to P10X
-# v=0010 : papampi
-#          WTM minimum mining time and force switch
-# v=0011 : papampi
-#          Pool Wallet Address Format
-# v=0012 : papampi
-#          New claymore dual mining 
-# v=0013 : damNmad
-#          Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable
-# v=0014 : Falcon
-#          Added RavenCoin (RVN)
-# v=0015 : papampi
-#          Temp Control Maximum fan speed 
-# v=0016 : papampi
-#          Some fix in claymore_dual
-# v=0017 : papampi
-#          NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
-# v=0018 : papampi
-#          Alternate Pool Switch
-# v=0019 : papampi
-#          WTM 2nd lower minimum difference to switch
-# v=0020 : LukePicci
-#          Relocate nvOC to arbitrary install directory
-# v=0021 : papampi
-#          More miner optional arguments
-# v=0022 : papampi
-#          OhGodAnETHlargementPill
-# v=0023 : LukePicci
-#          Simplified ALGO specific settings
-# v=0024 : papampi
-#          HEADLEASS_MODE
-# v=0025 : LuKePicci
-#          AUTO_SWITCH generalized implementetion
-# v=0026 : papampi, sizzlephizzle
-#          Algo mining unification 
-# v=0027 : LuKePicci
-#          Separate algo_id
-# v=0028 : LuKePicci
-#          More tempcontrol alert color and verbosity options
-# v=0029 : papampi
-#          Nice Algo extension arguments 
-# v=0030 : papampi
-#          CryptoNightHeavy  
-# v=0031 : papampi
-#          New EWBF v0.3  
-
-nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0031"   # Do not edit this
 
 # fullzero:     nvOC creator
 
@@ -109,7 +38,8 @@ nvOC_1bash_ver="v0019-2.1.0031"   # Do not edit this
 #               Methods for separating settings and implementation
 #               Methods for AUTO_UPDATE
 #               ( BTC address: 1GFTEtLLvvwoa4ogDntD5oaXBgJLYokzTC )
-# LukePicci: 
+
+# LukePicci:    nvOC 19-2.1 main developer
 
 # Maxximus007:  Maxximus007_AUTO_TEMPERATURE_CONTROL
 #               Expectless 1bash
@@ -147,11 +77,48 @@ nvOC_1bash_ver="v0019-2.1.0031"   # Do not edit this
 # xleejohnx:    SRR support
 #               ( BTC address: 1EY5WbiW3YkWanSKEGcjCETpQfCR81wc56 )
 
+v0001="Community Release"
+v0002="Papampi; Telegram changes"
+v0003="Papampi; WTM_MINIMUM_MINING_TIME"
+v0004="Papampi; More NiceHash mining algos"
+v0005="damNmad; New Coins LUX, SUMO, DSR"
+v0006="Papampi; New Coins ELLA, XVG, GBX, CRC"
+v0007="Papampi; EQUIHASH_MINER, ETHASH_MINER, bminer"
+v0008="Papampi; Nicehash bug fixes"
+v0009="papampi; Added P104 and changed P106 to P10X"
+v0010="papampi; WTM minimum mining time and force switch"
+v0011="papampi; Pool Wallet Address Format"
+v0012="papampi; New claymore dual mining "
+v0013="damNmad; Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable"
+v0014="Falcon; Added RavenCoin (RVN)"
+v0015="papampi; Temp Control Maximum fan speed" 
+v0016="papampi; Some fix in claymore_dual"
+v0017="papampi; NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER"
+v0018="papampi; Alternate Pool Switch"
+v0019="papampi; WTM 2nd lower minimum difference to switch"
+v0020="LukePicci; Relocate nvOC to arbitrary install directory"
+v0021="papampi; More miner optional arguments"
+v0022="papampi; OhGodAnETHlargementPill"
+v0023="LukePicci; Simplified ALGO specific settings"
+v0024="papampi; HEADLEASS_MODE"
+v0025="LuKePicci; AUTO_SWITCH generalized implementetion"
+v0026="papampi, sizzlephizzle; Algo mining unification" 
+v0027="LuKePicci; Separate algo_id"
+v0028="LuKePicci; More tempcontrol alert color and verbosity options"
+v0029="papampi; Nice Algo extension arguments"
+v0030="papampi;CryptoNightHeavy"  
+v0031="papampi;New EWBF v0.3"  
+v0032="papampi;Version numbering"
+
+# Do not edit these lines
+nvOC_Ver="v0019-2.1" 
+nvOC_1bash_ver="0032"
+nvOC_1bash_last_compatible="0029"
+
 
 # Open a terminal to launch miner; will auto launch on boot
 
 # firefox has an OP bookmark; look at the OP for more information
-
 
 # Supported Algorithms: 
 #               ETHASH, EQUIHASH, NEOSCRYPT, LYRA2V2, SKUNK, SKEIN, BITCORE, TIMETRAVEL10 
