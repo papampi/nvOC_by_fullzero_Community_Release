@@ -244,6 +244,8 @@ LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OF
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
+DISABLED_GPUS=""            # GPUs indexes that are disabled in miner and need to be exclude from watchdog and tempcontrol checks, use 0 index EX: "0 1"
+
 SYSRQ_REBOOT="NO"           # YES or NO # Use sys request reboot or normal reboot. 
                             # Set "YES", watchdog and tempcontrol use sysrq reboot to prevent kernel panic and freeze if GPU drops off the bus
 

@@ -62,7 +62,7 @@
 # v=0019 : papampi
 #          Load average check, notify, reboot (1bash setting)
 # v=0020 : papampi
-#          Check Ping if Network couldnt resolve 
+#          Check Ping if Network couldnt resolve
 
 export DISPLAY=:0
 source ${NVOC}/1bash
@@ -178,7 +178,7 @@ done
 if [[ $DNS > 0 || $PING > 0 ]]
 then
   echo "$(date) - [INFO] - There was a problem with network, now its ok" | tee -a ${LOG_FILE}
-fi  
+fi
 
 ## Before starting to check GPU utilization in main loop check if miner start was successful or not
 ## in case there is problem in miner variables or other problems, dont start main loop to restart 3main and eventually reboot.
@@ -267,68 +267,73 @@ do
   # Loop over each GPU and check utilization
   for (( GPU=0; GPU < GPU_COUNT; GPU++))
   do
-    { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
-    # echo utilization
-    echo "$(date) - [INFO] - GPU$GPU Utilization: $UTIL%"
-
-    # Numeric check: if any are not numeric, we have a mining problem
-
-    # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
-    if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]
+    if echo $DISABLED_GPUS | grep -q $GPU
     then
-      if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
-      then
-        # Not numeric so: Help we've lost a GPU, so reboot
-        echo "$(date) - [CRITICAL] - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
-        echo ""
-        # Hope PCI BUS info will help find the faulty GPU
-        nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
-        echo "$(date) - [CRITICAL] - reboot in 10 seconds"  | tee -a ${LOG_FILE}
-        echo ""
-        if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash "${NVOC}/telegram"
-        fi
-        sleep 10
-        if [[ $SYSRQ_REBOOT == YES ]]
-        then
-          sudo bash ${NVOC}/sysrq_reboot.sh
-        else
-          sudo reboot
-        fi
-      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
-      then
-        echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
-        COUNT=$((COUNT - 1))
-        NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
-      fi
+      echo "$(date) - [INFO] - GPU$GPU disabled"
     else
-      if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
-        # Not numeric so: Help we've lost a GPU, so reboot
-        echo "$(date) - [CRITICAL] - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
-        echo ""
-        # Hope PCI BUS info will help find the faulty GPU
-        nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
-        echo "$(date) - [CRITICAL] - reboot in 10 seconds"  | tee -a ${LOG_FILE}
-        echo ""
-        if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash "${NVOC}/telegram"
-        fi
-        sleep 10
-        if [[ $SYSRQ_REBOOT == YES ]]
-        then
-          sudo bash ${NVOC}/sysrq_reboot.sh
-        else
-          sudo reboot
-        fi
-      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
-      then
-        echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
-        COUNT=$((COUNT - 1))
-        NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
-      fi
-    fi
+      { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+      # echo utilization
+      echo "$(date) - [INFO] - GPU$GPU Utilization: $UTIL%"
 
-    sleep 0.5    # raise to 0.5 seconds delay until querying the next GPU to lower nvidia-smi impact
+      # Numeric check: if any are not numeric, we have a mining problem
+
+      # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
+      if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]
+      then
+        if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+        then
+          # Not numeric so: Help we've lost a GPU, so reboot
+          echo "$(date) - [CRITICAL] - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
+          echo ""
+          # Hope PCI BUS info will help find the faulty GPU
+          nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
+          echo "$(date) - [CRITICAL] - reboot in 10 seconds"  | tee -a ${LOG_FILE}
+          echo ""
+          if [[ $TELEGRAM_ALERTS == "YES" ]]; then
+            bash "${NVOC}/telegram"
+          fi
+          sleep 10
+          if [[ $SYSRQ_REBOOT == YES ]]
+          then
+            sudo bash ${NVOC}/sysrq_reboot.sh
+          else
+            sudo reboot
+          fi
+        elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+        then
+          echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
+          COUNT=$((COUNT - 1))
+          NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
+        fi
+      else
+        if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
+          # Not numeric so: Help we've lost a GPU, so reboot
+          echo "$(date) - [CRITICAL] - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
+          echo ""
+          # Hope PCI BUS info will help find the faulty GPU
+          nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
+          echo "$(date) - [CRITICAL] - reboot in 10 seconds"  | tee -a ${LOG_FILE}
+          echo ""
+          if [[ $TELEGRAM_ALERTS == "YES" ]]; then
+            bash "${NVOC}/telegram"
+          fi
+          sleep 10
+          if [[ $SYSRQ_REBOOT == YES ]]
+          then
+            sudo bash ${NVOC}/sysrq_reboot.sh
+          else
+            sudo reboot
+          fi
+        elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+        then
+          echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
+          COUNT=$((COUNT - 1))
+          NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
+        fi
+      fi
+
+      sleep 0.5    # raise to 0.5 seconds delay until querying the next GPU to lower nvidia-smi impact
+    fi
   done
 
   # If we found at least one GPU below the utilization threshold
@@ -545,6 +550,8 @@ do
       REBOOTRESET=0
     fi
   fi
-# Delay until next cycle
+  # Delay until next cycle
   sleep $WATCHDOG_CYCLE
+
 done
+

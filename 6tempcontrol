@@ -214,166 +214,172 @@ do
   GPU=0
   while (( GPU < GPUS ))
   do
-    { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
-
-    # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
-
-    # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
-    if [[ $(${SMI} -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]
+    if echo $DISABLED_GPUS | grep -q $GPU
     then
-      if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
-      then
-        # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
-        while (( ERR_TIMER > 0 ))
-        do
-          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a "$LOG_FILE"
-          if [[ $TELEGRAM_ALERTS == "YES" ]]
-          then
-            bash "${NVOC}/telegram" &
-          fi
-          sleep 15
-          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit --format=csv,noheader,nounits)
-          if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
-          then
-            ERR_TIMER=$((ERR_TIMER - 15))
-          else
-            ERR_TIMER=$ERR_TIMER_BRK
-            break
-          fi
-          if (( ERR_TIMER <= 0 ))
-          then
-            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
-            if [[ $TELEGRAM_ALERTS == "YES" ]]
-            then
-              bash "${NVOC}/telegram"
-            fi
-            sleep 3
-            if [[ $SYSRQ_REBOOT == YES ]]
-            then
-              sudo bash ${NVOC}/sysrq_reboot.sh
-            else
-              sudo reboot
-            fi
-          fi
-        done
-      fi
+      echo "$(date) - [INFO] - GPU$GPU disabled"
     else
-      if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+
+      { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+
+      # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
+
+      # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
+      if [[ $(${SMI} -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]
       then
-        # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
-        while (( ERR_TIMER > 0 ))
-        do
-          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a "$LOG_FILE"
-          if [[ $TELEGRAM_ALERTS == "YES" ]]
-          then
-            bash "${NVOC}/telegram" &
-          fi
-          sleep 15
-          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
-          if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
-          then
-            ERR_TIMER=$((ERR_TIMER - 15))
-          else
-            ERR_TIMER=$ERR_TIMER_BRK
-            break
-          fi
-          if (( ERR_TIMER <= 0 ))
-          then
-            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
+        if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+        then
+          # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
+          while (( ERR_TIMER > 0 ))
+          do
+            echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a "$LOG_FILE"
             if [[ $TELEGRAM_ALERTS == "YES" ]]
             then
               bash "${NVOC}/telegram" &
             fi
-            sleep 3
-            if [[ $SYSRQ_REBOOT == YES ]]
+            sleep 15
+            { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit --format=csv,noheader,nounits)
+            if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
             then
-              sudo bash ${NVOC}/sysrq_reboot.sh
+              ERR_TIMER=$((ERR_TIMER - 15))
             else
-              sudo reboot
+              ERR_TIMER=$ERR_TIMER_BRK
+              break
             fi
-          fi
-        done
-      fi
-    fi
-
-    POWERLIMIT=${PWRLIMIT%%.*}
-    TEMP_DIFF=$(( TARGET_TEMP[GPU] - CURRENT_TEMP ))
-    NEW_FAN_SPEED=$CURRENT_FAN
-    HIGH_TEMP_DIFF=$(( ALLOWED_TEMP_DIFF * 2 ))
-
-    echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"
-
-    if (( CURRENT_TEMP > TARGET_TEMP[GPU] ))
-    then
-      # If temp difference is more than double the allowed, multiply adjustement by 2
-      if (( TEMP_DIFF < - HIGH_TEMP_DIFF ))
-      then
-        FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
-      else
-        FAN_ADJUST_CALCULATED=$FAN_ADJUST
-      fi
-      NEW_FAN_SPEED=$(( CURRENT_FAN + FAN_ADJUST_CALCULATED ))
-      if (( NEW_FAN_SPEED > MAXIMAL_FAN_SPEED ))
-      then
-        NEW_FAN_SPEED=$MAXIMAL_FAN_SPEED
-        # Fan speed reached MAXIMAL_FAN_SPEED, we have to drop the power limit
-        NEW_POWER_LIMIT=$((POWERLIMIT - POWER_ADJUST))
-        if [[ $WARN_PL_DROPS == YES ]]
-        then
-          echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a "$LOG_FILE"
-          if [[ $TELEGRAM_ALERTS == "YES" ]]
-          then
-            bash "${NVOC}/telegram" &
-          fi
-        else
-          echo -e "${B}INFO: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}"
+            if (( ERR_TIMER <= 0 ))
+            then
+              echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
+              if [[ $TELEGRAM_ALERTS == "YES" ]]
+              then
+                bash "${NVOC}/telegram"
+              fi
+              sleep 3
+              if [[ $SYSRQ_REBOOT == YES ]]
+              then
+                sudo bash ${NVOC}/sysrq_reboot.sh
+              else
+                sudo reboot
+              fi
+            fi
+          done
         fi
-        echo ""
-        sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
+      else
+        if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+        then
+          # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
+          while (( ERR_TIMER > 0 ))
+          do
+            echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a "$LOG_FILE"
+            if [[ $TELEGRAM_ALERTS == "YES" ]]
+            then
+              bash "${NVOC}/telegram" &
+            fi
+            sleep 15
+            { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+            if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+            then
+              ERR_TIMER=$((ERR_TIMER - 15))
+            else
+              ERR_TIMER=$ERR_TIMER_BRK
+              break
+            fi
+            if (( ERR_TIMER <= 0 ))
+            then
+              echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
+              if [[ $TELEGRAM_ALERTS == "YES" ]]
+              then
+                bash "${NVOC}/telegram" &
+              fi
+              sleep 3
+              if [[ $SYSRQ_REBOOT == YES ]]
+              then
+                sudo bash ${NVOC}/sysrq_reboot.sh
+              else
+                sudo reboot
+              fi
+            fi
+          done
+        fi
       fi
-    else
-      # Current temp is lower than target, so we can relax fan speed, and restore original power limit if applicable
-      if (( TEMP_DIFF > ALLOWED_TEMP_DIFF ))
+
+      POWERLIMIT=${PWRLIMIT%%.*}
+      TEMP_DIFF=$(( TARGET_TEMP[GPU] - CURRENT_TEMP ))
+      NEW_FAN_SPEED=$CURRENT_FAN
+      HIGH_TEMP_DIFF=$(( ALLOWED_TEMP_DIFF * 2 ))
+
+      echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"
+
+      if (( CURRENT_TEMP > TARGET_TEMP[GPU] ))
       then
-        # Faster restore fan speed. This can be far more advanced too
-        FAN_ADJUST_CALCULATED=$FAN_ADJUST
-        if (( TEMP_DIFF > HIGH_TEMP_DIFF ))
+        # If temp difference is more than double the allowed, multiply adjustement by 2
+        if (( TEMP_DIFF < - HIGH_TEMP_DIFF ))
         then
           FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
-          if (( TEMP_DIFF > HIGH_TEMP_DIFF * 2 ))
+        else
+          FAN_ADJUST_CALCULATED=$FAN_ADJUST
+        fi
+        NEW_FAN_SPEED=$(( CURRENT_FAN + FAN_ADJUST_CALCULATED ))
+        if (( NEW_FAN_SPEED > MAXIMAL_FAN_SPEED ))
+        then
+          NEW_FAN_SPEED=$MAXIMAL_FAN_SPEED
+          # Fan speed reached MAXIMAL_FAN_SPEED, we have to drop the power limit
+          NEW_POWER_LIMIT=$((POWERLIMIT - POWER_ADJUST))
+          if [[ $WARN_PL_DROPS == YES ]]
           then
-            FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 4 ))
+            echo -e "${B}WARNING: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}" | tee -a "$LOG_FILE"
+            if [[ $TELEGRAM_ALERTS == "YES" ]]
+            then
+              bash "${NVOC}/telegram" &
+            fi
+          else
+            echo -e "${B}INFO: GPU $GPU${N}, ${R}$(date) - Adjusting Power Limit for ${B}GPU$GPU${N}${R}. Old Limit: ${B}$POWERLIMIT${N}${R} New Limit: ${B}$NEW_POWER_LIMIT${N}${R} Fan speed: ${B}$NEW_FAN_SPEED${N}"
           fi
+          echo ""
+          sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
         fi
-        NEW_FAN_SPEED=$(( CURRENT_FAN - FAN_ADJUST_CALCULATED ))
-        # Set to minimal fan speed if calculated is below
-        if (( NEW_FAN_SPEED < MINIMAL_FAN_SPEED ))
+      else
+        # Current temp is lower than target, so we can relax fan speed, and restore original power limit if applicable
+        if (( TEMP_DIFF > ALLOWED_TEMP_DIFF ))
         then
-          NEW_FAN_SPEED=$MINIMAL_FAN_SPEED
-        fi
-        # Restore original power limit when possible using fan speed
-        if (( ${POWER_LIMIT[${GPU}]} != POWERLIMIT ))
-        then
-          if (( NEW_FAN_SPEED < RESTORE_POWER_LIMIT ))
+          # Faster restore fan speed. This can be far more advanced too
+          FAN_ADJUST_CALCULATED=$FAN_ADJUST
+          if (( TEMP_DIFF > HIGH_TEMP_DIFF ))
           then
-            NEW_POWER_LIMIT=${POWER_LIMIT[${GPU}]}
-            echo -e "${B}GPU$GPU${N}${C}$(date) - Restoring Power Limit for ${N}${B}GPU$GPU${N}. ${C}Old limit: ${N}${B}$POWERLIMIT${N}${C} New limit: ${N}${B}$NEW_POWER_LIMIT${N}${C} Fan speed: ${N}${B}$NEW_FAN_SPEED${N}"
-            echo ""
-            sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
+            FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
+            if (( TEMP_DIFF > HIGH_TEMP_DIFF * 2 ))
+            then
+              FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 4 ))
+            fi
+          fi
+          NEW_FAN_SPEED=$(( CURRENT_FAN - FAN_ADJUST_CALCULATED ))
+          # Set to minimal fan speed if calculated is below
+          if (( NEW_FAN_SPEED < MINIMAL_FAN_SPEED ))
+          then
+            NEW_FAN_SPEED=$MINIMAL_FAN_SPEED
+          fi
+          # Restore original power limit when possible using fan speed
+          if (( ${POWER_LIMIT[${GPU}]} != POWERLIMIT ))
+          then
+            if (( NEW_FAN_SPEED < RESTORE_POWER_LIMIT ))
+            then
+              NEW_POWER_LIMIT=${POWER_LIMIT[${GPU}]}
+              echo -e "${B}GPU$GPU${N}${C}$(date) - Restoring Power Limit for ${N}${B}GPU$GPU${N}. ${C}Old limit: ${N}${B}$POWERLIMIT${N}${C} New limit: ${N}${B}$NEW_POWER_LIMIT${N}${C} Fan speed: ${N}${B}$NEW_FAN_SPEED${N}"
+              echo ""
+              sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
+            fi
           fi
         fi
       fi
-    fi
 
-    if (( NEW_FAN_SPEED != CURRENT_FAN ))
-    then
-      echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"
-      echo ""
-      sudo ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
-    fi
+      if (( NEW_FAN_SPEED != CURRENT_FAN ))
+      then
+        echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"
+        echo ""
+        sudo ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
+      fi
 
-    (( GPU++ ))
-    sleep 0.5    # 0.5 seconds delay until querying the next GPU
+      (( GPU++ ))
+      sleep 0.5    # 0.5 seconds delay until querying the next GPU
+    fi
   done
   echo "$(date) - All good, will check again in $LOOP_TIMER seconds"
   echo ""
