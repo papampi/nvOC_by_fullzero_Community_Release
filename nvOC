@@ -54,17 +54,13 @@
 #          cuda version, service status, upgrade cmdlets
 
 
-# DEV_VERSION=0012
-
-nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.1.0012"                   # Do not edit this
-
-
 export DISPLAY=:0
-
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
+
+nvOC_nvOC_Dev="0012"
+nvOC_nvOC_ver="$nvOC_Ver.$nvOC_nvOC_Dev"                   # Do not edit this
 
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
@@ -543,7 +539,7 @@ Report()
   do
     echo -en "\e[48;5;${i}m "
   done
-  echo -en "${B}Report generator $REPORT_VER by leenoox${N}"
+  echo -en "${B}Report generator for nvOC $nvOC_Ver v$nvOC_nvOC_Dev ${N}"
   for i in {21..16}
   do
     echo -en "\e[48;5;${i}m \e[0m"
@@ -555,12 +551,16 @@ Report()
 #######################################
 
   nvidia_driver_ver=$(nvidia-smi -i 0 -q|grep "Driver Version"|cut -f 2 -d ":"|cut -f 2 -d " ")
-  nvOC_ver_from_1bash=$(cat ${NVOC}/1bash | grep "nvOC v" | cut -d' ' -f 2- | head -n 1 | sed 's/   #################//');
-  nvOC_ver_from_3main=$(head -n 100 ${NVOC}/3main | grep nvOC_ver= | sed 's/nvOC_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-  nvOC_3main_ver=$(head -n 100 ${NVOC}/3main | grep nvOC_3main_ver= | sed 's/nvOC_3main_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-  nvOC_wdog_ver=$(head -n 100 ${NVOC}/5watchdog | grep nvOC_wdog_ver= | sed 's/nvOC_wdog_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-  nvOC_temp_ver=$(head -n 100 ${NVOC}/6tempcontrol | grep nvOC_temp_ver= | sed 's/nvOC_temp_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-  nvOC_wtm_ver=$( head -n 100 ${NVOC}/8wtm_auto_switch | grep wtm_auto_switch_ver= | sed 's/wtm_auto_switch_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+  nvOC_ver_from_1bash=$(cat ${NVOC}/1bash | grep nvOC_Ver| sed 's/^.*="v//' | sed 's/\"//');
+  nvOC_1bash_temp_ver=$(head -n 100 ${NVOC}/1bash.template | grep nvOC_1bash_ver= | sed 's/nvOC_1bash_ver=//' | sed 's/\"//' | sed 's/\"//' )
+  nvOC_3main_ver=$(head -n 100 ${NVOC}/3main | grep nvOC_3main_Dev= | sed 's/nvOC_3main_Dev=//' | sed 's/\"//' | sed 's/\"//' )
+  nvOC_wdog_ver=$(head -n 100 ${NVOC}/5watchdog | grep nvOC_wdog_Dev= | sed 's/nvOC_wdog_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_temp_ver=$(head -n 100 ${NVOC}/6tempcontrol | grep nvOC_temp_Dev= | sed 's/nvOC_temp_Dev=//' | sed 's/\"//' | sed 's/\"//' )
+  nvOC_wtm_ver=$( head -n 100 ${NVOC}/8wtm_auto_switch | grep wtm_auto_switch_Dev= | sed 's/wtm_auto_switch_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_wtm_p_ver=$( head -n 100 ${NVOC}/8wtm_profit_check | grep wtm_profit_check_Dev= | sed 's/wtm_profit_check_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_pools_switch_ver=$( head -n 100 ${NVOC}/9poolswitch | grep nvOC_poolswitch_Dev= | sed 's/nvOC_poolswitch_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_minerinfo_ver=$( head -n 100 ${NVOC}/www/cgi-bin/minerinfo | grep nvOC_minerinfo_Dev= | sed 's/nvOC_minerinfo_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  
   kernel=$(cat /proc/version | cut -d' ' -f 3);
 # os_release=$(cat /usr/lib/os-release | grep PRETTY_NAME | sed 's/PRETTY_NAME=\"//' | sed 's/\"//');
 # os_release=$(cat /etc/lsb-release | grep DISTRIB_DESCRIPTION | sed 's/DISTRIB_DESCRIPTION=\"//' | sed 's/\"//');
@@ -607,20 +607,25 @@ Report()
   echo "[code]"
   echo -e \
 "
-${B}Software info:${N}
-Report ver    :  $REPORT_VER
-nvOC path     :  ${NVOC}
-nvOC (1bash)  :$nvOC_ver_from_1bash
-nvOC (3main)  :  $nvOC_ver_from_3main
-1bash ver     :  $nvOC_1bash_ver
-3main ver     :  $nvOC_3main_ver
-5watchdog ver :  $nvOC_wdog_ver
-6tempcontrol v:  $nvOC_temp_ver
-wtm switch ver:  $nvOC_wtm_ver
+${B}Operating System info:${N}
 Kernel        :  $kernel
 OS            :  $os_release
 System        :  $system
 nvidia driver :  $nvidia_driver_ver
+
+${B}nvOC info:${N}
+nvOC path     :  ${NVOC}
+nvOC          :  $nvOC_ver_from_1bash
+Report        :  $nvOC_nvOC_Dev
+1bash         :  $nvOC_1bash_ver
+1bash.template:  $nvOC_1bash_temp_ver
+3main         :  $nvOC_3main_ver
+5watchdog     :  $nvOC_wdog_ver
+6tempcontrol  :  $nvOC_temp_ver
+wtm switch    :  $nvOC_wtm_ver
+wtm profit    :  $nvOC_wtm_p_ver
+pool switch   :  $nvOC_pools_switch_ver
+minerinfo     :  $nvOC_minerinfo_ver
 
 ${B}Hardware info:${N}
 Motherboard   :  $mbvendor $mbmodel  $mbversion

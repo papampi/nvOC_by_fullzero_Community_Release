@@ -64,16 +64,15 @@
 # v=0020 : papampi
 #          Check Ping if Network couldnt resolve 
 
-
-nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.1.020"   # Do not edit this
-
-echo "Watchdog for $nvOC_Ver"
-echo "Version: $nvOC_wdog_ver"
-echo ""
-
 export DISPLAY=:0
 source ${NVOC}/1bash
+
+nvOC_wdog_Dev="0020"
+nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
+
+echo "Watchdog for nvOC $nvOC_Ver"
+echo "Version: $nvOC_wdog_ver"
+echo ""
 
 if [ $WATCHDOG_USE_COLOR == "YES" ]; then
   N='\e[0m'     # Normal

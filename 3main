@@ -71,8 +71,8 @@
 
 source ${NVOC}/1bash
 
-nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_3main_ver="v0019-2.1.0024"                  # Do not edit this
+nvOC_3main_Dev="0024"
+nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"                  # Do not edit this
 
 #########################################################################
 #########################################################################

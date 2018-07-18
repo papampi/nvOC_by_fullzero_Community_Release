@@ -1,14 +1,14 @@
 #!/bin/bash
 # log rotation by papampi for nvOC by fullzero, v0019-2.0 Community Release
 
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-log_rotate_ver="v0019-2.0.002"
-
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
-echo "Log Rotate for $nvOC_Ver"
-echo "Version: : $log_rotate_ver" 
+nvOC_log_rotate_Dev="0001"
+log_rotate_ver="$nvOC_Ver.$nvOC_log_rotate_Dev"
+
+echo "Log Rotate for nvOC $nvOC_Ver"
+echo "Version: $log_rotate_ver" 
 echo ""
 while true
 do

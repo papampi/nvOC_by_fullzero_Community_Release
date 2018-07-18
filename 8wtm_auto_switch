@@ -58,18 +58,19 @@
 #
 # v=0022 : papampi: Fix no top_coin on first run
 
-
-nvOC_Ver="nvOC v0019-2.1 - Community Release"
-wtm_auto_switch_ver="v0019-2.1.0022"   # Do not edit this
-
-echo ""
-echo ""
-echo "WhatToMine.com Auto Switch $wtm_auto_switch_ver by papampi"
-echo ""
-
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
+
+wtm_auto_switch_Dev="0022"
+wtm_auto_switch_ver="$nvOC_Ver.$wtm_auto_switch_Dev"   # Do not edit this
+
+echo ""
+echo ""
+echo "WhatToMine.com Auto Switch for nvOC $nvOC_ver"
+echo "Version $wtm_auto_switch_ver"
+echo ""
+
 
 WDOG_LOG="${NVOC}/nvoc_logs/watchdog-screenlog.0"
 

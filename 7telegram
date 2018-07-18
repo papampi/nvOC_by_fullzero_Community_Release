@@ -8,14 +8,15 @@
 ##########################################################################
 ##########################################################################
 
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-nvOC_telegram_ver="v0019-2.0.001"   # Do not edit this
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
-echo "Telegram Messages for $nvOC_Ver"
-echo "Version: :$nvOC_telegram_ver"
+nvOC_telegram_Dev="0001"
+nvOC_telegram_ver="$nvOC_Ver.$nvOC_telegram_Dev"   # Do not edit this
+
+echo "Telegram Messages for nvOC $nvOC_Ver"
+echo "Version: $nvOC_telegram_ver"
 echo ""
 
 while true

@@ -10,17 +10,17 @@
 # v=0003 : papampi: code cleanup
 # v=0004 : LukePicci: Relocate nvOC to arbitrary install directory
 
-
-nvOC_Ver="nvOC v0019-2.0 - Community Release"
-wtm_profit_check_ver="v0019-2.0.0004"   # Do not edit this
-
-echo ""
-echo "WhatToMine.com Profit Check $wtm_profit_check_ver by papampi"
-echo ""
-
-
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
+
+wtm_profit_check_Dev="0004"
+wtm_profit_check_ver="$nvOC_Ver.$wtm_profit_check_Dev"   # Do not edit this
+
+echo ""
+echo "WhatToMine.com Profit Check for nvOC $nvOC_ver"
+echo "Version: $wtm_profit_check_ver"
+echo ""
+
 
 # Creating a log file to record coin switch
 LOG_FILE="${NVOC}/nvoc_logs/8_wtmautoswitchlog"
