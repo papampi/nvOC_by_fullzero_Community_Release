@@ -552,6 +552,7 @@ Report()
 
   nvidia_driver_ver=$(nvidia-smi -i 0 -q|grep "Driver Version"|cut -f 2 -d ":"|cut -f 2 -d " ")
   nvOC_ver_from_1bash=$(cat ${NVOC}/1bash | grep nvOC_Ver| sed 's/^.*="v//' | sed 's/\"//');
+  nvOC_1bash_temp_ver=$(head -n 100 ${NVOC}/1bash.template | grep nvOC_1bash_ver= | sed 's/nvOC_1bash_ver=//' | sed 's/\"//' | sed 's/\"//' )
   nvOC_3main_ver=$(head -n 100 ${NVOC}/3main | grep nvOC_3main_Dev= | sed 's/nvOC_3main_Dev=//' | sed 's/\"//' | sed 's/\"//' )
   nvOC_wdog_ver=$(head -n 100 ${NVOC}/5watchdog | grep nvOC_wdog_Dev= | sed 's/nvOC_wdog_Dev=//' | sed 's/\"//' | sed 's/\"//')
   nvOC_temp_ver=$(head -n 100 ${NVOC}/6tempcontrol | grep nvOC_temp_Dev= | sed 's/nvOC_temp_Dev=//' | sed 's/\"//' | sed 's/\"//' )
@@ -617,6 +618,7 @@ nvOC path     :  ${NVOC}
 nvOC          :  $nvOC_ver_from_1bash
 Report        :  $nvOC_nvOC_Dev
 1bash         :  $nvOC_1bash_ver
+1bash.template:  $nvOC_1bash_temp_ver
 3main         :  $nvOC_3main_ver
 5watchdog     :  $nvOC_wdog_ver
 6tempcontrol  :  $nvOC_temp_ver
