@@ -235,8 +235,8 @@ Reboot()
   sudo su -c "shutdown -r now"
 }
 
-############################### Start nvOC ####################################
-Start()
+############################### Start nvOC in gnome-terminal ##################
+StartGnomeTerminal()
 {
   if [[ $LOCALorREMOTE == REMOTE ]]
   then
@@ -252,7 +252,7 @@ Start()
 }
 
 ############################### Stop nvOC #####################################
-Stop()
+StopGnomeTerminal()
 {
   echo -e "${B}Stopping nvOC processes...${N}"; echo
 
@@ -270,7 +270,14 @@ Stop()
 Restart()
 {
    # Restart nvOC from scratch
-   Stop && Start
+   # if systemctl is-enabled nvoc.service
+   # then
+   # # nvOC as systemd service
+   # StopService && StartService
+   # else
+   # # nvOC in gnome-terminal
+   StopGnomeTerminal && StartGnomeTerminal
+   # fi
 }
 
 ############################### gpumap ########################################
@@ -1051,8 +1058,8 @@ case $# in
       report)              Report;;
       patch)               Patch;;
       reboot)              Reboot;;
-      start)               Start;;
-      stop)                Stop;;
+      start)               StartGnomeTerminal;;
+      stop)                StopGnomeTerminal;;
       restart)             Restart;;
       restore)             Restore;;
       upgrade)             Upgrade;;
