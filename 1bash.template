@@ -605,7 +605,7 @@ BTCZ_PORT="5586"
 BTCZ_WORKER="$WORKERNAME"
 
 # Bitcoin Gold (BTG)
-BTG_ADDRESS="$MPH_ADDRESS"
+BTG_ADDRESS="replace_with_your_address"
 BTG_EXTENSION_ARGUMENTS="--algo 144_5 --pers BgoldPoW"
 BTG_POOL="us-east.equihash-hub.miningpoolhub.com"
 BTG_PORT="20595"
