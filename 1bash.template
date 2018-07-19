@@ -109,10 +109,11 @@ v0029="papampi; Nice Algo extension arguments"
 v0030="papampi;CryptoNightHeavy"  
 v0031="papampi;New EWBF v0.3"  
 v0032="papampi;Version numbering"
+v0033="papampi;ZHASH Algo, Z_EWBF Miner"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0032"
+nvOC_1bash_ver="0033"
 nvOC_1bash_last_compatible="0029"
 
 
@@ -425,7 +426,11 @@ EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter 
 EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
 EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" or new "v0_3" # EWBF Equihash Miner version
                                                  # If the new "v0_3" version selected you need to add new parameters to COIN_EXTENSION_ARGUMENTS
-						 # For example add "--algo 144_5 --pers BgoldPoW" for BitcoinGold
+
+Z_EWBF_PERCENT="0"                               # Z_EWBF PERCENT to alter donation percent for EWBF ZHASH Miner   
+Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
+Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version, "v0.3" or "latest"  
+
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
@@ -545,6 +550,12 @@ XEVAN_INTENSITY="0"
 XEVAN_MINER="ZENEMYminer"
 XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+## ZHASH
+ZHASH_MINER="Z_EWBF"
+ZHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+
+
 ################################################################
 #####                                                      #####
 ##### COIN, POOL, PORT info section, sorted alphabetically #####
@@ -591,10 +602,10 @@ BTCZ_PORT="5586"
 BTCZ_WORKER="$WORKERNAME"
 
 # Bitcoin Gold (BTG)
-BTG_ADDRESS="replace_with_your_address"
-BTG_EXTENSION_ARGUMENTS=""
-BTG_POOL="replace_with_your_BTG_POOL"
-BTG_PORT="replace_with_your_BTG_PORT"
+BTG_ADDRESS="$MPH_ADDRESS"
+BTG_EXTENSION_ARGUMENTS="--algo 144_5 --pers BgoldPoW"
+BTG_POOL="us-east.equihash-hub.miningpoolhub.com"
+BTG_PORT="20595"
 BTG_WORKER="$WORKERNAME"
 
 # Bitcore (BTX)
@@ -1143,7 +1154,7 @@ CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
 CRYPTONIGHTV7_COINS="XMR,MPH_CRYPTONIGHTV7,NICE_CRYPTONIGHTV7,ETN"
 CRYPTONIGHTHEAVY="LOKI,NICE_CNHEAVY"
 DECRED_COINS="DCR"
-EQUIHASH_COINS="BTG,ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
+EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
 ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
 GRS_COINS="GRS,MPH_GRS"
 LBRY_COINS="LBC,ZPOOL_LBRY"
@@ -1160,7 +1171,7 @@ SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN"
 XEVAN_COINS="BSD"
-
+ZHASH_COINS="BTG"
 
 #####################################################################
 #                                                                   #
@@ -1339,6 +1350,10 @@ PHI_POWERLIMIT_WATTS=100           #
 PHI_CORE_OVERCLOCK=0               # 
 PHI_MEMORY_OVERCLOCK=0             # 
 
+# ZHASH
+ZHASH_POWERLIMIT_WATTS=100           # 
+ZHASH_CORE_OVERCLOCK=150               # 
+ZHASH_MEMORY_OVERCLOCK=150             # 
 
 daggerhashimoto_POWERLIMIT_WATTS=100       # Recomended value for some GTX-1060: 76
 daggerhashimoto_CORE_OVERCLOCK=0         # Recomended value for some GTX-1060: -200
