@@ -50,7 +50,7 @@
 # v=0019 : papampi
 #          Crytponight Heavy
 # v=0020 : papampi
-#          ZHASH Algo, Z_EWBF
+#          ZHASH, PHI1612, PHI2 Algos and Z_EWBF
 
 nvOC_0miner_dev="0020"
 
