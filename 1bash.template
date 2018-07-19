@@ -428,7 +428,7 @@ EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" # EWBF 
 
 Z_EWBF_PERCENT="0"                               # EWBF ZHASH Dev fee percent to alter donation percent   
 Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
-Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version, "v0.3" or "latest"  
+Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version,  "latest" or add the version you installed 
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
