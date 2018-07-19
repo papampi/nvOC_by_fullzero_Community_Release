@@ -662,7 +662,7 @@ ELLA_WORKER="$WORKERNAME"
 
 # Ethereum Classic (ETC)
 ETC_ADDRESS="replace_with_your_address"
-ETC_EXTENSION_ARGUMENTS=""    
+ETC_EXTENSION_ARGUMENTS=""                               #claymore opts: "-allcoins etc"
 ETC_POOL="europe.ethash-hub.miningpoolhub.com"
 ETC_PORT="20555"
 ETC_WORKER="$WORKERNAME"
