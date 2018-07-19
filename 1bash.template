@@ -1001,7 +1001,7 @@ DUAL_ADDITIONAL_ARGUMENTS=""                #Additional arguments if needed
 NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
 NICE_ETHASH_PORT="3353"
 NICE_ETHASH_WORKER="$WORKERNAME"
-NICE_ETHASH_EXTENSION_ARGUMENTS=""
+NICE_ETHASH_EXTENSION_ARGUMENTS=""            # To mine with claymore add "-esm 3 -allpools 1 -estale 0"
 
 # Nice Equihash
 NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
