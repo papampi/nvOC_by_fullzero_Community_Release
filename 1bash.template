@@ -424,13 +424,11 @@ DSTM_OPTS=""                                     # DSTM Miner optional arguments
 
 EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
 EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" or new "v0_3" # EWBF Equihash Miner version
-                                                 # If the new "v0_3" version selected you need to add new parameters to COIN_EXTENSION_ARGUMENTS
+EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" # EWBF Equihash Miner version
 
-Z_EWBF_PERCENT="0"                               # Z_EWBF PERCENT to alter donation percent for EWBF ZHASH Miner   
+Z_EWBF_PERCENT="0"                               # EWBF ZHASH Dev fee percent to alter donation percent   
 Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
 Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version, "v0.3" or "latest"  
-
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
