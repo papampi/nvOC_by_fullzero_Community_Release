@@ -483,7 +483,7 @@ echo '</head>'
 echo '<body>'
 if [[ $nvOC_1bash_temp_ver != $nvOC_1bash_ver ]]
 then
-  echo '<h4>'  "<tt style=\"color:red;\">" 1bash and 1bash.template versions are not the same, update 1bash is recomended "</tt>"  '</h4>'
+  echo '<h4>'  "<tt style=\"color:red;\">" 1bash and 1bash.template versions are not the same, update 1bash is strongly recommended"</tt>"  '</h4>'
 fi
 echo '<h3>'  "nvOC $nvOC_Ver - Community Release"
 echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "</tt>"  '</h4>'
