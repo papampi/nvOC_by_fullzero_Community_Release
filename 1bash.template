@@ -109,7 +109,7 @@ v0029="papampi; Nice Algo extension arguments"
 v0030="papampi;CryptoNightHeavy"  
 v0031="papampi;New EWBF v0.3"  
 v0032="papampi;Version numbering"
-v0033="papampi;ZHASH, PHI1612, PHI2 Algos and Z_EWBF Miner"
+v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
@@ -1044,6 +1044,13 @@ NICE_SKUNKHASH_POOL="skunk.eu.nicehash.com:"
 NICE_SKUNKHASH_PORT="3362"
 NICE_SKUNKHASH_WORKER="$WORKERNAME"
 NICE_CRYPTONIGHT_EXTENSION_ARGUMENTS=""
+
+#NICE_X16R stratum+tcp://
+NICE_X16R_POOL="x16r.eu.nicehash.com:"
+NICE_X16R_PORT="3366"
+NICE_X16R_WORKER="$WORKERNAME"
+NICE_X16R_EXTENSION_ARGUMENTS=""
+
 
 ########################################################
 #                                                      #
