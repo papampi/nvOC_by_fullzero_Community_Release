@@ -4,7 +4,7 @@
 # nvOC                                                                         #
 #                                                                              #
 # Purpose:  Handles a variety of tasks for the nvOC mining operating system    #
-#           including stop and start mining, patching, etc                     #
+#           including stop and start mining, etc                               #
 #                                                                              #
 # Usage:  See echo_usage (below)                                               #
 #                                                                              #
@@ -52,6 +52,8 @@
 #          Git repo and submodules status report
 # v=0012 : LuKePicci
 #          cuda version, service status, upgrade cmdlets
+# v=0013 : papampi
+#          Remove patching
 
 
 export DISPLAY=:0
@@ -59,7 +61,7 @@ export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
 
-nvOC_nvOC_Dev="0012"
+nvOC_nvOC_Dev="0013"
 nvOC_nvOC_ver="$nvOC_Ver.$nvOC_nvOC_Dev"                   # Do not edit this
 
 # Text output beautifier, use bold text and colors
@@ -99,8 +101,6 @@ echo_usage()
   echo "           upgrade to latest nvOC revision for your current branch"
   echo -e "        ${C}$0 miners-upgrade${N}"
   echo "           upgrade nvOC miners collection with latest changes and intall them"
-  echo -e "        ${C}$0 patch${N}"
-  echo "           stops nvOC and applies outstanding Ubuntu patches and "
   echo "           Nvidia driver updates"
   echo -e "        ${C}$0 reboot${N}"
   echo "           reboots the host machine"
@@ -205,21 +205,6 @@ GPUinfo()
     (( i++ ))
   done
   echo -e $INFO | column -t -s,
-}
-
-############################### Patch nvOC ####################################
-Patch()
-{
-  # Kill off the nv_OC processes
-  Stop
-
-  echo -e "${B}Applying patches/updates...${N}"; echo
-
-  # Apply patches
-  sudo dpkg --configure -a
-  sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
-
-  echo; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
 }
 
 ############################### Reboot host ###################################
@@ -1064,7 +1049,6 @@ case $# in
       gpuinfo)             GPUinfo;;
       gpumap)              GPUmap;;
       report)              Report;;
-      patch)               Patch;;
       reboot)              Reboot;;
       start)               StartGnomeTerminal;;
       stop)                StopGnomeTerminal;;
