@@ -217,7 +217,7 @@ do
 
   # If 1, 5 and 15 min load average are more than double cpu core give warning
   HIGH_AVERAGE=$(( $(nproc) * 2 ))
-  AVERAGES=$(uptime | sed 's/.*: //g; s/,//g')
+  AVERAGES=$(uptime | sed 's/.*: //g')
   echo "Load Average: $AVERAGES"
 
   AVERAGE_1=$(echo "$AVERAGES" | cut -d"," -f1)
