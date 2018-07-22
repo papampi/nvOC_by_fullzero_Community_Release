@@ -143,8 +143,6 @@ RESTART=0
 SLEEP_TIME=$(( ACTIVE_GPU_COUNT * 2 + 10 ))
 numtest='^[0-9.]+$'
 
-#ideally this should be localvariable
-
 # If number gpu installed is set in 1bash give a comparison
 if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
 then
