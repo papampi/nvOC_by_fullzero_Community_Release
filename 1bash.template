@@ -206,7 +206,7 @@ AUTO_SWITCH="NO"       # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING,
 
 NUMBER_GPUS_INSTALLED=""    # Number or "" # Set number of GPUs installed. Watchdog will check installed vs detected. Leave empty to not check
 
-BLACKLIST_GPUS=""           # space seperated list of devices to be ignore by the miner, start from 0, e.g. 0 1 2 3 4 ...
+DISABLED_GPUS=""           # space seperated list of devices to be ignore by the miner, start from 0, e.g. 0 1 2 3 4 ...
 
 LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local access to the rig. Set to REMOTE if logging remotely to the rig
 # LOCAL will attach the mining process to the gnome or guake terminal

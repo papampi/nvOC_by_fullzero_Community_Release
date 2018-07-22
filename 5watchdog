@@ -74,7 +74,7 @@ echo ""
 
 export DISPLAY=:0
 source ${NVOC}/1bash
-source ${NVOC}/helpers/blacklist_gpu
+source ${NVOC}/helpers/disabled_gpu
 
 if [ $WATCHDOG_USE_COLOR == "YES" ]; then
   N='\e[0m'     # Normal
@@ -136,7 +136,7 @@ fi
 # Initialize vars
 REBOOTRESET=0
 GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
-ACTIVE_GPU_COUNT = $(($GPU_COUNT - ${#BLACKLIST_GPU_ARRAY[@]}))
+ACTIVE_GPU_COUNT = $(($GPU_COUNT - ${#DISABLED_GPU_ARRAY[@]}))
 COUNT=$((6 * ACTIVE_GPU_COUNT))
 # Track how many times we have restarted the miner/3main
 RESTART=0
@@ -272,8 +272,9 @@ do
   # Loop over each GPU and check utilization
   for (( GPU=0; GPU < GPU_COUNT; GPU++))
   do
-    if [[ ${BLACKLIST_GPU_ARRAY[$gpu]} ]]; then
-      # skip if blacklisted
+    if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
+      # skip if disabled
+      echo "$(date) - [INFO] - GPU$GPU disabled"
       continue
     fi
     { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)

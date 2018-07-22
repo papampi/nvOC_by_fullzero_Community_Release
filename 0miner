@@ -55,7 +55,7 @@ nvOC_0miner_ver="v0019-2.0.0019" # Do not edit this
 
 source "${NVOC}/1bash"
 source "${NVOC}/0algo_id"
-source "${NVOC}/helpers/blacklist_gpu"
+source "${NVOC}/helpers/disabled_gpu"
 build_miner_devices_opt
 
 # Prevent running 2 miners
