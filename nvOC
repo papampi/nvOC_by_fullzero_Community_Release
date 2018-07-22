@@ -99,9 +99,6 @@ echo_usage()
   echo "           upgrade to latest nvOC revision for your current branch"
   echo -e "        ${C}$0 miners-upgrade${N}"
   echo "           upgrade nvOC miners collection with latest changes and intall them"
-  echo -e "        ${C}$0 patch${N}"
-  echo "           stops nvOC and applies outstanding Ubuntu patches and "
-  echo "           Nvidia driver updates"
   echo -e "        ${C}$0 reboot${N}"
   echo "           reboots the host machine"
   echo -e "        ${C}$0 stop${N}"
@@ -205,21 +202,6 @@ GPUinfo()
     (( i++ ))
   done
   echo -e $INFO | column -t -s,
-}
-
-############################### Patch nvOC ####################################
-Patch()
-{
-  # Kill off the nv_OC processes
-  Stop
-
-  echo -e "${B}Applying patches/updates...${N}"; echo
-
-  # Apply patches
-  sudo dpkg --configure -a
-  sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
-
-  echo; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
 }
 
 ############################### Reboot host ###################################
@@ -1075,7 +1057,6 @@ case $# in
       gpuinfo)             GPUinfo;;
       gpumap)              GPUmap;;
       report)              Report;;
-      patch)               Patch;;
       reboot)              Reboot;;
       start)               StartGnomeTerminal;;
       stop)                StopGnomeTerminal;;
