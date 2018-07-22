@@ -50,6 +50,11 @@ echo ""
 sudo renice -n -15 -p $$ && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
 sleep 1
 
+source ${NVOC}/1bash
+source ${NVOC}/0algo_id
+source ${NVOC}/helpers/disabled_gpu
+sleep 1
+
 NVD="nvidia-settings"
 SMI="nvidia-smi"
 
@@ -121,6 +126,11 @@ count=0
 # Set variables for Temp and Power Limit; Enable fan control; Display info
 while (( count < GPUS ))
 do
+  if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
+    # skip if disabled
+    echo "$(date) - [INFO] - GPU$GPU disabled"
+    continue
+  fi
   if [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
   then
     POWER_LIMIT[$count]=$(( INDIVIDUAL_POWERLIMIT_$count ))
@@ -214,6 +224,11 @@ do
   GPU=0
   while (( GPU < GPUS ))
   do
+    if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
+      # skip if disabled
+      echo "$(date) - [INFO] - GPU$GPU disabled"
+      continue
+    fi
     { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog

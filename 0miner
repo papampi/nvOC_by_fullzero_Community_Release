@@ -56,6 +56,8 @@ nvOC_0miner_dev="0020"
 
 source "${NVOC}/1bash"
 source "${NVOC}/0algo_id"
+source "${NVOC}/helpers/disabled_gpu"
+build_miner_devices_opt
 
 nvOC_0miner_ver="$nvOC_Ver.$nvOC_0miner_dev" # Do not edit this
 
@@ -101,7 +103,6 @@ then
 fi
 
 LAUNCH="$CUDA_ENV screen -c ${NVOC}/screenrc-miner -dmSL miner"
-
 ## Unify COIN End
 
 ## NICEHASH

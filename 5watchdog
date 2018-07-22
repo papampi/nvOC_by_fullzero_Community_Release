@@ -66,6 +66,7 @@
 
 export DISPLAY=:0
 source ${NVOC}/1bash
+source ${NVOC}/helpers/disabled_gpu
 
 nvOC_wdog_Dev="0020"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
@@ -134,12 +135,15 @@ fi
 # Initialize vars
 REBOOTRESET=0
 GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
-COUNT=$((6 * GPU_COUNT))
+ACTIVE_GPU_COUNT = $(($GPU_COUNT - ${#DISABLED_GPU_ARRAY[@]}))
+COUNT=$((6 * ACTIVE_GPU_COUNT))
 # Track how many times we have restarted the miner/3main
 RESTART=0
 # Dynamic sleep time, dstm zm miner takes a very long time to load GPUs
-SLEEP_TIME=$(( GPU_COUNT * 2 + 10 ))
+SLEEP_TIME=$(( ACTIVE_GPU_COUNT * 2 + 10 ))
 numtest='^[0-9.]+$'
+
+#ideally this should be localvariable
 
 # If number gpu installed is set in 1bash give a comparison
 if [[ -n "$NUMBER_GPUS_INSTALLED"  ]]
@@ -267,6 +271,11 @@ do
   # Loop over each GPU and check utilization
   for (( GPU=0; GPU < GPU_COUNT; GPU++))
   do
+    if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
+      # skip if disabled
+      echo "$(date) - [INFO] - GPU$GPU disabled"
+      continue
+    fi
     { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
     # echo utilization
     echo "$(date) - [INFO] - GPU$GPU Utilization: $UTIL%"
@@ -336,8 +345,8 @@ do
   then
     #echo "$(date) - Debug: NUM_GPU_BLW_THRSHLD=$NUM_GPU_BLW_THRSHLD, COUNT=$COUNT, RESTART=$RESTART, REBOOTRESET=$REBOOTRESET" | tee -a ${LOG_FILE}
 
-  # Check Internet and pool only if all GPU utilizations are bellow threshold
-    if (( NUM_GPU_BLW_THRSHLD = GPU_COUNT ))
+    # Check Internet and pool only if all GPU utilizations are bellow threshold
+    if (( NUM_GPU_BLW_THRSHLD = ACTIVE_GPU_COUNT))
     then
 
       #Check for Internet and wait if down
@@ -367,7 +376,7 @@ do
       if  nc -vzw1 google.com 443  && [[ $INTERNET == 0 ]]
       then
         echo "$(date) - [INFO] - Internet was down, Now it's ok" | tee -a ${LOG_FILE}
-        REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); INTERNET=1
+        REBOOTRESET=0; RESTART=0; COUNT=$((6 * ACTIVE_ACTIVE_GPU_COUNT)); INTERNET=1
         #### Now that internet comes up check miner and restart 3main if needed
         if [[ -z $(ps ax | grep -i screen | grep miner) ]]
         then
@@ -382,9 +391,6 @@ do
       fi
 
       ######################## Beginning Pool Check
-
-      source ${NVOC}/1bash
-
       if [[ $COIN == *DUAL* ]] ;   then
         COIN=$(echo $COIN| sed 's/DUAL_//' | cut -d _ -f 1)
         COIN_POOL=${COIN}_POOL
@@ -405,7 +411,7 @@ do
         if  nc -vzw1 ${!COIN_POOL}t2 ${!COIN_PORT} && [[ $POOL == 0 ]] ;  then
           echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  # | tee -a $LOG_FILE
           #When pool comes up, reset counters to skip additional checks until the next time through the loop
-          REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); POOL=1
+          REBOOTRESET=0; RESTART=0; COUNT=$((6 * ACTIVE_GPU_COUNT)); POOL=1
           if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]] ;    then
             echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
           elif  [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]] ;   then
@@ -426,7 +432,6 @@ do
         echo ""
 
       else
-        source ${NVOC}/1bash
         COIN_POOL=${COIN}_POOL
         COIN_PORT=${COIN}_PORT
         COIN_POOL_2=${COIN}_POOL_2
@@ -453,7 +458,7 @@ do
         if nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} && [[ $POOL == 0 ]] ;   then
           echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  | tee -a $LOG_FILE
           #When pool comes up, reset counters to skip additional checks until the next time through the loop
-          REBOOTRESET=0; RESTART=0; COUNT=$((6 * GPU_COUNT)); POOL=1
+          REBOOTRESET=0; RESTART=0; COUNT=$((6 * ACTIVE_GPU_COUNT)); POOL=1
           if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]]
           then
             echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
@@ -477,13 +482,13 @@ do
     fi
 
     # Percent of GPUs below threshold
-    PCT_GPU_BAD=$((100 * NUM_GPU_BLW_THRSHLD / GPU_COUNT ))
+    PCT_GPU_BAD=$((100 * NUM_GPU_BLW_THRSHLD / ACTIVE_GPU_COUNT ))
 
     #  If we have had too many GPU below threshold over time OR
     #     we have ALL GPUs below threshold AND had at least (#GPUs + 1)
     #        occurrences of below threshold (2nd run through the loop
     #        to allow miner to fix itself)
-    if (( COUNT < 1 )) || (( PCT_GPU_BAD == 100 )) && (( COUNT < 2 * GPU_COUNT ))
+    if (( COUNT < 1 )) || (( PCT_GPU_BAD == 100 )) && (( COUNT < 2 * ACTIVE_GPU_COUNT ))
     then
       # Get some some diagnostics to the logs before restarting or rebooting
       echo "" | tee -a ${LOG_FILE}; echo "" | tee -a ${LOG_FILE}
@@ -523,7 +528,7 @@ do
 
       RESTART=$((RESTART + 1))
       REBOOTRESET=0
-      COUNT=$GPU_COUNT
+      COUNT=$ACTIVE_GPU_COUNT
 
       # Give 3main time to restart to prevent reboot
       sleep $SLEEP_TIME
@@ -535,7 +540,7 @@ do
     # No below threshold GPUs detected for this pass
   else
     # All is good, reset the counter
-    COUNT=$((6 * GPU_COUNT))
+    COUNT=$((6 * ACTIVE_GPU_COUNT))
     echo "$(date) - [INFO] - No mining issues detected, Check again in $WATCHDOG_CYCLE"
     echo " "
     # No need for a reboot after 5 times through the main loop with no issues
