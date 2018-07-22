@@ -36,6 +36,7 @@
 
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
+source ${NVOC}/helpers/disabled_gpu
 
 nvOC_temp_Dev="0006"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
@@ -48,11 +49,6 @@ echo ""
 
 # Set higher process and disk I/O priorities because we are essential service
 sudo renice -n -15 -p $$ && sudo ionice -c2 -n0 -p$$ >/dev/null 2>&1
-sleep 1
-
-source ${NVOC}/1bash
-source ${NVOC}/0algo_id
-source ${NVOC}/helpers/disabled_gpu
 sleep 1
 
 NVD="nvidia-settings"
