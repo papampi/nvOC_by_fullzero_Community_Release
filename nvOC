@@ -99,9 +99,6 @@ echo_usage()
   echo "           upgrade to latest nvOC revision for your current branch"
   echo -e "        ${C}$0 miners-upgrade${N}"
   echo "           upgrade nvOC miners collection with latest changes and intall them"
-  echo -e "        ${C}$0 patch${N}"
-  echo "           stops nvOC and applies outstanding Ubuntu patches and "
-  echo "           Nvidia driver updates"
   echo -e "        ${C}$0 reboot${N}"
   echo "           reboots the host machine"
   echo -e "        ${C}$0 stop${N}"
@@ -205,21 +202,6 @@ GPUinfo()
     (( i++ ))
   done
   echo -e $INFO | column -t -s,
-}
-
-############################### Patch nvOC ####################################
-Patch()
-{
-  # Kill off the nv_OC processes
-  Stop
-
-  echo -e "${B}Applying patches/updates...${N}"; echo
-
-  # Apply patches
-  sudo dpkg --configure -a
-  sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
-
-  echo; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
 }
 
 ############################### Reboot host ###################################
@@ -884,10 +866,10 @@ Ethernet      :  $ethernet"
 Upgrade()
 {
   echo -e "${Y}Warnings${N}:
-- your customized 1bash settings won't be affected, but you will have
-  have to create a new one starting from ${B}1bash.template${N} if it gets
-  updated during this upgrade, otherwise you will get a warning each
-  time nvOC restarts
+- your customized 1bash settings won't be affected, but you may have
+  to create a new one starting from a frash copy of ${B}1bash.template${N}
+  if it gets updated during this upgrade, otherwise you will get a
+  warning each time nvOC restarts
 - the upgrade will fail safely if you made conflicting customizations
   to any other nvOC script: if it happens you need either to run this
   script with ${C}restore${N} command or manually manage this by git commands.
@@ -901,6 +883,17 @@ Upgrade()
 
   echo "Checking for nvOC updates...  (target: '${NVOC}')"
   git -C ${NVOC} pull
+
+  echo -e "nvOC has been upgraded.
+There may be new required miners packages to be installed.
+Would you like to check for further miners updates and install them now?"
+
+  read -p "Do you want to continue (Y/n)?  " -n 1 ans
+  echo
+  if [[ ${ans,,} != n ]]
+  then
+    MinersUpgrade
+  fi
 }
 
 ################################# Restore working tree ##############################
@@ -1064,7 +1057,6 @@ case $# in
       gpuinfo)             GPUinfo;;
       gpumap)              GPUmap;;
       report)              Report;;
-      patch)               Patch;;
       reboot)              Reboot;;
       start)               StartGnomeTerminal;;
       stop)                StopGnomeTerminal;;
