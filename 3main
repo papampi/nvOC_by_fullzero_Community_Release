@@ -289,45 +289,6 @@ then
   sudo ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
 fi
 
-source ${NVOC}/0algo_id
-
-if [[ $POWERLIMIT_MODE == GLOBAL ]]
-then
-  sudo nvidia-smi -pl "$_POWERLIMIT_WATTS"
-fi
-
-if [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
-then
-  for i in $(seq 0 $((GPUS-1)))
-  do
-    sudo nvidia-smi -i $i -pl $((INDIVIDUAL_POWERLIMIT_$i))
-  done
-fi
-
-if [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
-then
-  for i in $(seq 0 $((GPUS-1)))
-  do
-    sudo nvidia-smi -i $i -pl $((${ALGO}_POWERLIMIT_WATTS))
-  done
-fi
-
-if [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
-then
-  for i in $(seq 0 $((GPUS-1)))
-  do
-    sudo nvidia-smi -i $i -pl $((_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
-  done
-fi
-
-if [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
-then
-  for i in $(seq 0 $((GPUS-1)))
-  do
-    sudo nvidia-smi -i $i -pl $((${ALGO}_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
-  done
-fi
-
 if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
 then
   HCD="${NVOC}/miners/cpuOPT/cpuminer"
@@ -467,6 +428,7 @@ then
       eval gpu_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
       eval mem_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
     fi
+    OVERCLOCK_MODE="MANAGED_BY_SWITCHER"
 
     if [[ $POWERLIMIT_MODE == GLOBAL ]]
     then
@@ -484,6 +446,7 @@ then
     then
       eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
     fi
+    POWERLIMIT_MODE="MANAGED_BY_SWITCHER"
   done
 fi
 
@@ -497,10 +460,8 @@ then
     echo UPDATED HOSTS FILE WITH IPv6 FIX
     echo ""
     echo ""
+    sleep 2
   fi
-
-  sleep 2
-  cd "${NVOC}"
 
   cat <<EOF >${NVOC}/nice_conf.json
 {
@@ -547,8 +508,6 @@ fi
 
 if [[ $AUTO_SWITCH == SALFTER_MPH_SWITCHING ]]
 then
-  cd "${NVOC}"
-
   cat <<EOF >${NVOC}/mph_conf.json
 {
   "output_dir": "${NVOC}",
@@ -654,8 +613,6 @@ fi
 
 if [[ $AUTO_SWITCH == SALFTER_PROGRAMATIC_SWITCHING ]]
 then
-  cd "${NVOC}"
-
   cat <<EOF >${NVOC}/programatic_conf.json
 {
   "output_dir": "${NVOC}",
@@ -792,6 +749,44 @@ else
   pkill -f 8wtm_auto_switch
 fi
 
+source ${NVOC}/0algo_id
+
+if [[ $POWERLIMIT_MODE == GLOBAL ]]
+then
+  sudo nvidia-smi -pl "$_POWERLIMIT_WATTS"
+elif [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((INDIVIDUAL_POWERLIMIT_$i))
+  done
+elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((${ALGO}_POWERLIMIT_WATTS))
+  done
+elif [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
+  done
+elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    sudo nvidia-smi -i $i -pl $((${ALGO}_POWERLIMIT_WATTS + INDIVIDUAL_POWERLIMIT_$i))
+  done
+elif [[ $POWERLIMIT_MODE == MANAGED_BY_SWITCHER ]]
+then
+    echo "INFO: An auto-switcher is taking over GPU Power Limit settings management."
+    echo
+else
+  echo "WARNING: '$POWERLIMIT_MODE' is not a valid powerlimit mode, falling back to 'GLOBAL'"
+  sudo nvidia-smi -pl "$_POWERLIMIT_WATTS"
+fi
+
 if [[ $OhGodAnETHlargementPill == YES && $ALGO == ETHASH ]]
 then
   echo " Launching OhGodAnETHlargementPill"
@@ -836,6 +831,10 @@ then
     __CORE_OVERCLOCK[$i]=$((__CORE_OVERCLOCK_$i))
     MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
   done
+elif [[ $OVERCLOCK_MODE == MANAGED_BY_SWITCHER ]]
+then
+  echo "INFO: An auto-switcher is taking over GPU Core and Memory clocks management."
+  echo
 else
   UNDEFINED_CORE_OVERCLOCK=$_CORE_OVERCLOCK
   UNDEFINED_MEMORY_OVERCLOCK=$_MEMORY_OVERCLOCK
@@ -990,30 +989,32 @@ then
     echo "LAUNCHING:  ${AUTO_SWITCH} (will launch miner)"
     echo ""
 
-    while true
-    do
-      ${AUTO_SWITCH_CMD}
-      echo ""
-      cat ${NVOC}/current-profit
-      echo ""
-      if [[ $LOCALorREMOTE == LOCAL ]]
-      then
-        if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then
-          guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0" &
-        fi
-        echo "mining process in Guake Tab"
+    ( while true
+      do
+        ${AUTO_SWITCH_CMD}
         echo ""
+        cat ${NVOC}/current-profit
+        echo ""
+        sleep $PROFIT_CHECK_TIMEOUT
+      done
+    ) &
+
+    if [[ $LOCALorREMOTE == LOCAL ]]
+    then
+      if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then
+        touch ${NVOC}/nvoc_logs/screenlog.0
+        guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0" &
       fi
-      if [[ $LOCALorREMOTE == REMOTE ]]
-      then
-        echo "ENTER:"
-        echo ""
-        echo "screen -r miner"
-        echo ""
-        echo "in a terminal to view mining process"
-      fi
-      sleep "$PROFIT_CHECK_TIMEOUT"
-    done
+      echo "mining process in Guake Tab"
+      echo ""
+    fi
+    if [[ $LOCALorREMOTE == REMOTE ]]
+    then
+      echo "Enter:"
+      echo "        bash ${NVOC}/nvOC miner-log"
+      echo ""
+      echo "in a terminal to view mining process output"
+    fi
   fi
 
 elif [[ $AUTO_START_MINER == NO ]]
