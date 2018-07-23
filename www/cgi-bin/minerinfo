@@ -40,6 +40,7 @@ echo '<style>; .button {background-color: black ; border: none; color: black; pa
 echo '</style>'
 
 nvOC_1bash_temp_ver=$( cat ${NVOC}/1bash.template | grep nvOC_1bash_ver= | sed 's/nvOC_1bash_ver=//' | sed 's/\"//' | sed 's/\"//')
+nvOC_BRANCH=$(cd ${NVOC};git rev-parse --abbrev-ref HEAD)
 
 LSB_RELEASE=$(lsb_release -s -d)
 UNAME=$(uname -r)
@@ -492,7 +493,9 @@ echo "Boot Time: " "<tt style=\"text-align:left; color:white; \">" "$SYSTEM_BOOT
 
 echo "System Up Time: " "<tt style=\"text-align:left; color:white\">" "$SYSTEM_UP_TIME <br> </tt>"
 
-echo "NVOC root path: " "<tt style=\"text-align:left; color:white\">" "${NVOC} <br> </tt>"
+echo "nvOC root path: " "<tt style=\"text-align:left; color:white\">" "${NVOC} <br> </tt>"
+
+echo "nvOC Branch: " "<tt style=\"text-align:left; color:white\">" "$nvOC_BRANCH <br> </tt>"
 
 echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_TIME<br> </tt>"
 
