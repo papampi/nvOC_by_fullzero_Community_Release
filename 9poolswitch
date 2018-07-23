@@ -13,15 +13,17 @@
 # v=0002 : LukePicci
 #          Relocate nvOC to arbitrary install directory
 
-nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_poolswitch_ver="v0019-2.1.0002"
-echo "Pool Switch for nvOC $nvOC_poolswitch_ver by papampi"
+source ${NVOC}/1bash
+
+nvOC_poolswitch_Dev="0002"
+nvOC_poolswitch_ver="$nvOC_Ver.$nvOC_poolswitch_Dev"
+echo "Pool Switch for nvOC nvOC_Ver"
+echo "Version: $nvOC_poolswitch_ver"
 
 WDOG_LOG="${NVOC}/5_watchdoglog"
 MINER_LOG="${NVOC}/nvoc_logs/screenlog.0"
 WTM_LOG="${NVOC}/nvoc_logs/8_wtmautoswitchlog"
 
-source ${NVOC}/1bash
 eval 'COIN_POOL=${COIN}_POOL'
 eval 'COIN_PORT=${COIN}_PORT'
 eval 'COIN_POOL_1=${COIN}_POOL_1'

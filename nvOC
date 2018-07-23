@@ -54,17 +54,13 @@
 #          cuda version, service status, upgrade cmdlets
 
 
-# DEV_VERSION=0012
-
-nvOC_ver="nvOC v0019-2.1 - Community Release"   # Do not edit this
-nvOC_nvOC_ver="v0019-2.1.0012"                   # Do not edit this
-
-
 export DISPLAY=:0
-
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
+
+nvOC_nvOC_Dev="0012"
+nvOC_nvOC_ver="$nvOC_Ver.$nvOC_nvOC_Dev"                   # Do not edit this
 
 # Text output beautifier, use bold text and colors
 USE_COLOR="YES"    # YES/NO
@@ -103,9 +99,6 @@ echo_usage()
   echo "           upgrade to latest nvOC revision for your current branch"
   echo -e "        ${C}$0 miners-upgrade${N}"
   echo "           upgrade nvOC miners collection with latest changes and intall them"
-  echo -e "        ${C}$0 patch${N}"
-  echo "           stops nvOC and applies outstanding Ubuntu patches and "
-  echo "           Nvidia driver updates"
   echo -e "        ${C}$0 reboot${N}"
   echo "           reboots the host machine"
   echo -e "        ${C}$0 stop${N}"
@@ -211,21 +204,6 @@ GPUinfo()
   echo -e $INFO | column -t -s,
 }
 
-############################### Patch nvOC ####################################
-Patch()
-{
-  # Kill off the nv_OC processes
-  Stop
-
-  echo -e "${B}Applying patches/updates...${N}"; echo
-
-  # Apply patches
-  sudo dpkg --configure -a
-  sudo -- sh -c 'apt update; apt upgrade -y; apt autoremove -y; apt autoclean -y'
-
-  echo; echo "...done. Reboot may be necessary - use 'nvOC reboot'."
-}
-
 ############################### Reboot host ###################################
 Reboot()
 {
@@ -235,8 +213,8 @@ Reboot()
   sudo su -c "shutdown -r now"
 }
 
-############################### Start nvOC ####################################
-Start()
+############################### Start nvOC in gnome-terminal ##################
+StartGnomeTerminal()
 {
   if [[ $LOCALorREMOTE == REMOTE ]]
   then
@@ -251,8 +229,8 @@ Start()
   fi
 }
 
-############################### Stop nvOC #####################################
-Stop()
+############################### Stop nvOC in gnome-terminal ###################
+StopGnomeTerminal()
 {
   echo -e "${B}Stopping nvOC processes...${N}"; echo
 
@@ -270,7 +248,14 @@ Stop()
 Restart()
 {
    # Restart nvOC from scratch
-   Stop && Start
+   if systemctl is-enabled nvoc.service
+   then
+     # nvOC as systemd service
+     StopService && StartService
+   else
+     # nvOC in gnome-terminal
+     StopGnomeTerminal && StartGnomeTerminal
+   fi
 }
 
 ############################### gpumap ########################################
@@ -425,15 +410,7 @@ GPUmap()
         echo -e "Acknowledged. Thank you for using ${B}gpumap${N}"
         echo "Resuming mining operation now..."
         echo ""
-        if [[ $LOCALorREMOTE == LOCAL ]]
-        then
-          gnome-terminal
-          exit
-        else
-          echo "REMOTE setting in 1bash detected."
-          echo "To resume mining we have to reboot the rig"
-          Reboot
-        fi
+        Restart
       else
         echo "Neither y or n were pressed!"
         echo "Lets try this again..."
@@ -450,15 +427,7 @@ GPUmap()
           ${NVD} -a [gpu:${count}]/GPULogoBrightness=0 >/dev/null 2>&1
           echo -e "Thank you for using ${B}gpumap${N}"
           echo "Resuming mining operation now."
-          if [[ $LOCALorREMOTE == LOCAL ]]
-          then
-            gnome-terminal
-            exit
-          else
-            echo "REMOTE setting in 1bash detected."
-            echo "To resume mining we have to reboot the rig"
-            Reboot
-          fi
+          Restart
         fi
       fi
       echo; echo
@@ -477,15 +446,7 @@ GPUmap()
 
   if [[ $response =~ ^[Yy]$ ]]
   then
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      gnome-terminal
-      exit
-    else
-      echo "REMOTE setting in 1bash detected."
-      echo "To resume mining we have to reboot the rig"
-      Reboot
-    fi
+    Restart
   fi
 }
 
@@ -543,7 +504,7 @@ Report()
   do
     echo -en "\e[48;5;${i}m "
   done
-  echo -en "${B}Report generator $REPORT_VER by leenoox${N}"
+  echo -en "${B}Report generator for nvOC $nvOC_Ver v$nvOC_nvOC_Dev ${N}"
   for i in {21..16}
   do
     echo -en "\e[48;5;${i}m \e[0m"
@@ -555,12 +516,16 @@ Report()
 #######################################
 
   nvidia_driver_ver=$(nvidia-smi -i 0 -q|grep "Driver Version"|cut -f 2 -d ":"|cut -f 2 -d " ")
-  nvOC_ver_from_1bash=$(cat ${NVOC}/1bash | grep "nvOC v" | cut -d' ' -f 2- | head -n 1 | sed 's/   #################//');
-  nvOC_ver_from_3main=$(head -n 100 ${NVOC}/3main | grep nvOC_ver= | sed 's/nvOC_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-  nvOC_3main_ver=$(head -n 100 ${NVOC}/3main | grep nvOC_3main_ver= | sed 's/nvOC_3main_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-  nvOC_wdog_ver=$(head -n 100 ${NVOC}/5watchdog | grep nvOC_wdog_ver= | sed 's/nvOC_wdog_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-  nvOC_temp_ver=$(head -n 100 ${NVOC}/6tempcontrol | grep nvOC_temp_ver= | sed 's/nvOC_temp_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
-  nvOC_wtm_ver=$( head -n 100 ${NVOC}/8wtm_auto_switch | grep wtm_auto_switch_ver= | sed 's/wtm_auto_switch_ver=//' | sed 's/\"//' | sed 's/\"//' | sed 's/# Do not edit this//')
+  nvOC_ver_from_1bash=$(cat ${NVOC}/1bash | grep nvOC_Ver| sed 's/^.*="v//' | sed 's/\"//');
+  nvOC_1bash_temp_ver=$(cat ${NVOC}/1bash.template | grep nvOC_1bash_ver= | sed 's/nvOC_1bash_ver=//' | sed 's/\"//' | sed 's/\"//' )
+  nvOC_3main_ver=$(head -n 100 ${NVOC}/3main | grep nvOC_3main_Dev= | sed 's/nvOC_3main_Dev=//' | sed 's/\"//' | sed 's/\"//' )
+  nvOC_wdog_ver=$(head -n 100 ${NVOC}/5watchdog | grep nvOC_wdog_Dev= | sed 's/nvOC_wdog_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_temp_ver=$(head -n 100 ${NVOC}/6tempcontrol | grep nvOC_temp_Dev= | sed 's/nvOC_temp_Dev=//' | sed 's/\"//' | sed 's/\"//' )
+  nvOC_wtm_ver=$( head -n 100 ${NVOC}/8wtm_auto_switch | grep wtm_auto_switch_Dev= | sed 's/wtm_auto_switch_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_wtm_p_ver=$( head -n 100 ${NVOC}/8wtm_profit_check | grep wtm_profit_check_Dev= | sed 's/wtm_profit_check_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_pools_switch_ver=$( head -n 100 ${NVOC}/9poolswitch | grep nvOC_poolswitch_Dev= | sed 's/nvOC_poolswitch_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  nvOC_minerinfo_ver=$( head -n 100 ${NVOC}/www/cgi-bin/minerinfo | grep nvOC_minerinfo_Dev= | sed 's/nvOC_minerinfo_Dev=//' | sed 's/\"//' | sed 's/\"//')
+  
   kernel=$(cat /proc/version | cut -d' ' -f 3);
 # os_release=$(cat /usr/lib/os-release | grep PRETTY_NAME | sed 's/PRETTY_NAME=\"//' | sed 's/\"//');
 # os_release=$(cat /etc/lsb-release | grep DISTRIB_DESCRIPTION | sed 's/DISTRIB_DESCRIPTION=\"//' | sed 's/\"//');
@@ -607,20 +572,25 @@ Report()
   echo "[code]"
   echo -e \
 "
-${B}Software info:${N}
-Report ver    :  $REPORT_VER
-nvOC path     :  ${NVOC}
-nvOC (1bash)  :$nvOC_ver_from_1bash
-nvOC (3main)  :  $nvOC_ver_from_3main
-1bash ver     :  $nvOC_1bash_ver
-3main ver     :  $nvOC_3main_ver
-5watchdog ver :  $nvOC_wdog_ver
-6tempcontrol v:  $nvOC_temp_ver
-wtm switch ver:  $nvOC_wtm_ver
+${B}Operating System info:${N}
 Kernel        :  $kernel
 OS            :  $os_release
 System        :  $system
 nvidia driver :  $nvidia_driver_ver
+
+${B}nvOC info:${N}
+nvOC path     :  ${NVOC}
+nvOC          :  $nvOC_ver_from_1bash
+Report        :  $nvOC_nvOC_Dev
+1bash         :  $nvOC_1bash_ver
+1bash.template:  $nvOC_1bash_temp_ver
+3main         :  $nvOC_3main_ver
+5watchdog     :  $nvOC_wdog_ver
+6tempcontrol  :  $nvOC_temp_ver
+wtm switch    :  $nvOC_wtm_ver
+wtm profit    :  $nvOC_wtm_p_ver
+pool switch   :  $nvOC_pools_switch_ver
+minerinfo     :  $nvOC_minerinfo_ver
 
 ${B}Hardware info:${N}
 Motherboard   :  $mbvendor $mbmodel  $mbversion
@@ -721,7 +691,6 @@ Ethernet      :  $ethernet"
 
 # 1bash maintenance
   echo "CLEAR_LOGS_ON_BOOT ........: $CLEAR_LOGS_ON_BOOT"
-  echo "AUTO_UPDATE ...............: $AUTO_UPDATE"
   echo "AUTO_REBOOT ...............: $AUTO_REBOOT"
   if [[ $AUTO_REBOOT == YES ]]
   then
@@ -841,36 +810,43 @@ Ethernet      :  $ethernet"
   fi
   echo
 
+# 1bash auto switching
+  echo "AUTO_SWITCH ...............: $AUTO_SWITCH"
+  if [[ $AUTO_SWITCH == WTM_SWITCHING ]]
+  then
+    echo "WTM_AUTO_SWITCH_COINS .....: $WTM_AUTO_SWITCH_COINS"
+    echo "WTM_AUTO_SWITCH_URL .......: ${WTM_AUTO_SWITCH_URL:0:49}"
+  fi
 
 # 1bash coin, miner, pool, port, address
   echo "COIN ......................: $COIN"
   echo "ALGO ......................: $ALGO"
-  eval MINER=${ALGO}_MINER
+  MINER=${ALGO}_MINER
   echo "MINER .....................: ${!MINER}"
-  if [[ $COIN == $( echo $COIN | grep "ZPOOL" ) ]]
+  if [[ ${COIN:0:5} == ZPOOL ]]
   then
     echo "ZPOOLPASS .................: hidden_pass...,"$(echo $ZPOOLPASS | cut -d',' -f 2-)
   fi
-  eval COIN_WORKER_TMP=${COIN}_WORKER
+  COIN_WORKER_TMP=${COIN}_WORKER
   echo $COIN "WORKER ................:" ${!COIN_WORKER_TMP}
-  eval COIN_ADDRESS_TMP=${COIN}_ADDRESS
+  COIN_ADDRESS_TMP=${COIN}_ADDRESS
   echo $COIN "ADDRESS ...............:" ${!COIN_ADDRESS_TMP::8}...
-  eval COIN_POOL_TMP=${COIN}_POOL
+  COIN_POOL_TMP=${COIN}_POOL
   echo $COIN "POOL ..................:" ${!COIN_POOL_TMP}
-  eval COIN_PORT_TMP=${COIN}_PORT
-  if [[ $COIN_PORT_TMP != "" ]]
+  COIN_PORT_TMP=${COIN}_PORT
+  if [[ ${!COIN_PORT_TMP} != "" ]]
   then
     echo $COIN "PORT ..................:" ${!COIN_PORT_TMP}
   fi
-  eval ALGO_INTENSITY_TMP=${ALGO}_INTENSITY
-  if [[ $ALGO_INTENSITY_TMP != "" ]]
+  ALGO_INTENSITY_TMP=${ALGO}_INTENSITY
+  if [[ ${!ALGO_INTENSITY_TMP} != "" ]]
   then
     echo $ALGO "INTENSITY ..........:" ${!ALGO_INTENSITY_TMP}
   fi
-  eval COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
-  if [[ $COIN_AUTOCONVERT_TO_BTC_TMP != "" ]]
+  COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
+  if [[ ${!COIN_AUTOCONVERT_TO_BTC_TMP} != "" ]]
   then
-    echo "${COIN}_AUTOCONVERT_TO_BTC ....:" $COIN_AUTOCONVERT_TO_BTC_TMP
+    echo "${COIN}_AUTOCONVERT_TO_BTC ....:" ${!COIN_AUTOCONVERT_TO_BTC_TMP}
   fi
 
   echo
@@ -890,10 +866,10 @@ Ethernet      :  $ethernet"
 Upgrade()
 {
   echo -e "${Y}Warnings${N}:
-- your customized 1bash settings won't be affected, but you will have
-  have to create a new one starting from ${B}1bash.template${N} if it gets
-  updated during this upgrade, otherwise you will get a warning each
-  time nvOC restarts
+- your customized 1bash settings won't be affected, but you may have
+  to create a new one starting from a frash copy of ${B}1bash.template${N}
+  if it gets updated during this upgrade, otherwise you will get a
+  warning each time nvOC restarts
 - the upgrade will fail safely if you made conflicting customizations
   to any other nvOC script: if it happens you need either to run this
   script with ${C}restore${N} command or manually manage this by git commands.
@@ -907,6 +883,17 @@ Upgrade()
 
   echo "Checking for nvOC updates...  (target: '${NVOC}')"
   git -C ${NVOC} pull
+
+  echo -e "nvOC has been upgraded.
+There may be new required miners packages to be installed.
+Would you like to check for further miners updates and install them now?"
+
+  read -p "Do you want to continue (Y/n)?  " -n 1 ans
+  echo
+  if [[ ${ans,,} != n ]]
+  then
+    MinersUpgrade
+  fi
 }
 
 ################################# Restore working tree ##############################
@@ -957,6 +944,9 @@ Environment=NVOC=${NVOC}
 WorkingDirectory=${NVOC}
 ExecStart=/usr/bin/screen -c ${NVOC}/screenrc-main -dmSL main /bin/bash "${NVOC}/2unix"
 Restart=always
+
+[Install]
+WantedBy=graphical.target
 EOF
 
   if sudo systemd-analyze verify nvoc.service
@@ -1067,10 +1057,9 @@ case $# in
       gpuinfo)             GPUinfo;;
       gpumap)              GPUmap;;
       report)              Report;;
-      patch)               Patch;;
       reboot)              Reboot;;
-      start)               Start;;
-      stop)                Stop;;
+      start)               StartGnomeTerminal;;
+      stop)                StopGnomeTerminal;;
       restart)             Restart;;
       restore)             Restore;;
       upgrade)             Upgrade;;

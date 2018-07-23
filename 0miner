@@ -49,14 +49,18 @@
 #	         Algo Unification for all algorithms
 # v=0019 : papampi
 #          Crytponight Heavy
+# v=0020 : papampi
+#          ZHASH, PHI1612, PHI2 Algos and Z_EWBF
 
-nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_0miner_ver="v0019-2.0.0019" # Do not edit this
+nvOC_0miner_dev="0020"
 
 source "${NVOC}/1bash"
 source "${NVOC}/0algo_id"
 source "${NVOC}/helpers/disabled_gpu"
 build_miner_devices_opt
+
+nvOC_0miner_ver="$nvOC_Ver.$nvOC_0miner_dev" # Do not edit this
+
 
 # Prevent running 2 miners
 if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; then
@@ -169,19 +173,24 @@ then
     HCD="${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $DSTM_OPTS ${!xext}"
   elif [[ $EQUIHASH_MINER == EWBF ]]
   then
-    if [[ EWBF_VERSION == 3_4 || EWBF_VERSION == 3_3 ]]
-    then
-      HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
-    else
-      HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --fee $EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
-    fi
+    HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $EWBF_OPTS ${!xext}"
   elif [[ $EQUIHASH_MINER == BMINER ]]
   then
     HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
   eval $LAUNCH $HCD
 
-elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
+## ZHASH
+elif [[ $ALGO == ZHASH ]];
+then
+  if [[ $ZHASH_MINER == Z_EWBF ]]
+  then
+    HCD="${NVOC}/miners/z_ewbf/$Z_EWBF_VERSION/miner --fee $Z_EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $Z_EWBF_OPTS ${!xext}"
+  fi
+  eval $LAUNCH $HCD
+
+
+elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI1612 || $ALGO == PHI2 || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
 then
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer

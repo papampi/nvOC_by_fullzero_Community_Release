@@ -64,17 +64,16 @@
 # v=0020 : papampi
 #          Check Ping if Network couldnt resolve 
 
-
-nvOC_Ver="nvOC v0019-2.1 - Community Release"
-nvOC_wdog_ver="v0019-2.1.020"   # Do not edit this
-
-echo "Watchdog for $nvOC_Ver"
-echo "Version: $nvOC_wdog_ver"
-echo ""
-
 export DISPLAY=:0
 source ${NVOC}/1bash
 source ${NVOC}/helpers/disabled_gpu
+
+nvOC_wdog_Dev="0020"
+nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
+
+echo "Watchdog for nvOC $nvOC_Ver"
+echo "Version: $nvOC_wdog_ver"
+echo ""
 
 if [ $WATCHDOG_USE_COLOR == "YES" ]; then
   N='\e[0m'     # Normal
@@ -222,7 +221,7 @@ do
 
   # If 1, 5 and 15 min load average are more than double cpu core give warning
   HIGH_AVERAGE=$(( $(nproc) * 2 ))
-  AVERAGES=$(uptime | sed 's/.*: //g; s/,//g')
+  AVERAGES=$(uptime | sed 's/.*: //g')
   echo "Load Average: $AVERAGES"
 
   AVERAGE_1=$(echo "$AVERAGES" | cut -d"," -f1)
@@ -443,7 +442,7 @@ do
           POOL=0
           if [[ $ALT_POOL == YES ]] && [[ -n ${!COIN_POOL_2} ]]
           then
-            guake -n 9poolswitch -r POOL_SWITCH -e "bash ${NVOC}/9poolswitch"
+            guake -n 9poolswitch -r POOL_SWITCH -e "bash ${NVOC}/9poolswitch" &
             sleep 300
           else
             while !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} ;   do

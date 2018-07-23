@@ -3,80 +3,9 @@
 ##########################################################################
 ##########################################################################
 #################   nvOC v0019-2.1 - Community Release   #################
-##############        by papampi, Stubo and leenoox         ##############
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
-# v=0001 : Community Release
-#
-# v=0002 : Papampi
-#          Telegram changes
-#
-# v=0003 : Papampi
-#          WTM_MINIMUM_MINING_TIME
-#
-# v=0004 : Papampi
-#          More NiceHash mining algos
-#
-# v=0005 : damNmad
-#          New Coins LUX, SUMO, DSR
-#
-# v=0006 : Papampi
-#          New Coins ELLA, XVG, GBX, CRC
-#
-# v=0007 : Papampi
-#          EQUIHASH_MINER, ETHASH_MINER, bminer,
-# v=0008 : Papampi
-#          Nicehash bug fixes
-# v=0009 : papampi
-#          Added P104 and changed P106 to P10X
-# v=0010 : papampi
-#          WTM minimum mining time and force switch
-# v=0011 : papampi
-#          Pool Wallet Address Format
-# v=0012 : papampi
-#          New claymore dual mining 
-# v=0013 : damNmad
-#          Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable
-# v=0014 : Falcon
-#          Added RavenCoin (RVN)
-# v=0015 : papampi
-#          Temp Control Maximum fan speed 
-# v=0016 : papampi
-#          Some fix in claymore_dual
-# v=0017 : papampi
-#          NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER
-# v=0018 : papampi
-#          Alternate Pool Switch
-# v=0019 : papampi
-#          WTM 2nd lower minimum difference to switch
-# v=0020 : LukePicci
-#          Relocate nvOC to arbitrary install directory
-# v=0021 : papampi
-#          More miner optional arguments
-# v=0022 : papampi
-#          OhGodAnETHlargementPill
-# v=0023 : LukePicci
-#          Simplified ALGO specific settings
-# v=0024 : papampi
-#          HEADLEASS_MODE
-# v=0025 : LuKePicci
-#          AUTO_SWITCH generalized implementetion
-# v=0026 : papampi, sizzlephizzle
-#          Algo mining unification 
-# v=0027 : LuKePicci
-#          Separate algo_id
-# v=0028 : LuKePicci
-#          More tempcontrol alert color and verbosity options
-# v=0029 : papampi
-#          Nice Algo extension arguments 
-# v=0030 : papampi
-#          CryptoNightHeavy  
-# v=0031 : papampi
-#          New EWBF v0.3  
-
-nvOC_Ver="nvOC v0019-2.1 - Community Release" # Do not edit this
-nvOC_1bash_ver="v0019-2.1.0031"   # Do not edit this
 
 # fullzero:     nvOC creator
 
@@ -109,7 +38,8 @@ nvOC_1bash_ver="v0019-2.1.0031"   # Do not edit this
 #               Methods for separating settings and implementation
 #               Methods for AUTO_UPDATE
 #               ( BTC address: 1GFTEtLLvvwoa4ogDntD5oaXBgJLYokzTC )
-# LukePicci: 
+
+# LukePicci:    nvOC 19-2.1 main developer
 
 # Maxximus007:  Maxximus007_AUTO_TEMPERATURE_CONTROL
 #               Expectless 1bash
@@ -147,11 +77,49 @@ nvOC_1bash_ver="v0019-2.1.0031"   # Do not edit this
 # xleejohnx:    SRR support
 #               ( BTC address: 1EY5WbiW3YkWanSKEGcjCETpQfCR81wc56 )
 
+v0001="Community Release"
+v0002="Papampi; Telegram changes"
+v0003="Papampi; WTM_MINIMUM_MINING_TIME"
+v0004="Papampi; More NiceHash mining algos"
+v0005="damNmad; New Coins LUX, SUMO, DSR"
+v0006="Papampi; New Coins ELLA, XVG, GBX, CRC"
+v0007="Papampi; EQUIHASH_MINER, ETHASH_MINER, bminer"
+v0008="Papampi; Nicehash bug fixes"
+v0009="papampi; Added P104 and changed P106 to P10X"
+v0010="papampi; WTM minimum mining time and force switch"
+v0011="papampi; Pool Wallet Address Format"
+v0012="papampi; New claymore dual mining "
+v0013="damNmad; Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable"
+v0014="Falcon; Added RavenCoin (RVN)"
+v0015="papampi; Temp Control Maximum fan speed" 
+v0016="papampi; Some fix in claymore_dual"
+v0017="papampi; NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER"
+v0018="papampi; Alternate Pool Switch"
+v0019="papampi; WTM 2nd lower minimum difference to switch"
+v0020="LukePicci; Relocate nvOC to arbitrary install directory"
+v0021="papampi; More miner optional arguments"
+v0022="papampi; OhGodAnETHlargementPill"
+v0023="LukePicci; Simplified ALGO specific settings"
+v0024="papampi; HEADLEASS_MODE"
+v0025="LuKePicci; AUTO_SWITCH generalized implementetion"
+v0026="papampi, sizzlephizzle; Algo mining unification" 
+v0027="LuKePicci; Separate algo_id"
+v0028="LuKePicci; More tempcontrol alert color and verbosity options"
+v0029="papampi; Nice Algo extension arguments"
+v0030="papampi;CryptoNightHeavy"  
+v0031="papampi;New EWBF v0.3"  
+v0032="papampi;Version numbering"
+v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
+
+# Do not edit these lines
+nvOC_Ver="v0019-2.1" 
+nvOC_1bash_ver="0033"
+nvOC_1bash_last_compatible="0029"
+
 
 # Open a terminal to launch miner; will auto launch on boot
 
 # firefox has an OP bookmark; look at the OP for more information
-
 
 # Supported Algorithms: 
 #               ETHASH, EQUIHASH, NEOSCRYPT, LYRA2V2, SKUNK, SKEIN, BITCORE, TIMETRAVEL10 
@@ -458,9 +426,11 @@ DSTM_OPTS=""                                     # DSTM Miner optional arguments
 
 EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
 EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" or new "v0_3" # EWBF Equihash Miner version
-                                                 # If the new "v0_3" version selected you need to add new parameters to COIN_EXTENSION_ARGUMENTS
-						 # For example add "--algo 144_5 --pers BgoldPoW" for BitcoinGold
+EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" # EWBF Equihash Miner version
+
+Z_EWBF_PERCENT="0"                               # EWBF ZHASH Dev fee percent to alter donation percent   
+Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
+Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version,  "latest" or add the version you installed 
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
@@ -541,9 +511,14 @@ PASCAL_MINER="TPccminer"
 PASCAL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PHI1612
-PHI_INTENSITY="0"
-PHI_MINER="ANXccminer"
-PHI_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+PHI1612_INTENSITY="0"
+PHI1612_MINER="ANXccminer"
+PHI1612_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## PHI2
+PHI2_INTENSITY="0"
+PHI2_MINER="ANXccminer"
+PHI2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## SIA
 SIA_INTENSITY="0"
@@ -579,6 +554,12 @@ X16R_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 XEVAN_INTENSITY="0"
 XEVAN_MINER="ZENEMYminer"
 XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## ZHASH
+ZHASH_MINER="Z_EWBF"
+ZHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+
 
 ################################################################
 #####                                                      #####
@@ -627,9 +608,9 @@ BTCZ_WORKER="$WORKERNAME"
 
 # Bitcoin Gold (BTG)
 BTG_ADDRESS="replace_with_your_address"
-BTG_EXTENSION_ARGUMENTS=""
-BTG_POOL="replace_with_your_BTG_POOL"
-BTG_PORT="replace_with_your_BTG_PORT"
+BTG_EXTENSION_ARGUMENTS="--algo 144_5 --pers BgoldPoW"
+BTG_POOL="us-east.equihash-hub.miningpoolhub.com"
+BTG_PORT="20595"
 BTG_WORKER="$WORKERNAME"
 
 # Bitcore (BTX)
@@ -683,7 +664,7 @@ ELLA_WORKER="$WORKERNAME"
 
 # Ethereum Classic (ETC)
 ETC_ADDRESS="replace_with_your_address"
-ETC_EXTENSION_ARGUMENTS=""    
+ETC_EXTENSION_ARGUMENTS=""                               #claymore opts: "-allcoins etc"
 ETC_POOL="europe.ethash-hub.miningpoolhub.com"
 ETC_PORT="20555"
 ETC_WORKER="$WORKERNAME"
@@ -1022,7 +1003,7 @@ DUAL_ADDITIONAL_ARGUMENTS=""                #Additional arguments if needed
 NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
 NICE_ETHASH_PORT="3353"
 NICE_ETHASH_WORKER="$WORKERNAME"
-NICE_ETHASH_EXTENSION_ARGUMENTS=""
+NICE_ETHASH_EXTENSION_ARGUMENTS=""            # To mine with claymore add "-esm 3 -allpools 1 -estale 0"
 
 # Nice Equihash
 NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
@@ -1065,6 +1046,13 @@ NICE_SKUNKHASH_POOL="skunk.eu.nicehash.com:"
 NICE_SKUNKHASH_PORT="3362"
 NICE_SKUNKHASH_WORKER="$WORKERNAME"
 NICE_CRYPTONIGHT_EXTENSION_ARGUMENTS=""
+
+#NICE_X16R stratum+tcp://
+NICE_X16R_POOL="x16r.eu.nicehash.com:"
+NICE_X16R_PORT="3366"
+NICE_X16R_WORKER="$WORKERNAME"
+NICE_X16R_EXTENSION_ARGUMENTS=""
+
 
 ########################################################
 #                                                      #
@@ -1178,7 +1166,7 @@ CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
 CRYPTONIGHTV7_COINS="XMR,MPH_CRYPTONIGHTV7,NICE_CRYPTONIGHTV7,ETN"
 CRYPTONIGHTHEAVY="LOKI,NICE_CNHEAVY"
 DECRED_COINS="DCR"
-EQUIHASH_COINS="BTG,ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
+EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
 ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
 GRS_COINS="GRS,MPH_GRS"
 LBRY_COINS="LBC,ZPOOL_LBRY"
@@ -1187,7 +1175,8 @@ LYRA2Z_COINS="XZC,MPH_LYRA2Z"
 MYR_GR_COINS="XMY,MPH_MYR_GR"
 NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
 PASCAL_COINS="PASC,PASL"
-PHI_COINS="LUX,FLM,SERA"
+PHI1612_COINS="FLM,SERA"
+PHI2_COINS="LUX"
 SIA_COINS="SIA"
 SIB_COINS="SIB,NICE_X11GHOST"
 SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
@@ -1195,7 +1184,7 @@ SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN"
 XEVAN_COINS="BSD"
-
+ZHASH_COINS="BTG"
 
 #####################################################################
 #                                                                   #
@@ -1319,30 +1308,35 @@ MEMORY_OVERCLOCK_18=100
 # Lowercase algos are those used by all salfter-based switchers
 # Uppercase algos are those used for single coin mining and by WTM switcher
 
-# Neoscrypt
-NEOSCRYPT_POWERLIMIT_WATTS=100             # Recomended value for some GTX-1060: 80
-NEOSCRYPT_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 150
-NEOSCRYPT_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: 800
+# BITCORE, TIMETRAVEL10
+BITCORE_POWERLIMIT_WATTS=100        # Recomended value for some GTX-1060: 65
+BITCORE_CORE_OVERCLOCK=0            # Recomended value for some GTX-1060: 150
+BITCORE_MEMORY_OVERCLOCK=0          # Recomended value for some GTX-1060: 800
 
-# Ethash
-ETHASH_POWERLIMIT_WATTS=100                # Recomended value for some GTX-1060: 76
-ETHASH_CORE_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
-ETHASH_MEMORY_OVERCLOCK=0                # Recomended value for some GTX-1060: 1600
+# Cryptonight
+CRYPTONIGHT_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
+CRYPTONIGHT_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
+CRYPTONIGHT_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
+
+# CRYPTONIGHTV7
+CRYPTONIGHTV7_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
+CRYPTONIGHTV7_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
+CRYPTONIGHTV7_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
+
+# CRYPTONIGHT HEAVY
+CRYPTONIGHTHEAVY_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
+CRYPTONIGHTHEAVY_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
+CRYPTONIGHTHEAVY_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
 
 # Equihash
 EQUIHASH_POWERLIMIT_WATTS=100              # Recomended value for some GTX-1060: 76
 EQUIHASH_CORE_OVERCLOCK=0                # Recomended value for some GTX-1060: 150
 EQUIHASH_MEMORY_OVERCLOCK=0              # Recomended value for some GTX-1060: 400
 
-# Skunk
-SKUNK_POWERLIMIT_WATTS=100                 # Recomended value for some GTX-1060: 78
-SKUNK_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 150
-SKUNK_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 1000
-
-# Cryptonight
-CRYPTONIGHT_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
-CRYPTONIGHT_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
-CRYPTONIGHT_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
+# Ethash
+ETHASH_POWERLIMIT_WATTS=100                # Recomended value for some GTX-1060: 76
+ETHASH_CORE_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
+ETHASH_MEMORY_OVERCLOCK=0                # Recomended value for some GTX-1060: 1600
 
 # lyra2vRev2
 LYRA2REV2_POWERLIMIT_WATTS=100             # Recomended value for some GTX-1060: 65
@@ -1354,26 +1348,40 @@ LYRA2V2_POWERLIMIT_WATTS=100               # Recomended value for some GTX-1060:
 LYRA2V2_CORE_OVERCLOCK=0                 # Recomended value for some GTX-1060: 160
 LYRA2V2_MEMORY_OVERCLOCK=0               # Recomended value for some GTX-1060: -1000
 
-# Xevan
-XEVAN_POWERLIMIT_WATTS=100                 # Recomended value for some GTX-1060: 65
-XEVAN_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
-XEVAN_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 600
+# Neoscrypt
+NEOSCRYPT_POWERLIMIT_WATTS=100             # Recomended value for some GTX-1060: 80
+NEOSCRYPT_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 150
+NEOSCRYPT_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: 800
+
+# PHI1612
+PHI1612_POWERLIMIT_WATTS=100           # 
+PHI1612_CORE_OVERCLOCK=0               # 
+PHI1612_MEMORY_OVERCLOCK=0             # 
+
+# PHI2
+PHI2_POWERLIMIT_WATTS=100           # 
+PHI2_CORE_OVERCLOCK=0               # 
+PHI2_MEMORY_OVERCLOCK=0             # 
+
+# Skunk
+SKUNK_POWERLIMIT_WATTS=100                 # Recomended value for some GTX-1060: 78
+SKUNK_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 150
+SKUNK_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 1000
 
 # X16R
 X16R_POWERLIMIT_WATTS=100                  # Recomended value for some GTX-1060: 65
 X16R_CORE_OVERCLOCK=0                    # Recomended value for some GTX-1060: 100
 X16R_MEMORY_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
 
-# BITCORE, TIMETRAVEL10
-BITCORE_POWERLIMIT_WATTS=100        # Recomended value for some GTX-1060: 65
-BITCORE_CORE_OVERCLOCK=0            # Recomended value for some GTX-1060: 150
-BITCORE_MEMORY_OVERCLOCK=0          # Recomended value for some GTX-1060: 800
+# Xevan
+XEVAN_POWERLIMIT_WATTS=100                 # Recomended value for some GTX-1060: 65
+XEVAN_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
+XEVAN_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 600
 
-# PHI1612, PHI
-PHI_POWERLIMIT_WATTS=100           # 
-PHI_CORE_OVERCLOCK=0               # 
-PHI_MEMORY_OVERCLOCK=0             # 
-
+# ZHASH
+ZHASH_POWERLIMIT_WATTS=100           # 
+ZHASH_CORE_OVERCLOCK=150               # 
+ZHASH_MEMORY_OVERCLOCK=150             # 
 
 daggerhashimoto_POWERLIMIT_WATTS=100       # Recomended value for some GTX-1060: 76
 daggerhashimoto_CORE_OVERCLOCK=0         # Recomended value for some GTX-1060: -200

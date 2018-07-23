@@ -7,7 +7,9 @@
 # Rev 0006: papampi, More average Hash rate and reported hash rate to WTM
 # Rev 0007: papampi, Wait for watchdog to get gpu count
 # Rev 0008: papampi, Individual PL, OC, MC
+# Rev 0009: papampi, 1bash version alert
 
+nvOC_minerinfo_Dev="0009"
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -37,7 +39,9 @@ source ${NVOC}/0algo_id
 echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
 echo '</style>'
 
-nvOC_Ver="nvOC v0019-2.1 - Community Release"
+nvOC_1bash_temp_ver=$( cat ${NVOC}/1bash.template | grep nvOC_1bash_ver= | sed 's/nvOC_1bash_ver=//' | sed 's/\"//' | sed 's/\"//')
+nvOC_BRANCH=$(cd ${NVOC};git rev-parse --abbrev-ref HEAD)
+
 LSB_RELEASE=$(lsb_release -s -d)
 UNAME=$(uname -r)
 SYSTEM_BOOT_TIME=$(uptime -s)
@@ -478,14 +482,20 @@ fi
 echo '<title>Worker: '$WORKERNAME'</title>'
 echo '</head>'
 echo '<body>'
-echo '<h3>'  "$nvOC_Ver"
+if [[ $nvOC_1bash_temp_ver != $nvOC_1bash_ver ]]
+then
+  echo '<h4>'  "<tt style=\"color:red;\">" 1bash and 1bash.template versions are not the same, update 1bash is strongly recommended"</tt>"  '</h4>'
+fi
+echo '<h3>'  "nvOC $nvOC_Ver - Community Release"
 echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "</tt>"  '</h4>'
 
 echo "Boot Time: " "<tt style=\"text-align:left; color:white; \">" "$SYSTEM_BOOT_TIME <br> </tt>"
 
 echo "System Up Time: " "<tt style=\"text-align:left; color:white\">" "$SYSTEM_UP_TIME <br> </tt>"
 
-echo "NVOC root path: " "<tt style=\"text-align:left; color:white\">" "${NVOC} <br> </tt>"
+echo "nvOC root path: " "<tt style=\"text-align:left; color:white\">" "${NVOC} <br> </tt>"
+
+echo "nvOC Branch: " "<tt style=\"text-align:left; color:white\">" "$nvOC_BRANCH <br> </tt>"
 
 echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_TIME<br> </tt>"
 
