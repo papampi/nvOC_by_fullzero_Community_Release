@@ -135,6 +135,7 @@ do
   if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
     # skip if disabled
     echo "$(date) - [INFO] - GPU$GPU disabled"
+    (( count++ ))
     continue
   fi
   if [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
@@ -233,6 +234,7 @@ do
     if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
       # skip if disabled
       echo "$(date) - [INFO] - GPU$GPU disabled"
+      (( GPU++ ))
       continue
     fi
     { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)

@@ -136,7 +136,7 @@ fi
 # Initialize vars
 REBOOTRESET=0
 GPU_COUNT=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
-ACTIVE_GPU_COUNT = $(($GPU_COUNT - ${#DISABLED_GPU_ARRAY[@]}))
+ACTIVE_GPU_COUNT=$(($GPU_COUNT - ${#DISABLED_GPU_ARRAY[@]}))
 COUNT=$((6 * ACTIVE_GPU_COUNT))
 # Track how many times we have restarted the miner/3main
 RESTART=0
