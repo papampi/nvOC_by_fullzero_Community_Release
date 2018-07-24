@@ -95,8 +95,9 @@ xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
 xversion=${!xminer}$UVERSION
-xpath="${NVOC}/miners/${!xminer}"
 xcuda=$ALGO$UCUDA
+
+mpath="${NVOC}/miners/${!xminer}"
 
 if [[ ${!xcuda} != "" ]]
 then
@@ -148,13 +149,13 @@ then
   screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS"
 fi
 
-if [[ ${!xversion} != "" && -f ${!xpath}//${!xversion}/nvoc-miner.json ]]
+if [[ ${!xversion} != "" && -f ${mpath}//${!xversion}/nvoc-miner.json ]]
 then
-  HCD="${!xpath}/${!xversion}/$(jq -r .hcd ${!xpath}/${!xversion}/nvoc-miner.json)"
+  HCD="${mpath}/${!xversion}/$(jq -r .hcd ${mpath}/${!xversion}/nvoc-miner.json)"
   eval $LAUNCH $HCD
 elif [[ -f ${NVOC}/miners/${!xminer}/nvoc-miner.json ]]
 then
-  HCD="${!xpath}/$(jq -r .hcd ${!xpath}//nvoc-miner.json)"
+  HCD="${mpath}/$(jq -r .hcd ${mpath}/nvoc-miner.json)"
   eval $LAUNCH $HCD
 fi
 
