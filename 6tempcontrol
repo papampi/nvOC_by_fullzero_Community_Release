@@ -122,9 +122,9 @@ count=0
 # Set variables for Temp and Power Limit; Enable fan control; Display info
 while (( count < GPUS ))
 do
-  if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
+  if [ ${DISABLED_GPU_ARRAY[$count]} ]; then
     # skip if disabled
-    echo "$(date) - [INFO] - GPU$GPU disabled"
+    echo "$(date) - [INFO] - GPU$count disabled"
     (( count++ ))
     continue
   fi
