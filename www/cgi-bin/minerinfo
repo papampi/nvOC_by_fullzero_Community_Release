@@ -92,7 +92,7 @@ else
 fi
 
 REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
-MINER_PID=$(pgrep -f -o  miner)
+MINER_PID=$(pgrep -fn "${NVOC}/miners")
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 TEMP_FAN_POWER=$(tail  -50 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
 TEMP_ALERT_LOG=$(cat ${NVOC}/6_autotemplog | awk '{print $0,"<br>"}')
@@ -104,7 +104,8 @@ DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
 MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
 FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
 CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
-MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
+MINER_CMD=$(pgrep -afn "NVOC/mining/miners" | cut -d ' ' -f 1 --complement)
+MINER_PATH="$(dirname "$(pgrep -afn "NVOC/mining/miners" | cut -d ' ' -f 2)")"
 MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 eval 'COIN_POOL=${COIN}_POOL'
 
@@ -247,7 +248,7 @@ then
 elif [[ $AUTO_SWITCH == SALFTER_PROGRAMATIC_SWITCHING ]]
 then
   CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
-  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo-log |  awk '{print $0,"<br>"}')
+  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0,"<br>"}')
   AUTO_SWITCH_TEXT="Salfter Programatic Switch"
 
 elif [[ $AUTO_SWITCH == WTM_SWITCHING ]]
@@ -323,13 +324,32 @@ else
 fi
 
 ##################################################################
-########################### Average Hash Rate ####################
+########################### Miner reporting ######################
 
-if  ps ax | grep -q "[z]m_miner"
+
+HASH_AVERAGE="Unknown ??/s for current miner"
+MINER_ERROR="Error reporting not available for current miner"
+REJECTED_SHARES="Unkonwn for current miner"
+
+if [[ $MINER_PID != "" && -f ${MINER_PATH}/nvoc-miner.json ]]
+then
+  total_hash=$($(jq -r .minerinfo.total_hash ${MINER_PATH}/nvoc-miner.json))
+  hash_count=$($(jq -r .minerinfo.hash_count ${MINER_PATH}/nvoc-miner.json))
+  
+  solution_speed_unit=$($(jq -r .minerinfo.solution_speed_unit ${MINER_PATH}/nvoc-miner.json))
+  HASH_AVERAGE="$((total_hash / hash_count)) $solution_speed_unit"
+
+  MINER_ERROR=$($(jq -r .minerinfo.miner_error ${MINER_PATH}/nvoc-miner.json))
+  REJECTED_SHARES=$($(jq -r .minerinfo.rejected_shares ${MINER_PATH}/nvoc-miner.json))
+
+elif  ps ax | grep -q "[z]m_miner"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "[0-9]*.[0-9]* Sol/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE="$((total_hash / hash_count)) Sols/s"
+
+  MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
 
 elif  ps ax | grep -q "[e]thminer"
 then
@@ -342,6 +362,12 @@ then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $5}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE="$((total_hash / hash_count)) MH/s"
+
+  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
+  then
+    REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
+  fi
 
 elif  ps ax | grep -q "[K]Tccminer"
 then
@@ -449,25 +475,6 @@ then
 
 else
   WTM_HASH="Not Available"
-fi
-########################################################################
-########################### Miner ERROR Logs ###########################
-
-if  ps ax | grep -q "[z]m_miner"
-then
-  MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
-
-elif  ps ax |  grep -q "[c]laymore"
-then
-  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
-  then
-    REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
-  fi
-
-else
-  MINER_ERROR="Send us your miner error logs to add"
 fi
 
 ###################################################################
