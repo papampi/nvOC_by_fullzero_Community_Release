@@ -145,16 +145,25 @@ then
   screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS"
 fi
 
+if [[ ${!xversion} != "" && -f ${NVOC}/miners/${!xminer}/${!xversion}/nvoc-miner.json ]]
+then
+  HCD="$(jq -r .hcd ${NVOC}/miners/${!xminer}/${!xversion}/nvoc-miner.json)"
+  eval $LAUNCH $HCD
+elif [[ -f ${NVOC}/miners/${!xminer}/nvoc-miner.json ]]
+then
+  HCD="$(jq -r .hcd ${NVOC}/miners/${!xminer}/nvoc-miner.json)"
+  eval $LAUNCH $HCD
+fi
+
 ## ETHASH
 if [[ $ALGO == ETHASH ]]
 then
-## Declare Miner Start
   if [[ $ETHASH_MINER == GENOIL ]]
   then
     HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
-  elif [[ $ETHASH_MINER == ETHMINER ]]
-  then
-    HCD="${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext} $ETHMINER_OPTS"
+  # elif [[ $ETHASH_MINER == ETHMINER ]]
+  # then
+  #   HCD="${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext} $ETHMINER_OPTS"
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
     HCD="${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -dbg -1 ${!xext} $CLAYMORE_OPTS"
