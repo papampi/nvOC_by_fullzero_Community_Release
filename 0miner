@@ -83,6 +83,7 @@ UEXT="_EXTENSION_ARGUMENTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
+UVERSION="_VERSION"
 UCUDA="_CUDA"
 
 xpool=$COIN$UPOOL
@@ -93,6 +94,7 @@ xext=$COIN$UEXT
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
+xversion=${!xminer}$UVERSION
 xcuda=$ALGO$UCUDA
 
 if [[ ${!xcuda} != "" ]]
