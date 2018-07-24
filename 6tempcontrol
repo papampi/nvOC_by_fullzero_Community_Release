@@ -124,7 +124,7 @@ while (( count < GPUS ))
 do
   if [ ${DISABLED_GPU_ARRAY[$count]} ]; then
     # skip if disabled
-    echo "${B}GPU $count$:{N} ${R}Disabled"
+    echo -e "${B}GPU $count:${N} ${R}${B}Disabled${N}"
     (( count++ ))
     continue
   fi
@@ -223,7 +223,7 @@ do
   do
     if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
       # skip if disabled
-      echo "${B}GPU $GPU -${N} ${R}Disabled"
+      echo -e "${B}GPU $GPU,${N} ${R}${B}Disabled${N}"
       (( GPU++ ))
       continue
     fi
