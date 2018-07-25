@@ -33,6 +33,8 @@
 #          Relocate nvOC to arbitrary install directory
 # v=0006 : papampi (suggestion by abdeldev)
 #          Use sysrq reboot, to prevent freeze/hang
+# v=0007 : brightskye
+#          Add supports for disabled_gpu
 
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id

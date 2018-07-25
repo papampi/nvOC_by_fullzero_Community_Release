@@ -51,13 +51,14 @@
 #          Crytponight Heavy
 # v=0020 : papampi
 #          ZHASH, PHI1612, PHI2 Algos and Z_EWBF
+# v=0021 : brightskye
+#          disabled_gpu helper
 
-nvOC_0miner_dev="0020"
+nvOC_0miner_dev="0021"
 
 source "${NVOC}/1bash"
 source "${NVOC}/0algo_id"
 source "${NVOC}/helpers/disabled_gpu"
-build_miner_devices_opt
 
 nvOC_0miner_ver="$nvOC_Ver.$nvOC_0miner_dev" # Do not edit this
 
@@ -136,6 +137,9 @@ then
   MPH_SKEIN_ADDRESS=$MPH_ADDRESS
   MPH_CRYPTONIGHTV7==$MPH_ADDRESS
 fi
+
+## helpers/disabled_gpu assists at setting each supported miner's device opts
+build_miner_devices_opt
 
 ## CLAYMORE_DUAL
 if [[ $COIN == CLAYMORE_DUAL ]]

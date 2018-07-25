@@ -14,12 +14,15 @@
 # BaliMiner:    TELEGRAM_MESSAGES
 #               ( BTC address:  1HbzxQ6AVeWYvFm322KtxZcJJLAqfJHpN8 )
 
+# brightskye:   DISABLED_GPUS
+#               Allow turning off gpu by utilizing each miner's -device options
+#               
+
 # damNmad:      damNmad_ALGO_SPECIFIC_OC
 #               nvOC discord channel https://discordapp.com/invite/8YDFEvY
 #               Added Lots of COIN selections
 #               Alternative telegram alert
 #               ( BTC address: 1Mtf6K7c3ZhBDcPz91c4wcQ95DxLn88zC )
-
 
 # IAmNotAJeep:  IAmNotAJeep_and_Maxximus007_WATCHDOG
 #               Methods for improved system stability
@@ -110,10 +113,11 @@ v0030="papampi;CryptoNightHeavy"
 v0031="papampi;New EWBF v0.3"  
 v0032="papampi;Version numbering"
 v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
+v0034="brightskye; DISABLED_GPUS"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0033"
+nvOC_1bash_ver="0034"
 nvOC_1bash_last_compatible="0029"
 
 

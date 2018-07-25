@@ -63,12 +63,14 @@
 #          Load average check, notify, reboot (1bash setting)
 # v=0020 : papampi
 #          Check Ping if Network couldnt resolve 
+# v=0021 : brightskye
+#          Adds support for disabled_gpu
 
 export DISPLAY=:0
 source ${NVOC}/1bash
 source ${NVOC}/helpers/disabled_gpu
 
-nvOC_wdog_Dev="0020"
+nvOC_wdog_Dev="0021"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
 
 echo "Watchdog for nvOC $nvOC_Ver"
