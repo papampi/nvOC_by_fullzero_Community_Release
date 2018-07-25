@@ -396,7 +396,7 @@ elif  ps ax | grep -q  "[Z]ENEMYminer" ;then
     HASH_AVERAGE="$((total_hash / hash_count)) kH/s"
   elif  ps ax | grep -q "[z]_ewbf"
 then
-  total_hash=$(tail -100 NVOC/mining/nvoc_logs/screenlog.0 | grep "Total speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | grep -o "[0-9]*.[0-9]* Sol/s" |awk '{print $1}'| awk '{s+=$1} END {printf "%.0f", s}')
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | grep -o "[0-9]*.[0-9]* Sol/s" |awk '{print $1}'| awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | grep -v grep |  wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
   fi
