@@ -222,6 +222,12 @@ do
   AVERAGES=$(uptime | sed 's/.*: //g')
   echo "Load Average: $AVERAGES"
 
+  # Prevent slow single core cpus gives warning
+  if [[ "$HIGH_AVERAGE" < 4 ]]
+  then
+    HIGH_AVERAGE=4
+  fi
+
   AVERAGE_1=$(echo "$AVERAGES" | cut -d"," -f1)
   if [[ "$AVERAGE_1" > "$HIGH_AVERAGE"  ]]
   then
