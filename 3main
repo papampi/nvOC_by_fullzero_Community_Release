@@ -428,7 +428,7 @@ then
       fi
       eval pwr_lim_$a=$_POWERLIMIT_WATTS
     fi
-    POWERLIMIT_MODE="MANAGED_BY_SWITCHER"
+    
 
     checkdef=${a}_CORE_OVERCLOCK
     if [[ ${!checkdef} == "" ]]
@@ -470,8 +470,10 @@ then
       eval gpu_clks_$a=0
       eval mem_clks_$a=0
     fi
-    OVERCLOCK_MODE="MANAGED_BY_SWITCHER"
   done
+  
+  POWERLIMIT_MODE="MANAGED_BY_SWITCHER"
+  OVERCLOCK_MODE="MANAGED_BY_SWITCHER"
 fi
 
 if [[ $AUTO_SWITCH == SALFTER_NICEHASH_SWITCHING ]]
