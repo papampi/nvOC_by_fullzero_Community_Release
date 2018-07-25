@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 # Supported Miners:
 # Bminer        : -devices 0,1,2,3,4,5,6,7,8,...
 # CCMINER       : --devices 0,1,2,3,4,5,6,7,8,...
@@ -42,15 +40,12 @@ else
             DISABLED_GPU_ARRAY[$i]=$(date +%s)
         done
     fi
-    # echo ${!DISABLED_GPU_ARRAY[@]} # print indexes
-    # echo ${DISABLED_GPU_ARRAY[@]} # print values
-    # echo ${#DISABLED_GPU_ARRAY[@]} # print Array length
 fi
 
 # Set each miner's device opt accordingly
 # @Param    $1=number of GPUS, if not provided, default to Global variable GPUS or query nvidia-smi if not found
 # @Return   void
-# @Outcome  BMINER_OPTS, CCMINER_OPTS, CLAYMORE_OPTS, DSTM_OPTS, ETHMINER_OPTS, EWBF_OPTS will be appended with their respective options for device
+# @Outcome  Each supported miner's opts will be appended with their respective options for device
 # @Note     If devices options has already been configured prior (e.g. in 1bash), the device option will not be overriden
 function build_miner_devices_opt () {
     local gpus=${1:-$GPUS}
@@ -58,7 +53,6 @@ function build_miner_devices_opt () {
     if [ -v DISABLED_GPU_ARRAY[@] ]; then
         if [ -z $gpus ]; then
             #echo "gpu count is not passed in as arguments nor found in global GPUS"
-            #echo "Reading gpu count from nvidia-smi"
             gpus=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
         fi
         # Get all runnable devices
@@ -119,7 +113,6 @@ function is_gpu_disabled () {
         echo 'WARNING: No GPU specified for testing '
         return 255
     fi
-    #echo ${DISABLED_GPU_ARRAY[$gpu]}
     # Check if anything is assigned to DISABLED_GPU_ARRAY at index $gpu
     if [ ${DISABLED_GPU_ARRAY[$gpu]} ]; then 
         # bash will evaluate function return 0 as true, other as false 
