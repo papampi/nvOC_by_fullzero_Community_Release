@@ -284,11 +284,6 @@ then
   echo ENVIRONMENTAL VARIBLES SET
 fi
 
-if [[ $CONTROL_GPU_LED == YES ]]
-then
-  sudo ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
-fi
-
 if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
 then
   HCD="${NVOC}/miners/cpuOPT/cpuminer"
@@ -901,6 +896,11 @@ then
     NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=${GPUPowerMizerMode}"
     gpu=$((gpu+1))
   done
+fi
+
+if [[ $CONTROL_GPU_LED == YES ]]
+then
+   NVD_SETTINGS="${NVD_SETTINGS} -a GPULogoBrightness=$LED_BRIGHTNESS"
 fi
 
 # Apply GPU settings
