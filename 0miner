@@ -51,8 +51,10 @@
 #          Crytponight Heavy
 # v=0020 : papampi
 #          ZHASH, PHI1612, PHI2 Algos and Z_EWBF
+# v=0021 : LuKePicci
+#          Support pluggable miners
 
-nvOC_0miner_dev="0020"
+nvOC_0miner_dev="0021"
 
 source "${NVOC}/1bash"
 source "${NVOC}/0algo_id"

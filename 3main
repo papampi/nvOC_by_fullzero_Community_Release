@@ -68,11 +68,13 @@
 #          Fix XMR cpu miner
 # v=0024 : LuKePicci
 #          Support CUDA version selection
+# v=0025 : LuKePicci
+#          Support pluggable miners
 
 source ${NVOC}/1bash
 
-nvOC_3main_Dev="0024"
-nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"                  # Do not edit this
+nvOC_3main_Dev="0025"
+nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"             # Do not edit this
 
 #########################################################################
 #########################################################################

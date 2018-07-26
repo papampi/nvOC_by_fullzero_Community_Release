@@ -110,10 +110,11 @@ v0030="papampi;CryptoNightHeavy"
 v0031="papampi;New EWBF v0.3"  
 v0032="papampi;Version numbering"
 v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
+v0034="LuKePicci:Rearrange settings and explaination comments"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0033"
+nvOC_1bash_ver="0034"
 nvOC_1bash_last_compatible="0029"
 
 

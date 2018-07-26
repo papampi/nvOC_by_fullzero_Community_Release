@@ -8,8 +8,9 @@
 # Rev 0007: papampi, Wait for watchdog to get gpu count
 # Rev 0008: papampi, Individual PL, OC, MC
 # Rev 0009: papampi, 1bash version alert
+# Rev 0010: LuKePicci, Support pluggable miners
 
-nvOC_minerinfo_Dev="0009"
+nvOC_minerinfo_Dev="0010"
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
