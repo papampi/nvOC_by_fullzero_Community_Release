@@ -166,11 +166,15 @@ AUTO_START_MINER="NO"      # YES or NO # Set this to NO when troubleshooting, th
 AUTO_SWITCH="NO"       # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING,
                        # SALFTER_MPH_SWITCHING, SALFTER_PROGRAMATIC_SWITCHING
 
-#        - NO disables auto switching, mine previously selected COIN
-#        - WTM_SWTICHING whattomine.com switcher
-#        - SALFTER_NICEHASH_SWITCHING nicehash profit switcher
-#        - SALFTER_MPH_SWITCHING miningpoolhub profit switcher
-#        - SALFTER_PROGRAMATIC_SWITCHING reads the coin to switch to from a given URL
+# Notes: - NO disables auto switching, mine previously selected COIN
+#        - WTM_SWTICHING switch coin over your preferred pools following
+#          whattomine.com profitability charts
+#        - SALFTER_NICEHASH_SWITCHING switch algo over nicehash pools following
+#          nicehash profitabiliy charts
+#        - SALFTER_MPH_SWITCHING switch algo over miningpoolhub pools following
+#          miningpoolhub profitability charts
+#        - SALFTER_PROGRAMATIC_SWITCHING switch algo over pools provided by any
+#          custom api URL following its own profitability logic
 
 NUMBER_GPUS_INSTALLED=""    # Number or "" # Set number of GPUs installed. Watchdog will check installed vs detected. Leave empty to not check
 
