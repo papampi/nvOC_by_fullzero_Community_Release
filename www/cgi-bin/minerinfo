@@ -334,14 +334,14 @@ REJECTED_SHARES="Unkonwn for current miner"
 
 if [[ $MINER_PID != "" && -f ${MINER_PATH}/nvoc-miner.json ]]
 then
-  total_hash=$($(jq -r .minerinfo.total_hash ${MINER_PATH}/nvoc-miner.json))
-  hash_count=$($(jq -r .minerinfo.hash_count ${MINER_PATH}/nvoc-miner.json))
+  total_hash=$(eval $(jq -r .minerinfo.total_hash ${MINER_PATH}/nvoc-miner.json))
+  hash_count=$(eval $(jq -r .minerinfo.hash_count ${MINER_PATH}/nvoc-miner.json))
   
-  solution_speed_unit=$($(jq -r .minerinfo.solution_speed_unit ${MINER_PATH}/nvoc-miner.json))
+  solution_speed_unit=$(jq -r .minerinfo.solution_speed_unit ${MINER_PATH}/nvoc-miner.json)
   HASH_AVERAGE="$((total_hash / hash_count)) $solution_speed_unit"
 
-  MINER_ERROR=$($(jq -r .minerinfo.miner_error ${MINER_PATH}/nvoc-miner.json))
-  REJECTED_SHARES=$($(jq -r .minerinfo.rejected_shares ${MINER_PATH}/nvoc-miner.json))
+  MINER_ERROR=$(eval $(jq -r .minerinfo.miner_error ${MINER_PATH}/nvoc-miner.json))
+  REJECTED_SHARES=$(eval $(jq -r .minerinfo.rejected_shares ${MINER_PATH}/nvoc-miner.json))
 
 elif  ps ax | grep -q "[z]m_miner"
 then
