@@ -401,7 +401,10 @@ fi
 
 if [[ ${AUTO_SWITCH:0:7} == SALFTER ]]
 then
-  for a in daggerhashimoto equihash neoscrypt lyra2rev2 lbry blake_vanilla cryptonight cryptonight_monero groestl keccak myriad_groestl qubit scrypt sia skein x11
+  NICE_ALGO_NAMES="cryptonight cryptonightv7 daggerhashimoto lbry lyra2rev2"
+  MPH_ALGO_NAMES="cryptonight_monero ethash groestl lyra2re2 myriad_groestl skein"
+  SHARED_ALGO_NAMES="equihash keccak neoscrypt qubit scrypt sia x11"
+  for a in $NICE_ALGO_NAMES $MPH_ALGO_NAMES $SHARED_ALGO_NAMES
   do
     checkdef=${a}_POWERLIMIT_WATTS
     if [[ ${!checkdef} == "" ]]
@@ -545,12 +548,6 @@ then
   "min_profit": $MINIMUM_PROFIT,
   "miners":
   {
-    "Blake-Vanilla":
-    {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $pwr_lim_blake_vanilla, "gpu_oc": $gpu_clks_blake_vanilla, "mem_oc": $mem_clks_blake_vanilla, "fan": 0,
-      "speed": 12.3, "power": 0.389
-    },
     "Cryptonight-Monero":
     {
       "bin": "${NVOC}/miners/xmr-stak/xmr-stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
@@ -566,7 +563,7 @@ then
     "Ethash":
     {
       "bin": "${NVOC}/miners/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
-      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
+      "power_limit": $pwr_lim_ethash, "gpu_oc": $gpu_clks_ethash, "mem_oc": $mem_clks_ethash, "fan": 0,
       "speed": 0.087, "power": 0.397
     },
     "Groestl":
@@ -584,7 +581,7 @@ then
     "Lyra2RE2":
     {
       "bin": "${NVOC}/miners//SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
+      "power_limit": $pwr_lim_lyra2re2, "gpu_oc": $gpu_clks_lyra2re2, "mem_oc": $mem_clks_lyra2re2, "fan": 0,
       "speed": 0.081, "power": 0.386
     },
     "Myriad-Groestl":
@@ -646,11 +643,6 @@ then
   "config_json_url": "$PROGRAMATIC_SWITCH_CONFIG_JSON_URL",
   "miners":
   {
-    "Blake-Vanilla":
-    {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $pwr_lim_blake_vanilla, "gpu_oc": $gpu_clks_blake_vanilla, "mem_oc": $mem_clks_blake_vanilla, "fan": 0
-    },
     "Cryptonight":
     {
       "bin": "${NVOC}/miners/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
@@ -674,7 +666,7 @@ then
     "Ethash":
     {
       "bin": "${NVOC}/miners/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
-      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0
+      "power_limit": $pwr_lim_ethash, "gpu_oc": $gpu_clks_ethash, "mem_oc": $mem_clks_ethash, "fan": 0
     },
     "Groestl":
     {
@@ -689,7 +681,7 @@ then
     "Lyra2RE2":
     {
       "bin": "${NVOC}/miners/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0
+      "power_limit": $pwr_lim_lyra2re2, "gpu_oc": $gpu_clks_lyra2re2, "mem_oc": $mem_clks_lyra2re2, "fan": 0
     },
     "Myriad-Groestl":
     {
