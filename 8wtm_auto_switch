@@ -57,12 +57,15 @@
 # v=0021 : LuKePicci: Flexible OC settings policies
 #
 # v=0022 : papampi: Fix no top_coin on first run
+#
+# v=0023 : papampi: Add wtm python check 
+
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
 
-wtm_auto_switch_Dev="0022"
+wtm_auto_switch_Dev="0023"
 wtm_auto_switch_ver="$nvOC_Ver.$wtm_auto_switch_Dev"   # Do not edit this
 
 echo ""
