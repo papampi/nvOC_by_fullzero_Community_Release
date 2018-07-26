@@ -57,12 +57,15 @@
 # v=0021 : LuKePicci: Flexible OC settings policies
 #
 # v=0022 : papampi: Fix no top_coin on first run
+#
+# v=0023 : papampi: Add wtm python check 
+
 
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
 
-wtm_auto_switch_Dev="0022"
+wtm_auto_switch_Dev="0023"
 wtm_auto_switch_ver="$nvOC_Ver.$wtm_auto_switch_Dev"   # Do not edit this
 
 echo ""
@@ -127,13 +130,20 @@ do
     MINER_TIME_MIN=$(( MINER_TIME / 60 ))
     echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
 
+    # If WTM_SWITCHER is frozen kill it.
+    if ps ax | grep -q [WTM]_SWITCHER 
+    then
+      echo "$(date) - WTM_SWITCHER is frozen. killing it" | tee -a ${NVOC}/5_watchdoglog
+      pkill -f WTM_SWITCHER
+    fi
+    
     if (( MINER_TIME >= WTM_MINIMUM_MINING_TIME ))
     then
       echo "Minimum mining time passed, checking for new coins with ${WTM_LOWER_MIN_DIFFERENCE}% more profit"
-      python2.7 ${NVOC}/WTM_SWITCHER ${NVOC}/WTM_1.json
+      python2.7 ${NVOC}/WTM_SWITCHER ${NVOC}/WTM_1.json &
     else
       echo "Minimum mining time not reached, checking for new coins with ${WTM_MIN_DIFFERENCE}% more profit"
-      python2.7 ${NVOC}/WTM_SWITCHER ${NVOC}/WTM.json
+      python2.7 ${NVOC}/WTM_SWITCHER ${NVOC}/WTM.json &
     fi
 
     sleep 5
