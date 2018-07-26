@@ -131,7 +131,7 @@ do
     echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
 
     # If WTM_SWITCHER is frozen kill it.
-    if ps ax | grep -q [W]TM_SWITCHER 
+    if ps ax | grep -q [WTM]_SWITCHER 
     then
       echo "$(date) - WTM_SWITCHER is frozen. killing it" | tee -a ${NVOC}/5_watchdoglog
       pkill -f WTM_SWITCHER
