@@ -133,7 +133,7 @@ do
     # If WTM_SWITCHER is frozen kill it.
     if ps ax | grep -q [W]TM_SWITCHER 
     then
-      echo "$(date) - TESTING, WTM_SWITCHER is frozen. killing it" | tee -a ${NVOC}/5_watchdoglog
+      echo "$(date) - WTM_SWITCHER is frozen. killing it" | tee -a ${NVOC}/5_watchdoglog
       pkill -f WTM_SWITCHER
     fi
     
