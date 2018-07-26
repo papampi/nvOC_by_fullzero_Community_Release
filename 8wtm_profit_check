@@ -43,7 +43,14 @@ fi
 while true
 do
 
-  python2.7 "${NVOC}/WTM_SWITCHER" ${NVOC}/WTM.json | tee -a $LOG_FILE
+  # If WTM_SWITCHER is frozen kill it.
+  if ps ax | grep -q [W]TM_SWITCHER 
+  then
+    echo "$(date) - TESTING, WTM_SWITCHER is frozen. killing it" | tee -a ${NVOC}/5_watchdoglog
+    pkill -f WTM_SWITCHER
+  fi
+    
+  python2.7 "${NVOC}/WTM_SWITCHER" ${NVOC}/WTM.json | tee -a $LOG_FILE &
   sleep 5
   source ${NVOC}/1bash  # source 1bash again in case it was edited between our timer checks
   CURRENT_COIN=$COIN
