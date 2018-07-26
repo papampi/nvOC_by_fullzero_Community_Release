@@ -422,12 +422,12 @@ then
     hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[k]H/s" | wc -l | awk '{print $1}')
     HASH_AVERAGE="$((total_hash / hash_count)) kH/s"
   fi
-elif  ps ax | grep -q "[z]_ewbf"
-then
-  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | grep -o "[0-9]*.[0-9]* Sol/s" |awk '{print $1}'| awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | grep -v grep |  wc -l | awk '{print $1}')
-  HASH_AVERAGE=$((total_hash / hash_count))
-fi
+  elif  ps ax | grep -q "[z]_ewbf"
+  then
+    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | grep -o "[0-9]*.[0-9]* Sol/s" |awk '{print $1}'| awk '{s+=$1} END {printf "%.0f", s}')
+    hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | grep -v grep |  wc -l | awk '{print $1}')
+    HASH_AVERAGE=$((total_hash / hash_count))
+  fi
 ##################################################################
 ########################### WTM Hash Rate ########################
 
@@ -483,8 +483,6 @@ elif [[ $ALGO == ZHASH ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bzh_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
-
-5Bzh_hr%5D
 else
   WTM_HASH="Not Available"
 fi
