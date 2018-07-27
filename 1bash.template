@@ -110,12 +110,13 @@ v0030="papampi;CryptoNightHeavy"
 v0031="papampi;New EWBF v0.3"  
 v0032="papampi;Version numbering"
 v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
-v0034="LuKePicci:Rearrange settings and explaination comments"
+v0034="LuKePicci;Rearrange settings and explaination comments"
+v0035="LuKePicci;Uniform plusCPU handling"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0034"
-nvOC_1bash_last_compatible="0029"
+nvOC_1bash_ver="0035"
+nvOC_1bash_last_compatible="0035"
 
 
 # Open a terminal to launch miner; will auto launch on boot
