@@ -159,10 +159,9 @@ elif [[ -f ${NVOC}/miners/${!xminer}/nvoc-miner.json ]]
 then
   HCD="${mpath}/$(jq -r .hcd ${mpath}/nvoc-miner.json)"
   eval $LAUNCH $HCD
-fi
 
 ## ETHASH
-if [[ $ALGO == ETHASH ]]
+elif [[ $ALGO == ETHASH ]]
 then
   if [[ $ETHASH_MINER == GENOIL ]]
   then
