@@ -33,11 +33,13 @@
 #          Relocate nvOC to arbitrary install directory
 # v=0006 : papampi (suggestion by abdeldev)
 #          Use sysrq reboot, to prevent freeze/hang
+# v=0007 : LuKePicci
+#          Reduce calls to nvidia-smi and nvidia-settings 
 
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
 
-nvOC_temp_Dev="0006"
+nvOC_temp_Dev="0007"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
@@ -212,6 +214,7 @@ ERR_TIMER_BRK=$ERR_TIMER
 while true
 do
   SMI_QUERY=$(${SMI} --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw,name --format=csv,noheader,nounits)
+  NVD_SETTINGS=""
   GPU=0
   while (( GPU < GPUS ))
   do
@@ -380,7 +383,10 @@ do
   done
 
   # Apply adjustments
-  sudo ${NVD} ${NVD_SETTINGS} >/dev/null 2>&1
+  if [[ $NVD_SETTINGS != "" ]]
+  then
+    sudo ${NVD} ${NVD_SETTINGS} >/dev/null 2>&1
+  fi
 
   echo "$(date) - All good, will check again in $LOOP_TIMER seconds"
   echo ""
