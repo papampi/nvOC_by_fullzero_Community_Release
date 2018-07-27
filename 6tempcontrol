@@ -211,11 +211,11 @@ ERR_TIMER_BRK=$ERR_TIMER
 # The Main Loop
 while true
 do
-  SMI_QUERY=$(${SMI} --query-gpu=name,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+  SMI_QUERY=$(${SMI} --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw,name --format=csv,noheader,nounits)
   GPU=0
   while (( GPU < GPUS ))
   do
-    { IFS=', ' read GPU_NAME CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(echo "$SMI_QUERY" | sed '$((GPU+1))q;d')
+    { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW GPU_NAME; } < <(echo "$SMI_QUERY" | sed "$((GPU+1))q;d")
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
 
@@ -377,11 +377,10 @@ do
     fi
 
     (( GPU++ ))
-    sleep 0.5    # 0.5 seconds delay until querying the next GPU
   done
 
   # Apply adjustments
-  sudo ${NVD} ${NVD_SETTINGS} 2>&1 >/dev/null
+  sudo ${NVD} ${NVD_SETTINGS} >/dev/null 2>&1
 
   echo "$(date) - All good, will check again in $LOOP_TIMER seconds"
   echo ""
