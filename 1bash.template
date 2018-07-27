@@ -235,17 +235,9 @@ SRR_SERIAL="000055"         # Remote SRR control setting
 __SRR_SLOT="1"              # Remote SRR control setting
 
 
-
-plusCPU="NO"                # YES or NO # Mine XMR with CPU. Set your XMR address in addresses/pools section
-
-threadCOUNT="1"             # Number of CPU threads to use for plusCPU mining. Please check how many threads your CPU has.
-
-
-
 CONTROL_GPU_LED="YES"       # YES or NO # Control GPU LED light. NOTE: It only works on some models
 
 LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OFF, 100 = full brightness
-
 
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
@@ -414,6 +406,7 @@ ZHASH_COINS="BTG"
 #
 #   ALGOS="${ALGOS} NEWALGO"
 #   NEWALGO_COINS="NEWCOIN"
+
 
 ########################################################
 #                                                      #
@@ -588,9 +581,28 @@ ZHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 #   NEWALGO_MINER="builtin_or_pluggable_miner_name"
 #   NEWALGO_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+
+################################################################
+#                                                              #
+# CPU mining settings                                          #
+#                                                              #
+################################################################
+
+plusCPU="NO"                # YES or NO # Mine XMR with CPU. Set your XMR address in addresses/pools section
+
+threadCOUNT="1"             # Number of CPU threads to use for plusCPU mining. Please check how many threads your CPU has.
+
+plusCPU_MINER="cpuOPT"      # choose "cpuOPT" for the only available builtin cpu miner or your pluggable miner name
+plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+# example, replacing cpuminer for plusCPU:
+#
+#   plusCPU_MINER="builtin_or_pluggable_miner_name"
+
+
 ########################################################
 #                                                      #
-# Builtin miners settings                              #
+# Builtin GPU miners settings                              #
 #                                                      #
 ########################################################
 
@@ -1014,6 +1026,13 @@ ZEN_POOL="luckpool.org"
 ZEN_PORT="3057"
 ZEN_WORKER="$WORKERNAME"
 
+# plusCPU (defaults: same as XMR)
+plusCPU_ADDRESS="$XMR_ADDRESS"
+plusCPU_EXTENSION_ARGUMENTS="-a cryptonightv7"
+plusCPU_POOL="$XMR_POOL"
+plusCPU_PORT="$XMR_PORT"
+plusCPU_WORKER="$XMR_WORKER"
+
 # example, adding NEWCOIN:
 #
 #   ## Newcoin (NEWCOIN)
@@ -1022,6 +1041,7 @@ ZEN_WORKER="$WORKERNAME"
 #   NEWCOIN_POOL="newpool.example.org"
 #   NEWCOIN_PORT="4242"
 #   NEWCOIN_WORKER="$WORKERNAME"
+
 
 ###################################################
 # Claymore_Dual Mining                            #

@@ -155,7 +155,7 @@ if [[ ${!xversion} != "" && -f ${mpath}//${!xversion}/nvoc-miner.json ]]
 then
   HCD="${mpath}/${!xversion}/$(jq -r .hcd ${mpath}/${!xversion}/nvoc-miner.json)"
   eval $LAUNCH $HCD
-elif [[ -f ${NVOC}/miners/${!xminer}/nvoc-miner.json ]]
+elif [[ -f ${mpath}/nvoc-miner.json ]]
 then
   HCD="${mpath}/$(jq -r .hcd ${mpath}/nvoc-miner.json)"
   eval $LAUNCH $HCD
