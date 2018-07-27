@@ -211,15 +211,16 @@ ERR_TIMER_BRK=$ERR_TIMER
 # The Main Loop
 while true
 do
+  SMI_QUERY=$(${SMI} --query-gpu=name,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
   GPU=0
   while (( GPU < GPUS ))
   do
-    { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+    { IFS=', ' read GPU_NAME CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(echo "$SMI_QUERY" | sed '$((GPU+1))q;d')
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
 
     # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
-    if [[ $(${SMI} -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]
+    if [[ $GPU_NAME =~ 1050 ]]
     then
       if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
       then
@@ -303,16 +304,21 @@ do
 
     echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"
 
-    if (( CURRENT_TEMP > TARGET_TEMP[GPU] ))
+    if (( TEMP_DIFF > ALLOWED_TEMP_DIFF ))
     then
+      # Things are getting hot, speed up fans
       # If temp difference is more than double the allowed, multiply adjustement by 2
-      if (( TEMP_DIFF < - HIGH_TEMP_DIFF ))
+      FAN_ADJUST_CALCULATED=$FAN_ADJUST
+      if (( TEMP_DIFF > HIGH_TEMP_DIFF ))
       then
-        FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
-      else
-        FAN_ADJUST_CALCULATED=$FAN_ADJUST
+        (( FAN_ADJUST_CALCULATED += FAN_ADJUST ))
+      fi
+      if (( TEMP_DIFF > HIGH_TEMP_DIFF * 2 ))
+      then
+        (( FAN_ADJUST_CALCULATED += FAN_ADJUST ))
       fi
       NEW_FAN_SPEED=$(( CURRENT_FAN + FAN_ADJUST_CALCULATED ))
+      
       if (( NEW_FAN_SPEED > MAXIMAL_FAN_SPEED ))
       then
         NEW_FAN_SPEED=$MAXIMAL_FAN_SPEED
@@ -331,36 +337,34 @@ do
         echo ""
         sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
       fi
-    else
+    elif (( TEMP_DIFF < - ALLOWED_TEMP_DIFF ))
+    then
       # Current temp is lower than target, so we can relax fan speed, and restore original power limit if applicable
-      if (( TEMP_DIFF > ALLOWED_TEMP_DIFF ))
+      
+      # Faster restore fan speed. This can be far more advanced too
+      if (( TEMP_DIFF < - HIGH_TEMP_DIFF ))
       then
-        # Faster restore fan speed. This can be far more advanced too
+        FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
+      else
         FAN_ADJUST_CALCULATED=$FAN_ADJUST
-        if (( TEMP_DIFF > HIGH_TEMP_DIFF ))
+      fi
+      NEW_FAN_SPEED=$(( CURRENT_FAN - FAN_ADJUST_CALCULATED ))
+
+      # Set to minimal fan speed if calculated is below
+      if (( NEW_FAN_SPEED < MINIMAL_FAN_SPEED ))
+      then
+        NEW_FAN_SPEED=$MINIMAL_FAN_SPEED
+      fi
+
+      # Restore original power limit when possible using fan speed
+      if (( ${POWER_LIMIT[${GPU}]} != POWERLIMIT ))
+      then
+        if (( NEW_FAN_SPEED < RESTORE_POWER_LIMIT ))
         then
-          FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 2 ))
-          if (( TEMP_DIFF > HIGH_TEMP_DIFF * 2 ))
-          then
-            FAN_ADJUST_CALCULATED=$(( FAN_ADJUST * 4 ))
-          fi
-        fi
-        NEW_FAN_SPEED=$(( CURRENT_FAN - FAN_ADJUST_CALCULATED ))
-        # Set to minimal fan speed if calculated is below
-        if (( NEW_FAN_SPEED < MINIMAL_FAN_SPEED ))
-        then
-          NEW_FAN_SPEED=$MINIMAL_FAN_SPEED
-        fi
-        # Restore original power limit when possible using fan speed
-        if (( ${POWER_LIMIT[${GPU}]} != POWERLIMIT ))
-        then
-          if (( NEW_FAN_SPEED < RESTORE_POWER_LIMIT ))
-          then
-            NEW_POWER_LIMIT=${POWER_LIMIT[${GPU}]}
-            echo -e "${B}GPU$GPU${N}${C}$(date) - Restoring Power Limit for ${N}${B}GPU$GPU${N}. ${C}Old limit: ${N}${B}$POWERLIMIT${N}${C} New limit: ${N}${B}$NEW_POWER_LIMIT${N}${C} Fan speed: ${N}${B}$NEW_FAN_SPEED${N}"
-            echo ""
-            sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
-          fi
+          NEW_POWER_LIMIT=${POWER_LIMIT[${GPU}]}
+          echo -e "${B}GPU$GPU${N}${C}$(date) - Restoring Power Limit for ${N}${B}GPU$GPU${N}. ${C}Old limit: ${N}${B}$POWERLIMIT${N}${C} New limit: ${N}${B}$NEW_POWER_LIMIT${N}${C} Fan speed: ${N}${B}$NEW_FAN_SPEED${N}"
+          echo ""
+          sudo ${SMI} -i $GPU -pl ${NEW_POWER_LIMIT}
         fi
       fi
     fi
@@ -369,12 +373,16 @@ do
     then
       echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"
       echo ""
-      sudo ${NVD} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED} 2>&1 >/dev/null
+      NVD_SETTINGS="${NVD_SETTINGS} -a [fan:${GPU}]/GPUTargetFanSpeed=${NEW_FAN_SPEED}"
     fi
 
     (( GPU++ ))
     sleep 0.5    # 0.5 seconds delay until querying the next GPU
   done
+
+  # Apply adjustments
+  sudo ${NVD} ${NVD_SETTINGS} 2>&1 >/dev/null
+
   echo "$(date) - All good, will check again in $LOOP_TIMER seconds"
   echo ""
   echo ""
