@@ -214,6 +214,7 @@ ERR_TIMER_BRK=$ERR_TIMER
 while true
 do
   SMI_QUERY=$(${SMI} --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw,name --format=csv,noheader,nounits)
+  NVD_SETTINGS=""
   GPU=0
   while (( GPU < GPUS ))
   do
@@ -382,7 +383,10 @@ do
   done
 
   # Apply adjustments
-  sudo ${NVD} ${NVD_SETTINGS} >/dev/null 2>&1
+  if [[ $NVD_SETTINGS != "" ]]
+  then
+    sudo ${NVD} ${NVD_SETTINGS} >/dev/null 2>&1
+  fi
 
   echo "$(date) - All good, will check again in $LOOP_TIMER seconds"
   echo ""
