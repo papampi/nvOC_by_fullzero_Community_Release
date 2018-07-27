@@ -72,7 +72,7 @@ then
 
 elif [[ ${!xminer} == cpuOPT ]]
 then
-  HCD="${NVOC}/miners/cpuOPT/cpuminer -o stratum+tcp://${!xpool}:${!xport} -u ${!xaddr}${!xwallet}${!xwork} -p x -t $threadCOUNT ${!xext}"
+  HCD="${NVOC}/miners/cpuOPT/cpuminer -o stratum+tcp://${!xpool}:${!xport} -u ${!xaddr}${!xwallet}${!xwork} -p ${MINER_PWD} -t $threadCOUNT ${!xext}"
   eval $LAUNCH $HCD
 
 else
