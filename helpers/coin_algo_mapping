@@ -1,6 +1,6 @@
 #!/bin/bash
-export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "${NVOC}/1bash"
+# export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# source "${NVOC}/1bash"
 ALGO="UNDEFINED"
 
 if [[ $COIN == "" ]]

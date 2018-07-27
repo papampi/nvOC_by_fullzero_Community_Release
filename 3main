@@ -764,7 +764,7 @@ else
   pkill -f 8wtm_auto_switch
 fi
 
-source ${NVOC}/0algo_id
+source ${NVOC}/helpers/coin_algo_mapping
 
 UNDEFINED_POWERLIMIT_WATTS=$_POWERLIMIT_WATTS
 

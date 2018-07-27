@@ -57,7 +57,7 @@
 export DISPLAY=:0
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
-source ${NVOC}/0algo_id
+source ${NVOC}/helpers/coin_algo_mapping
 
 nvOC_nvOC_Dev="0012"
 nvOC_nvOC_ver="$nvOC_Ver.$nvOC_nvOC_Dev"                   # Do not edit this
