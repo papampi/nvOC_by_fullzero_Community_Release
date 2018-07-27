@@ -33,11 +33,13 @@
 #          Relocate nvOC to arbitrary install directory
 # v=0006 : papampi (suggestion by abdeldev)
 #          Use sysrq reboot, to prevent freeze/hang
+# v=0007 : LuKePicci
+#          Reduce calls to nvidia-smi and nvidia-settings 
 
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
 
-nvOC_temp_Dev="0006"
+nvOC_temp_Dev="0007"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
