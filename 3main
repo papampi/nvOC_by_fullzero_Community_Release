@@ -68,11 +68,13 @@
 #          Fix XMR cpu miner
 # v=0024 : LuKePicci
 #          Support CUDA version selection
+# v=0025 : LuKePicci
+#          Support pluggable miners
 
 source ${NVOC}/1bash
 
-nvOC_3main_Dev="0024"
-nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"                  # Do not edit this
+nvOC_3main_Dev="0025"
+nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"             # Do not edit this
 
 #########################################################################
 #########################################################################
@@ -282,33 +284,6 @@ then
   export GPU_MAX_ALLOC_PERCENT="100"
   echo ""
   echo ENVIRONMENTAL VARIBLES SET
-fi
-
-if [[ $CONTROL_GPU_LED == YES ]]
-then
-  sudo ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
-fi
-
-if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
-then
-  HCD="${NVOC}/miners/cpuOPT/cpuminer"
-  XMRADDR="$XMR_ADDRESS.$XMR_WORKER"
-  echo ""
-  echo ""
-  echo "LAUNCHING:  plusCPU"
-  if ! ps ax | grep -q '[c]puminer'
-  then
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      guake -n $HCD -r plusCPU -e "$HCD -a cryptonightv7 -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT" &
-    else
-      screen -c ${NVOC}/screenrc-miner -dmS plusCPU $HCD -a cryptonightv7 -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT
-    fi
-    echo ""
-    echo "plusCPU process in guake terminal Tab (f12)"
-    echo ""
-    running=""
-  fi
 fi
 
 if [[ $AUTO_REBOOT == YES ]]
@@ -767,7 +742,7 @@ else
   pkill -f 8wtm_auto_switch
 fi
 
-source ${NVOC}/0algo_id
+source ${NVOC}/helpers/coin_algo_mapping
 
 UNDEFINED_POWERLIMIT_WATTS=$_POWERLIMIT_WATTS
 
@@ -924,6 +899,11 @@ then
   done
 fi
 
+if [[ $CONTROL_GPU_LED == YES ]]
+then
+   NVD_SETTINGS="${NVD_SETTINGS} -a GPULogoBrightness=$LED_BRIGHTNESS"
+fi
+
 # Apply GPU settings
 sudo ${NVD} $NVD_SETTINGS &
 
@@ -936,6 +916,30 @@ fi
 if [[ $AUTO_START_MINER == YES ]]
 then
   echo "Auto Start Miner Set to YES"
+
+  if [[ $plusCPU == YES ]]
+  then
+    if ! ps ax | grep -q '[c]puminer'
+    then
+      echo
+      echo
+      echo "LAUNCHING:  CPUMINER"
+      echo
+      bash ${NVOC}/0cpuminer
+      echo
+      echo "    "$(ps ax | grep -i screen | grep cpuminer | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/cpuminer-screenlog.0
+      echo
+
+      if [[ $LOCALorREMOTE == LOCAL ]]
+      then
+        guake -n $HCD -r cpuminer -e "tail -f ${NVOC}/nvoc_logs/cpuminer-screenlog.0" &
+        echo "cpuminer process in guake terminal Tab (f12)"
+      else
+        echo "process in screen wdog; 'nvOC cpuminer-log'"
+      fi
+      echo
+    fi
+  fi
 
   while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
     echo "" | tee -a ${NVOC}/nvoc_logs/screenlog.0
@@ -990,7 +994,7 @@ then
     echo "    "
     bash ${NVOC}/0miner
     echo "    "
-    echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
+    echo "    "$(ps ax | grep -i screen | grep miner | grep -v cpuminer | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
     echo "    "
 
     if [[ $LOCALorREMOTE == REMOTE ]]
