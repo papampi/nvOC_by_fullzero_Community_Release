@@ -117,6 +117,8 @@ echo_usage()
   echo "           display nvOC startup output (Only for nvOC running as a service)"
   echo -e "        ${C}$0 miner-log${N}"
   echo "           display live miner output"
+  echo -e "        ${C}$0 cpuminer-log${N}"
+  echo "           display live cpuminer output"
   echo -e "        ${C}$0 wdog-log${N}"
   echo "           display live watchdog output (Only for REMOTE)"
   echo -e "        ${C}$0 temp-log${N}"
@@ -922,6 +924,21 @@ MinersUpgrade()
 ################################# install systemd nvoc.service template ##############################
 InstallService()
 {
+  echo -e "${Y}Warnings${N}:
+- if you don't know what means to run nvOC as a system service you probably
+  don't need to run this command, please choose not to continue (press 'n')
+- by default nvOC runs in gnome-terminal, installing it as a service will switch
+  to systemd instead
+- the nvoc systemd service manifest has been tested successfully in some
+  environments, but it has to be still considered as beta
+"
+  read -p "Do you want to continue (y/N)?  " -n 1 ans
+  echo
+  if [[ ${ans,,} != y ]]
+  then
+    exit 0
+  fi
+  
   echo "Reinstalling nvOC service for ${NVOC}"
   sudo bash -c 'cat > /etc/systemd/system/nvoc.service' << EOF
 [Unit]
@@ -929,7 +946,7 @@ Description=nvOC Service
 
 [Service]
 Type=forking
-User=nvoc
+User=$(whoami)
 
 Environment=GPU_FORCE_64BIT_PTR=0
 Environment=GPU_MAX_HEAP_SIZE=100
@@ -951,8 +968,8 @@ EOF
 
   if sudo systemd-analyze verify nvoc.service
   then
-    echo -e "Setting ACL for '${B}nvoc${N}' user write access to NVOC path..."
-    sudo setfacl -m user:nvoc:rw ${NVOC}
+    #echo -e "Setting ACL for '${B}nvoc${N}' user write access to NVOC path..."
+    #sudo setfacl -m user:nvoc:rw ${NVOC}
     
     sudo systemctl enable nvoc
     echo -e "${B}Done.${N} This service has autostart enabled."
@@ -989,26 +1006,22 @@ miner-log()
   tail -f ${NVOC}/nvoc_logs/screenlog.0
 }
 
+################################# cpuminer-log ###################################
+cpuminer-log()
+{
+  tail -f ${NVOC}/nvoc_logs/cpuminer-screenlog.0
+}
+
 ################################# wdog-log ######################################
 wdog-log()
 {
-  if [[ $LOCALorREMOTE == REMOTE ]]
-  then
-    tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0
-  else
-    echo "Only for REMOTE"
-  fi
+  tail -f ${NVOC}/nvoc_logs/watchdog-screenlog.0
 }
 
 ################################# temp-log ######################################
 temp-log()
 {
-  if [[ $LOCALorREMOTE == REMOTE ]]
-  then
-    tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0
-  else
-    echo "Only for REMOTE"
-  fi
+  tail -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0
 }
 
 
@@ -1069,6 +1082,7 @@ case $# in
       stop-service)        StopService;;
       main-log)            main-log;;
       miner-log)           miner-log;;
+      cpuminer-log)        cpuminer-log;;
       wdog-log)            wdog-log;;
       temp-log)            temp-log;;
       wtm-log)             wtm-log;;
