@@ -307,16 +307,16 @@ do
 
     echo -e "${B}GPU $GPU${N}, Target temp: ${B}${TARGET_TEMP[${GPU}]}${N}, Current: ${B}$CURRENT_TEMP${N}, Diff: ${B}$TEMP_DIFF${N}, Fan: ${B}$CURRENT_FAN${N}, Power: ${B}$POWERDRAW${N}"
 
-    if (( TEMP_DIFF > ALLOWED_TEMP_DIFF ))
+    if (( TEMP_DIFF > 0 ))
     then
       # Things are getting hot, speed up fans
       # If temp difference is more than double the allowed, multiply adjustement by 2
       FAN_ADJUST_CALCULATED=$FAN_ADJUST
-      if (( TEMP_DIFF > HIGH_TEMP_DIFF ))
+      if (( TEMP_DIFF > ALLOWED_TEMP_DIFF ))
       then
         (( FAN_ADJUST_CALCULATED += FAN_ADJUST ))
       fi
-      if (( TEMP_DIFF > HIGH_TEMP_DIFF * 2 ))
+      if (( TEMP_DIFF > HIGH_TEMP_DIFF ))
       then
         (( FAN_ADJUST_CALCULATED += FAN_ADJUST ))
       fi
