@@ -17,9 +17,10 @@ if [[ ! -e "${NVOC}/1bash" || "$(which shellcheck)" != "" && $(shellcheck -e 203
 then
   echo "################################################################################"
   echo " !!  There is something wrong with your 1bash settings file, nvOC can't start."
-  echo "     Check if it exists or contains errors. "
-  echo "     This program will restart in a minute"
+  echo "     Check if it exists or contains errors. SSH access is now being enabled to"
+  echo "     let you debug. This program will restart in a minute"
   echo ""
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
   sleep 60
   exit
 fi
@@ -36,10 +37,11 @@ then
   echo -e " $(tput bold)################################################################################ $(tput sgr0)"
   echo ""
   echo -e " \e[31m     Your 1bash revision is not compatible with latest update"
-  echo "      Please update your 1bash from 1bash.template and restart nvOC"
-  echo "      This program will restart in a minute"
+  echo "      Please update your 1bash with latest 1bash.template and restart nvOC"
+  echo "      SSH access will be enabled and this program restarts in a minute"
   echo -e " $(tput sgr0)"
   echo -e " $(tput bold)################################################################################ $(tput sgr0)"
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
   sleep 60
   exit
 fi
@@ -48,10 +50,11 @@ if [[ ${current_1bash_ver} != ${template_1bash_ver} ]]
 then
   echo "################################################################################"
   echo " !!  Your 1bash revision is different from the 1bash.template"
-  echo "     This could potentially cause errors."
-  echo "     Please, update your 1bash to comply with the 1bash.template."
+  echo "     This could potentially cause errors. SSH access is now being enabled to"
+  echo "     let you debug. Please, update your 1bash to comply with latest 1bash.template."
   echo "     nvOC will now try to run anyway in 10 seconds"
   echo ""
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
   sleep 10
 fi
 
