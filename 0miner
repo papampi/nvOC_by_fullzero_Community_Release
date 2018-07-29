@@ -53,8 +53,12 @@
 #          ZHASH, PHI1612, PHI2 Algos and Z_EWBF
 # v=0021 : LuKePicci
 #          Support pluggable miners
+# v=0022 : papampi
+#          Ethminer new arguments
 
-nvOC_0miner_dev="0021"
+
+
+nvOC_0miner_dev="0022"
 
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
