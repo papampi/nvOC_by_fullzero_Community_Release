@@ -612,7 +612,6 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 CLAYMORE_VERSION="latest"                        # Choose: latest or any version you add its folder.
 CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
-ETHMINER_SCHEMA="stratum+tcp"                    # Use Ethminer new schema; stratum+ssl, stratum+tcp, stratum+tls, stratum+tls12, stratum1+ssl, stratum1+tcp, stratum1+tls, stratum1+tls12, stratum2+ssl, stratum2+tcp, stratum2+tls, stratum2+tls12
 
 DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 
@@ -625,10 +624,8 @@ Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arg
 Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version,  "latest" or add the version you installed 
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
-BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
-                                                 # Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
-						 # Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
-
+BMINER_PROTOCOL="stratum"                        # Choose for equihash and ethahsh mining protocols:
+                                                 
 CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
 
@@ -639,10 +636,16 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 ########################################################
 
 # Notes: set your coins infom pool and miner coin-specific arguments
-#        No need to add stratum+tcp:// to pool addresses
 #        If you add any new coin here don't forget to also map it to its
 #        algo as explained in previous sections.
 #        You can setup new coins as in the example at the end of this section.
+#        Default Coin Pool Protocols is stratum+tcp, If your pool has other protocols check miner support before changing it
+#        stratum+ssl, stratum+tcp, stratum+tls, stratum+tls12, stratum1+ssl, stratum1+tcp, stratum1+tls, stratum1+tls12, stratum2+ssl, stratum2+tcp, stratum2+tls, stratum2+tls12
+#
+#        If using bminer for equihash or ethash use these protocols:
+#        Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
+#        Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
+
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
