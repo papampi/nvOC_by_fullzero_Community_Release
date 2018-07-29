@@ -110,11 +110,13 @@ v0030="papampi;CryptoNightHeavy"
 v0031="papampi;New EWBF v0.3"  
 v0032="papampi;Version numbering"
 v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
+v0034="LuKePicci;Rearrange settings and explaination comments"
+v0035="LuKePicci;Uniform plusCPU handling"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0033"
-nvOC_1bash_last_compatible="0029"
+nvOC_1bash_ver="0035"
+nvOC_1bash_last_compatible="0035"
 
 
 # Open a terminal to launch miner; will auto launch on boot
@@ -166,11 +168,15 @@ AUTO_START_MINER="NO"      # YES or NO # Set this to NO when troubleshooting, th
 AUTO_SWITCH="NO"       # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING,
                        # SALFTER_MPH_SWITCHING, SALFTER_PROGRAMATIC_SWITCHING
 
-#        - NO disables auto switching, mine previously selected COIN
-#        - WTM_SWTICHING whattomine.com switcher
-#        - SALFTER_NICEHASH_SWITCHING nicehash profit switcher
-#        - SALFTER_MPH_SWITCHING miningpoolhub profit switcher
-#        - SALFTER_PROGRAMATIC_SWITCHING reads the coin to switch to from a given URL
+# Notes: - NO disables auto switching, mine previously selected COIN
+#        - WTM_SWTICHING switch coin over your preferred pools following
+#          whattomine.com profitability charts
+#        - SALFTER_NICEHASH_SWITCHING switch algo over nicehash pools following
+#          nicehash profitabiliy charts
+#        - SALFTER_MPH_SWITCHING switch algo over miningpoolhub pools following
+#          miningpoolhub profitability charts
+#        - SALFTER_PROGRAMATIC_SWITCHING switch algo over pools provided by any
+#          custom api URL following its own profitability logic
 
 NUMBER_GPUS_INSTALLED=""    # Number or "" # Set number of GPUs installed. Watchdog will check installed vs detected. Leave empty to not check
 
@@ -230,17 +236,9 @@ SRR_SERIAL="000055"         # Remote SRR control setting
 __SRR_SLOT="1"              # Remote SRR control setting
 
 
-
-plusCPU="NO"                # YES or NO # Mine XMR with CPU. Set your XMR address in addresses/pools section
-
-threadCOUNT="1"             # Number of CPU threads to use for plusCPU mining. Please check how many threads your CPU has.
-
-
-
 CONTROL_GPU_LED="YES"       # YES or NO # Control GPU LED light. NOTE: It only works on some models
 
 LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OFF, 100 = full brightness
-
 
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
@@ -252,7 +250,7 @@ WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU uti
 
 WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
 
-GPU_UTIL_THRESHOLD="70"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recomended values 70-90) 
+GPU_UTIL_THRESHOLD="70"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recommended values 70-90) 
 	    
 HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want watchdog reboot when all load averages (1 min, 5 min and 15 min) goes over double the CPU cores.
                             # This option uses sysrq_reboot to reboot the rig.
@@ -346,28 +344,6 @@ WARN_PL_DROPS="NO"            # Gives a Warning every time an auto-adjustment oc
 
 USE_COLOR="YES"               # YES or NO, enables Text output beautifier, use bold text and colors
 
-########################################################
-#                                                      #
-# Telegram settings                                    #
-#                                                      #
-########################################################
-
-# The Telegram service can periodically send Telegram messages with the status of your rig.
-# Please watch kk003's video tutorial how to create a telegram bot and get Api Key + User Id:
-# https://youtu.be/HS7Q1zH00bs
-# If You set telegram to "NO" but add CHATID and API, you will only get notifications from system.
-
-TELEGRAM_MESSAGES="NO"               # YES or NO # Set to YES if you want to receive Telegram Periodic Messages
-
-TELEGRAM_ALERTS="NO"                 # YES or NO # Set to No if you Dont want to get Telegram Alerts on warnings
-
-TELEGRAM_TYPE="papampi"              # kk003 or papampi or damNmad or BaliMiner # There are 4 versions. Please choose one
-
-TELEGRAM_TIMEOUT_IN_MINUTES="60"     # timeout
-
-TELEGRAM_CHATID="CHATID"             # Enter your Chat ID here
-
-TELEGRAM_APIKEY="Your Telegram API"  # Enter your API Key here
 
 ########################################################################################
 # GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section                    #
@@ -389,9 +365,53 @@ fi
 # GLOBAL_WORKERNAME implementation End - DO NOT EDIT this section                      #
 ########################################################################################
 
+################################################################
+#                                                              #
+# Algo definitions and Coin->Algo mappings                     #
+#                                                              #
+################################################################
+
+# Notes: nvOC natively supports some algorithms.
+#        You can add a new one but you also have to specify the set of coins that
+#        support it and a compatilbe miner in the next sections.
+#        See the example for NEWCOIN/NEWALGO at the end of this section.
+
+ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 DECRED EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R XEVAN ZHASH"
+
+BITCORE_COINS="BTX"
+CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
+CRYPTONIGHTV7_COINS="XMR,MPH_CRYPTONIGHTV7,NICE_CRYPTONIGHTV7,ETN"
+CRYPTONIGHTHEAVY="LOKI,NICE_CNHEAVY"
+DECRED_COINS="DCR"
+EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
+ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
+GRS_COINS="GRS,MPH_GRS"
+LBRY_COINS="LBC,ZPOOL_LBRY"
+LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
+LYRA2Z_COINS="XZC,MPH_LYRA2Z"
+MYR_GR_COINS="XMY,MPH_MYR_GR"
+NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
+PASCAL_COINS="PASC,PASL"
+PHI1612_COINS="FLM,SERA"
+PHI2_COINS="LUX"
+SIA_COINS="SIA"
+SIB_COINS="SIB,NICE_X11GHOST"
+SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
+SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
+X13_COINS="ONION"
+X16R_COINS="RVN,XMN"
+XEVAN_COINS="BSD"
+ZHASH_COINS="BTG"
+
+# example, adding NEWALGO for NEWCOIN:
+#
+#   ALGOS="${ALGOS} NEWALGO"
+#   NEWALGO_COINS="NEWCOIN"
+
+
 ########################################################
 #                                                      #
-# Addresses, pools, ports, intensity, miner settings   #
+# Common miners settings                               #
 #                                                      #
 ########################################################
 
@@ -410,38 +430,29 @@ WALLET_ADDRESS_FORMAT="."                        # Choose between "." , "/" , "-
 MINER_PWD="x"                                    # Set the miner password. Default: x
                                                  # For zpool use MINER_PWD="$WORKERNAME,c=btc"
                                                  # For dwarfpool and some other pools you can set your email to enable notification from pool
-## ETHASH
-ETHASH_MINER="ETHMINER"                          # Choose "CLAYMORE" or "ETHMINER", "GENOIL" or "BMINER"
-ETHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"    # Chose the format your pool requires
-CLAYMORE_VERSION="latest"                        # Choose: latest or any version you add its folder.
-ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
-CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 
-## EQUIHASH
-EQUIHASH_MINER="DSTM"                            # Choose "DSTM" or "EWBF" or "BMINER"
-EQUIHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"  # Chose the format your pool requires 
-DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
+########################################################
+#                                                      #
+# Algo->miner mapping and specific settings            #
+#                                                      #
+########################################################
 
-EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
-EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" # EWBF Equihash Miner version
+# Notes: miner, intensity and wallet address format for different algos.
+#        Choose a miner either from built in miners or any installed pluggable miner
+#        Test intensity on your rig and edit it or miner will set default values.
+#        Choose the wallet address format your pool requires, or leave common format.
+#        You can define new mappings as in the example at the end of this section.
 
-Z_EWBF_PERCENT="0"                               # EWBF ZHASH Dev fee percent to alter donation percent   
-Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
-Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version,  "latest" or add the version you installed 
-
-BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
-BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
-                                                 # Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
-						 # Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
-
-CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
-
-
-# Miner, Intensity and wallet address format for different algos 
-# "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer", "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr-stak"
-# Test intensity on your rig and edit it or miner will set default values
-
+# Available builtin miners:
+#        Various algos:
+#          "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer",
+#          "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr-stak"
+#        Equihash:
+#          "DSTM", "EWBF", "BMINER"
+#        Zhash:
+#          "Z_EWBF"
+#        Ethash:
+#          "CLAYMORE", "ETHMINER", "GENOIL"
 
 ## BITCORE, TIMETRAVEL10
 BITCORE_INTENSITY="0"
@@ -467,6 +478,14 @@ CRYPTONIGHTHEAVY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 DCR_INTENSITY="0"
 DCR_MINER="TPccminer"
 DCR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## EQUIHASH
+EQUIHASH_MINER="DSTM"
+EQUIHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## ETHASH
+ETHASH_MINER="ETHMINER"
+ETHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## GROESTL
 GROESTL_INTENSITY="0"
@@ -557,17 +576,70 @@ XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 ZHASH_MINER="Z_EWBF"
 ZHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+# example, adding miner for NEWALGO:
+#
+#   ## Newalgo
+#   NEWALGO_MINER="builtin_or_pluggable_miner_name"
+#   NEWALGO_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 
 ################################################################
-#####                                                      #####
-##### COIN, POOL, PORT info section, sorted alphabetically #####
-#####                                                      #####
+#                                                              #
+# CPU mining settings                                          #
+#                                                              #
 ################################################################
 
-## Set your coins info 
-## No Need to add stratum+tcp:// to pool addresses
-## If you added any new coins in the section bellow dont forget to add it to "Coin/Algo identification" section too
+plusCPU="NO"                # YES or NO # Mine XMR with CPU. Set your XMR address in addresses/pools section
+
+threadCOUNT="1"             # Number of CPU threads to use for plusCPU mining. Please check how many threads your CPU has.
+
+plusCPU_MINER="cpuOPT"      # choose "cpuOPT" for the only available builtin cpu miner or your pluggable miner name
+plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+# example, replacing cpuminer for plusCPU:
+#
+#   plusCPU_MINER="builtin_or_pluggable_miner_name"
+
+
+########################################################
+#                                                      #
+# Builtin GPU miners settings                              #
+#                                                      #
+########################################################
+
+CLAYMORE_VERSION="latest"                        # Choose: latest or any version you add its folder.
+ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
+CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
+
+DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
+
+EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
+EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
+EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" # EWBF Equihash Miner version
+
+Z_EWBF_PERCENT="0"                               # EWBF ZHASH Dev fee percent to alter donation percent   
+Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
+Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version,  "latest" or add the version you installed 
+
+BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
+BMINER_PROTOCOL="stratum"                        # Chose for equihash and ethahsh mining protocols:
+                                                 # Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
+						 # Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
+
+CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
+
+
+########################################################
+#                                                      #
+# COIN, POOL, PORT info section, sorted alphabetically #
+#                                                      #
+########################################################
+
+# Notes: set your coins infom pool and miner coin-specific arguments
+#        No need to add stratum+tcp:// to pool addresses
+#        If you add any new coin here don't forget to also map it to its
+#        algo as explained in previous sections.
+#        You can setup new coins as in the example at the end of this section.
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
@@ -955,6 +1027,22 @@ ZEN_POOL="luckpool.org"
 ZEN_PORT="3057"
 ZEN_WORKER="$WORKERNAME"
 
+# plusCPU (defaults: same as XMR)
+plusCPU_ADDRESS="$XMR_ADDRESS"
+plusCPU_EXTENSION_ARGUMENTS="-a cryptonightv7"
+plusCPU_POOL="$XMR_POOL"
+plusCPU_PORT="$XMR_PORT"
+plusCPU_WORKER="$XMR_WORKER"
+
+# example, adding NEWCOIN:
+#
+#   ## Newcoin (NEWCOIN)
+#   NEWCOIN_ADDRESS="replace_with_your_address"
+#   NEWCOIN_EXTENSION_ARGUMENTS=""
+#   NEWCOIN_POOL="newpool.example.org"
+#   NEWCOIN_PORT="4242"
+#   NEWCOIN_WORKER="$WORKERNAME"
+
 
 ###################################################
 # Claymore_Dual Mining                            #
@@ -1153,36 +1241,6 @@ MPH_GRS_POOL="hub.miningpoolhub.com"
 MPH_GRS_PORT="17004"
 MPH_GRS_EXTENSION_ARGUMENTS=""
 
-################################################################
-#                                                              #
-# Coin/Algo identification                                     #
-#                                                              #
-################################################################
-
-BITCORE_COINS="BTX"
-CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
-CRYPTONIGHTV7_COINS="XMR,MPH_CRYPTONIGHTV7,NICE_CRYPTONIGHTV7,ETN"
-CRYPTONIGHTHEAVY="LOKI,NICE_CNHEAVY"
-DECRED_COINS="DCR"
-EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
-ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
-GRS_COINS="GRS,MPH_GRS"
-LBRY_COINS="LBC,ZPOOL_LBRY"
-LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
-LYRA2Z_COINS="XZC,MPH_LYRA2Z"
-MYR_GR_COINS="XMY,MPH_MYR_GR"
-NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
-PASCAL_COINS="PASC,PASL"
-PHI1612_COINS="FLM,SERA"
-PHI2_COINS="LUX"
-SIA_COINS="SIA"
-SIB_COINS="SIB,NICE_X11GHOST"
-SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
-SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
-X13_COINS="ONION"
-X16R_COINS="RVN,XMN"
-XEVAN_COINS="BSD"
-ZHASH_COINS="BTG"
 
 #####################################################################
 #                                                                   #
@@ -1302,148 +1360,178 @@ MEMORY_OVERCLOCK_18=100
 ########################################################
 
 # OC settings used according to current mining ALGO
-# Deafault values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
+
+# Uppercase algos are those used for single coin mining (no auto switch) and by WTM switcher
 # Lowercase algos are those used by all salfter-based switchers
-# Uppercase algos are those used for single coin mining and by WTM switcher
+
+# For any missing algo settings the following fallback policy is applied:
+#   *_POWERLIMIT_WATTS defaults to global POWERLIMIT_WATTS value
+#   *_*_OVERCLOCK defaults both algo specific OC offsets to 0
+
+# Recommended values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
 
 # BITCORE, TIMETRAVEL10
-BITCORE_POWERLIMIT_WATTS=100        # Recomended value for some GTX-1060: 65
-BITCORE_CORE_OVERCLOCK=0            # Recomended value for some GTX-1060: 150
-BITCORE_MEMORY_OVERCLOCK=0          # Recomended value for some GTX-1060: 800
+BITCORE_POWERLIMIT_WATTS=100               # Recommended value for some GTX-1060: 65
+BITCORE_CORE_OVERCLOCK=0                 # Recommended value for some GTX-1060: 150
+BITCORE_MEMORY_OVERCLOCK=0               # Recommended value for some GTX-1060: 800
 
 # Cryptonight
-CRYPTONIGHT_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
-CRYPTONIGHT_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
-CRYPTONIGHT_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
+CRYPTONIGHT_POWERLIMIT_WATTS=100           # Recommended value for some GTX-1060: 62
+CRYPTONIGHT_CORE_OVERCLOCK=0             # Recommended value for some GTX-1060: 155
+CRYPTONIGHT_MEMORY_OVERCLOCK=0           # Recommended value for some GTX-1060: -300
 
 # CRYPTONIGHTV7
-CRYPTONIGHTV7_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
-CRYPTONIGHTV7_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
-CRYPTONIGHTV7_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
+CRYPTONIGHTV7_POWERLIMIT_WATTS=100         # Recommended value for some GTX-1060: 62
+CRYPTONIGHTV7_CORE_OVERCLOCK=0           # Recommended value for some GTX-1060: 155
+CRYPTONIGHTV7_MEMORY_OVERCLOCK=0         # Recommended value for some GTX-1060: -300
 
 # CRYPTONIGHT HEAVY
-CRYPTONIGHTHEAVY_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
-CRYPTONIGHTHEAVY_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
-CRYPTONIGHTHEAVY_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
+CRYPTONIGHTHEAVY_POWERLIMIT_WATTS=100      # Recommended value for some GTX-1060: 62
+CRYPTONIGHTHEAVY_CORE_OVERCLOCK=0        # Recommended value for some GTX-1060: 155
+CRYPTONIGHTHEAVY_MEMORY_OVERCLOCK=0      # Recommended value for some GTX-1060: -300
 
 # Equihash
-EQUIHASH_POWERLIMIT_WATTS=100              # Recomended value for some GTX-1060: 76
-EQUIHASH_CORE_OVERCLOCK=0                # Recomended value for some GTX-1060: 150
-EQUIHASH_MEMORY_OVERCLOCK=0              # Recomended value for some GTX-1060: 400
+EQUIHASH_POWERLIMIT_WATTS=100              # Recommended value for some GTX-1060: 76
+EQUIHASH_CORE_OVERCLOCK=0                # Recommended value for some GTX-1060: 150
+EQUIHASH_MEMORY_OVERCLOCK=0              # Recommended value for some GTX-1060: 400
 
 # Ethash
-ETHASH_POWERLIMIT_WATTS=100                # Recomended value for some GTX-1060: 76
-ETHASH_CORE_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
-ETHASH_MEMORY_OVERCLOCK=0                # Recomended value for some GTX-1060: 1600
+ETHASH_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 76
+ETHASH_CORE_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+ETHASH_MEMORY_OVERCLOCK=0                # Recommended value for some GTX-1060: 1600
 
 # lyra2vRev2
-LYRA2REV2_POWERLIMIT_WATTS=100             # Recomended value for some GTX-1060: 65
-LYRA2REV2_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 135
-LYRA2REV2_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: -1200
+LYRA2REV2_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 65
+LYRA2REV2_CORE_OVERCLOCK=0               # Recommended value for some GTX-1060: 135
+LYRA2REV2_MEMORY_OVERCLOCK=0             # Recommended value for some GTX-1060: -1200
 
 # lyra2v2
-LYRA2V2_POWERLIMIT_WATTS=100               # Recomended value for some GTX-1060: 65
-LYRA2V2_CORE_OVERCLOCK=0                 # Recomended value for some GTX-1060: 160
-LYRA2V2_MEMORY_OVERCLOCK=0               # Recomended value for some GTX-1060: -1000
+LYRA2V2_POWERLIMIT_WATTS=100               # Recommended value for some GTX-1060: 65
+LYRA2V2_CORE_OVERCLOCK=0                 # Recommended value for some GTX-1060: 160
+LYRA2V2_MEMORY_OVERCLOCK=0               # Recommended value for some GTX-1060: -1000
 
 # Neoscrypt
-NEOSCRYPT_POWERLIMIT_WATTS=100             # Recomended value for some GTX-1060: 80
-NEOSCRYPT_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 150
-NEOSCRYPT_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: 800
+NEOSCRYPT_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 80
+NEOSCRYPT_CORE_OVERCLOCK=0               # Recommended value for some GTX-1060: 150
+NEOSCRYPT_MEMORY_OVERCLOCK=0             # Recommended value for some GTX-1060: 800
 
 # PHI1612
-PHI1612_POWERLIMIT_WATTS=100           # 
-PHI1612_CORE_OVERCLOCK=0               # 
-PHI1612_MEMORY_OVERCLOCK=0             # 
+PHI1612_POWERLIMIT_WATTS=100               # No recommended value available
+PHI1612_CORE_OVERCLOCK=0                 # No recommended value available
+PHI1612_MEMORY_OVERCLOCK=0               # No recommended value available
 
 # PHI2
-PHI2_POWERLIMIT_WATTS=100           # 
-PHI2_CORE_OVERCLOCK=0               # 
-PHI2_MEMORY_OVERCLOCK=0             # 
+PHI2_POWERLIMIT_WATTS=100                  # No recommended value available
+PHI2_CORE_OVERCLOCK=0                    # No recommended value available
+PHI2_MEMORY_OVERCLOCK=0                  # No recommended value available
 
 # Skunk
-SKUNK_POWERLIMIT_WATTS=100                 # Recomended value for some GTX-1060: 78
-SKUNK_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 150
-SKUNK_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 1000
+SKUNK_POWERLIMIT_WATTS=100                 # Recommended value for some GTX-1060: 78
+SKUNK_CORE_OVERCLOCK=0                   # Recommended value for some GTX-1060: 150
+SKUNK_MEMORY_OVERCLOCK=0                 # Recommended value for some GTX-1060: 1000
 
 # X16R
-X16R_POWERLIMIT_WATTS=100                  # Recomended value for some GTX-1060: 65
-X16R_CORE_OVERCLOCK=0                    # Recomended value for some GTX-1060: 100
-X16R_MEMORY_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
+X16R_POWERLIMIT_WATTS=100                  # Recommended value for some GTX-1060: 65
+X16R_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
+X16R_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
 
 # Xevan
-XEVAN_POWERLIMIT_WATTS=100                 # Recomended value for some GTX-1060: 65
-XEVAN_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
-XEVAN_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 600
+XEVAN_POWERLIMIT_WATTS=100                 # Recommended value for some GTX-1060: 65
+XEVAN_CORE_OVERCLOCK=0                   # Recommended value for some GTX-1060: 100
+XEVAN_MEMORY_OVERCLOCK=0                 # Recommended value for some GTX-1060: 600
 
 # ZHASH
-ZHASH_POWERLIMIT_WATTS=100           # 
-ZHASH_CORE_OVERCLOCK=150               # 
-ZHASH_MEMORY_OVERCLOCK=150             # 
+ZHASH_POWERLIMIT_WATTS=100                 # No recommended value available
+ZHASH_CORE_OVERCLOCK=150                 # No recommended value available
+ZHASH_MEMORY_OVERCLOCK=150               # No recommended value available
 
-daggerhashimoto_POWERLIMIT_WATTS=100       # Recomended value for some GTX-1060: 76
-daggerhashimoto_CORE_OVERCLOCK=0         # Recomended value for some GTX-1060: -200
-daggerhashimoto_MEMORY_OVERCLOCK=0       # Recomended value for some GTX-1060: 1200
+### IGNORE PL & OC SETTINGS BELOW THIS LINE IF YOU DON'T USE ANY SALFTER_* AUTO SWITCHER
 
-equihash_POWERLIMIT_WATTS=100              # Recomended value for some GTX-1060: 76
-equihash_CORE_OVERCLOCK=0                # Recomended value for some GTX-1060: 150
-equihash_MEMORY_OVERCLOCK=0              # Recomended value for some GTX-1060: 400
+# Nicehash and MiningPoolHub sometimes use different names fot the same algo. Therefore:
+#  - SALFTER_NICEHASH_SWITCHING matches Nicehash naming convention
+#  - SALFTER_MPH_SWITCHING matches MiningPoolHub naming convention
+#  - SALFTER_PROGRAMATIC_SWITCHING also matches MiningPoolHub convention
+# For your convenience, the matching naming convention is indicated above each settings block
 
-neoscrypt_POWERLIMIT_WATTS=100             # Recomended value for some GTX-1060: 80
-neoscrypt_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 150
-neoscrypt_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: 800
+# daggerhashimoto @ NICEHASH
+daggerhashimoto_POWERLIMIT_WATTS=100       # Recommended value for some GTX-1060: 76
+daggerhashimoto_CORE_OVERCLOCK=0         # Recommended value for some GTX-1060: -200
+daggerhashimoto_MEMORY_OVERCLOCK=0       # Recommended value for some GTX-1060: 1200
 
-lyra2rev2_POWERLIMIT_WATTS=100             # Recomended value for some GTX-1060: 120
-lyra2rev2_CORE_OVERCLOCK=0               # Recomended value for some GTX-1060: 100
-lyra2rev2_MEMORY_OVERCLOCK=0             # Recomended value for some GTX-1060: 100
+# lbry @ NICEHASH
+lbry_POWERLIMIT_WATTS=100                  # Recommended value for some GTX-1060: 120
+lbry_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
+lbry_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
 
-lbry_POWERLIMIT_WATTS=100                  # Recomended value for some GTX-1060: 120
-lbry_CORE_OVERCLOCK=0                    # Recomended value for some GTX-1060: 100
-lbry_MEMORY_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
+# lyra2rev2 @ NICEHASH
+lyra2rev2_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 120
+lyra2rev2_CORE_OVERCLOCK=0               # Recommended value for some GTX-1060: 100
+lyra2rev2_MEMORY_OVERCLOCK=0             # Recommended value for some GTX-1060: 100
 
-blake_vanilla_POWERLIMIT_WATTS=100         # Recomended value for some GTX-1060: 120
-blake_vanilla_CORE_OVERCLOCK=0           # Recomended value for some GTX-1060: 100
-blake_vanilla_MEMORY_OVERCLOCK=100       # Recomended value for some GTX-1060: 100
+# equihash @ NICEHASH & MININGPOOLHUB
+equihash_POWERLIMIT_WATTS=100              # Recommended value for some GTX-1060: 76
+equihash_CORE_OVERCLOCK=0                # Recommended value for some GTX-1060: 150
+equihash_MEMORY_OVERCLOCK=0              # Recommended value for some GTX-1060: 400
 
-cryptonight_POWERLIMIT_WATTS=100           # Recomended value for some GTX-1060: 62
-cryptonight_CORE_OVERCLOCK=0             # Recomended value for some GTX-1060: 155
-cryptonight_MEMORY_OVERCLOCK=0           # Recomended value for some GTX-1060: -300
+# neoscrypt @ NICEHASH & MININGPOOLHUB
+neoscrypt_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 80
+neoscrypt_CORE_OVERCLOCK=0               # Recommended value for some GTX-1060: 150
+neoscrypt_MEMORY_OVERCLOCK=0             # Recommended value for some GTX-1060: 800
 
-cryptonight_monero_POWERLIMIT_WATTS=100    # Recomended value for some GTX-1060: 62
-cryptonight_monero_CORE_OVERCLOCK=0      # Recomended value for some GTX-1060: 155
-cryptonight_monero_MEMORY_OVERCLOCK=0    # Recomended value for some GTX-1060: -300
+# cryptonight_monero @ MININGPOOLHUB
+cryptonight_monero_POWERLIMIT_WATTS=100    # Recommended value for some GTX-1060: 62
+cryptonight_monero_CORE_OVERCLOCK=0      # Recommended value for some GTX-1060: 155
+cryptonight_monero_MEMORY_OVERCLOCK=0    # Recommended value for some GTX-1060: -300
 
-groestl_POWERLIMIT_WATTS=100               # Recomended value for some GTX-1060: 120
-groestl_CORE_OVERCLOCK=0                 # Recomended value for some GTX-1060: 100
-groestl_MEMORY_OVERCLOCK=0               # Recomended value for some GTX-1060: 100
+# ethash @ MININGPOOLHUB
+ethash_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 76
+ethash_CORE_OVERCLOCK=0                  # Recommended value for some GTX-1060: -200
+ethash_MEMORY_OVERCLOCK=0                # Recommended value for some GTX-1060: 1200
 
-keccak_POWERLIMIT_WATTS=100                # Recomended value for some GTX-1060: 120
-keccak_CORE_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
-keccak_MEMORY_OVERCLOCK=0                # Recomended value for some GTX-1060: 100
+# groestl @ MININGPOOLHUB
+groestl_POWERLIMIT_WATTS=100               # Recommended value for some GTX-1060: 120
+groestl_CORE_OVERCLOCK=0                 # Recommended value for some GTX-1060: 100
+groestl_MEMORY_OVERCLOCK=0               # Recommended value for some GTX-1060: 100
 
-myriad_groestl_POWERLIMIT_WATTS=100        # Recomended value for some GTX-1060: 120
-myriad_groestl_CORE_OVERCLOCK=0          # Recomended value for some GTX-1060: 100
-myriad_groestl_MEMORY_OVERCLOCK=0        # Recomended value for some GTX-1060: 100
+# keccak @ MININGPOOLHUB
+keccak_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 120
+keccak_CORE_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+keccak_MEMORY_OVERCLOCK=0                # Recommended value for some GTX-1060: 100
 
-qubit_POWERLIMIT_WATTS=100                 # Recomended value for some GTX-1060: 120
-qubit_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
-qubit_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 100
+# lyra2re2 @ MININGPOOLHUB
+lyra2re2_POWERLIMIT_WATTS=100              # Recommended value for some GTX-1060: 120
+lyra2re2_CORE_OVERCLOCK=0                # Recommended value for some GTX-1060: 100
+lyra2re2_MEMORY_OVERCLOCK=0              # Recommended value for some GTX-1060: 100
 
-scrypt_POWERLIMIT_WATTS=100                # Recomended value for some GTX-1060: 120
-scrypt_CORE_OVERCLOCK=0                  # Recomended value for some GTX-1060: 100
-scrypt_MEMORY_OVERCLOCK=0                # Recomended value for some GTX-1060: 100
+# myriad_groestl @ MININGPOOLHUB
+myriad_groestl_POWERLIMIT_WATTS=100        # Recommended value for some GTX-1060: 120
+myriad_groestl_CORE_OVERCLOCK=0          # Recommended value for some GTX-1060: 100
+myriad_groestl_MEMORY_OVERCLOCK=0        # Recommended value for some GTX-1060: 100
 
-sia_POWERLIMIT_WATTS=100                   # Recomended value for some GTX-1060: 120
-sia_CORE_OVERCLOCK=0                     # Recomended value for some GTX-1060: 100
-sia_MEMORY_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
+# qubit @ MININGPOOLHUB
+qubit_POWERLIMIT_WATTS=100                 # Recommended value for some GTX-1060: 120
+qubit_CORE_OVERCLOCK=0                   # Recommended value for some GTX-1060: 100
+qubit_MEMORY_OVERCLOCK=0                 # Recommended value for some GTX-1060: 100
 
-skein_POWERLIMIT_WATTS=100                 # Recomended value for some GTX-1060: 120
-skein_CORE_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
-skein_MEMORY_OVERCLOCK=0                 # Recomended value for some GTX-1060: 100
+# scrypt @ MININGPOOLHUB
+scrypt_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 120
+scrypt_CORE_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+scrypt_MEMORY_OVERCLOCK=0                # Recommended value for some GTX-1060: 100
 
-x11_POWERLIMIT_WATTS=100                   # Recomended value for some GTX-1060: 120
-x11_CORE_OVERCLOCK=0                     # Recomended value for some GTX-1060: 100
-x11_MEMORY_OVERCLOCK=0                   # Recomended value for some GTX-1060: 100
+# sia @ MININGPOOLHUB
+sia_POWERLIMIT_WATTS=100                   # Recommended value for some GTX-1060: 120
+sia_CORE_OVERCLOCK=0                     # Recommended value for some GTX-1060: 100
+sia_MEMORY_OVERCLOCK=0                   # Recommended value for some GTX-1060: 100
+
+# skein @ MININGPOOLHUB
+skein_POWERLIMIT_WATTS=100                 # Recommended value for some GTX-1060: 120
+skein_CORE_OVERCLOCK=0                   # Recommended value for some GTX-1060: 100
+skein_MEMORY_OVERCLOCK=0                 # Recommended value for some GTX-1060: 100
+
+# x11 @ MININGPOOLHUB
+x11_POWERLIMIT_WATTS=100                   # Recommended value for some GTX-1060: 120
+x11_CORE_OVERCLOCK=0                     # Recommended value for some GTX-1060: 100
+x11_MEMORY_OVERCLOCK=0                   # Recommended value for some GTX-1060: 100
 
 ################################################################
 #                                                              #
@@ -1507,3 +1595,26 @@ WORKER_NAME="$WORKERNAME"
 PROFIT_CHECK_TIMEOUT=600
 
 # ENSURE YOU USE MINER_TEMP_CONTROL for fanspeed with salfter switcher
+
+########################################################
+#                                                      #
+# Telegram settings                                    #
+#                                                      #
+########################################################
+
+# The Telegram service can periodically send Telegram messages with the status of your rig.
+# Please watch kk003's video tutorial how to create a telegram bot and get Api Key + User Id:
+# https://youtu.be/HS7Q1zH00bs
+# If You set telegram to "NO" but add CHATID and API, you will only get notifications from system.
+
+TELEGRAM_MESSAGES="NO"               # YES or NO # Set to YES if you want to receive Telegram Periodic Messages
+
+TELEGRAM_ALERTS="NO"                 # YES or NO # Set to No if you Dont want to get Telegram Alerts on warnings
+
+TELEGRAM_TYPE="papampi"              # kk003 or papampi or damNmad or BaliMiner # There are 4 versions. Please choose one
+
+TELEGRAM_TIMEOUT_IN_MINUTES="60"     # timeout
+
+TELEGRAM_CHATID="CHATID"             # Enter your Chat ID here
+
+TELEGRAM_APIKEY="Your Telegram API"  # Enter your API Key here
