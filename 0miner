@@ -91,12 +91,14 @@ UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
 UVERSION="_VERSION"
 UCUDA="_CUDA"
+USCHEMA="_STRATUM_SCHEMA"
 
 xpool=$COIN$UPOOL
 xport=$COIN$UPORT
 xaddr=$COIN$UADDR
 xwork=$COIN$UWORK
 xext=$COIN$UEXT
+xschema=$COIN$USCHEMA
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
@@ -144,6 +146,11 @@ then
   MPH_ETHASH_ADDRESS=$MPH_ADDRESS
   MPH_SKEIN_ADDRESS=$MPH_ADDRESS
   MPH_CRYPTONIGHTV7==$MPH_ADDRESS
+fi
+
+if [[ ${!xschema} != "" ]]
+then
+  xschema="stratum+tcp"
 fi
 
 ## CLAYMORE_DUAL
@@ -211,20 +218,20 @@ elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $A
 then
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
-  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o ${!xschema}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
-  eval $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  eval $LAUNCH $HCD -o ${!xschema}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
 then
   HCD="${NVOC}"/miners/pasc/sgminer
   UCCALGO="-k pascal"
-  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o ${!xschema}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
   ## CRYPTONIGHTV7
 elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
