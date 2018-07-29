@@ -112,6 +112,8 @@ v0032="papampi;Version numbering"
 v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
 v0034="LuKePicci;Rearrange settings and explaination comments"
 v0035="LuKePicci;Uniform plusCPU handling"
+v0036="papampi;Ethminer new arguments"
+
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
@@ -608,8 +610,9 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 ########################################################
 
 CLAYMORE_VERSION="latest"                        # Choose: latest or any version you add its folder.
-ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
 CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
+ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
+ETHMINER_SCHEMA="stratum+tcp"                    # Use Ethminer new schema; stratum+ssl, stratum+tcp, stratum+tls, stratum+tls12, stratum1+ssl, stratum1+tcp, stratum1+tls, stratum1+tls12, stratum2+ssl, stratum2+tcp, stratum2+tls, stratum2+tls12
 
 DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 
