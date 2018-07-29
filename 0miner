@@ -149,8 +149,8 @@ then
 fi
 
 if [[ ${!xproto} == "" ]]
-then
-  xproto="stratum+tcp"
+then 
+  eval $xproto="stratum+tcp"
 fi
 
 ## CLAYMORE_DUAL
