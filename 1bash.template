@@ -112,13 +112,13 @@ v0032="papampi;Version numbering"
 v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
 v0034="LuKePicci;Rearrange settings and explaination comments"
 v0035="LuKePicci;Uniform plusCPU handling"
-v0036="papampi;Ethminer new arguments"
+v0036="papampi;Ethminer new arguments, Coin Stratum Schema"
 
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
 nvOC_1bash_ver="0036"
-nvOC_1bash_last_compatible="0035"
+nvOC_1bash_last_compatible="0036"
 
 
 # Open a terminal to launch miner; will auto launch on boot
@@ -650,6 +650,8 @@ ALTCOM_EXTENSION_ARGUMENTS=""
 ALTCOM_POOL="ALTCOM POOL"
 ALTCOM_PORT="ALTCOM PORT"
 ALTCOM_WORKER="$WORKERNAME"
+ALTCOM_STRATUM_SCHEMA="stratum+tcp"
+
 
 # Bitcoin Interest (BCI)
 BCI_ADDRESS="replace_with_your_address"
@@ -657,6 +659,7 @@ BCI_EXTENSION_ARGUMENTS=""
 BCI_POOL="replace_with_your_BCI_POOL"
 BCI_PORT="replace_with_your_BCI_PORT"
 BCI_WORKER="$WORKERNAME"
+BCI_STRATUM_SCHEMA="stratum+tcp"
 
 # Bitsend (BSD)
 BSD_ADDRESS="replace_with_your_address"
@@ -664,6 +667,7 @@ BSD_EXTENSION_ARGUMENTS=""
 BSD_POOL="bsd.suprnova.cc"
 BSD_PORT="8686"
 BSD_WORKER="$WORKERNAME"
+BSD_STRATUM_SCHEMA="stratum+tcp"
 
 # Bitcoin Private (BTCP)
 BTCP_ADDRESS="replace_with_your_address"
@@ -671,6 +675,7 @@ BTCP_EXTENSION_ARGUMENTS=""
 BTCP_POOL="BTCP_POOL_ADDRESS"
 BTCP_PORT="BTCP_POOL_PORT"
 BTCP_WORKER="$WORKERNAME"
+BTCP_STRATUM_SCHEMA="stratum+tcp"
 
 # Bitcoinz (BTCZ)
 BTCZ_ADDRESS="replace_with_your_address"
@@ -678,6 +683,7 @@ BTCZ_EXTENSION_ARGUMENTS=""
 BTCZ_POOL="btcz.suprnova.cc"
 BTCZ_PORT="5586"
 BTCZ_WORKER="$WORKERNAME"
+BTCZ_STRATUM_SCHEMA="stratum+tcp"
 
 # Bitcoin Gold (BTG)
 BTG_ADDRESS="replace_with_your_address"
@@ -685,6 +691,7 @@ BTG_EXTENSION_ARGUMENTS="--algo 144_5 --pers BgoldPoW"
 BTG_POOL="us-east.equihash-hub.miningpoolhub.com"
 BTG_PORT="20595"
 BTG_WORKER="$WORKERNAME"
+BTG_STRATUM_SCHEMA="stratum+tcp"
 
 # Bitcore (BTX)
 BTX_ADDRESS="replace_with_your_address"
@@ -692,6 +699,7 @@ BTX_EXTENSION_ARGUMENTS=""
 BTX_POOL="btx.suprnova.cc"
 BTX_PORT="3629"
 BTX_WORKER="$WORKERNAME"
+BTX_STRATUM_SCHEMA="stratum+tcp"
 
 # Callisto (CLO)
 CLO_ADDRESS="replace_with_your_address"
@@ -699,6 +707,7 @@ CLO_EXTENSION_ARGUMENTS=""
 CLO_POOL="clo.2miners.com"
 CLO_PORT="3030"
 CLO_WORKER="$WORKERNAME"
+CLO_STRATUM_SCHEMA="stratum+tcp"
 
 # CrowdCoin (CRC)
 CRC_ADDRESS="replace_with_your_address"
@@ -706,6 +715,7 @@ CRC_EXTENSION_ARGUMENTS=""
 CRC_POOL="replace_with_pool_address"
 CRC_PORT="replace_with_pool_port"
 CRC_WORKER="$WORKERNAME"
+CRC_STRATUM_SCHEMA="stratum+tcp"
 
 # Decred (DCR)
 DCR_ADDRESS="replace_with_your_address"
@@ -713,6 +723,7 @@ DCR_EXTENSION_ARGUMENTS=""
 DCR_POOL="yiimp.eu"
 DCR_PORT="3252"
 DCR_WORKER="$WORKERNAME"
+DCR_STRATUM_SCHEMA="stratum+tcp"
 
 # Digibyte (DGB)
 DGB_ADDRESS="replace_with_your_address"
@@ -720,6 +731,7 @@ DGB_EXTENSION_ARGUMENTS=""
 DGB_POOL="hub.miningpoolhub.com"
 DGB_PORT="20527"
 DGB_WORKER="$WORKERNAME"
+DGB_STRATUM_SCHEMA="stratum+tcp"
 
 # Desire (DSR)
 DSR_ADDRESS="replace_with_your_address"
@@ -727,6 +739,7 @@ DSR_EXTENSION_ARGUMENTS=""
 DSR_POOL="DSR_POOL"
 DSR_PORT="DSR_PORT"
 DSR_WORKER="$WORKERNAME"
+DSR_STRATUM_SCHEMA="stratum+tcp"
 
 #Ellaism (ELLA)
 ELLA_ADDRESS="replace_with_your_address"
@@ -734,6 +747,7 @@ ELLA_EXTENSION_ARGUMENTS=""
 ELLA_POOL="replace_with_pool_address"
 ELLA_PORT="replace_with_pool_port"
 ELLA_WORKER="$WORKERNAME"
+ELLA_STRATUM_SCHEMA="stratum+tcp"
 
 # Ethereum Classic (ETC)
 ETC_ADDRESS="replace_with_your_address"
@@ -741,6 +755,7 @@ ETC_EXTENSION_ARGUMENTS=""                               #claymore opts: "-allco
 ETC_POOL="europe.ethash-hub.miningpoolhub.com"
 ETC_PORT="20555"
 ETC_WORKER="$WORKERNAME"
+ETC_STRATUM_SCHEMA="stratum+tcp"
 
 # Ethereum (ETH)
 ETH_ADDRESS="replace_with_your_address"
@@ -748,6 +763,7 @@ ETH_EXTENSION_ARGUMENTS=""
 ETH_POOL="europe.ethash-hub.miningpoolhub.com"
 ETH_PORT="20535"
 ETH_WORKER="$WORKERNAME"
+ETH_STRATUM_SCHEMA="stratum+tcp"
 
 # Electroneum(ETN) 
 ETN_ADDRESS="replace_with_your_address"
@@ -755,6 +771,7 @@ ETN_EXTENSION_ARGUMENTS=""
 ETN_POOL="ETN POOL"
 ETN_PORT="ETN PORT"
 ETN_WORKER="$WORKERNAME"
+ETN_STRATUM_SCHEMA="stratum+tcp"
 
 # Metaverse (ETP)
 ETP_ADDRESS="replace_with_your_address"
@@ -762,6 +779,7 @@ ETP_EXTENSION_ARGUMENTS=""
 ETP_POOL="replace_with_your_ETP_POOL"
 ETP_PORT="replace_with_your_ETP_PORT"
 ETP_WORKER="$WORKERNAME"
+ETP_STRATUM_SCHEMA="stratum+tcp"
 
 # Expanse (EXP)
 EXP_ADDRESS="replace_with_your_address"
@@ -769,6 +787,7 @@ EXP_EXTENSION_ARGUMENTS=""
 EXP_POOL="exp-us.dwarfpool.com:"
 EXP_PORT="81"
 EXP_WORKER="$WORKERNAME"
+EXP_STRATUM_SCHEMA="stratum+tcp"
 
 # Folm (FLM)
 FLM_ADDRESS="replace_with_your_address"
@@ -776,6 +795,7 @@ FLM_EXTENSION_ARGUMENTS=""
 FLM_POOL="replace_with_your_FLM_POOL"
 FLM_PORT="replace_with_your_FLM_PORT"
 FLM_WORKER="$WORKERNAME"
+FLM_STRATUM_SCHEMA="stratum+tcp"
 
 # FeatherCoin (FTC)
 FTC_ADDRESS="replace_with_your_address"
@@ -783,6 +803,7 @@ FTC_EXTENSION_ARGUMENTS=""
 FTC_POOL="hub.miningpoolhub.com"
 FTC_PORT="20510"
 FTC_WORKER="$WORKERNAME"
+FTC_STRATUM_SCHEMA="stratum+tcp"
 
 # GoByte (GBX)
 GBX_ADDRESS="replace_with_your_address"
@@ -790,6 +811,7 @@ GBX_EXTENSION_ARGUMENTS=""
 GBX_POOL="replace_with_pool_address"
 GBX_PORT="replace_with_pool_port"
 GBX_WORKER="$WORKERNAME"
+GBX_STRATUM_SCHEMA="stratum+tcp"
 
 # Groestl (GRS)
 GRS_ADDRESS="replace_with_your_address"
@@ -797,6 +819,7 @@ GRS_EXTENSION_ARGUMENTS=""
 GRS_POOL="moria.dwarfpool.com"
 GRS_PORT="3345"
 GRS_WORKER="$WORKERNAME"
+GRS_STRATUM_SCHEMA="stratum+tcp"
 
 # Hush (HUSH)
 HUSH_ADDRESS="replace_with_your_address"
@@ -804,6 +827,7 @@ HUSH_EXTENSION_ARGUMENTS=""
 HUSH_POOL="zdash.suprnova.cc"
 HUSH_PORT="4048"
 HUSH_WORKER="$WORKERNAME"
+HUSH_STRATUM_SCHEMA="stratum+tcp"
 
 # Komodo (KMD)
 KMD_ADDRESS="replace_with_your_address"
@@ -811,6 +835,7 @@ KMD_EXTENSION_ARGUMENTS=""
 KMD_POOL="luckpool.org"
 KMD_PORT="3857"
 KMD_WORKER="$WORKERNAME"
+KMD_STRATUM_SCHEMA="stratum+tcp"
 
 # Karbo (KRB)
 KRB_ADDRESS="replace_with_your_address"
@@ -818,6 +843,7 @@ KRB_EXTENSION_ARGUMENTS=""
 KRB_POOL="krb.sberex.com"
 KRB_PORT="5555"
 KRB_WORKER="$WORKERNAME"
+KRB_STRATUM_SCHEMA="stratum+tcp"
 
 # LBRY (LBC) 
 LBC_ADDRESS="replace_with_your_address"
@@ -825,6 +851,7 @@ LBC_EXTENSION_ARGUMENTS=""
 LBC_POOL="lbry.suprnova.cc"
 LBC_PORT="6256"
 LBC_WORKER="$WORKERNAME"
+LBC_STRATUM_SCHEMA="stratum+tcp"
 
 #Loki (LOKI)
 LOKI_ADDRESS="replace_with_your_address"
@@ -832,6 +859,7 @@ LOKI_EXTENSION_ARGUMENTS=""
 LOKI_POOL="LOKI_POOL"
 LOKI_PORT="LOKI_PORT"
 LOKI_WORKER="$WORKERNAME"
+LOKI_STRATUM_SCHEMA="stratum+tcp"
 
 # Lux Coin (LUX)
 LUX_ADDRESS="replace_with_your_address"
@@ -839,6 +867,7 @@ LUX_EXTENSION_ARGUMENTS=""
 LUX_POOL="yiimp.eu"
 LUX_PORT="8333"
 LUX_WORKER="$WORKERNAME"
+LUX_STRATUM_SCHEMA="stratum+tcp"
 
 # Mona Coin (MONA)
 MONA_ADDRESS="replace_with_your_address"
@@ -846,6 +875,7 @@ MONA_EXTENSION_ARGUMENTS=""
 MONA_POOL="mona.suprnova.cc"
 MONA_PORT="2995"
 MONA_WORKER="$WORKERNAME"
+MONA_STRATUM_SCHEMA="stratum+tcp"
 
 # Music Coin (MUSIC)
 MUSIC_ADDRESS="replace_with_your_address"
@@ -853,12 +883,14 @@ MUSIC_EXTENSION_ARGUMENTS=""
 MUSIC_POOL="eus.gmc.epool.io"
 MUSIC_PORT="8008"
 MUSIC_WORKER="$WORKERNAME"
+MUSIC_STRATUM_SCHEMA="stratum+tcp"
 
 # DeepOnion (ONION)
 ONION_ADDRESS="replace_with_your_address"
 ONION_EXTENSION_ARGUMENTS=""
 ONION_POOL="kawaiipool.party"
 ONION_PORT="3633"
+ONION_STRATUM_SCHEMA="stratum+tcp"
 
 # Orbitcoin (ORB)
 ORB_ADDRESS="replace_with_your_address"
@@ -866,6 +898,7 @@ ORB_EXTENSION_ARGUMENTS=""
 ORB_POOL="strat.dnb.io"
 ORB_PORT="3031"
 ORB_WORKER="$WORKERNAME"
+ORB_STRATUM_SCHEMA="stratum+tcp"
 
 # Pascal Coin (PASC)
 PASC_ADDRESS="replace_with_your_address"
@@ -873,6 +906,7 @@ PASC_EXTENSION_ARGUMENTS=""
 PASC_POOL="pasc-us-east1.nanopool.org"
 PASC_PORT="15555"
 PASC_WORKER="$WORKERNAME"
+PASC_STRATUM_SCHEMA="stratum+tcp"
 
 # Pascal Lite (PASL)
 PASL_ADDRESS="replace_with_your_address"
@@ -880,6 +914,7 @@ PASL_EXTENSION_ARGUMENTS=""
 PASL_POOL="mine.pasl.fairpool.xyz"
 PASL_PORT="4009"
 PASL_WORKER="$WORKERNAME"
+PASL_STRATUM_SCHEMA="stratum+tcp"
 
 # Pirl Coin (PIRL)
 PIRL_ADDRESS="replace_with_your_address"
@@ -887,6 +922,7 @@ PIRL_EXTENSION_ARGUMENTS=""
 PIRL_POOL="PIRL POOL"
 PIRL_PORT="PIRL PORT"
 PIRL_WORKER="$WORKERNAME"
+PIRL_STRATUM_SCHEMA="stratum+tcp"
 
 # Phoenixcoin (PXC)
 PXC_ADDRESS="replace_with_your_address"
@@ -894,6 +930,7 @@ PXC_EXTENSION_ARGUMENTS=""
 PXC_POOL="atlas.phoenixcoin.org:"
 PXC_PORT="10554"
 PXC_WORKER="$WORKERNAME"
+PXC_STRATUM_SCHEMA="stratum+tcp"
 
 # Raven Coin (RVN)
 RVN_ADDRESS="replace_with_your_address"
@@ -901,6 +938,7 @@ RVN_EXTENSION_ARGUMENTS=""
 RVN_POOL="RVN_POOL_ADDRESS"
 RVN_PORT="RVN_POOL_PORT"
 RVN_WORKER="$WORKERNAME"
+RVN_STRATUM_SCHEMA="stratum+tcp"
 
 # Siacoin (SC)
 SC_ADDRESS="replace_with_your_address"
@@ -910,6 +948,7 @@ SC_GW_PORT="9980"
 SC_POOL="sia-us-east1.nanopool.org"
 SC_PORT="7777"
 SC_WORKER="$WORKERNAME"
+SC_STRATUM_SCHEMA="stratum+tcp"
 
 # Sib Coin (SIB)
 SIB_ADDRESS="replace_with_your_address"
@@ -917,6 +956,7 @@ SIB_EXTENSION_ARGUMENTS=""
 SIB_POOL="sib.suprnova.cc"
 SIB_PORT="3458"
 SIB_WORKER="$WORKERNAME"
+SIB_STRATUM_SCHEMA="stratum+tcp"
 
 # Signatum (SIGT)
 SIGT_ADDRESS="replace_with_your_address"
@@ -924,6 +964,7 @@ SIGT_EXTENSION_ARGUMENTS=""
 SIGT_POOL="us.hashbag.cc"
 SIGT_PORT="8644"
 SIGT_WORKER="$WORKERNAME"
+SIGT_STRATUM_SCHEMA="stratum+tcp"
 
 # Smart Coin (SMART)
 SMART_ADDRESS="replace_with_your_address"
@@ -931,6 +972,7 @@ SMART_EXTENSION_ARGUMENTS=""
 SMART_POOL="pool-eu.smartcash.cc"
 SMART_PORT="3333"
 SMART_WORKER="$WORKERNAME"
+SMART_STRATUM_SCHEMA="stratum+tcp"
 
 # SOILcoin (SOIL)
 SOIL_ADDRESS="replace_with_your_address"
@@ -938,6 +980,7 @@ SOIL_EXTENSION_ARGUMENTS=""
 SOIL_POOL="soil.pool.sexy"
 SOIL_PORT="9009"
 SOIL_WORKER="$WORKERNAME"
+SOIL_STRATUM_SCHEMA="stratum+tcp"
 
 # Sumokoin (SUMO)
 SUMO_ADDRESS="replace_with_your_address"
@@ -945,6 +988,7 @@ SUMO_EXTENSION_ARGUMENTS=""
 SUMO_POOL="SUMO_POOL"
 SUMO_PORT="SUMO_PORT"
 SUMO_WORKER="$WORKERNAME"
+SUMO_STRATUM_SCHEMA="stratum+tcp"
 
 # TrezarCoin (TZC)
 TZC_ADDRESS="replace_with_your_address"
@@ -952,6 +996,7 @@ TZC_EXTENSION_ARGUMENTS=""
 TZC_POOL="TZC POOL"
 TZC_PORT="TZC PORT"
 TZC_WORKER="$WORKERNAME"
+TZC_STRATUM_SCHEMA="stratum+tcp"
 
 # Ubiq (UBQ)
 UBQ_ADDRESS="replace_with_your_address"
@@ -959,6 +1004,7 @@ UBQ_EXTENSION_ARGUMENTS=""
 UBQ_POOL="us.ubiqpool.io"
 UBQ_PORT="8008"
 UBQ_WORKER="$WORKERNAME"
+UBQ_STRATUM_SCHEMA="stratum+tcp"
 
 # VIVO (VIVO)
 VIVO_ADDRESS="replace_with_your_address"
@@ -966,6 +1012,7 @@ VIVO_EXTENSION_ARGUMENTS=""
 VIVO_POOL="VIVO POOL"
 VIVO_PORT="VIVO PORT"
 VIVO_WORKER="$WORKERNAME"
+VIVO_STRATUM_SCHEMA="stratum+tcp"
 
 # Vertcoin (VTC)
 VTC_ADDRESS="replace_with_your_address"
@@ -973,6 +1020,7 @@ VTC_EXTENSION_ARGUMENTS=""
 VTC_POOL="hub.miningpoolhub.com"
 VTC_PORT="20507"
 VTC_WORKER="$WORKERNAME"
+VTC_STRATUM_SCHEMA="stratum+tcp"
 
 # Motion (XMN)
 XMN_ADDRESS="replace_with_your_address"
@@ -980,6 +1028,7 @@ XMN_EXTENSION_ARGUMENTS=""
 XMN_POOL="XMN_POOL_ADDRESS"
 XMN_PORT="XMN_POOL_PORT"
 XMN_WORKER="$WORKERNAME"
+XMN_STRATUM_SCHEMA="stratum+tcp"
 
 # Monero (XMR)
 XMR_ADDRESS="replace_with_your_address"
@@ -987,6 +1036,7 @@ XMR_EXTENSION_ARGUMENTS=""
 XMR_POOL="xmr-us-east1.nanopool.org"
 XMR_PORT="14444"
 XMR_WORKER="$WORKERNAME"
+XMR_STRATUM_SCHEMA="stratum+tcp"
 
 # Myriad (XMY)
 XMY_ADDRESS="replace_with_your_address"
@@ -994,6 +1044,7 @@ XMY_EXTENSION_ARGUMENTS=""
 XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
 XMY_PORT="20479"
 XMY_WORKER="$WORKERNAME"
+XMY_STRATUM_SCHEMA="stratum+tcp"
 
 # Verge (XVG)
 XVG_ADDRESS="replace_with_your_address"
@@ -1001,6 +1052,7 @@ XVG_EXTENSION_ARGUMENTS=""
 XVG_POOL="replace_with_pool_address"
 XVG_PORT="replace_with_pool_port"
 XVG_WORKER="$WORKERNAME"
+XVG_STRATUM_SCHEMA="stratum+tcp"
 
 # ZCoin (XZC)
 XZC_ADDRESS="replace_with_your_address"
@@ -1008,6 +1060,7 @@ XZC_EXTENSION_ARGUMENTS=""
 XZC_POOL="xzc.suprnova.cc"
 XZC_PORT="1569"
 XZC_WORKER="$WORKERNAME"
+XZC_STRATUM_SCHEMA="stratum+tcp"
 
 # ZClassic (ZCL)
 ZCL_ADDRESS="replace_with_your_address"
@@ -1015,6 +1068,7 @@ ZCL_EXTENSION_ARGUMENTS=""
 ZCL_POOL="us.zclmine.pro"
 ZCL_PORT="9009"
 ZCL_WORKER="$WORKERNAME"
+ZCL_STRATUM_SCHEMA="stratum+tcp"
 
 # Zcash (ZEC)
 ZEC_ADDRESS="t1XfkZUZWME8FnRiFxHZQAQ2K1UdQMbshJp" # replace_with_your_address
@@ -1022,6 +1076,7 @@ ZEC_EXTENSION_ARGUMENTS=""
 ZEC_POOL="zec-us-east1.nanopool.org"
 ZEC_PORT="6666"
 ZEC_WORKER="$WORKERNAME"
+ZEC_STRATUM_SCHEMA="stratum+tcp"
 
 # Zencash (ZEN)
 ZEN_ADDRESS="replace_with_your_address"
@@ -1029,6 +1084,7 @@ ZEN_EXTENSION_ARGUMENTS=""
 ZEN_POOL="luckpool.org"
 ZEN_PORT="3057"
 ZEN_WORKER="$WORKERNAME"
+ZEN_STRATUM_SCHEMA="stratum+tcp"
 
 # plusCPU (defaults: same as XMR)
 plusCPU_ADDRESS="$XMR_ADDRESS"
