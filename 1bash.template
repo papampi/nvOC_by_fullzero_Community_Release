@@ -652,7 +652,6 @@ ALTCOM_PORT="ALTCOM PORT"
 ALTCOM_WORKER="$WORKERNAME"
 ALTCOM_STRATUM_SCHEMA="stratum+tcp"
 
-
 # Bitcoin Interest (BCI)
 BCI_ADDRESS="replace_with_your_address"
 BCI_EXTENSION_ARGUMENTS=""
