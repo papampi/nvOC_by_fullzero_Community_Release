@@ -299,65 +299,74 @@ function dgh_enabled_devices () {
     echo "$4 $(dgh_all_enabled_devices "$1" "$deli" "$3" "$5")"
   }
 }
-# COIN_${!MINER}_OPTS E.g. ZEC_BMINER_OPTS
-# ALGO_${!MINER}_OPTS E.g. EQUIHASH_BMINER_OPTS
-# MINER_OPTS    E.g. BMINER_OPTS
+
+## Recursively looks for miner's options in GLOBAL VARIABLE E.g 
+ # ARGUMENTS:
+ #    $1 str  - The known miner (to override the miner lookup process)
+ #    $2 str  - The coin value E.g. ${COIN} defined in 1bash
+ #    $3 str  - The algorithm value E.g. ${ALGO defined in 1bash}
+ #    GLOBAL:
+ #      *_MINER
+ #      *_OPTS
+ # RETURNS:
+ #    - The defined value opt the found OPTS
+ #      - OPTS are search with the priority of COIN > ALGO > MINER
+ #      - When looking for the defined miner, the priorty is as follow:
+ #          ${!COIN}_MINER > ${!ALGO}_MINER, 
+ #          E.g. IF ZEC_MINER is defined, this will be used instead of EQUIHASH_MINER
+ #      - When looking for miner opts, the priorty is as follow:
+ #          ${!COIN}_${!MINER}_OPTS > ${!ALGO}_${!MINER}_OPTS > ${!MINER}_OPTS
+ #          E.g. Assume MINER=EWBF, ZEC_EWBF_OPTS > EQUIHASH_EWBF_OPTS > EWBF_OPTS
+ #              We will first use the value of ZEC_EWBF_OPTS then fall back to EQUIHASH_EWBF_OPTS 
+ #              and finally fall back to EWBF_OPTS if non was found prior
 function dgh_get_miner_opts () {
-  local coin=$1 algo=$2
-  local xopts='_OPTS'
-  local xminer='_MINER'
-  local miner opts
-#  echo "coin '$coin'"
-#  echo "algo '$algo'"
+  local miner=$1 coin=$2 algo=$3
+  local opts_ext='_OPTS'
+  local miner_ext='_MINER'
+  local miner_ref opts_ref
+  
+  #no arguments
+  [[ -z $coin && -z $algo && -z $miner ]] && return 1
   # Step 1. look for which miner is used
-  [[ -z $coin && -z $algo ]] && { 
-    echo ''
-    return 1
-  } 
-  # look for where miner is assigned
-  # First we look for $coin$xminer e.g. ZEC_MINER
-  miner=${coin}${xminer}
-#  echo "coin miner '$miner' val:'${!miner}'"
-  # If nothing is found, we look for $algo$xminer e.g. EQUIHASH_MINER
-  [[ -z ${!miner} ]] && {
-    miner=${algo}${xminer}
-#    echo "algo miner '$miner' val:'${!miner}'"
-    # Error out if no miner defined
-    [ -z ${!miner} ] && return 1
+  [[ -z $miner ]] && {
+    # look for where miner is assigned
+    # First we look for $coin$miner_ext e.g. ZEC_MINER
+    miner_ref=${coin}${miner_ext}
+    # If nothing is found, we look for $algo$miner_ext e.g. EQUIHASH_MINER
+    [[ -z ${!miner_ref} ]] && {
+      miner_ref=${algo}${miner_ext}
+      # Error out if no miner defined
+    }
+    miner=${!miner_ref}
   }
+  # no miner found
+  [[ -z ${miner} ]] && return 1
   # Step 2. Look for where the OPTS is defined for this miner
   # For example we will pretend $miner='BMINER'
   # First look at $coin_$miner_OPTS. E.g. ZEC_BMINER_OPTS
-  opts="${coin}_${!miner}$xopts"
-#  echo "coin miner opts '$opts' val:'${!opts}'"
+  opts_ref="${coin}_${miner}$opts_ext"
+  [[ -z ${coin} || -z ${!opts_ref} ]] || {
+    # Found! Return the opts
+    echo ${!opts_ref}
+    return 0
+  } 
   # Not found, look at $algo_$miner_OPTS. e.g. EQUIHASH_BMINER_OPTS 
-  [[ -z ${!opts} ]] && {
-    opts="${algo}_${!miner}${xopts}"
-#    echo "algo miner opts '$opts' val:'${!opts}'"
-  } || {
+  opts_ref="${algo}_${miner}${opts_ext}"
+  [[ -z ${algo} || -z ${!opts_ref} ]] || { 
     # Found! Return the opts
-    echo ${!opts}
+    echo ${!opts_ref}
     return 0
-  }
+  } 
   # Still not found, we try $miner_OPTS e.g. BMINER_OPTS
-  [[ -z ${!opts} ]] && {
-    opts="${!miner}${xopts}" 
-#    echo "miner opts '$opts' val:'${!opts}'"
-  } || { 
-    # Found! Return the opts
-    echo ${!opts}
+  opts_ref="${miner}${opts_ext}" 
+  [[ -z ${!opts_ref} ]] || { 
+    # Found! return opts
+    echo ${!opts_ref}
     return 0
   }
-  # Still nothing 
-  [[ -z ${!opts} ]] && { 
-    # Found! Return the opts
-    echo ""
-    return 1 
-  } || { 
-    # found! return opts
-    echo ${!opts}
-    return 0
-  }
+  #Still nothing
+  echo ''
+  return 1 
 }
 
 ####################################      Public Functions End      ##################################
