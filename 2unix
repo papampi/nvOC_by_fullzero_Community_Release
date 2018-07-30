@@ -34,7 +34,7 @@ last_compatible_1bash_ver="$nvOC_1bash_last_compatible"
 last_incompatible_1bash_ver="$nvOC_1bash_last_incompatible"
 
 
-if [[ ${current_1bash_ver} -le ${last_incompatible_1bash_ver} ]]
+if [[ ${current_1bash_ver} -lt ${last_incompatible_1bash_ver} ]]
 then
   echo -e " $(tput bold)################################################################################ $(tput sgr0)"
   echo ""
