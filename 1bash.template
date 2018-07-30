@@ -117,6 +117,7 @@ v0035="LuKePicci;Uniform plusCPU handling"
 nvOC_Ver="v0019-2.1" 
 nvOC_1bash_ver="0035"
 nvOC_1bash_last_compatible="0035"
+nvOC_1bash_last_incompatible="0034"
 
 
 # Open a terminal to launch miner; will auto launch on boot
