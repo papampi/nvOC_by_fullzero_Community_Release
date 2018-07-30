@@ -20,8 +20,11 @@
  #                          E.g: DISABLED_GPU_ARRAY[0]= unix date
  #                               DISABLED_GPU_ARRAY[1]= unix date
  #                               DISABLED_GPU_ARRAY[5]= unix date
+ #        MDPA - (MINER_DEVICE_PREFIX_ARRAY) predefined options prefix of each known miner E.g. --device
+ #        MDTA - (MINER_DEVICE_TYPE_ARRAY), represents how GPU # is presented, A=alphanumeric,N=numeric E.g. A is used by claymore only
+ #        MDDA - (MINER_DEVICE_DELIMITER_ARRAY), the delimiter between GPU# E.g. MDPA[D]=',' => seperated by comma 1,2,3,4
  # MINER REFERENCE:
- #    Bminer        : -devices 0,1,2,3,4,5,6,7,8,...
+ #    BMINER        : -devices 0,1,2,3,4,5,6,7,8,...
  #    CCMINER       : --devices 0,1,2,3,4,5,6,7,8,...
  #    CLAYMORE      : -di 0123456789abcdefghi...
  #    DSTM          : --dev 0 1 2 3 4 5 6 7 8 ...
@@ -38,30 +41,45 @@ source ${NVOC}/helpers/generic_helper.sh
  # ARGUMENTS:
  #    GLOBAL:
  #        DISABLED_GPUS
- #        DISABLED_GPU_ARRAY
  # RETURNS:
  #    - n/a
  #    GLOBAL:
  #        DISABLED_GPU_ARRAY
+ #        MDPA - (MINER_DEVICE_PREFIX_ARRAY) predefined options prefix of each known miner E.g. --device
+ #        MDTA - (MINER_DEVICE_TYPE_ARRAY), represents how GPU # is presented, A=alphanumeric,N=numeric E.g. A is used by claymore only
+ #        MDDA - (MINER_DEVICE_DELIMITER_ARRAY), the delimiter between GPU# E.g. MDPA[D]=',' => seperated by comma 1,2,3,4
  #    ENV:
  #        CUDA_DEVICE_ORDER=PCI_BUS_ID
 function _dgh_main () {
+  # I don't like this, should refactor it in the future if portable miner is implemented
+  # declare hard coded miner opt dev prefix
+  [[ ! -v MDPA[@] ]] && {
+    declare -rgA "MDPA=([BMINER]='-devices ' [CCMINER]='--devices ' [CLAYMORE]='-di ' [DSTM]='--dev ' \
+                  [ETHMINER]='--cuda_devices ' [EWBF]='--cuda_devices ' [Z_EWBF]='--cuda_devices ')"
+  }
+  [[ ! -v MDTA[@] ]] && {
+    declare -rgA "MDTA=([BMINER]='N' [CCMINER]='N' [CLAYMORE]='A' [DSTM]='N' \
+                  [ETHMINER]='N' [EWBF]='N' [Z_EWBF]='N')"
+  }
+  [[ ! -v MDDA[@] ]] && {
+    declare -rgA "MDDA=([BMINER]=',' [CCMINER]=',' [CLAYMORE]='' [DSTM]=' ' \
+                  [ETHMINER]=' ' [EWBF]=' ' [Z_EWBF]=' ')"
+  }
   [[ -z "$DISABLED_GPUS" ]] && {
     echo "DISABLED_GPUS not set"
     return 1
-  } || {
-    # Export CUDA_DEVICE_ORDER env variables
-    export CUDA_DEVICE_ORDER=PCI_BUS_ID
-    # Array doesn't exists till it's assign value
-    [[ ! -v DISABLED_GPU_ARRAY[@] ]] && {
-      #echo "declare DISABLED_GPU_ARRAY"
-      declare -ga DISABLED_GPU_ARRAY
-      for i in $DISABLED_GPUS; do
-        DISABLED_GPU_ARRAY[$i]=$(date +%s)
-      done
-    }
-    return 0
+  } 
+  # Export CUDA_DEVICE_ORDER env variables
+  export CUDA_DEVICE_ORDER=PCI_BUS_ID
+  # Array doesn't exists till it's assign value
+  [[ ! -v DISABLED_GPU_ARRAY[@] ]] && {
+    #echo "declare DISABLED_GPU_ARRAY"
+    declare -ga DISABLED_GPU_ARRAY
+    for i in $DISABLED_GPUS; do
+      DISABLED_GPU_ARRAY[$i]=$(date +%s)
+    done
   }
+  return 0
 }
 
 ####################################      Private Functions End     ##################################
@@ -133,9 +151,10 @@ function dgh_alphanumeric_to_int () {
 function dgh_is_gpu_disabled () {
   local gpu=$1
   # numeric
-  if gh_is_numeric $gpu ; then
-    [ ${DISABLED_GPU_ARRAY[$gpu]} ] && return 0 || return 1
-  fi
+  gh_is_numeric $gpu && { 
+    [ ${DISABLED_GPU_ARRAY[$gpu]} ] && return 0 || return 1 
+  }
+  # not numeric
   gpu=$(dgh_alphanumeric_to_int $gpu)
   [ -z $gpu ] && return 127
   [ ${DISABLED_GPU_ARRAY[$gpu]} ]
@@ -227,9 +246,9 @@ function dgh_update_devices () {
  #            E.g. ETHMINER OPTS is --cuda_devices 0 1 2 3, then pass '--cuda_devices ' as the arguments with trailing space
  #  $2 char - The delimiter between the GPU numbers, default to no delimiter, if there's no delimiter, pass in ''
  #            E.g. pass ' ' for this arguments with the ETHMINER OPTS Example from above
- #  $3 char - 'n' or 'a',
- #            'n' - generate the devices options in numeric: 0,1,2,3,..,10,... (Suitable for most miner)
- #            'a' - generate the devices in alphanumeric: 0123...abc... ($2 must be set '' to void the delimiter)
+ #  $3 char - 'N' or 'A',
+ #            'N' - generate the devices options in numeric: 0,1,2,3,..,10,... (Suitable for most miner)
+ #            'A' - generate the devices in alphanumeric: 0123...abc... ($2 must be set '' to void the delimiter)
  #  $4 int  - # of gpus, default to GLOBAL_VARIABLE GPUS or query via smi if not set
  #  GLOBAL:
  #      GPUS
@@ -244,20 +263,17 @@ function dgh_update_devices () {
  #    - Supports Claymore device options of 0123456789abcd....
 function dgh_all_enabled_devices () {
   local prefix=$1
-  local delimiter=${2-' '}
-  local type=${3:-'n'}
+  local delimiter=${2-''}
+  local type=${3:-'N'}
   local gpus=${4:-$(dgh_gpu_count)}
-  # echo "prefix: '$prefix'"
-  # echo "delimiter: '$delimiter'"
-  # echo "type: '$type'"
-  # echo "gpus: '$gpus'"
   local devices=''
   for (( i=0; i < $gpus; i++ )) ; do
-    # do nothing if no disabled gpu defined
     dgh_is_gpu_disabled $i || {
-      [[ $type = 'a' ]] && devices+=$(dgh_int_to_alphanumeric $i) || devices+=$i
+      # gpu enabled
+      [[ $type = 'A' ]] && devices+=$(dgh_int_to_alphanumeric $i) || devices+=$i
       devices+=$delimiter
     }
+    # do nothing if no disabled gpu defined
   done
   [[ ! -z $devices ]] && devices=${devices%$delimiter}
   echo "$prefix$devices"
@@ -286,18 +302,18 @@ function dgh_all_enabled_devices () {
  # OTHERS:
  #    - Supports Claymore device options of 0123456789abcd....
 function dgh_enabled_devices () {
-  local deli=${2-' '}
   # missing input
   [[ -z $4 ]] && {
-    dgh_all_enabled_devices "$1" "$deli" "$3" "$5" && return 0
+    dgh_all_enabled_devices "$1" "$2" "$3" "$5" 
+    return 0
   }
   # input contain matching prefix
-  [[ $4 =~ $1 ]] && {
-    dgh_update_devices "$1" "$deli" "$4" 
-  } || {
-    # no matching prefix
-    echo "$4 $(dgh_all_enabled_devices "$1" "$deli" "$3" "$5")"
-  }
+  [[ ! -z $1 ]] && [[ $4 =~ $1 ]] && {
+    dgh_update_devices "$1" "$2" "$4"
+    return $?
+  } 
+  # no matching prefix
+  echo "$4 $(dgh_all_enabled_devices "$1" "$2" "$3" "$5")"
 }
 
 ## Recursively looks for miner's options in GLOBAL VARIABLE E.g 
