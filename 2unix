@@ -51,9 +51,9 @@ fi
 if [[ ${current_1bash_ver} le ${last_compatible_1bash_ver} ]]
 then
   echo "################################################################################"
-  echo " !!  Your 1bash revision is different from the 1bash.template"
-  echo "     This could potentially cause errors. SSH access is now being enabled to"
-  echo "     let you debug. Please, update your 1bash to comply with latest 1bash.template."
+  echo " !!  Your 1bash revision is older than last compatible version"
+  echo "     There are new features available if you update your 1bash with latest 1bash.template."
+  echo "     SSH access is now being enabled to let you update yor 1bash. "
   echo "     nvOC will now try to run anyway in 10 seconds"
   echo ""
   sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
