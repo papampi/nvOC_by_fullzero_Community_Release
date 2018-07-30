@@ -629,7 +629,7 @@ echo "Miner Hash Rate / Output: <br>" "<tt style=\"text-align:left; color:white\
 
 echo "Miner Last Errors: <br>" "<tt style=\"text-align:left; color:white\">" "$MINER_ERROR <br> </tt>"
 
-echo "Rejected Shares: " "<tt style=\"text-align:left; color:red\">" "$REJECTED_SHARES <br> </tt> <br>"
+echo "Rejected Shares: <br> " "<tt style=\"text-align:left; color:white\">" "$REJECTED_SHARES <br> </tt> <br>"
 
 echo "GPU Temp, Fan and Power Info: <br>"  "<tt style=\"text-align:left; color:white\">" "$TEMP_FAN_POWER <br> </tt>"
 
