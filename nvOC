@@ -904,7 +904,7 @@ then
   echo "       Please update your 1bash from 1bash.template before restarting nvOC"
   echo -e " $(tput sgr0)"
   echo -e " $(tput bold)################################################################################ $(tput sgr0)"
-elif [[ ${current_1bash_ver} -le ${template_1bash_ver} ]]
+elif [[ ${current_1bash_ver} -le ${last_compatible_1bash_ver} ]]
 then
   echo -e " $(tput bold)################################################################################"
   echo "     Your 1bash revision is different from 1bash.template"
