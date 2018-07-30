@@ -118,7 +118,7 @@ v0034="brightskye; DISABLED_GPUS"
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
 nvOC_1bash_ver="0034"
-nvOC_1bash_last_compatible="0029"
+nvOC_1bash_last_compatible="0034"
 
 
 # Open a terminal to launch miner; will auto launch on boot

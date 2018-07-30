@@ -1,0 +1,123 @@
+#!/bin/bash
+
+# Supported Miners:
+# Bminer        : -devices 0,1,2,3,4,5,6,7,8,...
+# CCMINER       : --devices 0,1,2,3,4,5,6,7,8,...
+# CLAYMORE      : -di 0123456789abcdefghi...
+# DSTM          : --dev 0 1 2 3 4 5 6 7 8 ...
+# ETHMINER      : --cuda_devices 0 1 2 3 4 5 6 7 8 ...
+# EWBF          : --cuda_devices 0 1 2 3 4 5 6 7 8 ...
+# Z_EWBF        : --cuda_devices 0 1 2 3 4 5 6 7 8 ...
+#
+
+# Provide functions and set global variables required for disabling GPUS in miners
+# PREREQUISITE  : DISABLED_GPUS is set Prior (in 1bash and loaded prior calling this script)
+# OUTCOME 1     : Declare DISABLED_GPU_ARRAY and marked the index of the array as true as defined in DISABLED_GPUS
+#               : E.g. DISABLED_GPUS="1 4"
+#                      DISABLED_GPU_ARRAY[1]=unix date
+#                      DISABLED_GPU_ARRAY[4]=unix date
+# OUTCOME 2     : Provide build_miner_devices_opt that will assigned all usable gpus to each miner's extension opt
+#               : E.g. DISABLED_GPUS="1 4"
+#               : BMINER_OPTS+=" -devices 0,2,3,5,6,..."
+#               : CCMINER_OPTS+=" --devices 0,2,3,5,6,..."
+#               : CLAYMORE_OPTS+=" -di02356..."
+#               : DSTM_OPTS+=" --dev 0 2 3 5 6 ..."
+#               : ETHMINER_OPTS+=" --cuda_devices 0 2 3 5 6 ..."
+#               : EWBF_OPTS+=" --cuda_devices 0 2 3 5 6 ..."
+#               : Z_EWBF_OPTS+=" --cuda_devices 0 1 2 3 4 5 6 ..."
+#
+
+if [ -z "$DISABLED_GPUS" ]; then
+    echo "DISABLED_GPUS not set"
+else
+    # Export CUDA_DEVICE_ORDER env variables
+    export CUDA_DEVICE_ORDER=PCI_BUS_ID
+    # Array doesn't exists till it's assign value
+    if ! [ -v DISABLED_GPU_ARRAY[@] ]; then
+        #echo "declare DISABLED_GPU_ARRAY"
+        declare -ga DISABLED_GPU_ARRAY
+        for i in $DISABLED_GPUS; do
+            DISABLED_GPU_ARRAY[$i]=$(date +%s)
+        done
+    fi
+fi
+
+# Set each miner's device opt accordingly
+# @Param    $1=number of GPUS, if not provided, default to Global variable GPUS or query nvidia-smi if not found
+# @Return   void
+# @Outcome  Each supported miner's opts will be appended with their respective options for device
+# @Note     If devices options has already been configured prior (e.g. in 1bash), the device option will not be overriden
+function build_miner_devices_opt () {
+    local gpus=${1:-$GPUS}
+    # build_disabled_gpu_array
+    if [ -v DISABLED_GPU_ARRAY[@] ]; then
+        if [ -z $gpus ]; then
+            #echo "gpu count is not passed in as arguments nor found in global GPUS"
+            gpus=$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)
+        fi
+        # Get all runnable devices
+        local space_seperated_devices=""
+        local comma_seperated_devices=""
+        local claymore_devices=""
+        local ascii_a_value=97
+        for ((i=0; i<$gpus; i++)); do
+            if ! [[ ${DISABLED_GPU_ARRAY[$i]} ]]; then
+                space_seperated_devices+="$i "
+                comma_seperated_devices+="$i,"
+                if [[ "$i" -lt "10"  ]]; then
+                    claymore_devices+="$i"
+                elif [[ "$i" -lt $((10+26))  ]]; then
+                    # 26 alphabet characters
+                    # $(printf \\$(printf '%03o' $(($i-10+97)))) will print their char from ascii decimal value
+                    # $(printf '%03o' $(($i-10+97)))) will converts the number from decimal to octal
+                    # decimal value 97 represent a
+                    claymore_devices+=$(printf \\$(printf '%03o' $(($i-10+$ascii_a_value))))
+                fi
+            fi
+        done
+        #strip last comma/spaces
+        comma_seperated_devices="${comma_seperated_devices%?}"
+        space_seperated_devices="${space_seperated_devices%?}"
+        # Add device list to respective miner opts
+        # Skip if miner opts already specified the device option
+        if ! [[ " $BMINER_OPTS " =~ "-devices" ]]; then
+            BMINER_OPTS+=" -devices $comma_seperated_devices"
+        fi
+        if ! [[ " $CCMINER_OPTS " =~ "--devices" ]]; then
+            CCMINER_OPTS+=" --devices $comma_seperated_devices"
+        fi
+        if ! [[ " $CLAYMORE_OPTS " =~ "-di" ]]; then
+            CLAYMORE_OPTS+=" -di $claymore_devices"
+        fi
+        if ! [[ " $DSTM_OPTS " =~ "--dev" ]]; then
+            DSTM_OPTS+=" --dev $space_seperated_devices"
+        fi
+        if ! [[ " $ETHMINER_OPTS " =~ "--cuda_devices" ]]; then
+            ETHMINER_OPTS+=" --cuda_devices $space_seperated_devices"
+        fi
+        if ! [[ " $EWBF_OPTS " =~ " --cuda_devices" ]]; then
+            EWBF_OPTS+=" --cuda_devices $space_seperated_devices"
+        fi
+        if ! [[ " $Z_EWBF_OPTS " =~ " --cuda_devices" ]]; then
+            Z_EWBF_OPTS+=" --cuda_devices $space_seperated_devices"
+        fi
+    else
+        echo "No DISABLED_GPUS detected"
+    fi    
+}
+
+# return exit code 0 for true 1 for false, 255 for error
+function is_gpu_disabled () {
+    local gpu=${1}
+    if [ -z $gpu ]; then
+        echo 'WARNING: No GPU specified for testing '
+        return 255
+    fi
+    # Check if anything is assigned to DISABLED_GPU_ARRAY at index $gpu
+    if [ ${DISABLED_GPU_ARRAY[$gpu]} ]; then 
+        # bash will evaluate function return 0 as true, other as false 
+        return 0
+    else
+        return 1
+    fi
+}
