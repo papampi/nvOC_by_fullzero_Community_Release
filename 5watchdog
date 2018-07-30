@@ -68,7 +68,7 @@
 
 export DISPLAY=:0
 source ${NVOC}/1bash
-source ${NVOC}/helpers/disabled_gpu
+source ${NVOC}/helpers/disabled_gpu.sh
 
 nvOC_wdog_Dev="0021"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"

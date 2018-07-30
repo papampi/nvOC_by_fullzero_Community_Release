@@ -38,7 +38,7 @@
 
 source ${NVOC}/1bash
 source ${NVOC}/0algo_id
-source ${NVOC}/helpers/disabled_gpu
+source ${NVOC}/helpers/disabled_gpu.sh
 
 nvOC_temp_Dev="0006"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
