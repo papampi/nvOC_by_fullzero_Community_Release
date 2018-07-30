@@ -31,8 +31,10 @@ current_1bash_ver="$nvOC_1bash_ver"
 source "${NVOC}/1bash.template"
 template_1bash_ver="$nvOC_1bash_ver"
 last_compatible_1bash_ver="$nvOC_1bash_last_compatible"
+last_incompatible_1bash_ver="$nvOC_1bash_last_incompatible"
 
-if [[ ${current_1bash_ver} -lt ${last_compatible_1bash_ver} ]]
+
+if [[ ${current_1bash_ver} -le ${last_incompatible_1bash_ver} ]]
 then
   echo -e " $(tput bold)################################################################################ $(tput sgr0)"
   echo ""
@@ -46,7 +48,7 @@ then
   exit
 fi
 
-if [[ ${current_1bash_ver} != ${template_1bash_ver} ]]
+if [[ ${current_1bash_ver} le ${last_compatible_1bash_ver} ]]
 then
   echo "################################################################################"
   echo " !!  Your 1bash revision is different from the 1bash.template"
