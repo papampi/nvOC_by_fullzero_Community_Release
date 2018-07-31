@@ -150,11 +150,11 @@ then
   screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS"
 fi
 
+miner_opts="$(dgh_enabled_devices "${MDPA[${!xminer}]}" "${MDDA[${!xminer}]}" "${MDTA[${!xminer}]}" "$(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")")"
 ## ETHASH
 if [[ $ALGO == ETHASH ]]
 then
 ## Declare Miner Start
-  miner_opts="$(dgh_enabled_devices "${MDPA[$ETHASH_MINER]}" "${MDDA[$ETHASH_MINER]}" "${MDTA[$ETHASH_MINER]}" "$(dgh_get_miner_opts "$ETHASH_MINER" "$COIN" "$ALGO")")"
   if [[ $ETHASH_MINER == GENOIL ]]
   then
     # skipping GENOIL's setting, since i'm not sure what's it's device options prefix ,etc
@@ -174,7 +174,6 @@ then
 ## EQUIHASH
 elif [[ $ALGO == EQUIHASH ]];
 then
-  miner_opts="$(dgh_enabled_devices "${MDPA[$EQUIHASH_MINER]}" "${MDDA[$EQUIHASH_MINER]}" "${MDTA[$EQUIHASH_MINER]}" "$(dgh_get_miner_opts "$EQUIHASH_MINER" "$COIN" "$ALGO")")"
   if [[ $EQUIHASH_MINER == DSTM ]]
   then
     HCD="${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $miner_opts ${!xext}"
@@ -190,7 +189,6 @@ then
 ## ZHASH
 elif [[ $ALGO == ZHASH ]];
 then
-  miner_opts="$(dgh_enabled_devices "${MDPA[$ZHASH_MINER]}" "${MDDA[$ZHASH_MINER]}" "${MDTA[$ZHASH_MINER]}" "$(dgh_get_miner_opts "$ZHASH_MINER" "$COIN" "$ALGO")")"
   if [[ $ZHASH_MINER == Z_EWBF ]]
   then
     HCD="${NVOC}/miners/z_ewbf/$Z_EWBF_VERSION/miner --fee $Z_EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $miner_opts ${!xext}"
