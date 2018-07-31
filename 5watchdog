@@ -63,13 +63,11 @@
 #          Load average check, notify, reboot (1bash setting)
 # v=0020 : papampi
 #          Check Ping if Network couldnt resolve 
-# v=0021 : papampi
-#          Remove wtm python check 
 
 export DISPLAY=:0
 source ${NVOC}/1bash
 
-nvOC_wdog_Dev="0021"
+nvOC_wdog_Dev="0020"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
 
 echo "Watchdog for nvOC $nvOC_Ver"
@@ -201,6 +199,21 @@ sleep $SLEEP_TIME
 ### Watchdog Main Loop [infinite]
 while true
 do
+  #If WTM auto switch python cant sync, kill it
+  if [[ $AUTO_SWITCH  ==  WTM_SWITCHING || $WTM_PROFIT_CHECK == YES ]]
+  then
+    WTM_S_PID=$(ps -ef | grep WTM_SWITCHER | grep -v grep |awk '{print $2}')
+    if  [[ -n $WTM_S_PID ]]
+    then
+      WTM_S_PID_TIME=$(ps -eo pid,etimes | grep $WTM_S_PID | awk  '$2> 30 { print $1}')
+      echo "WTM Switcher Syncing"
+      if  [[ -n "$WTM_S_PID_TIME" ]]
+      then
+        echo "$(date) - [WARNING] - WTM switcher can't sync, kill it"
+        ps -eo pid,etimes | grep $(pgrep -f WTM_SWITCHER) | awk  '$2> 30 { print $1}'  | xargs kill -9
+      fi
+    fi
+  fi
 
   # If 1, 5 and 15 min load average are more than double cpu core give warning
   HIGH_AVERAGE=$(( $(nproc) * 2 ))
