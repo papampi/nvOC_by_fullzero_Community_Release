@@ -1,4 +1,4 @@
-# nvOC easy-to-use Linux Nvidia Mining OS
+# nvOC easy-to-use Linux Nvidia Mining OS (19-3.1 alpha)
 Looking for Latest stable version? Go here: https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/19.2
 ## Community Edition - Quick start how-to
 You can get nvOC running on your mining rig in some different ways:
