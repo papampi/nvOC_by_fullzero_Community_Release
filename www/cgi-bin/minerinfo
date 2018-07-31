@@ -8,8 +8,9 @@
 # Rev 0007: papampi, Wait for watchdog to get gpu count
 # Rev 0008: papampi, Individual PL, OC, MC
 # Rev 0009: papampi, 1bash version alert
+# Rev 0010: LuKePicci, Support pluggable miners
 
-nvOC_minerinfo_Dev="0009"
+nvOC_minerinfo_Dev="0010"
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -34,7 +35,7 @@ echo '<html>'
 echo '<head>'
 echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8\n\n">'
 source ${NVOC}/1bash
-source ${NVOC}/0algo_id
+source ${NVOC}/helpers/coin_algo_mapping
 
 echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
 echo '</style>'
@@ -92,7 +93,7 @@ else
 fi
 
 REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
-MINER_PID=$(pgrep -f -o  miner)
+MINER_PID=$(pgrep -fn "${NVOC}/miners")
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 TEMP_FAN_POWER=$(tail  -50 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
 TEMP_ALERT_LOG=$(cat ${NVOC}/6_autotemplog | awk '{print $0,"<br>"}')
@@ -104,7 +105,8 @@ DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
 MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
 FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
 CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
-MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
+MINER_CMD=$(pgrep -afn "${NVOC}/miners" | cut -d ' ' -f 1 --complement)
+MINER_PATH="$(dirname "$(pgrep -afn "${NVOC}/miners" | cut -d ' ' -f 2)")"
 MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 eval 'COIN_POOL=${COIN}_POOL'
 
@@ -247,7 +249,7 @@ then
 elif [[ $AUTO_SWITCH == SALFTER_PROGRAMATIC_SWITCHING ]]
 then
   CURRENT_COIN=$(head -n 1 ${NVOC}/current-profit)
-  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo-log |  awk '{print $0,"<br>"}')
+  MINING_HISTORY=$(tail -n 5 ${NVOC}/algo_log |  awk '{print $0,"<br>"}')
   AUTO_SWITCH_TEXT="Salfter Programatic Switch"
 
 elif [[ $AUTO_SWITCH == WTM_SWITCHING ]]
@@ -323,13 +325,32 @@ else
 fi
 
 ##################################################################
-########################### Average Hash Rate ####################
+########################### Miner reporting ######################
 
-if  ps ax | grep -q "[z]m_miner"
+
+HASH_AVERAGE="Unknown ??/s for current miner"
+MINER_ERROR="Not available for current miner"
+REJECTED_SHARES="Not available for current miner"
+
+if [[ $MINER_PID != "" && -f ${MINER_PATH}/nvoc-miner.json ]]
+then
+  total_hash=$(eval $(jq -r .minerinfo.total_hash ${MINER_PATH}/nvoc-miner.json))
+  hash_count=$(eval $(jq -r .minerinfo.hash_count ${MINER_PATH}/nvoc-miner.json))
+  
+  solution_speed_unit=$(jq -r .minerinfo.solution_speed_unit ${MINER_PATH}/nvoc-miner.json)
+  HASH_AVERAGE="$((total_hash / hash_count)) $solution_speed_unit"
+
+  MINER_ERROR=$(eval $(jq -r .minerinfo.miner_error ${MINER_PATH}/nvoc-miner.json))
+  REJECTED_SHARES=$(eval $(jq -r .minerinfo.rejected_shares ${MINER_PATH}/nvoc-miner.json))
+
+elif  ps ax | grep -q "[z]m_miner"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "[0-9]*.[0-9]* Sol/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE="$((total_hash / hash_count)) Sols/s"
+
+  MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
 
 elif  ps ax | grep -q "[e]thminer"
 then
@@ -342,6 +363,12 @@ then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $5}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE="$((total_hash / hash_count)) MH/s"
+
+  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
+  then
+    REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
+  fi
 
 elif  ps ax | grep -q "[K]Tccminer"
 then
@@ -383,7 +410,8 @@ then
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
 
-elif  ps ax | grep -q  "[Z]ENEMYminer" ;then
+elif  ps ax | grep -q  "[Z]ENEMYminer" 
+then
   if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"
   then
     total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[M]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]*MH/s" | sed 's:MH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
@@ -395,7 +423,12 @@ elif  ps ax | grep -q  "[Z]ENEMYminer" ;then
     hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[k]H/s" | wc -l | awk '{print $1}')
     HASH_AVERAGE="$((total_hash / hash_count)) kH/s"
   fi
-fi
+  elif  ps ax | grep -q "[z]_ewbf"
+  then
+    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | grep -o "[0-9]*.[0-9]* Sol/s" |awk '{print $1}'| awk '{s+=$1} END {printf "%.0f", s}')
+    hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | grep -v grep |  wc -l | awk '{print $1}')
+    HASH_AVERAGE=$((total_hash / hash_count))
+  fi
 ##################################################################
 ########################### WTM Hash Rate ########################
 
@@ -447,27 +480,12 @@ elif [[ $ALGO == LYRA2Z ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bl2z_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
+elif [[ $ALGO == ZHASH ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bzh_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
 else
   WTM_HASH="Not Available"
-fi
-########################################################################
-########################### Miner ERROR Logs ###########################
-
-if  ps ax | grep -q "[z]m_miner"
-then
-  MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
-
-elif  ps ax |  grep -q "[c]laymore"
-then
-  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
-  then
-    REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
-  fi
-
-else
-  MINER_ERROR="Send us your miner error logs to add"
 fi
 
 ###################################################################
@@ -611,7 +629,7 @@ echo "Miner Hash Rate / Output: <br>" "<tt style=\"text-align:left; color:white\
 
 echo "Miner Last Errors: <br>" "<tt style=\"text-align:left; color:white\">" "$MINER_ERROR <br> </tt>"
 
-echo "Rejected Shares: " "<tt style=\"text-align:left; color:red\">" "$REJECTED_SHARES <br> </tt> <br>"
+echo "Rejected Shares: <br> " "<tt style=\"text-align:left; color:white\">" "$REJECTED_SHARES <br> </tt> <br>"
 
 echo "GPU Temp, Fan and Power Info: <br>"  "<tt style=\"text-align:left; color:white\">" "$TEMP_FAN_POWER <br> </tt>"
 
