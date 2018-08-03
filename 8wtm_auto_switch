@@ -107,6 +107,7 @@ MINER_START_TIME=$(date +%s)
 while true
 do
   source ${NVOC}/1bash
+  source ${NVOC}/helpers/coin_algo_mapping
   TIMEOUT=$((WTM_AUTO_SWITCH_SYNC_INTERVAL * 60))
   
   if [[ $AUTO_START_MINER == YES ]]; then
