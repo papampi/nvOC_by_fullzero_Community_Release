@@ -894,9 +894,9 @@ current_1bash_ver="$nvOC_1bash_ver"
 source "${NVOC}/1bash.template"
 template_1bash_ver="$nvOC_1bash_ver"
 last_compatible_1bash_ver="$nvOC_1bash_last_compatible"
-last_incompatible_1bash_ver="$nvOC_1bash_last_incompatible"
+least_compatible_1bash_ver="$nvOC_1bash_least_compatible"
 
-if [[ ${current_1bash_ver} -lt ${last_incompatible_1bash_ver} ]]
+if (( current_1bash_ver < least_compatible_1bash_ver ))
 then
   echo -e " $(tput bold)################################################################################"
   echo ""
@@ -904,7 +904,7 @@ then
   echo "       Please update your 1bash from 1bash.template before restarting nvOC"
   echo -e " $(tput sgr0)"
   echo -e " $(tput bold)################################################################################ $(tput sgr0)"
-elif [[ ${current_1bash_ver} -le ${last_compatible_1bash_ver} ]]
+elif (( current_1bash_ver < last_compatible_1bash_ver ))
 then
   echo -e " $(tput bold)################################################################################"
   echo "     Your 1bash revision is older than last compatible version"
