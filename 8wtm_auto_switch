@@ -112,18 +112,6 @@ do
   
   if [[ $AUTO_START_MINER == YES ]]; then
 
-    #Waiting for miner start before start switching
-    if [[ !  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];then
-      echo "Miner not running"
-      echo ""
-      while [[ -z $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];  do
-        echo "Miner still not running, waiting ..."
-        echo ""
-        sleep 5
-      done
-      echo "Miner is running now"
-    fi
-
     CURRENT_TIME=$(date +%s)
     CURRENT_COIN=$COIN
     CURRENT_COIN_ALGORITHM=$ALGO
