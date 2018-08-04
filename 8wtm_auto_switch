@@ -107,21 +107,10 @@ MINER_START_TIME=$(date +%s)
 while true
 do
   source ${NVOC}/1bash
+  source ${NVOC}/helpers/coin_algo_mapping
   TIMEOUT=$((WTM_AUTO_SWITCH_SYNC_INTERVAL * 60))
   
   if [[ $AUTO_START_MINER == YES ]]; then
-
-    #Waiting for miner start before start switching
-    if [[ !  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];then
-      echo "Miner not running"
-      echo ""
-      while [[ -z $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];  do
-        echo "Miner still not running, waiting ..."
-        echo ""
-        sleep 5
-      done
-      echo "Miner is running now"
-    fi
 
     CURRENT_TIME=$(date +%s)
     CURRENT_COIN=$COIN
