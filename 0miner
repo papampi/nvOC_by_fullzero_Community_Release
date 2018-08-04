@@ -223,8 +223,15 @@ then
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
-  HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
-  eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  if [[ $CRYPTONIGHT_MINER == KTccminer-cryptonight ]]
+  then
+    HCD="${NVOC}"/miners/"${!xminer}"/ccminer
+    eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $CCMINER_OPTS ${!xext}
+  else
+    UCCALGO="-a ${ALGO,,}"
+    HCD="${NVOC}"/miners/"${!xminer}"/ccminer
+    eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  fi
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
