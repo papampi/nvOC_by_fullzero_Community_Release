@@ -886,9 +886,35 @@ Upgrade()
   echo "Checking for nvOC updates...  (target: '${NVOC}')"
   git -C ${NVOC} pull
 
-  echo -e "nvOC has been upgraded.
-There may be new required miners packages to be installed.
-Would you like to check for further miners updates and install them now?"
+  echo -e "nvOC has been upgraded."
+
+# check 1bash revision mismatch
+source "${NVOC}/1bash"
+current_1bash_ver="$nvOC_1bash_ver"
+source "${NVOC}/1bash.template"
+template_1bash_ver="$nvOC_1bash_ver"
+last_compatible_1bash_ver="$nvOC_1bash_last_compatible"
+least_compatible_1bash_ver="$nvOC_1bash_least_compatible"
+
+if (( current_1bash_ver < least_compatible_1bash_ver ))
+then
+  echo -e " $(tput bold)################################################################################"
+  echo ""
+  echo -e "\e[31m       Your 1bash revision is not compatible with latest update"
+  echo "       Please update your 1bash from 1bash.template before restarting nvOC"
+  echo -e " $(tput sgr0)"
+  echo -e " $(tput bold)################################################################################ $(tput sgr0)"
+elif (( current_1bash_ver < last_compatible_1bash_ver ))
+then
+  echo -e " $(tput bold)################################################################################"
+  echo "     Your 1bash revision is older than last compatible version"
+  echo "     There are new features available if you update your 1bash with latest 1bash.template."
+  echo "     Please, update your 1bash to comply with 1bash.template."
+  echo "################################################################################ $(tput sgr0)"
+fi
+
+  echo -e "There may be new required miners packages to be installed.
+  Would you like to check for further miners updates and install them now?"
 
   read -p "Do you want to continue (Y/n)?  " -n 1 ans
   echo
