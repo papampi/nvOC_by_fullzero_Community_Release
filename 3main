@@ -961,7 +961,7 @@ then
         echo ""
         echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
         #if guake tab is already showing watchdog output dont open a new one
-        if ! $(ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" |grep -v grep) ;then
+        if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[w]atchdog-screenlog.0" |grep -v grep ;then
           guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -n 0 -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" &
         fi
         echo ""
