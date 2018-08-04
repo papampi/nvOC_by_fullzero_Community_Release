@@ -47,6 +47,7 @@ Version: always the latest, from configurable branch (default: [release](https:/
 | host | size   | download                                                                       |
 |------|--------|--------------------------------------------------------------------------------|
 | MEGA | 3,50GB | [link](https://mega.nz/#!od1HGYjZ!kMp4ihj2TK81hNz6GkBR1--UkPhNf-JmdGHHEeDw3Ig) |
+| GDrive | 3,50GB | [link](https://drive.google.com/folderview?id=1B0G83ZQm6a7-5irzBSo7YrYyk353HtIg) |
 
 Checksums:
 
@@ -60,7 +61,7 @@ Version: beta testing snapshot branch [19-2.1@a3e92bd976997327fc971b549066f8a566
 
 | host | size   | download                                                                       |
 |------|--------|--------------------------------------------------------------------------------|
-| MEGA | 3,43GB | [link](https://mega.nz/#!dNVTBIAC!7GGJpn9F-kehJOd1gW60CcR28BHTR3WMJxS7K-hd6Tg) |
+| MEGA | 3,43GB | deprecated, get newer versions |
 
 Checksums:
 
