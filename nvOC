@@ -222,7 +222,7 @@ StartGnomeTerminal()
   then
     export DISPLAY=:0
   fi
-  if ps ax | grep "[g]nome-terminal"
+  if ps ax | grep -q "[g]nome-terminal"
   then
     echo "nvOC already running, use ./nvOC restart"
   else
