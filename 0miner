@@ -107,6 +107,16 @@ xcuda=$ALGO$UCUDA
 
 mpath="${NVOC}/miners/${!xminer}"
 
+# This should be in 1bash
+CUDA_8_MINERS="KXccminer SPccminer ASccminer NAccminer ANXccminer SUPRminer"
+
+for miner in $CUDA_8_MINERS
+do
+  if [[ ${!xminer} =~ $miner || ]]; then 
+    CUDA_ENV="PATH=/usr/local/cuda-8/bin:$PATH LD_LIBRARY_PATH=/usr/local/cuda-8/lib64:$LD_LIBRARY_PATH"
+  fi
+done
+
 if [[ ${!xcuda} != "" ]]
 then
   CUDA_ENV=${CUDA_ENV/cuda/${!xcuda}}
