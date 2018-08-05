@@ -193,7 +193,13 @@ then
 else
   echo "$(date) - [WARNING] - Miner not running, reinit nvOC from scratch" | tee -a ${LOG_FILE}
   pkill -f 3main
-  exit
+  sleep $SLEEP_TIME
+  if ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
+  then
+    echo "$(date) - [WARNING] - Miner still not running after reiniting nvOC" | tee -a ${LOG_FILE}
+    echo "$(date) - [WARNING] - Check your coin settings, overclock, miner arguments,...." | tee -a ${LOG_FILE}
+    echo "$(date) - [WARNING] - Watchdog will now continue its main loop and may reboot your system to solve the problem" | tee -a ${LOG_FILE}
+  fi  
 fi
 
 sleep $SLEEP_TIME
