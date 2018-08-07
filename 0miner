@@ -113,7 +113,7 @@ LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
 
 for miner in $CUDA_8_MINERS
 do
-  if [[ ${!xminer} =~ $miner || ]]; then 
+  if [[ ${!xminer} =~ $miner ]]; then 
     LAUNCH="screen -c ${NVOC}/screenrc-miner-cuda-8 -dmSL miner"
   fi
 done
