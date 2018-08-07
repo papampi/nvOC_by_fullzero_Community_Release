@@ -65,11 +65,13 @@
 #          Check Ping if Network couldnt resolve 
 # v=0021 : papampi
 #          Remove wtm python check 
+# v=0022 : papampi
+#          Optimize first run miner check 
 
 export DISPLAY=:0
 source ${NVOC}/1bash
 
-nvOC_wdog_Dev="0021"
+nvOC_wdog_Dev="0022"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
 
 echo "Watchdog for nvOC $nvOC_Ver"
@@ -193,7 +195,13 @@ then
 else
   echo "$(date) - [WARNING] - Miner not running, reinit nvOC from scratch" | tee -a ${LOG_FILE}
   pkill -f 3main
-  exit
+  sleep $SLEEP_TIME
+  if ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
+  then
+    echo "$(date) - [WARNING] - Miner still not running after reiniting nvOC" | tee -a ${LOG_FILE}
+    echo "$(date) - [WARNING] - Check your coin settings, overclock, miner arguments,...." | tee -a ${LOG_FILE}
+    echo "$(date) - [WARNING] - Watchdog will now continue its main loop and may reboot your system to solve the problem" | tee -a ${LOG_FILE}
+  fi  
 fi
 
 sleep $SLEEP_TIME
@@ -330,7 +338,7 @@ do
     #echo "$(date) - Debug: NUM_GPU_BLW_THRSHLD=$NUM_GPU_BLW_THRSHLD, COUNT=$COUNT, RESTART=$RESTART, REBOOTRESET=$REBOOTRESET" | tee -a ${LOG_FILE}
 
   # Check Internet and pool only if all GPU utilizations are bellow threshold
-    if (( NUM_GPU_BLW_THRSHLD = GPU_COUNT ))
+    if (( NUM_GPU_BLW_THRSHLD == GPU_COUNT ))
     then
 
       #Check for Internet and wait if down
