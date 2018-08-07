@@ -227,7 +227,7 @@ then
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
-  HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
+  HCD="${NVOC}"/miners/KTccminer_cryptonight/ccminer
   eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 ## PASCAL
@@ -256,7 +256,7 @@ then
       sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
     fi
   fi
-  HCD=${NVOC}/miners/xmr-stak/xmr-stak_miner
+  HCD=${NVOC}/miners/xmr_stak/xmr_stak_miner
   eval $LAUNCH $HCD --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
 else
   echo ""
