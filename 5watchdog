@@ -65,11 +65,13 @@
 #          Check Ping if Network couldnt resolve 
 # v=0021 : papampi
 #          Remove wtm python check 
+# v=0022 : papampi
+#          Optimize first run miner check 
 
 export DISPLAY=:0
 source ${NVOC}/1bash
 
-nvOC_wdog_Dev="0021"
+nvOC_wdog_Dev="0022"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
 
 echo "Watchdog for nvOC $nvOC_Ver"
