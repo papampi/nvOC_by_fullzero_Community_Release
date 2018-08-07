@@ -338,7 +338,7 @@ do
     #echo "$(date) - Debug: NUM_GPU_BLW_THRSHLD=$NUM_GPU_BLW_THRSHLD, COUNT=$COUNT, RESTART=$RESTART, REBOOTRESET=$REBOOTRESET" | tee -a ${LOG_FILE}
 
   # Check Internet and pool only if all GPU utilizations are bellow threshold
-    if (( NUM_GPU_BLW_THRSHLD = GPU_COUNT ))
+    if (( NUM_GPU_BLW_THRSHLD == GPU_COUNT ))
     then
 
       #Check for Internet and wait if down
