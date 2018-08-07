@@ -107,22 +107,16 @@ xcuda=$ALGO$UCUDA
 
 mpath="${NVOC}/miners/${!xminer}"
 
-# This should be in 1bash
+# List of cuda-8.0 miners 
 CUDA_8_MINERS="KXccminer SPccminer ASccminer NAccminer ANXccminer SUPRminer"
+LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
 
 for miner in $CUDA_8_MINERS
 do
   if [[ ${!xminer} =~ $miner || ]]; then 
-    CUDA_ENV="PATH=/usr/local/cuda-8/bin:$PATH LD_LIBRARY_PATH=/usr/local/cuda-8/lib64:$LD_LIBRARY_PATH"
+    LAUNCH="screen -c ${NVOC}/screenrc-miner-cuda-8 -dmSL miner"
   fi
 done
-
-if [[ ${!xcuda} != "" ]]
-then
-  CUDA_ENV=${CUDA_ENV/cuda/${!xcuda}}
-fi
-
-LAUNCH="$CUDA_ENV screen -c ${NVOC}/screenrc-miner -dmSL miner"
 
 ## Unify COIN End
 
@@ -189,7 +183,7 @@ then
     HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
   elif [[ $ETHASH_MINER == ETHMINER ]]
   then
-    HCD="${NVOC}/miners/ethminer/latest/ethminer -P ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} -U ${!xext} $ETHMINER_OPTS"
+    HCD="${NVOC}/miners/ethminer/$ETHMINER_VERSION/ethminer -P ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} -U ${!xext} $ETHMINER_OPTS"
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
     HCD="${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -dbg -1 ${!xext} $CLAYMORE_OPTS"
@@ -227,7 +221,7 @@ then
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI1612 || $ALGO == PHI2 || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
 then
   UCCALGO="-a ${ALGO,,}"
-  HCD="${NVOC}"/miners/"${!xminer}"/ccminer
+  HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
   eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 ## CRYPTONIGHT
