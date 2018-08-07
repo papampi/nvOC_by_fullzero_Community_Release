@@ -106,4 +106,9 @@ defnonblock 5
 # screen -t mail 8 mutt
 # screen -t daemon 9 tail -f /var/log/daemon.log
 
+## set cuda-8.0 env for older miners
+setenv PATH /usr/loca/cuda-8.0:$PATH
+setenv LD_LIBRARY_PATH /usr/local/cuda-8.0/lib64:$LD_LIBRARY_PATH
+
+## logfile:
 logfile  ${NVOC}/nvoc_logs/screenlog.0
