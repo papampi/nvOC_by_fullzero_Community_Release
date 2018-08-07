@@ -525,7 +525,7 @@ then
   {
     "Cryptonight-Monero":
     {
-      "bin": "${NVOC}/miners/xmr-stak/xmr-stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
+      "bin": "${NVOC}/miners/xmr_stak/xmr_stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
       "power_limit": $pwr_lim_cryptonight_monero, "gpu_oc": $gpu_clks_cryptonight_monero, "mem_oc": $mem_clks_cryptonight_monero, "fan": 0,
       "speed": 0.000002, "power": 0.325
     },
@@ -620,12 +620,12 @@ then
   {
     "Cryptonight":
     {
-      "bin": "${NVOC}/miners/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
+      "bin": "${NVOC}/miners/KTccminer_cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
       "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0
     },
     "Cryptonight-Monero":
     {
-      "bin": "${NVOC}/miners/xmr-stak/xmr-stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
+      "bin": "${NVOC}/miners/xmr_stak/xmr_stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
       "power_limit": $pwr_lim_cryptonight_monero, "gpu_oc": $gpu_clks_cryptonight_monero, "mem_oc": $mem_clks_cryptonight_monero, "fan": 0
     },
     "Cryptonight-Heavy":

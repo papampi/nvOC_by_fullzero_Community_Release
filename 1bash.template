@@ -446,7 +446,7 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 # Available builtin miners:
 #        Various algos:
 #          "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer",
-#          "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr-stak"
+#          "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr_stak"
 #        Equihash:
 #          "DSTM", "EWBF", "BMINER"
 #        Zhash:
@@ -466,12 +466,12 @@ CRYPTONIGHT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT-V7
 CRYPTONIGHTV7_INTENSITY="0"
-CRYPTONIGHTV7_MINER="xmr-stak"
+CRYPTONIGHTV7_MINER="xmr_stak"
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHTHEAVY
 CRYPTONIGHTHEAVY_INTENSITY="0"
-CRYPTONIGHTHEAVY_MINER="xmr-stak"
+CRYPTONIGHTHEAVY_MINER="xmr_stak"
 CRYPTONIGHTHEAVY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Decred
