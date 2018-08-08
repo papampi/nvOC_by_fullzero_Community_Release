@@ -227,7 +227,7 @@ then
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
-  if [[ $CRYPTONIGHT_MINER == KTccminer-cryptonight ]]
+  if [[ $CRYPTONIGHT_MINER == KTccminer_cryptonight ]]
   then  
     HCD="${NVOC}"/miners/KTccminer_cryptonight/"${!xversion}"/ccminer
     eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $CCMINER_OPTS ${!xext}
