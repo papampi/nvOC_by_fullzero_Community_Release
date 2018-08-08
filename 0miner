@@ -108,7 +108,7 @@ xcuda=$ALGO$UCUDA
 mpath="${NVOC}/miners/${!xminer}"
 
 # List of cuda-8.0 miners 
-CUDA_8_MINERS="KXccminer SPccminer ASccminer NAccminer ANXccminer SUPRminer"
+CUDA_8_MINERS="ANXccminer ASccminer KXccminer MSFTccminer NAccminer SILENTminer SPccminer SUPRminer vertminer"
 LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
 
 for miner in $CUDA_8_MINERS
