@@ -4,6 +4,8 @@
 #############      nvOC v0019-2.1 - Community Release    #################
 ##########################################################################
 
+## 1bash with no help and info ##
+
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
 nvOC_1bash_ver="0036"
@@ -58,7 +60,7 @@ SRR_SERIAL="000055"
 
 __SRR_SLOT="1"
 
-CONTROL_GPU_LED="YES"
+CONTROL_GPU_LED="NO"
 
 LED_BRIGHTNESS="100" 
 
@@ -196,21 +198,18 @@ MPH_ADDRESS="Your_MiningPoolHub_Username"
 
 WALLET_ADDRESS_FORMAT="." 
 
-MINER_PWD="x" # Set the miner password. Default: x
+MINER_PWD="x"
 
 ########################################################
 #        Algo->miner mapping and specific settings     #
 ########################################################
 
 # Available built-in miners:
-# Various algos:
 # "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer",
 # "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr_stak"
-# Equihash:
+# "KTccminer_cryptonight"
 # "DSTM", "EWBF", "BMINER"
-# Zhash:
 # "Z_EWBF"
-# Ethash:
 # "CLAYMORE", "ETHMINER", "GENOIL", "bminer"
 
 ## BITCORE, TIMETRAVEL10
