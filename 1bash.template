@@ -1443,15 +1443,15 @@ ETHASH_POWERLIMIT_WATTS=100              # Recommended value for some GTX-1060: 
 ETHASH_CORE_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
 ETHASH_MEMORY_OVERCLOCK=0                # Recommended value for some GTX-1060: 1600
 
-# lyra2vRev2
-LYRA2REV2_POWERLIMIT_WATTS=100           # Recommended value for some GTX-1060: 65
-LYRA2REV2_CORE_OVERCLOCK=0               # Recommended value for some GTX-1060: 135
-LYRA2REV2_MEMORY_OVERCLOCK=0             # Recommended value for some GTX-1060: -1200
-
-# lyra2v2
+# lyra2v2, Lyura2Rev2
 LYRA2V2_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 65
 LYRA2V2_CORE_OVERCLOCK=0                 # Recommended value for some GTX-1060: 160
 LYRA2V2_MEMORY_OVERCLOCK=0               # Recommended value for some GTX-1060: -1000
+
+# LYRA2Z
+LYRA2Z_POWERLIMIT_WATTS=100           # Recommended value for some GTX-1060: 65
+LYRA2Z_CORE_OVERCLOCK=0               # Recommended value for some GTX-1060: 135
+LYRA2Z_MEMORY_OVERCLOCK=0             # Recommended value for some GTX-1060: -1200
 
 # Neoscrypt
 NEOSCRYPT_POWERLIMIT_WATTS=100           # Recommended value for some GTX-1060: 80
