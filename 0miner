@@ -208,14 +208,14 @@ then
   miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
-  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$miner_opts" ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
 
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
   HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
-  eval $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$miner_opts" ${!xext}
+  eval $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
@@ -223,7 +223,7 @@ then
   miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
   HCD="${NVOC}"/miners/pasc/sgminer
   UCCALGO="-k pascal"
-  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$miner_opts" ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
   ## CRYPTONIGHTV7
 elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
 then
