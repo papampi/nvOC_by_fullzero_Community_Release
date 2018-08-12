@@ -1,0 +1,31 @@
+{
+    "friendlyname": "claymore",
+    "version": "$claymore_ver",
+    "hcd": "ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -dbg -1 ${!xext} $CLAYMORE_OPTS",
+    "devlist_format": 0,
+
+    "minerinfo":
+    {
+      "total_hash": "false",
+      "hash_count": "false",
+      "solution_speed_unit": "Mh/s",
+      "miner_error": "false",
+      "rejected_shares": "false"
+    },
+
+    "install":
+    {
+      "latest": "true",
+      "recommanded": "cuda-9.2",
+      "tarball": "$claymore_tarball_ver",
+      "executable": "claymore"
+    },
+
+    "compile":
+    {
+      "src_path": "false",
+      "src_commit_hash": "",
+      "command": "",
+      "output": ""
+    }
+}
