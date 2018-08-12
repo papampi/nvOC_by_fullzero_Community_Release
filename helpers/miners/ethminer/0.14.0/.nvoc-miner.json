@@ -1,0 +1,31 @@
+{
+    "friendlyname": "Ethminer",
+    "version": "$ethminer_ver_8",
+    "hcd": "ethminer -P ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} -U ${!xext} $ETHMINER_OPTS",
+    "devlist_format": 0,
+
+    "minerinfo":
+    {
+      "total_hash": "tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep Speed | sed -r 's/\\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o '[0-9]*.[0-9]* Mh/s' | awk '{print$1}' | awk '{s+=$1} END {printf \"%.0f\", s}'",
+      "hash_count": "tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep Speed | grep -v grep | wc -l | awk '{print $1}'",
+      "solution_speed_unit": "Mh/s",
+      "miner_error": "false",
+      "rejected_shares": "false"
+    },
+
+    "install":
+    {
+      "latest": "true",
+      "recommanded": "cuda-8.0",
+      "tarball": "$ethminer_tarball_ver_8",
+      "executable": "ethminer"
+    },
+
+    "compile":
+    {
+      "src_path": "false",
+      "src_commit_hash": "",
+      "command": "",
+      "output": ""
+    }
+}
