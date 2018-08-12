@@ -1,0 +1,33 @@
+
+{
+  "friendlyname": "ANXccminer",
+  "version": "$ANXccminer_ver_8",
+  "hcd": "ccminer -o ${!xproto}://${!xpool}:${!xport} -u ${!xaddr}${!xwallet}${!xwork} -p $MINER_PWD ${!xext} -i ${!xintensity} $CCMINER_OPTS",
+  "devlist_format": 0,
+
+  "minerinfo":
+  {
+    "total_hash": "false",
+    "hash_count": "false",
+    "solution_speed_unit": "false",
+    "miner_error": "false",
+    "rejected_shares": "false"
+  },
+
+  "install":
+  {
+    "latest": "true",
+    "recommanded": "cuda-8.0",
+    "tarball": "$ANXccminer_tarball_ver_8",
+    "executable": "ccminer"
+  },
+
+  "compile":
+  {
+    "src_path": "../src",
+    "src_repo": "https://github.com/anorganix/ccminer-phi",
+    "src_commit_hash": "$ANXccminer_src_ver_8",
+    "command": "bash autogen.sh && bash configure --with-cuda=/usr/local/cuda-8.0 && ./build.sh",
+    "output": "ccminer"
+  }
+}
