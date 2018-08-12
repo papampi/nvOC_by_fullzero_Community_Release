@@ -20,9 +20,6 @@
  #                          E.g: DISABLED_GPU_ARRAY[0]= unix date
  #                               DISABLED_GPU_ARRAY[1]= unix date
  #                               DISABLED_GPU_ARRAY[5]= unix date
- #        MDPA - (MINER_DEVICE_PREFIX_ARRAY) predefined options prefix of each known miner E.g. --device
- #        MDTA - (MINER_DEVICE_TYPE_ARRAY), represents how GPU # is presented, A=alphanumeric,N=numeric E.g. A is used by claymore only
- #        MDDA - (MINER_DEVICE_DELIMITER_ARRAY), the delimiter between GPU# E.g. MDPA[D]=',' => seperated by comma 1,2,3,4
  # MINER REFERENCE:
  #    BMINER        : -devices 0,1,2,3,4,5,6,7,8,...
  #    CCMINER       : --devices 0,1,2,3,4,5,6,7,8,...
@@ -45,26 +42,9 @@ source ${NVOC}/helpers/generic_helper.sh
  #    - n/a
  #    GLOBAL:
  #        DISABLED_GPU_ARRAY
- #        MDPA - (MINER_DEVICE_PREFIX_ARRAY) predefined options prefix of each known miner E.g. --device
- #        MDTA - (MINER_DEVICE_TYPE_ARRAY), represents how GPU # is presented, A=alphanumeric,N=numeric E.g. A is used by claymore only
- #        MDDA - (MINER_DEVICE_DELIMITER_ARRAY), the delimiter between GPU# E.g. MDPA[D]=',' => seperated by comma 1,2,3,4
  #    ENV:
  #        CUDA_DEVICE_ORDER=PCI_BUS_ID
 function _dgh_main () {
-  # I don't like this, should refactor it in the future if portable miner is implemented
-  # declare hard coded miner opt dev prefix
-  [[ ! -v MDPA[@] ]] && {
-    declare -rgA "MDPA=([BMINER]='-devices ' [CCMINER]='--devices ' [CLAYMORE]='-di ' [DSTM]='--dev ' \
-                  [ETHMINER]='--cuda_devices ' [EWBF]='--cuda_devices ' [Z_EWBF]='--cuda_devices ')"
-  }
-  [[ ! -v MDTA[@] ]] && {
-    declare -rgA "MDTA=([BMINER]='N' [CCMINER]='N' [CLAYMORE]='A' [DSTM]='N' \
-                  [ETHMINER]='N' [EWBF]='N' [Z_EWBF]='N')"
-  }
-  [[ ! -v MDDA[@] ]] && {
-    declare -rgA "MDDA=([BMINER]=',' [CCMINER]=',' [CLAYMORE]='' [DSTM]=' ' \
-                  [ETHMINER]=' ' [EWBF]=' ' [Z_EWBF]=' ')"
-  }
   [[ -z "$DISABLED_GPUS" ]] && {
     echo "DISABLED_GPUS not set"
     return 1

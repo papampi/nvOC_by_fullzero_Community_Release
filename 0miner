@@ -97,6 +97,7 @@ xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
 xcuda=$ALGO$UCUDA
+miner_opts="$(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")"
 
 if [[ ${!xcuda} != "" ]]
 then
@@ -138,19 +139,17 @@ then
   MPH_CRYPTONIGHTV7==$MPH_ADDRESS
 fi
 
-
 ## CLAYMORE_DUAL
 if [[ $COIN == CLAYMORE_DUAL ]]
 then
   # add claymore opts?
-  # miner_opts="$(dgh_enabled_devices "${MDPA[CLAYMORE]}" "${MDDA[CLAYMORE]}" "${MDTA[CLAYMORE]}" "$(dgh_get_miner_opts 'CLAYMORE' "$COIN" "$ALGO")")"
+  # miner_opts="$(dgh_enabled_devices '-di ' '' 'A' "$miner_opts")"
   HCD=${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64
   E_ADDR="$DUAL_EWAL""$ETHASH_WALLET_FORMAT""$DUAL_EWORKER"
   D_ADDR="$DUAL_DWAL""$DUAL_WALLET_FORMAT""$DUAL_DWORKER"
   screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS"
 fi
 
-miner_opts="$(dgh_enabled_devices "${MDPA[${!xminer}]}" "${MDDA[${!xminer}]}" "${MDTA[${!xminer}]}" "$(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")")"
 ## ETHASH
 if [[ $ALGO == ETHASH ]]
 then
@@ -158,15 +157,19 @@ then
   if [[ $ETHASH_MINER == GENOIL ]]
   then
     # skipping GENOIL's setting, since i'm not sure what's it's device options prefix ,etc
+    # miner_opts="$(dgh_enabled_devices '-di ' '' 'A' "$miner_opts")"
     HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
   elif [[ $ETHASH_MINER == ETHMINER ]]
   then
+    miner_opts="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$miner_opts")"
     HCD="${NVOC}/miners/ethminer/latest/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext} $miner_opts"
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
+    miner_opts="$(dgh_enabled_devices '-di ' '' 'A' "$miner_opts")"
     HCD="${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -dbg -1 ${!xext} $miner_opts"
   elif [[ $ETHASH_MINER == BMINER ]]
   then
+    miner_opts="$(dgh_enabled_devices '-devices ' ',' 'N' "$miner_opts")"
     HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $miner_opts ${!xext}"
   fi
   eval $LAUNCH $HCD
@@ -176,12 +179,15 @@ elif [[ $ALGO == EQUIHASH ]];
 then
   if [[ $EQUIHASH_MINER == DSTM ]]
   then
+    miner_opts="$(dgh_enabled_devices '--dev ' ' ' 'N' "$miner_opts")"
     HCD="${NVOC}/miners/dstm/latest/zm_miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $miner_opts ${!xext}"
   elif [[ $EQUIHASH_MINER == EWBF ]]
   then
+    miner_opts="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$miner_opts")"
     HCD="${NVOC}/miners/ewbf/$EWBF_VERSION/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $miner_opts ${!xext}"
   elif [[ $EQUIHASH_MINER == BMINER ]]
   then
+    miner_opts="$(dgh_enabled_devices '-devices ' ',' 'N' "$miner_opts")"
     HCD="${NVOC}/miners/bminer/latest/bminer -uri $BMINER_PROTOCOL://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $miner_opts ${!xext}"
   fi
   eval $LAUNCH $HCD
@@ -191,6 +197,7 @@ elif [[ $ALGO == ZHASH ]];
 then
   if [[ $ZHASH_MINER == Z_EWBF ]]
   then
+    miner_opts="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$miner_opts")"
     HCD="${NVOC}/miners/z_ewbf/$Z_EWBF_VERSION/miner --fee $Z_EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $miner_opts ${!xext}"
   fi
   eval $LAUNCH $HCD
@@ -198,30 +205,30 @@ then
 
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI1612 || $ALGO == PHI2 || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
 then
-  miner_opts="$(dgh_enabled_devices "${MDPA[CCMINER]}" "${MDDA[CCMINER]}" "${MDTA[CCMINER]}" "$(dgh_get_miner_opts "CCMINER" "$COIN" "$ALGO")")"
+  miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/ccminer
-  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$miner_opts" ${!xext}
 
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
-  miner_opts="$(dgh_enabled_devices "${MDPA[CCMINER]}" "${MDDA[CCMINER]}" "${MDTA[CCMINER]}" "$(dgh_get_miner_opts "CCMINER" "$COIN" "$ALGO")")"
+  miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
   HCD="${NVOC}"/miners/KTccminer-cryptonight/ccminer
-  eval $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
+  eval $LAUNCH $HCD -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$miner_opts" ${!xext}
 
 ## PASCAL
 elif [[ $ALGO == PASCAL ]]
 then
-  miner_opts="$(dgh_enabled_devices "${MDPA[CCMINER]}" "${MDDA[CCMINER]}" "${MDTA[CCMINER]}" "$(dgh_get_miner_opts "CCMINER" "$COIN" "$ALGO")")"
+  miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
   HCD="${NVOC}"/miners/pasc/sgminer
   UCCALGO="-k pascal"
-  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o stratum+tcp://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" "$miner_opts" ${!xext}
   ## CRYPTONIGHTV7
 elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
 then
   # Unsure about this, not sure how to implement
-  # miner_opts="$(dgh_enabled_devices "${MDPA[CCMINER]}" "${MDDA[CCMINER]}" "${MDTA[CCMINER]}" "$(dgh_get_miner_opts "CCMINER" "$COIN" "$ALGO")")"
+  # miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
 # Remove nvidia.txt if cards count changed
   if [ -f ~/nvidia.txt ]
   then
