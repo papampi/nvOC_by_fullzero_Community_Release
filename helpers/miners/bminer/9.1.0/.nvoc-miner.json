@@ -1,0 +1,31 @@
+{
+    "friendlyname": "bminer",
+    "version": "$bminer_ver",
+    "hcd": "bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} ${!xext} $BMINER_OPTS ",
+    "devlist_format": 0,
+
+    "minerinfo":
+    {
+      "total_hash": "false",
+      "hash_count": "false",
+      "solution_speed_unit": "Mh/s",
+      "miner_error": "false",
+      "rejected_shares": "false"
+    },
+
+    "install":
+    {
+      "latest": "true",
+      "recommanded": "cuda-9.2",
+      "tarball": "$bminer_tarball_ver",
+      "executable": "bminer"
+    },
+
+    "compile":
+    {
+      "src_path": "false",
+      "src_commit_hash": "",
+      "command": "",
+      "output": ""
+    }
+}
