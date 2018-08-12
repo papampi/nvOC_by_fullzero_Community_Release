@@ -6,8 +6,10 @@
 
     "minerinfo":
     {
-      "total_hash": "false",
-      "hash_count": "false",
+      "total_hash": "tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | awk '{s+=$1} END {printf "%.0f", s}'
+",
+      "hash_count": "tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}'
+",
       "solution_speed_unit": "Mh/s",
       "miner_error": "false",
       "rejected_shares": "false"
