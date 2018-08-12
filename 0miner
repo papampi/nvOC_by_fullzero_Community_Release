@@ -147,7 +147,7 @@ then
   HCD=${NVOC}/miners/claymore/$CLAYMORE_VERSION/ethdcrminer64
   E_ADDR="$DUAL_EWAL""$ETHASH_WALLET_FORMAT""$DUAL_EWORKER"
   D_ADDR="$DUAL_DWAL""$DUAL_WALLET_FORMAT""$DUAL_DWORKER"
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS"
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS" $miner_opts
 fi
 
 ## ETHASH
@@ -158,7 +158,7 @@ then
   then
     # skipping GENOIL's setting, since i'm not sure what's it's device options prefix ,etc
     # miner_opts="$(dgh_enabled_devices '-di ' '' 'A' "$miner_opts")"
-    HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext}"
+    HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext} $miner_opts"
   elif [[ $ETHASH_MINER == ETHMINER ]]
   then
     miner_opts="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$miner_opts")"
@@ -246,7 +246,7 @@ then
     fi
   fi
   HCD=${NVOC}/miners/xmr-stak/xmr-stak_miner
-  eval $LAUNCH $HCD --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
+  eval $LAUNCH $HCD --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0 $miner_opts
 else
   echo ""
   echo "COIN/ALGO not found, Check your settings"
