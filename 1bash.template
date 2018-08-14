@@ -638,6 +638,7 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 #        If you add any new coin here don't forget to also map it to its
 #        algo as explained in previous sections.
 #        You can setup new coins as in the example at the end of this section.
+#
 #        Default Coin Pool Protocols is stratum+tcp, If your pool has other protocols check miner support before changing it
 #        stratum+ssl, stratum+tcp, stratum+tls, stratum+tls12, stratum1+ssl, stratum1+tcp, stratum1+tls, stratum1+tls12, stratum2+ssl, stratum2+tcp, stratum2+tls, stratum2+tls12
 #
