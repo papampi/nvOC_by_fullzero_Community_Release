@@ -112,10 +112,12 @@ v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
 v0034="LuKePicci;Rearrange settings and explaination comments"
 v0035="LuKePicci;Uniform plusCPU handling"
 v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
+v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
+v0038="papampi;CryptoDredge_miner, Suported Algos: Allium, Blake2s, Lyra2v2,Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0036"
+nvOC_1bash_ver="0038"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
@@ -391,6 +393,7 @@ LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
 LYRA2Z_COINS="XZC,MPH_LYRA2Z"
 MYR_GR_COINS="XMY,MPH_MYR_GR"
 NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
+PASCAL_COINS="PASC,PASL"
 PHI1612_COINS="FLM,SERA"
 PHI2_COINS="LUX"
 SIA_COINS="SIA"
@@ -441,17 +444,20 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 #        Test intensity on your rig and edit it or miner will set default values.
 #        Choose the wallet address format your pool requires, or leave common format.
 #        You can define new mappings as in the example at the end of this section.
+#        Read BMINER available scheme in coin section 
 
 # Available builtin miners:
 #        Various algos:
 #          "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer",
-#          "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr_stak"
+#          "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr-stak", 
+#          "CryptoDredge_miner" 
 #        Equihash:
 #          "DSTM", "EWBF", "BMINER"
 #        Zhash:
-#          "Z_EWBF"
+#          "Z_EWBF", "BMINER"
 #        Ethash:
-#          "CLAYMORE", "ETHMINER", "GENOIL"
+#          "CLAYMORE", "ETHMINER", "GENOIL", "BMINER"
+
 
 ## BITCORE, TIMETRAVEL10
 BITCORE_INTENSITY="0"
@@ -465,12 +471,12 @@ CRYPTONIGHT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT-V7
 CRYPTONIGHTV7_INTENSITY="0"
-CRYPTONIGHTV7_MINER="xmr_stak"
+CRYPTONIGHTV7_MINER="xmr-stak"
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHTHEAVY
 CRYPTONIGHTHEAVY_INTENSITY="0"
-CRYPTONIGHTHEAVY_MINER="xmr_stak"
+CRYPTONIGHTHEAVY_MINER="xmr-stak"
 CRYPTONIGHTHEAVY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Decred
@@ -520,6 +526,11 @@ MYR_GR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 NEOSCRYPT_INTENSITY="0"
 NEOSCRYPT_MINER="KTccminer"
 NEOSCRYPT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## PASCAL
+PASCAL_INTENSITY="0"
+PASCAL_MINER="TPccminer"
+PASCAL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PHI1612
 PHI1612_INTENSITY="0"
@@ -632,13 +643,15 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 #        If you add any new coin here don't forget to also map it to its
 #        algo as explained in previous sections.
 #        You can setup new coins as in the example at the end of this section.
+#
 #        Default Coin Pool Protocols is stratum+tcp, If your pool has other protocols check miner support before changing it
 #        stratum+ssl, stratum+tcp, stratum+tls, stratum+tls12, stratum1+ssl, stratum1+tcp, stratum1+tls, stratum1+tls12, stratum2+ssl, stratum2+tcp, stratum2+tls, stratum2+tls12
 #
-#        If using bminer for equihash or ethash use these protocols:
+#        If using BMINER use these in coin pool protocols:
 #        Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
 #        Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
-
+#        ZHash Algos like BTG: "zhash"
+#        Tensority based coins like BTM: "tensority"
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
@@ -894,6 +907,22 @@ ORB_POOL="strat.dnb.io"
 ORB_PORT="3031"
 ORB_WORKER="$WORKERNAME"
 ORB_POOL_PROTOCOL="stratum+tcp"
+
+# Pascal Coin (PASC)
+PASC_ADDRESS="replace_with_your_address"
+PASC_EXTENSION_ARGUMENTS=""
+PASC_POOL="pasc-us-east1.nanopool.org"
+PASC_PORT="15555"
+PASC_WORKER="$WORKERNAME"
+PASC_POOL_PROTOCOL="stratum+tcp"
+
+# Pascal Lite (PASL)
+PASL_ADDRESS="replace_with_your_address"
+PASL_EXTENSION_ARGUMENTS=""
+PASL_POOL="mine.pasl.fairpool.xyz"
+PASL_PORT="4009"
+PASL_WORKER="$WORKERNAME"
+PASL_POOL_PROTOCOL="stratum+tcp"
 
 # Pirl Coin (PIRL)
 PIRL_ADDRESS="replace_with_your_address"
