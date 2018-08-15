@@ -112,10 +112,11 @@ v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
 v0034="LuKePicci;Rearrange settings and explaination comments"
 v0035="LuKePicci;Uniform plusCPU handling"
 v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
+v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0036"
+nvOC_1bash_ver="0037"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
@@ -642,10 +643,11 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 #        Default Coin Pool Protocols is stratum+tcp, If your pool has other protocols check miner support before changing it
 #        stratum+ssl, stratum+tcp, stratum+tls, stratum+tls12, stratum1+ssl, stratum1+tcp, stratum1+tls, stratum1+tls12, stratum2+ssl, stratum2+tcp, stratum2+tls, stratum2+tls12
 #
-#        If using bminer for equihash or ethash use these protocols:
+#        If using bminer use these on coin pool protocols:
 #        Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
 #        Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
-
+#        ZHash Algos like BTG: "zhash"
+#        Tensority based coins like BTM: "tensority"
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
