@@ -113,7 +113,7 @@ v0034="LuKePicci;Rearrange settings and explaination comments"
 v0035="LuKePicci;Uniform plusCPU handling"
 v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
 v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
-v0038="papampi;CryptoDredge_miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
+v0038="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
@@ -448,9 +448,9 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 
 # Available builtin miners:
 #        Various algos:
-#          "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer",
-#          "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr-stak", 
-#          "CryptoDredge_miner" 
+#          "ANXccminer", "ASccminer", "CryptoDredge", "KTccminer",  
+#          "KXccminer", "SILENTminer", "SPccminer",  "SUPRminer",   
+#          "TPccminer", "vertminer", "xmr-stak", "ZENEMYminer"
 #        Equihash:
 #          "DSTM", "EWBF", "BMINER"
 #        Zhash:
