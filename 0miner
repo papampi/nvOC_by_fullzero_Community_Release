@@ -234,7 +234,11 @@ elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $A
 then
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
-  eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+  if [[ ${!xminer} == "CryptoDredge" ]]
+  then
+    HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/CryptoDredge
+  fi
+eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 
 ## CRYPTONIGHT
