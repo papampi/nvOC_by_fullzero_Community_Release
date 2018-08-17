@@ -343,7 +343,7 @@ then
   MINER_ERROR=$(eval $(jq -r .minerinfo.miner_error ${MINER_PATH}/nvoc-miner.json))
   REJECTED_SHARES=$(eval $(jq -r .minerinfo.rejected_shares ${MINER_PATH}/nvoc-miner.json))
 
-elif  ps ax | grep -q "[z]m_miner"
+elif  ps ax | grep miner | grep -q "[D]STM"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -o "[0-9]*.[0-9]* Sol/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "==========" | grep -v grep | wc -l | awk '{print $1}')
@@ -352,13 +352,13 @@ then
   MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
   REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
 
-elif  ps ax | grep -q "[e]thminer"
+elif  ps ax | grep miner | grep -q "[e]thminer"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o '[0-9]*.[0-9]* Mh/s' | awk '{print$1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE="$((total_hash / hash_count)) MH/s"
 
-elif  ps ax |  grep -q "[c]laymore"
+elif  ps ax |  grep miner | grep -q "[C]LAYMORE"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $5}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | wc -l | awk '{print $1}')
@@ -370,7 +370,7 @@ then
     REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
   fi
 
-elif  ps ax | grep -q "[K]Tccminer"
+elif  ps ax | grep miner | grep -q "[K]Tccminer"
 then
   if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[k]H/s"
   then
@@ -384,7 +384,7 @@ then
     HASH_AVERAGE="$((total_hash / hash_count)) MH/s"
   fi
 
-elif  ps ax | grep -q "[T]Pccminer"
+elif  ps ax | grep miner | grep -q "[T]Pccminer"
 then
   if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"
   then
@@ -398,19 +398,19 @@ then
     HASH_AVERAGE="$((total_hash / hash_count)) kH/s"
   fi
 
-elif  ps ax | grep -q "[s]uprminer"
+elif  ps ax | grep miner | grep -q "[s]uprminer"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o "[0-9]*.[0-9]* MH/s" | awk '{print $1}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
 
-elif  ps ax | grep -q "[b]miner"
+elif  ps ax | grep miner | grep -q "[B]MINER"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | awk '{s+=$1} END {printf "%.0f", s}')
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}')
   HASH_AVERAGE=$((total_hash / hash_count))
 
-elif  ps ax | grep -q  "[Z]ENEMYminer" 
+elif  ps ax | grep miner | grep -q  "[Z]ENEMYminer" 
 then
   if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"
   then
@@ -423,10 +423,16 @@ then
     hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[k]H/s" | wc -l | awk '{print $1}')
     HASH_AVERAGE="$((total_hash / hash_count)) kH/s"
   fi
-  elif  ps ax | grep -q "[z]_ewbf"
+  elif  ps ax | grep miner | grep -q "[z]_EWBF"
   then
     total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | grep -o "[0-9]*.[0-9]* Sol/s" |awk '{print $1}'| awk '{s+=$1} END {printf "%.0f", s}')
     hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | grep -v grep |  wc -l | awk '{print $1}')
+    HASH_AVERAGE=$((total_hash / hash_count))
+
+  elif  ps ax | grep miner | grep -q "[C]ryptoDredge"
+  then
+    total_hash=$(tail -200 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total hashrate" | grep -o '[0-9]*.[0-9]*MH/s' | sed -r 's@MH/s@@' | awk '{s+=$1} END {printf "%.0f", s}')
+    hash_count=$(tail -200 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total hashrate" | grep -v grep |  wc -l | awk '{print $1}')
     HASH_AVERAGE=$((total_hash / hash_count))
   fi
 ##################################################################
