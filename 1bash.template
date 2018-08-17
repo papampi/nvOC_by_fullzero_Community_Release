@@ -117,9 +117,9 @@ v0038="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyr
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0038"
-nvOC_1bash_least_compatible="0034"
-nvOC_1bash_last_compatible="0035"
+nvOC_1bash_ver="38"
+nvOC_1bash_least_compatible="34"
+nvOC_1bash_last_compatible="35"
 
 # Open the terminal to launch miner; will auto launch on boot
 
