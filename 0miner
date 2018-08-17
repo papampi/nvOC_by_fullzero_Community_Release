@@ -58,7 +58,8 @@
 # v=0023 : papampi
 #          Cuda switch in screenrc for new and old miners
 # v=0024 : papampi
-#          New miners directory and miner version
+#          New miners directory and miner version, evaluate $xvirsion, 
+#          CryptonightHeavy and V7 fix
 
 
 nvOC_0miner_dev="0024"
@@ -172,6 +173,10 @@ then
   HCD="${mpath}/$(jq -r .hcd ${mpath}/nvoc-miner.json)"
   eval $LAUNCH $HCD
 
+  if [[ ${!xversion} == "" ]]
+  then
+    eval $xversion="recommended"
+  fi
 
 ## ETHASH
 elif [[ $ALGO == ETHASH ]]
@@ -243,9 +248,10 @@ then
   fi
 
 
-## CRYPTONIGHTV7
+## CRYPTONIGHTV7 (monero), CRYPTONIGHTHEAVY
 elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
 then
+
 # Remove nvidia.txt if cards count changed
   if [ -f ~/nvidia.txt ]
   then
@@ -262,8 +268,17 @@ then
       sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
     fi
   fi
+  if [[ $ALGO == "CRYPTONIGHTV7" ]]
+  then
+    UCCALGO="--currency monero7"
+  elif [[ $ALGO == "CRYPTONIGHTHEAVY" ]]
+  then
+    UCCALGO="-a cryptonight-heavy"
+  fi
   HCD=${NVOC}/miners/XMR_Stak/"${!xversion}"/xmr-stak
-  eval $LAUNCH $HCD --currency monero7 --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
+  eval $LAUNCH $HCD  $UCCALGO --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
+
+
 else
   echo ""
   echo "COIN/ALGO not found, Check your settings"
