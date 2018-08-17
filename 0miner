@@ -71,9 +71,6 @@ if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; then
   ps ax | grep SCREEN | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
 fi
 
-# Define cuda runtime paths
-CUDA_ENV="PATH=/usr/local/cuda/bin:$PATH LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
-
 # Set MINER_PWD if unset
 if [ -z "${MINER_PWD+x}" ]
 then
@@ -110,7 +107,6 @@ mpath="${NVOC}/miners/${!xminer}"
 # List of cuda-8.0 miners 
 CUDA_8_MINERS="ANXccminer ASccminer KXccminer MSFTccminer NAccminer SILENTminer SPccminer SUPRminer vertminer"
 LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
-
 for miner in $CUDA_8_MINERS
 do
   if [[ ${!xminer} =~ $miner ]]; then 
