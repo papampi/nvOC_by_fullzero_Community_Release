@@ -435,7 +435,7 @@ then
     hash_count=$(tail -200 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total hashrate" | grep -v grep |  wc -l | awk '{print $1}')
     HASH_AVERAGE=$((total_hash / hash_count))
     REJECTED_SHARES=$(tail -200  ${NVOC}/nvoc_logs/screenlog.0  | grep "INFO  - [0-9]*/[0-9]*" | awk '{print $4}' | cut -f2- -d/ | tail -1)
-    MINER_ERROR=$(tail -500  &{NVOC}/nvoc_logs/screenlog.0 | grep -E  "aborted|rejected"
+    MINER_ERROR=$(tail -500  &{NVOC}/nvoc_logs/screenlog.0 | grep -E  "aborted|rejected")
   fi
 ##################################################################
 ########################### WTM Hash Rate ########################
