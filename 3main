@@ -102,6 +102,7 @@ then
     sudo teamviewer --daemon enable
     sleep 2
     guake -n teamviewer -r teamviewer -e "teamviewer" &
+    sleep 1
     running=""
   fi
 fi
@@ -133,6 +134,7 @@ then
   HCD=${NVOC}/SRR
   if ! ps ax | grep -q '[S]RR';  then
     guake -n $HCD -r SRR -e "bash ${NVOC}/SRR" &
+    sleep 1
   fi
 fi
 
@@ -149,6 +151,7 @@ then
   if ! ps ax | grep -q '[l]og_rotate'
   then
     guake -n $HCD -r LOG_ROTATE -e "bash ${NVOC}/log_rotate" &
+    sleep 1
   fi
 fi
 
@@ -292,6 +295,7 @@ then
   if ! ps ax | grep -q '[7]reboot'
   then
     guake -n $HCD -r AUTO_REBOOT -e "bash ${NVOC}/7reboot" &
+    sleep 1
   fi
 fi
 
@@ -307,6 +311,7 @@ then
     echo "process in guake terminal Tab (f12)"
     echo ""
     guake -n $HCD -r PX_LP_upPASTE -e "bash ${NVOC}/upPASTE" &
+    sleep 1
   fi
 fi
 
@@ -328,6 +333,7 @@ then
       #if guake tab is already showing temp control output dont open a new one
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[t]empcontrol-screenlog.0"; then
         guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -n 0 -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" &
+        sleep 1
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
       echo "process in screen temp; 'nvOC temp-log'"
@@ -342,6 +348,7 @@ then
   if ! ps ax | grep -q '[7]telegram'
   then
     guake -n $HCD -r TELEGRAM_MESSAGES -e "bash ${NVOC}/7telegram" &
+    sleep 1
     running=""
   fi
 fi
@@ -370,6 +377,7 @@ EOF
   if ! ps ax | grep -q '[8]wtm_profit_check'
   then
     guake -n $HCD -r WTM_PROFIT_CHECK -e "bash ${NVOC}/8wtm_profit_check" &
+    sleep 1
     running=""
   fi
 fi
@@ -732,6 +740,7 @@ EOF
       echo "process in screen wtm, guake terminal Tab (f12)"
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[8]_wtmautoswitchlog"; then
         guake -n ${NVOC}/8wtm_auto_switch -r WTM_SWITCHING -e "tail -n 0 -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" &
+        sleep 1
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
       echo "process in screen wtm, 'nvOC wtm-log'"
@@ -792,6 +801,7 @@ then
     if [[ $LOCALorREMOTE == LOCAL ]]
     then
       guake -n $HCD -r ETH_PILL -e "screen -r eth_pill" &
+      sleep 1
     fi
   fi
 else
@@ -933,6 +943,7 @@ then
       if [[ $LOCALorREMOTE == LOCAL ]]
       then
         guake -n $HCD -r cpuminer -e "tail -f ${NVOC}/nvoc_logs/cpuminer-screenlog.0" &
+        sleep 1
         echo "cpuminer process in guake terminal Tab (f12)"
       else
         echo "process in screen wdog; 'nvOC cpuminer-log'"
@@ -963,6 +974,7 @@ then
         #if guake tab is already showing watchdog output dont open a new one
         if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[w]atchdog-screenlog.0" |grep -v grep ;then
           guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -n 0 -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" &
+          sleep 1
         fi
         echo ""
       elif [[ $LOCALorREMOTE == REMOTE ]]
@@ -1029,6 +1041,7 @@ then
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then
         touch ${NVOC}/nvoc_logs/screenlog.0
         guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0" &
+        sleep 1
       fi
       echo "mining process in Guake Tab"
       echo ""
