@@ -125,7 +125,7 @@ for i in filter(lambda x: data[x]["tag"] not in includedCoins, data):
     data.pop(i)
 
 #save current revenue
-proont "Daily Revenue:"
+print "Daily Revenue:"
 RevLog = open(outputDir + "/WTM_current_revenue", "w")
 for i in data:
     RevLog.write("%s:%02.2f\n" % (data[i]["tag"], float(data[i]["btc_revenue"])*exchrate) )
@@ -133,7 +133,7 @@ for i in data:
 RevLog.close()
 
 # save current profit
-print "New profits"
+print "New profits:"
 profitLog = open(outputDir + "/WTM_current_profit", "w")
 for i in data:
     profitLog.write("%s:%s\n" % (data[i]["tag"], data[i]["profitability"]))
