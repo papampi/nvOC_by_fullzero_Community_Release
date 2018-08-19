@@ -62,7 +62,7 @@ try:
     print("Getting BTC price from coindesk.com")
     response = requests.get("http://api.coindesk.com/v1/bpi/currentprice.json")
     exchrate = response.json()['bpi'][currency]['rate_float']
-    print(exchrate)
+    #print(exchrate)
 except Exception as e:
         print("error: ", e)
         try:
@@ -70,7 +70,7 @@ except Exception as e:
             print("Trying to get BTC price from coinbase.com")
             response = requests.get("https://api.coinbase.com/v2/exchange-rates?currency=BTC")
             exchrate = float(response.json()['data']['rates'][currency])
-            print(exchrate)
+            #print(exchrate)
         except Exception as e:
             print("error: ", e)
             try:
@@ -78,7 +78,7 @@ except Exception as e:
                 print("Trying to get BTC price from blockchain.info")
                 response = requests.get("https://blockchain.info/ticker")
                 exchrate = float(response.json()[currency]["last"])                
-                print exchrate
+                #print exchrate
             except Exception as e:
                 print("error: ", e)
                 print("Can not get data from blockchain.info")
