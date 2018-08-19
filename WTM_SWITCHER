@@ -14,6 +14,7 @@
 # v=0006 : papampi    : Comment out some output logs to prevent conflicts with 8wtm_auto_switch
 # v=0007 : papampi    : Added more sources to get BTC exchange rate
 # v=0008 : papampi    : NICE* prefix compatibility
+# v=0008 : papampi    : Fix can not get data
 
 
 from collections import OrderedDict
@@ -58,23 +59,31 @@ def saveTopCoin(data):
 
 #Get BTC exchange rate 
 try:
-    exchrate=float(json.loads(requests.get("http://api.coindesk.com/v1/bpi/currentprice.json").read())['bpi'][currency]['rate_float'])
-    print exchrate
-except:
+    print("Getting BTC price from coindesk.com")
+    response = requests.get("http://api.coindesk.com/v1/bpi/currentprice.json")
+    exchrate = response.json()['bpi'][currency]['rate_float']
+    print(exchrate)
+except Exception as e:
+        print("error: ", e)
         try:
             print("Can not get data from coindesk.com")
-            print("Trying to get data from coinbase.com")
-            exchrate=float(json.loads(urllib2.urlopen("https://api.coinbase.com/v2/exchange-rates?currency=BTC").read())["data"]["rates"][currency])
-            print exchrate
-        except:
+            print("Trying to get BTC price from coinbase.com")
+            response = requests.get("https://api.coinbase.com/v2/exchange-rates?currency=BTC")
+            exchrate = float(response.json()['data']['rates'][currency])
+            print(exchrate)
+        except Exception as e:
+            print("error: ", e)
             try:
                 print("Can not get data from coinbase.com")
-                print("Trying to get data from blockchain.info")
-                exchrate=float(json.loads(urllib2.urlopen("https://blockchain.info/ticker").read())[currency]["last"])
+                print("Trying to get BTC price from blockchain.info")
+                response = requests.get("https://blockchain.info/ticker")
+                exchrate = float(response.json()[currency]["last"])                
                 print exchrate
-            except:
+            except Exception as e:
+                print("error: ", e)
                 print("Can not get data from blockchain.info")
                 print("Failed to get BTC exchange rate")
+                #Instead of exit it should try to read from last price from WTM_BTC_EXCHANGE_RATE if it exists.
                 sys.exit()
 
 #BTC Rates for web, output, ...
