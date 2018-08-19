@@ -178,6 +178,8 @@ do
         echo ""
       else
         echo "Mining $CURRENT_COIN ($CURRENT_COIN_ALGORITHM) for $MINER_TIME_MIN minutes, continue mining $CURRENT_COIN for $((WTM_MINIMUM_MINING_TIME - MINER_TIME)) more seconds"
+        echo ""
+        echo ""
       fi
       
     else
