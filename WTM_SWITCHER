@@ -135,7 +135,7 @@ RevLog.close()
 
 # save current profit
 print " "
-print "New profits:"
+print "Current Profit:"
 profitLog = open(outputDir + "/WTM_current_profit", "w")
 for i in data:
     profitLog.write("%s:%s\n" % (data[i]["tag"], data[i]["profitability"]))
@@ -149,6 +149,7 @@ except:
     print "Currently mining coin was not found in inclusion list, will switch to the new best one"
     minimumDifference = 0
 
+print " "
 newTopCoin = oldTopCoin
 # try searching for a new top coin comparing its profit with current mining coin profit
 try:
