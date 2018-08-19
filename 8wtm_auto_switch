@@ -118,7 +118,7 @@ do
     MINER_TIME=$(( CURRENT_TIME - MINER_START_TIME ))
     MINER_TIME_MIN=$(( MINER_TIME / 60 ))
     echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
-    echo " "
+
     
     # If WTM_SWITCHER is frozen kill it.
     if ps ax | grep -q [WTM]_SWITCHER 
@@ -196,8 +196,6 @@ do
   else
     echo "Auto start miner set to NO"
   fi
-  echo ""
-  echo ""
+
   sleep $TIMEOUT
 done
-
