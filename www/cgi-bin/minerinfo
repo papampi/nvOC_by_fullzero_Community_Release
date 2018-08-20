@@ -110,7 +110,7 @@ MINER_CMD=$(pgrep -afn "${NVOC}/miners" | cut -d ' ' -f 1 --complement)
 MINER_PATH="$(dirname "$(pgrep -afn "${NVOC}/miners" | cut -d ' ' -f 2)")"
 MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 eval 'COIN_POOL=${COIN}_POOL'
-installed_cuda_version=$(sed 's/CUDA Version//' "/usr/local/cuda/version.txt" )
+default_cuda_version=$(sed 's/CUDA Version//' "/usr/local/cuda/version.txt" )
 available_cuda_versions=$(sed 's/CUDA Version//' /usr/local/cuda-{8.0,9.2}/version.txt)
 
 # OC, MC, PL
@@ -573,7 +573,7 @@ echo "Memory / Free Memory: " "<tt style=\"text-align:left; color:white\">" "$ME
 
 echo "Available CUDA Versions: "  "<tt style=\"text-align:left; color:white\">" "$available_cuda_versions <br> </tt>"
 
-echo "Installed CUDA Version: "  "<tt style=\"text-align:left; color:white\">" "$installed_cuda_version <br> </tt>"
+echo "Default CUDA Version: "  "<tt style=\"text-align:left; color:white\">" "$default_cuda_version <br> </tt>"
 
 echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$NIVIDIA_VERSION <br> </tt>"
 
