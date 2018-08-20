@@ -500,6 +500,14 @@ elif [[ $ALGO == ZHASH ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bzh_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
+elif [[ $ALGO == CRYPTONIGHTHEAVY ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcnh_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
+elif [[ $ALGO == PHI2 ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bphi2_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
 else
   WTM_HASH="Not Available"
 fi
