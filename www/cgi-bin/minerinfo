@@ -442,7 +442,7 @@ then
     HASH_AVERAGE="$((total_hash / hash_count)) KH/s"
   fi
   REJECTED_SHARES=$(tail -200  ${NVOC}/nvoc_logs/screenlog.0  | grep -o "INFO  - [0-9]*/[0-9]*" | cut -f2- -d/ | tail -1)
-  MINER_ERROR=$(tail -500  ${NVOC}/nvoc_logs/screenlog.0 | grep -E  "aborted|rejected")
+  MINER_ERROR=$(tail -500  ${NVOC}/nvoc_logs/screenlog.0 | grep -E  "aborted|rejected" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' )
 fi
 ##################################################################
 ########################### WTM Hash Rate ########################
