@@ -187,6 +187,7 @@ LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local a
 
 
 TEAMVIEWER="NO"             # YES or NO # If you use Team Viewer to remotely connect to this rig set this to YES
+RESOLUTION="1366x768"
 
 SSH="YES"                   # YES or NO # If you use SSH to remotely connect to this rig set this to YES
 
