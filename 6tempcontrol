@@ -222,6 +222,17 @@ do
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
 
+    #Shutdown rig if SHUTDOWN_TEMP reached
+    if [[ $CURRENT_TEMP -gt $SHUTDOWN_TEMP ]]
+    then
+	if [[ $TELEGRAM_ALERTS == "YES" ]] || [[ $TELEGRAM_MESSAGES == "YES" ]]
+        then
+          /usr/bin/curl -m 5 -s -X POST --output /dev/null https://api.telegram.org/bot$TELEGRAM_APIKEY/sendMessage -d "text=GPU$GPU exceeded $SHUTDOWN_TEMP c. System shutting down." -d chat_id=$TELEGRAM_CHATID
+        fi
+        sleep 2
+        sudo poweroff -f      
+    fi
+
     # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
     if [[ $GPU_NAME =~ 1050 ]]
     then
