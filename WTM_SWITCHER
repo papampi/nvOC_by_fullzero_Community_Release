@@ -15,6 +15,7 @@
 # v=0007 : papampi    : Added more sources to get BTC exchange rate
 # v=0008 : papampi    : NICE* prefix compatibility
 # v=0009 : papampi    : Fix can not get data
+# v=0010 : papampi    : BTC price workaround if failed to fetch
 
 
 from collections import OrderedDict
