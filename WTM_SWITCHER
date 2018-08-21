@@ -100,15 +100,16 @@ for d in apis:
         # Convert the exchange rate to a float.
         # Some APIs return it as a float, but coinbase.com returns
         # a string. This code also handles None, which in JSON is null
-        # If you just want to print the rate, this conversion is not needed.
         exchrate = float(data) 
-        #print("Rate", exchrate)
         break
     except (ValueError, TypeError) as e:
         print("Invalid exchange rate data", data, type(data))
 else:
-    print"Failed to get BTC exchange rate"
-
+    print"Failed to get latest BTC price, use last fetched."
+    file = open(outputDir + "/WTM_BTC_EXCHANGE_RATE", 'r')
+    lastprice = file.read()
+    exchrate = float(lastprice.split(" ")[0])
+    
 #BTC Rates for web, output, ...
 print "BTC PRICE: " + str(exchrate) + " " + str(currency)
 exchrateLog = open(outputDir + "/WTM_BTC_EXCHANGE_RATE", "w")
