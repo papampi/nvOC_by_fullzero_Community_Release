@@ -210,11 +210,6 @@ AUTO_WORKERNAME="HOST"      # HOST or MAC or CUSTOM # Use HOST IP address or net
 CUSTOM_WORKERNAME="19_2"    # If AUTO_WORKERNAME="CUSTOM" enter your desired workername here
 
 
-#Auto update is disabled on v0019-2.x Community Release.
-AUTO_UPDATE="STABLE"        # STABLE or BETA # To update to the latest STABLE or BETA releases, manually run 4update in guake terminal 
-
-
-
 _Parallax_MODE="NO"         # YES or NO # To deploy 1bash remotely from pastebin.com . You will need to create account
 
 pasteBASH="your_PASTE_here" # pastebin.com setting - enter paste link here
@@ -222,13 +217,11 @@ pasteBASH="your_PASTE_here" # pastebin.com setting - enter paste link here
 upPASTE_TIMEOUT_IN_MINUTES=60  # pastebin.com setting - timeout
 
 
-
 CLEAR_LOGS_ON_BOOT="NO"     # YES or NO # Clear all logs when rig boots up
 
 LOG_ROTATE="YES"            # Rotate (clean) all logs every x hours. Highly recommended to set this to yes!
 
 LOG_ROTATE_INTERVAL="3"     # Time between log rotations in hours. Default is: 3
-
 
 
 SRR="NO"                    # YES or NO # Remote SRR control using Raspberry Pi device with SRR board
@@ -242,6 +235,11 @@ CONTROL_GPU_LED="YES"       # YES or NO # Control GPU LED light. NOTE: It only w
 
 LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OFF, 100 = full brightness
 
+########################################################
+#                                                      #
+# MINER_WATCHDOG settings                              #
+#                                                      #
+########################################################
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
