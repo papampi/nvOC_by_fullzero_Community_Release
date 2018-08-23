@@ -105,9 +105,12 @@ then
     sleep 2
     guake -n teamviewer -r teamviewer -e "teamviewer" &
     running=""
-    echo "Setting Resolution to $RESOLUTION"
-    xrandr --fb $RESOLUTION
-    echo "" 
+    if [[ $RESOLUTION != "" ]]
+    then
+      echo "Setting resolution to $RESOLUTION"
+      xrandr --fb $RESOLUTION
+      echo "" 
+    fi
   fi  
 fi
 
