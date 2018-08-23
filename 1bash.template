@@ -330,7 +330,8 @@ INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO, if YES global target temperature is o
 
 TARGET_TEMP=65                # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
 
-SHUTDOWN_TEMP=90	      # Forcefully shutdown the system if any GPU exceeds this temperature in Celsius. Recommended: 80+
+HOT_SHUTDOWN="YES"	      # YES or NO, if YES system will shutdown when SHUTDOWN_TEMP is exceeded.
+SHUTDOWN_TEMP=85	      # If HOT_SHUTDOWN is YES then the system will shutdown if this number is exceeded. (Celsius)
 
 ALLOWED_TEMP_DIFF=2           # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
 
