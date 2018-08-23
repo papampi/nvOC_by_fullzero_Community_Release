@@ -112,10 +112,12 @@ v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
 v0034="LuKePicci;Rearrange settings and explaination comments"
 v0035="LuKePicci;Uniform plusCPU handling"
 v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
+v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
+v0038="Spiral;Added max temperature shutdown option & resolution option for teamviewer
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0036"
+nvOC_1bash_ver="0038"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
@@ -186,6 +188,7 @@ LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local a
 
 
 TEAMVIEWER="NO"             # YES or NO # If you use Team Viewer to remotely connect to this rig set this to YES
+RESOLUTION="1366x768"       # Default system resolution used when connecting through TeamViewer
 
 SSH="YES"                   # YES or NO # If you use SSH to remotely connect to this rig set this to YES
 
@@ -327,6 +330,9 @@ OhGodAnETHlargementPill="NO"       # YES or NO, Set to YES for mining Ethash alg
 INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO, if YES global target temperature is overridden by individual per-GPU setting found later in this file
 
 TARGET_TEMP=65                # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
+
+HOT_SHUTDOWN="YES"	      # YES or NO, if YES system will shutdown when SHUTDOWN_TEMP is exceeded.
+SHUTDOWN_TEMP=85	      # If HOT_SHUTDOWN is YES then the system will shutdown if this number is exceeded. (Celsius)
 
 ALLOWED_TEMP_DIFF=2           # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
 
@@ -642,10 +648,11 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 #        Default Coin Pool Protocols is stratum+tcp, If your pool has other protocols check miner support before changing it
 #        stratum+ssl, stratum+tcp, stratum+tls, stratum+tls12, stratum1+ssl, stratum1+tcp, stratum1+tls, stratum1+tls12, stratum2+ssl, stratum2+tcp, stratum2+tls, stratum2+tls12
 #
-#        If using bminer for equihash or ethash use these protocols:
+#        If using bminer use these on coin pool protocols:
 #        Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
 #        Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
-
+#        ZHash Algos like BTG: "zhash"
+#        Tensority based coins like BTM: "tensority"
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
@@ -1622,7 +1629,7 @@ WTM_PROFIT_CHECK_INTERVAL="30"                # interval between checking profit
 
 WTM_MIN_DIFFERENCE="6"                        # Mininumum difference in percent when switch to new coin, to prevent too many switches.
 
-WTM_MINIMUM_MINING_TIME="1800"                # Minimum mining time before checking and switching to prevent fast switches.
+WTM_MINIMUM_MINING_TIME="1800"                # Minimum mining time (seconds) before checking and switching to prevent fast switches.
 
 WTM_LOWER_MIN_DIFFERENCE="3"                  # When Minimum Mining time passed, next top coin will switch with lower difference
 
