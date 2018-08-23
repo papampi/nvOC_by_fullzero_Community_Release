@@ -35,11 +35,13 @@
 #          Use sysrq reboot, to prevent freeze/hang
 # v=0007 : LuKePicci
 #          Reduce calls to nvidia-smi and nvidia-settings 
+# v=0008 : Spiral
+#          Add loop to shutdown rig if SHUTDOWN_TEMP exceeded
 
 source ${NVOC}/1bash
 source ${NVOC}/helpers/coin_algo_mapping
 
-nvOC_temp_Dev="0007"
+nvOC_temp_Dev="0008"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
