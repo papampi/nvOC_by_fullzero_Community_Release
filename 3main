@@ -70,6 +70,8 @@
 #          Support CUDA version selection
 # v=0025 : LuKePicci
 #          Support pluggable miners
+# v=0026 : Spiral
+#	   Set resolution from 1bash for teamviewer usage
 
 source ${NVOC}/1bash
 
