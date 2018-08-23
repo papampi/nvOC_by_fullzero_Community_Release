@@ -223,7 +223,7 @@ do
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
 
     #Shutdown rig if SHUTDOWN_TEMP reached
-    if [[ $CURRENT_TEMP -gt $SHUTDOWN_TEMP ]]
+    if [[ $CURRENT_TEMP -gt $SHUTDOWN_TEMP ]] && [[ $HOT_SHUTDOWN == "YES" ]]
     then
 	if [[ $TELEGRAM_ALERTS == "YES" ]] || [[ $TELEGRAM_MESSAGES == "YES" ]]
         then
