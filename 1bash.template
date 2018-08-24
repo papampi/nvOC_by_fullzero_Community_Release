@@ -407,7 +407,7 @@ SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN"
 XEVAN_COINS="BSD"
-ZHASH_COINS="BTG"
+ZHASH_COINS="AION,BTG"
 
 # example, adding NEWALGO for NEWCOIN:
 #
@@ -653,6 +653,14 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 #        Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
 #        ZHash Algos like BTG: "zhash"
 #        Tensority based coins like BTM: "tensority"
+
+# AION
+AION_ADDRESS="replace_with_your_address"
+AION_EXTENSION_ARGUMENTS="--algo aion"
+AION_POOL="AION POOL"
+AION_PORT="AION PORT"
+AION_WORKER="$WORKERNAME"
+AION_POOL_PROTOCOL="stratum+tcp"
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
