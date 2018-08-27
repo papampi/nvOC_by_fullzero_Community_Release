@@ -113,13 +113,13 @@ v0034="LuKePicci;Rearrange settings and explaination comments"
 v0035="LuKePicci;Uniform plusCPU handling"
 v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
 v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
-v0038="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
-v0038="papampi;BMiner Dual mining
-
+v0038="Spiral;Added max temperature shutdown option & resolution option for teamviewer"
+v0039="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
+v0040="papampi;BMiner Dual mining"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="39"
+nvOC_1bash_ver="40"
 nvOC_1bash_least_compatible="34"
 nvOC_1bash_last_compatible="35"
 
@@ -190,6 +190,7 @@ LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local a
 
 
 TEAMVIEWER="NO"             # YES or NO # If you use Team Viewer to remotely connect to this rig set this to YES
+RESOLUTION="1366x768"       # Default system resolution used when connecting through TeamViewer
 
 SSH="YES"                   # YES or NO # If you use SSH to remotely connect to this rig set this to YES
 
@@ -330,6 +331,9 @@ INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO, if YES global target temperature is o
 
 TARGET_TEMP=65                # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
 
+HOT_SHUTDOWN="YES"	      # YES or NO, if YES system will shutdown when SHUTDOWN_TEMP is exceeded.
+SHUTDOWN_TEMP=85	      # If HOT_SHUTDOWN is YES then the system will shutdown if this number is exceeded. (Celsius)
+
 ALLOWED_TEMP_DIFF=2           # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
 
 MINIMAL_FAN_SPEED=50          # Lowest fan speed that will be used. Recommended ranges: 40 - 60
@@ -403,7 +407,7 @@ SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN"
 XEVAN_COINS="BSD"
-ZHASH_COINS="BTG"
+ZHASH_COINS="AION,BTG"
 
 # example, adding NEWALGO for NEWCOIN:
 #
@@ -655,6 +659,14 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 #        Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
 #        ZHash Algos like BTG: "zhash"
 #        Tensority based coins like BTM: "tensority"
+
+# AION
+AION_ADDRESS="replace_with_your_address"
+AION_EXTENSION_ARGUMENTS="--algo aion"
+AION_POOL="AION POOL"
+AION_PORT="AION PORT"
+AION_WORKER="$WORKERNAME"
+AION_POOL_PROTOCOL="stratum+tcp"
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
@@ -1654,7 +1666,7 @@ WTM_PROFIT_CHECK_INTERVAL="30"                # interval between checking profit
 
 WTM_MIN_DIFFERENCE="6"                        # Mininumum difference in percent when switch to new coin, to prevent too many switches.
 
-WTM_MINIMUM_MINING_TIME="1800"                # Minimum mining time before checking and switching to prevent fast switches.
+WTM_MINIMUM_MINING_TIME="1800"                # Minimum mining time (seconds) before checking and switching to prevent fast switches.
 
 WTM_LOWER_MIN_DIFFERENCE="3"                  # When Minimum Mining time passed, next top coin will switch with lower difference
 

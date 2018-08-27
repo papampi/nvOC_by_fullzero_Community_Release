@@ -70,10 +70,12 @@
 #          Support CUDA version selection
 # v=0025 : LuKePicci
 #          Support pluggable miners
+# v=0026 : Spiral
+#	   Set resolution from 1bash for teamviewer usage
 
 source ${NVOC}/1bash
 
-nvOC_3main_Dev="0025"
+nvOC_3main_Dev="0026"
 nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"             # Do not edit this
 
 #########################################################################
@@ -104,7 +106,13 @@ then
     guake -n teamviewer -r teamviewer -e "teamviewer" &
     sleep 1
     running=""
-  fi
+    if [[ $RESOLUTION != "" ]]
+    then
+      echo "Setting resolution to $RESOLUTION"
+      xrandr --fb $RESOLUTION
+      echo "" 
+    fi
+  fi  
 fi
 
 if [[ $TEAMVIEWER == NO ]]

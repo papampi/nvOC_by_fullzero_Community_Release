@@ -35,11 +35,13 @@
 #          Use sysrq reboot, to prevent freeze/hang
 # v=0007 : LuKePicci
 #          Reduce calls to nvidia-smi and nvidia-settings 
+# v=0008 : Spiral
+#          Add loop to shutdown rig if SHUTDOWN_TEMP exceeded
 
 source ${NVOC}/1bash
 source ${NVOC}/helpers/coin_algo_mapping
 
-nvOC_temp_Dev="0007"
+nvOC_temp_Dev="0008"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
@@ -221,6 +223,17 @@ do
     { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW GPU_NAME; } < <(echo "$SMI_QUERY" | sed "$((GPU+1))q;d")
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
+
+    #Shutdown rig if SHUTDOWN_TEMP reached
+    if [[ $CURRENT_TEMP -gt $SHUTDOWN_TEMP ]] && [[ $HOT_SHUTDOWN == "YES" ]]
+    then
+	if [[ $TELEGRAM_ALERTS == "YES" ]] || [[ $TELEGRAM_MESSAGES == "YES" ]]
+        then
+          /usr/bin/curl -m 5 -s -X POST --output /dev/null https://api.telegram.org/bot$TELEGRAM_APIKEY/sendMessage -d "text=GPU$GPU exceeded $SHUTDOWN_TEMP c. System shutting down." -d chat_id=$TELEGRAM_CHATID
+        fi
+        sleep 2
+        sudo poweroff -f      
+    fi
 
     # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
     if [[ $GPU_NAME =~ 1050 ]]
