@@ -1162,14 +1162,14 @@ MAIN_COIN_ADDRESS="replace_with_your_address" #Main Coin wallet address
 MAIN_COIN_POOL="POOL_ADDRESS"                 #Main Coin pool address
 MAIN_COIN_PORT="POOL_PORT"                    #Main Coin pool port
 MAIN_COIN_WORKER="$WORKERNAME"                #Main Coin worker name
-MAIN_COIN_POOL_PROTOCOL="ethash"              #Main Coin pool protocol scheme: "ethash", "ethproxy", "ethstratum", "ethash+ssl"
+MAIN_COIN_POOL_PROTOCOL="ethash"              #Main Coin pool protocol: "ethash", "ethproxy", "ethstratum", "ethash+ssl"
 
 DUAL_COIN=""                                  #Dual Coin, blake14r and blake2s coins
 DUAL_COIN_ADDRESS="replace_with_your_address" #Dual Coin wallet address
 DUAL_COIN_POOL="POOL_ADDRESS"                 #Dual Coin pool address
 DUAL_COIN_PORT="PORT"                         #Dual Coin pool port
 DUAL_COIN_WORKER="$WORKERNAME"                #Dual Coin worker name
-DUAL_COIN_POOL_PROTOCOL="blake2s"             # supported cooin algos: "blake14r", "blake2s" 
+DUAL_COIN_POOL_PROTOCOL="blake2s"             #Dual Coin Supported algos: "blake14r", "blake2s" 
 
 
 ########################################################
