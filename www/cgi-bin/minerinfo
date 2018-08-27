@@ -144,12 +144,13 @@ then
 fi
 
 # Reduce nvidia-smi query by trying to read from watchdog log first
-if ps ax | grep -q "[5]watchdog"
+if ps ax | grep -v grep | grep -q "[5]watchdog" && tail -10 ${NVOC}/nvoc_logs/watchdog-screenlog.0 | grep -q "[U]tilization:"
 then
   GPU_UTILIZATIONS=$(tail -$TAIL_GPU_COUNT ${NVOC}/nvoc_logs/watchdog-screenlog.0  | grep -o "GPU[0-9]* Utilization: [0-9]*%" | tail -$GPU_COUNT | sed  's/ Utilization//' |sed  's/: /:/'| paste -s )
 else
   GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
 fi
+
 
 # Red load average if its higher than cpu core count
 CORE=$(nproc)
