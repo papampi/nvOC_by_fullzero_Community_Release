@@ -63,7 +63,7 @@
 #          BMINER Dual Mining
 
 
-nvOC_0miner_dev="0024"
+nvOC_0miner_dev="0025"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 
