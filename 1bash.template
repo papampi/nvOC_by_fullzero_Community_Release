@@ -114,10 +114,12 @@ v0035="LuKePicci;Uniform plusCPU handling"
 v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
 v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
 v0038="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
+v0038="papampi;BMiner Dual mining
+
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="38"
+nvOC_1bash_ver="39"
 nvOC_1bash_least_compatible="34"
 nvOC_1bash_last_compatible="35"
 
@@ -1147,6 +1149,28 @@ ALL_COINS="0"                               #0 or 1, Set to 1 to be able to mine
 MPORT="-3333"                               #remote monitoring/management port. Default value is -3333 (read-only mode), specify "-mport 0" to disable remote monitoring/management feature. 
 MPSW=""                                     #remote monitoring/management password.
 DUAL_ADDITIONAL_ARGUMENTS=""                #Additional arguments if needed
+
+
+###################################################
+# Bminer_Dual Mining                              #
+# Set COIN="BMINER_DUAL"                          #  
+###################################################
+
+
+MAIN_COIN=""                                  #Main Coin, Ethereum or any Ethash Coin
+MAIN_COIN_ADDRESS="replace_with_your_address" #Main Coin wallet address
+MAIN_COIN_POOL="POOL_ADDRESS"                 #Main Coin pool address
+MAIN_COIN_PORT="POOL_PORT"                    #Main Coin pool port
+MAIN_COIN_WORKER="$WORKERNAME"                #Main Coin worker name
+MAIN_COIN_POOL_PROTOCOL="ethash"              #Main Coin pool protocol scheme: "ethash", "ethproxy", "ethstratum", "ethash+ssl"
+
+DUAL_COIN=""                                  #Dual Coin, blake14r and blake2s coins
+DUAL_COIN_ADDRESS="replace_with_your_address" #Dual Coin wallet address
+DUAL_COIN_POOL="POOL_ADDRESS"                 #Dual Coin pool address
+DUAL_COIN_PORT="PORT"                         #Dual Coin pool port
+DUAL_COIN_WORKER="$WORKERNAME"                #Dual Coin worker name
+DUAL_COIN_POOL_PROTOCOL="blake2s"             # supported cooin algos: "blake14r", "blake2s" 
+
 
 ########################################################
 #                                                      #
