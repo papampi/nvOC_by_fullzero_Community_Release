@@ -164,8 +164,9 @@ nvOC_1bash_last_compatible="35"
 #                                                      #
 ########################################################
 
-COIN="ZEC"                  # Choose manually the coin to mine (like ETH, ZEC ...)
-                            # or pick an automatic profit-based switcher below
+COIN="ZEC"                  # Manual mining, choose the coin to mine (like "ETH", "ZEC", ...)
+			    # Dual mining: "DUAL_CLAYMORE" or "DUAL_BMINER"
+                            # Automatic profit-based switchers below
 
 AUTO_START_MINER="NO"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
@@ -195,15 +196,12 @@ RESOLUTION="1366x768"       # Default system resolution used when connecting thr
 SSH="YES"                   # YES or NO # If you use SSH to remotely connect to this rig set this to YES
 
 
-
 AUTO_REBOOT="NO"            # YES or NO # If you want this rig to periodically reboot set this to YES
 
 REBOOT_TIMEOUT_IN_MINUTES=2880  # If AUTO_REBOOT is set to YES, use this to set how often to reboot, 1440 = 24 hours, 2880 = 48 hours
 
 
-
 SLOW_USB_KEY_MODE="NO"      # YES or NO # If you are using a slow USB flash drive (eg. USB 1.0 or USB 2.0) set this to YES
-
 
 
 GLOBAL_WORKERNAME="YES"     # YES or NO # Use same workername for all coins
@@ -310,12 +308,6 @@ GPUPowerMizerMode_Adjust="NO"      # YES or NO # Use nvidia PowerMizerMode
 
 GPUPowerMizerMode=1                # Set PowerMizerMode
 
-MANUAL_FAN="NO"                    # YES or NO # Manually set the fans, no auto adjustment. Set this to NO if using the auto MINER_TEMP_CONTROL
-
-FAN_SPEED=75                       # Set fan speed percentage if MANUAL_FAN="YES" (Do not write the % sign)
-
-MINER_TEMP_CONTROL="YES"           # YES or NO # Automatically adjusts the fan speed to keep the desired temp. Highly recommended to use this!
-
 OhGodAnETHlargementPill="NO"       # YES or NO, Set to YES for mining Ethash algos with 1080 or 1080TI cards
 
 
@@ -327,11 +319,17 @@ OhGodAnETHlargementPill="NO"       # YES or NO, Set to YES for mining Ethash alg
 
 # Automatically adjusts the fan speed to keep the desired target temp. If the actual temp is above the target temp this script will increase the fan speed. If the actual temp is 2C below the target temp this script will reduce the fan speed. If the target temperature can't be reached with fan adjustments it will decrease the Power Limit. If actual temp is above the desired target temp and fan speed is already at 100%, the script will lower the Power Limit. Once the target temp is reached, Power Limit will be restored.
 
+MINER_TEMP_CONTROL="YES"           # YES or NO # Automatically adjusts the fan speed to keep the desired temp. Highly recommended to use this!
+
+MANUAL_FAN="NO"                    # YES or NO # Manually set the fans, no auto adjustment. Set this to NO if using the auto MINER_TEMP_CONTROL
+
+FAN_SPEED=75                       # Set fan speed percentage if MANUAL_FAN="YES" (Do not write the % sign)
+
 INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO, if YES global target temperature is overridden by individual per-GPU setting found later in this file
 
 TARGET_TEMP=65                # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
 
-HOT_SHUTDOWN="YES"	      # YES or NO, if YES system will shutdown when SHUTDOWN_TEMP is exceeded.
+HOT_SHUTDOWN="NO"	      # YES or NO, if YES system will shutdown when SHUTDOWN_TEMP is exceeded.
 SHUTDOWN_TEMP=85	      # If HOT_SHUTDOWN is YES then the system will shutdown if this number is exceeded. (Celsius)
 
 ALLOWED_TEMP_DIFF=2           # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
