@@ -59,6 +59,8 @@
 #          Cuda switch in screenrc for new and old miners
 # v=0024 : papampi
 #          New miners directory and miner version
+# v=0025 : papampi
+#          BMINER Dual Mining
 
 
 nvOC_0miner_dev="0024"
@@ -163,10 +165,16 @@ fi
 ## CLAYMORE_DUAL
 if [[ $COIN == CLAYMORE_DUAL ]]
 then
-  HCD=${NVOC}/miners/CLAYMORE/"${!xversion}"/ethdcrminer64
+  HCD=${NVOC}/miners/CLAYMORE/$CLAYMORE_VERSION/ethdcrminer64
   E_ADDR="$DUAL_EWAL""$ETHASH_WALLET_FORMAT""$DUAL_EWORKER"
   D_ADDR="$DUAL_DWAL""$DUAL_WALLET_FORMAT""$DUAL_DWORKER"
   screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS"
+fi
+
+if [[ $COIN == BMINER_DUAL ]]
+then
+  HCD=${NVOC}/miners/BMINER/$BMINER_VERSION/bminer
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -uri $MAIN_COIN_POOL_PROTOCOL://$MAIN_COIN_ADDRESS.$MAIN_COIN_WORKER:$MINER_PWD@$MAIN_COIN_POOL:$MAIN_COIN_PORT -uri2 $DUAL_COIN_POOL_PROTOCOL://$DUAL_COIN_ADDRESS.$DUAL_COIN_WORKER:$MINER_PWD@$DUAL_COIN_POOL:$DUAL_COIN_PORT $BMINER_OPTS
 fi
 
 
