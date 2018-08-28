@@ -121,9 +121,9 @@ v0041="papampi;XDNA COIN, HEX ALGO"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="41"
-nvOC_1bash_least_compatible="34"
-nvOC_1bash_last_compatible="35"
+nvOC_1bash_ver="0041"
+nvOC_1bash_least_compatible="0034"
+nvOC_1bash_last_compatible="0035"
 
 # Open the terminal to launch miner; will auto launch on boot
 
