@@ -34,7 +34,7 @@ last_compatible_1bash_ver="$nvOC_1bash_last_compatible"
 least_compatible_1bash_ver="$nvOC_1bash_least_compatible"
 
 
-if (( current_1bash_ver < least_compatible_1bash_ver ))
+if [ $current_1bash_ver -lt $least_compatible_1bash_ver ]
 then
   echo -e " $(tput bold)################################################################################ $(tput sgr0)"
   echo ""
@@ -48,7 +48,7 @@ then
   exit
 
 
-elif (( current_1bash_ver < last_compatible_1bash_ver ))
+elif [ $current_1bash_ver -lt $last_compatible_1bash_ver ]
 then
   echo "################################################################################"
   echo " !!  Your 1bash revision is older than last compatible version. This could"
@@ -61,7 +61,7 @@ then
   sleep 10
 
 
-elif (( current_1bash_ver < template_1bash_ver ))
+elif [ $current_1bash_ver -lt $template_1bash_ver ]
 then
   echo "################################################################################"
   echo " !!  Your 1bash revision is older than the available template.There are new"
