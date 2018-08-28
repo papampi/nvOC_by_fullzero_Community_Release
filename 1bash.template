@@ -116,10 +116,12 @@ v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
 v0038="Spiral;Added max temperature shutdown option & resolution option for teamviewer"
 v0039="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
 v0040="papampi;BMiner Dual mining"
+v0041="papampi;XDNA COIN, HEX ALGO"
+
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="40"
+nvOC_1bash_ver="41"
 nvOC_1bash_least_compatible="34"
 nvOC_1bash_last_compatible="35"
 
@@ -390,6 +392,7 @@ DECRED_COINS="DCR"
 EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
 ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
 GRS_COINS="GRS,MPH_GRS"
+HEX_COINS="XDNA"
 LBRY_COINS="LBC,ZPOOL_LBRY"
 LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
 LYRA2Z_COINS="XZC,MPH_LYRA2Z"
@@ -498,6 +501,11 @@ ETHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 GROESTL_INTENSITY="0"
 GROESTL_MINER="TPccminer"
 GROESTL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## HEX
+HEX_INTENSITY="0"
+HEX_MINER="ZENEMYminer"
+HEX_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## KECCAK
 KECCAK_INTENSITY="0"
@@ -1042,6 +1050,14 @@ VTC_POOL="hub.miningpoolhub.com"
 VTC_PORT="20507"
 VTC_WORKER="$WORKERNAME"
 VTC_POOL_PROTOCOL="stratum+tcp"
+
+# XDNA (XDNA)
+XDNA_ADDRESS="replace_with_your_address"
+XDNA_EXTENSION_ARGUMENTS=""
+XDNA_POOL="XMN_POOL_ADDRESS"
+XDNA_PORT="XMN_POOL_PORT"
+XDNA_WORKER="$WORKERNAME"
+XDNA_POOL_PROTOCOL="stratum+tcp"
 
 # Motion (XMN)
 XMN_ADDRESS="replace_with_your_address"
