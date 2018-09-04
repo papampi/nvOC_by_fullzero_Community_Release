@@ -113,7 +113,7 @@ v0034="LuKePicci;Rearrange settings and explaination comments"
 v0035="LuKePicci;Uniform plusCPU handling"
 v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
 v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
-v0038="Spiral;Added max temperature shutdown option & resolution option for teamviewer
+v0038="Spiral;Added max temperature shutdown option & resolution option for teamviewer"
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
@@ -407,7 +407,7 @@ SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN"
 XEVAN_COINS="BSD"
-ZHASH_COINS="BTG"
+ZHASH_COINS="AION,BTG"
 
 # example, adding NEWALGO for NEWCOIN:
 #
@@ -653,6 +653,14 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 #        Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
 #        ZHash Algos like BTG: "zhash"
 #        Tensority based coins like BTM: "tensority"
+
+# AION
+AION_ADDRESS="replace_with_your_address"
+AION_EXTENSION_ARGUMENTS="--algo aion"
+AION_POOL="AION POOL"
+AION_PORT="AION PORT"
+AION_WORKER="$WORKERNAME"
+AION_POOL_PROTOCOL="stratum+tcp"
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
