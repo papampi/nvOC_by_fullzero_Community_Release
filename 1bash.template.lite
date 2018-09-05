@@ -1,40 +1,96 @@
 #!/bin/bash
 
 ##########################################################################
-#############      nvOC v0019-2.1 - Community Release    #################
+#################   nvOC v0019-2.1 - Community Release   #################
+##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
+
 
 ## 1bash with no help and info ##
 
+
+v0001="Community Release"
+v0002="Papampi; Telegram changes"
+v0003="Papampi; WTM_MINIMUM_MINING_TIME"
+v0004="Papampi; More NiceHash mining algos"
+v0005="damNmad; New Coins LUX, SUMO, DSR"
+v0006="Papampi; New Coins ELLA, XVG, GBX, CRC"
+v0007="Papampi; EQUIHASH_MINER, ETHASH_MINER, bminer"
+v0008="Papampi; Nicehash bug fixes"
+v0009="papampi; Added P104 and changed P106 to P10X"
+v0010="papampi; WTM minimum mining time and force switch"
+v0011="papampi; Pool Wallet Address Format"
+v0012="papampi; New claymore dual mining "
+v0013="damNmad; Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable"
+v0014="Falcon; Added RavenCoin (RVN)"
+v0015="papampi; Temp Control Maximum fan speed" 
+v0016="papampi; Some fix in claymore_dual"
+v0017="papampi; NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER"
+v0018="papampi; Alternate Pool Switch"
+v0019="papampi; WTM 2nd lower minimum difference to switch"
+v0020="LukePicci; Relocate nvOC to arbitrary install directory"
+v0021="papampi; More miner optional arguments"
+v0022="papampi; OhGodAnETHlargementPill"
+v0023="LukePicci; Simplified ALGO specific settings"
+v0024="papampi; HEADLEASS_MODE"
+v0025="LuKePicci; AUTO_SWITCH generalized implementetion"
+v0026="papampi, sizzlephizzle; Algo mining unification" 
+v0027="LuKePicci; Separate algo_id"
+v0028="LuKePicci; More tempcontrol alert color and verbosity options"
+v0029="papampi; Nice Algo extension arguments"
+v0030="papampi;CryptoNightHeavy"  
+v0031="papampi;New EWBF v0.3"  
+v0032="papampi;Version numbering"
+v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
+v0034="LuKePicci;Rearrange settings and explaination comments"
+v0035="LuKePicci;Uniform plusCPU handling"
+v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
+v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
+v0038="Spiral;Added max temperature shutdown option & resolution option for teamviewer"
+v0039="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
+v0040="papampi;BMiner Dual mining"
+v0041="papampi;XDNA COIN, HEX ALGO"
+
+
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0036"
+nvOC_1bash_ver="0041"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
 
+
 ########################################################
-#                General settings                      #
+#                                                      #
+# General settings                                     #
+#                                                      #
 ########################################################
 
-COIN="ZEC" 
-AUTO_START_MINER="NO" 
+COIN="ZEC"                  # Manual mining, choose the coin to mine (like "ETH", "ZEC", ...)
+			    # Dual mining: "DUAL_CLAYMORE" or "DUAL_BMINER"
+                            # Automatic profit-based switchers below
 
-AUTO_SWITCH="NO" # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING, SALFTER_MPH_SWITCHING, SALFTER_PROGRAMATIC_SWITCHING
+AUTO_START_MINER="NO"      
 
-NUMBER_GPUS_INSTALLED="" 
+AUTO_SWITCH="NO"
+
+NUMBER_GPUS_INSTALLED=""
 
 LOCALorREMOTE="LOCAL"
 
+
 TEAMVIEWER="NO"
+RESOLUTION="1366x768"
 
 SSH="YES"
+
 
 AUTO_REBOOT="NO"
 
 REBOOT_TIMEOUT_IN_MINUTES=2880
 
-SLOW_USB_KEY_MODE="NO"
+SLOW_USB_KEY_MODE="NO"     
+
 
 GLOBAL_WORKERNAME="YES"
 
@@ -42,17 +98,20 @@ AUTO_WORKERNAME="HOST"
 
 CUSTOM_WORKERNAME="19_2"
 
+
 _Parallax_MODE="NO"
 
-pasteBASH="your_PASTE_here" 
+pasteBASH="your_PASTE_here"
 
-upPASTE_TIMEOUT_IN_MINUTES=60 
+upPASTE_TIMEOUT_IN_MINUTES=60
+
 
 CLEAR_LOGS_ON_BOOT="NO"
 
-LOG_ROTATE="YES"
+LOG_ROTATE="YES"  
 
 LOG_ROTATE_INTERVAL="3"
+
 
 SRR="NO"
 
@@ -60,9 +119,16 @@ SRR_SERIAL="000055"
 
 __SRR_SLOT="1"
 
-CONTROL_GPU_LED="NO"
 
-LED_BRIGHTNESS="100" 
+CONTROL_GPU_LED="YES"
+
+LED_BRIGHTNESS=100
+
+########################################################
+#                                                      #
+# MINER_WATCHDOG settings                              #
+#                                                      #
+########################################################
 
 MINER_WATCHDOG="YES"
 
@@ -79,83 +145,92 @@ HIGH_LOAD_REBOOT="NO"
 ALT_POOL="NO"
 
 ########################################################
-#   General OC (overclock) and Power Limit settings    #
+#                                                      #
+# General OC (overclock) and Power Limit settings      #
+#                                                      #
 ########################################################
 
-POWERLIMIT_MODE="GLOBAL" # GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC (Pro Settings: GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET)
+POWERLIMIT_MODE="GLOBAL"    # GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC (Pro Settings: GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET)
 
-OVERCLOCK_MODE="GLOBAL" # NO, GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC (Pro Settings: GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET)
+OVERCLOCK_MODE="GLOBAL"     # NO, GLOBAL, GPU_SPECIFIC, ALGO_SPECIFIC (Pro Settings: GLOBAL_with_GPU_OFFSET, ALGO_SPECIFIC_with_GPU_OFFSET)
 
-_POWERLIMIT_WATTS="75"
+_POWERLIMIT_WATTS=75
 
-_CORE_OVERCLOCK="100"
+_CORE_OVERCLOCK=100
 
-_MEMORY_OVERCLOCK="100"
+_MEMORY_OVERCLOCK=100
 
 HEADLESS_MODE="NO"
 
 GPUPowerMizerMode_Adjust="NO"
 
-GPUPowerMizerMode="1"
-
-MANUAL_FAN="NO"
-
-FAN_SPEED="75"
-
-MINER_TEMP_CONTROL="YES"
+GPUPowerMizerMode=1
 
 OhGodAnETHlargementPill="NO"
 
+
 ########################################################
-#            MINER_TEMP_CONTROL settings               #
+#                                                      #
+# MINER_TEMP_CONTROL settings                          #
+#                                                      #
 ########################################################
 
+MINER_TEMP_CONTROL="YES"
+
+MANUAL_FAN="NO"
+
+FAN_SPEED=75
 
 INDIVIDUAL_TARGET_TEMPS="NO"
 
-TARGET_TEMP="65"
+TARGET_TEMP=65
 
-ALLOWED_TEMP_DIFF="2"
+HOT_SHUTDOWN="NO"
+SHUTDOWN_TEMP=85
 
-MINIMAL_FAN_SPEED="50"
+ALLOWED_TEMP_DIFF=2
 
-MAXIMAL_FAN_SPEED="95"
+MINIMAL_FAN_SPEED=50
 
-__FAN_ADJUST="5"
+MAXIMAL_FAN_SPEED=95
 
-POWER_ADJUST="5"
+__FAN_ADJUST=5
 
-RESTORE_POWER_LIMIT="85"
+POWER_ADJUST=5
+
+RESTORE_POWER_LIMIT=85
 
 WARN_PL_DROPS="NO"
 
 USE_COLOR="YES"
 
-########################################################################################
-#            GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section         #
-########################################################################################
 
+########################################################################################
+# GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section                    #
+########################################################################################
 IPW=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
 IP_AS_WORKER=$(echo -n "$IPW" | tail -c -3 | sed 'y/./0/')
 MAC=$(ifconfig -a | grep -Po 'HWaddr \K.*$')
 MAC_AS_WORKER=$(echo -n "$MAC" | sed 'y/:/_/')
 if [ $GLOBAL_WORKERNAME == "YES" ]; then
- if [ $AUTO_WORKERNAME == "HOST" ]; then
- WORKERNAME=$IP_AS_WORKER
- elif [ $AUTO_WORKERNAME == "MAC" ]; then
- WORKERNAME=$MAC_AS_WORKER
- elif [ $AUTO_WORKERNAME == "CUSTOM" ]; then
- WORKERNAME=$CUSTOM_WORKERNAME
- fi
+  if [ $AUTO_WORKERNAME == "HOST" ]; then
+    WORKERNAME=$IP_AS_WORKER
+  elif [ $AUTO_WORKERNAME == "MAC" ]; then
+    WORKERNAME=$MAC_AS_WORKER
+  elif [ $AUTO_WORKERNAME == "CUSTOM" ]; then
+    WORKERNAME=$CUSTOM_WORKERNAME
+  fi
 fi
-
 ########################################################################################
-#          GLOBAL_WORKERNAME implementation End - DO NOT EDIT this section             #
+# GLOBAL_WORKERNAME implementation End - DO NOT EDIT this section                      #
 ########################################################################################
 
 ################################################################
-# Algo definitions and Coin->Algo mappings #
+#                                                              #
+# Algo definitions and Coin->Algo mappings                     #
+#                                                              #
 ################################################################
+
 
 ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 DECRED EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R XEVAN ZHASH"
 
@@ -167,11 +242,13 @@ DECRED_COINS="DCR"
 EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
 ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
 GRS_COINS="GRS,MPH_GRS"
+HEX_COINS="XDNA"
 LBRY_COINS="LBC,ZPOOL_LBRY"
 LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
 LYRA2Z_COINS="XZC,MPH_LYRA2Z"
 MYR_GR_COINS="XMY,MPH_MYR_GR"
 NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
+PASCAL_COINS="PASC,PASL"
 PHI1612_COINS="FLM,SERA"
 PHI2_COINS="LUX"
 SIA_COINS="SIA"
@@ -181,36 +258,52 @@ SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN"
 XEVAN_COINS="BSD"
-ZHASH_COINS="BTG"
+ZHASH_COINS="AION,BTG"
+
+# example, adding NEWALGO for NEWCOIN:
+#
+#   ALGOS="${ALGOS} NEWALGO"
+#   NEWALGO_COINS="NEWCOIN"
 
 
 ########################################################
-#               Common miners settings                 #
+#                                                      #
+# Common miners settings                               #
+#                                                      #
 ########################################################
 
-USE_ENVIRONMENTAL_VARIBLES="NO" 
+USE_ENVIRONMENTAL_VARIBLES="NO"
 
-BTC_ADDRESS="replace_with_your_BTC_address" 
+BTC_ADDRESS="replace_with_your_BTC_address"
 
-NICE_ADDRESS="NICEHASH_BTC_ADDRESS" 
+NICE_ADDRESS="NICEHASH_BTC_ADDRESS"
 
-MPH_ADDRESS="Your_MiningPoolHub_Username" 
+MPH_ADDRESS="Your_MiningPoolHub_Username"
 
-WALLET_ADDRESS_FORMAT="." 
+WALLET_ADDRESS_FORMAT="."
 
 MINER_PWD="x"
 
 ########################################################
-#        Algo->miner mapping and specific settings     #
+#                                                      #
+# Algo->miner mapping and specific settings            #
+#                                                      #
 ########################################################
 
-# Available built-in miners:
-# "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer",
-# "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr_stak"
-# "KTccminer_cryptonight"
-# "DSTM", "EWBF", "BMINER"
-# "Z_EWBF"
-# "CLAYMORE", "ETHMINER", "GENOIL", "bminer"
+
+
+# Available builtin miners:
+#        Various algos:
+#          "ANXccminer", "ASccminer", "CryptoDredge", "KTccminer",  
+#          "KXccminer", "SILENTminer", "SPccminer",  "SUPRminer",   
+#          "TPccminer", "VERTMINER", "XMR_Stak", "ZENEMYminer"
+#        Equihash:
+#          "DSTM", "EWBF", "BMINER"
+#        Zhash:
+#          "Z_EWBF", "BMINER"
+#        Ethash:
+#          "CLAYMORE", "ETHMINER", "GENOIL", "BMINER"
+
 
 ## BITCORE, TIMETRAVEL10
 BITCORE_INTENSITY="0"
@@ -224,12 +317,12 @@ CRYPTONIGHT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT-V7
 CRYPTONIGHTV7_INTENSITY="0"
-CRYPTONIGHTV7_MINER="xmr_stak"
+CRYPTONIGHTV7_MINER="XMR_Stak"
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHTHEAVY
 CRYPTONIGHTHEAVY_INTENSITY="0"
-CRYPTONIGHTHEAVY_MINER="xmr_stak"
+CRYPTONIGHTHEAVY_MINER="XMR_Stak"
 CRYPTONIGHTHEAVY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Decred
@@ -250,6 +343,11 @@ GROESTL_INTENSITY="0"
 GROESTL_MINER="TPccminer"
 GROESTL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+## HEX
+HEX_INTENSITY="0"
+HEX_MINER="ZENEMYminer"
+HEX_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
 ## KECCAK
 KECCAK_INTENSITY="0"
 KECCAK_MINER="TPccminer"
@@ -261,8 +359,8 @@ LBRY_MINER="SPccminer"
 LBRY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LYRA2REV2
-LYRA2V2_INTENSITY="0"
-LYRA2V2_MINER="TPccminer"
+LYRA2V2_INTENSITY="1"
+LYRA2V2_MINER="CryptoDredge"
 LYRA2V2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LYRA2Z
@@ -276,9 +374,14 @@ MYR_GR_MINER="TPccminer"
 MYR_GR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Neoscrypt
-NEOSCRYPT_INTENSITY="0"
-NEOSCRYPT_MINER="KTccminer"
+NEOSCRYPT_INTENSITY="1"
+NEOSCRYPT_MINER="CryptoDredge"
 NEOSCRYPT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## PASCAL
+PASCAL_INTENSITY="0"
+PASCAL_MINER="TPccminer"
+PASCAL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PHI1612
 PHI1612_INTENSITY="0"
@@ -329,44 +432,72 @@ XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 ZHASH_MINER="Z_EWBF"
 ZHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+# example, adding miner for NEWALGO:
+#
+#   ## Newalgo
+#   NEWALGO_MINER="builtin_or_pluggable_miner_name"
+#   NEWALGO_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+
 ################################################################
-#                  CPU mining settings                         #
+#                                                              #
+# CPU mining settings                                          #
+#                                                              #
 ################################################################
 
-plusCPU="NO" 
+plusCPU="NO"
 
-threadCOUNT="1" 
-plusCPU_MINER="cpuOPT" 
+threadCOUNT="1"
 
+plusCPU_MINER="cpuOPT"
 plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 
 ########################################################
-#               Builtin GPU miners settings            #
+#                                                      #
+# Builtin GPU miners settings                          #
+#                                                      #
 ########################################################
 
-CLAYMORE_VERSION="latest" 
-CLAYMORE_OPTS="" 
+CLAYMORE_VERSION="recommended"
+CLAYMORE_OPTS=""
 
-ETHMINER_OPTS="" 
+ETHMINER_OPTS=""
+ETHMINER_VERSION="recommended"
 
 DSTM_OPTS=""
+DSTM_VERSION="recommended"
 
 EWBF_PERCENT="0"
-EWBF_OPTS="" 
-EWBF_VERSION="3_4" 
+EWBF_OPTS=""
+EWBF_VERSION="recommended"
 
-Z_EWBF_PERCENT="0" 
-Z_EWBF_OPTS="" 
-Z_EWBF_VERSION="latest" 
+Z_EWBF_PERCENT="0"
+Z_EWBF_OPTS=""
+Z_EWBF_VERSION="recommended"
 
-BMINER_OPTS="" 
+BMINER_OPTS=""
+BMINER_VERSION="recommended"
+#BMINER_PROTOCOL, Deprecated, use COIN_POOL_PROTOCOL
 
-CCMINER_OPTS="" 
+CCMINER_OPTS=""
+
 
 ########################################################
+#                                                      #
 # COIN, POOL, PORT info section, sorted alphabetically #
+#                                                      #
 ########################################################
+
+
+
+# AION
+AION_ADDRESS="replace_with_your_address"
+AION_EXTENSION_ARGUMENTS="--algo aion"
+AION_POOL="AION POOL"
+AION_PORT="AION PORT"
+AION_WORKER="$WORKERNAME"
+AION_POOL_PROTOCOL="stratum+tcp"
 
 # ALTCOM
 ALTCOM_ADDRESS="replace_with_your_address"
@@ -426,7 +557,7 @@ BTX_POOL_PROTOCOL="stratum+tcp"
 
 # Callisto (CLO)
 CLO_ADDRESS="replace_with_your_address"
-CLO_EXTENSION_ARGUMENTS="" 
+CLO_EXTENSION_ARGUMENTS=""   
 CLO_POOL="clo.2miners.com"
 CLO_PORT="3030"
 CLO_WORKER="$WORKERNAME"
@@ -466,7 +597,7 @@ DSR_POOL_PROTOCOL="stratum+tcp"
 
 #Ellaism (ELLA)
 ELLA_ADDRESS="replace_with_your_address"
-ELLA_EXTENSION_ARGUMENTS="" 
+ELLA_EXTENSION_ARGUMENTS=""    
 ELLA_POOL="replace_with_pool_address"
 ELLA_PORT="replace_with_pool_port"
 ELLA_WORKER="$WORKERNAME"
@@ -474,7 +605,7 @@ ELLA_POOL_PROTOCOL="stratum+tcp"
 
 # Ethereum Classic (ETC)
 ETC_ADDRESS="replace_with_your_address"
-ETC_EXTENSION_ARGUMENTS="" # claymore opts: "-allcoins etc"
+ETC_EXTENSION_ARGUMENTS=""                               # claymore opts: "-allcoins etc"
 ETC_POOL="europe.ethash-hub.miningpoolhub.com"
 ETC_PORT="20555"
 ETC_WORKER="$WORKERNAME"
@@ -482,7 +613,7 @@ ETC_POOL_PROTOCOL="stratum+tcp"
 
 # Ethereum (ETH)
 ETH_ADDRESS="replace_with_your_address"
-ETH_EXTENSION_ARGUMENTS="" 
+ETH_EXTENSION_ARGUMENTS=""    
 ETH_POOL="europe.ethash-hub.miningpoolhub.com"
 ETH_PORT="20535"
 ETH_WORKER="$WORKERNAME"
@@ -506,7 +637,7 @@ ETP_POOL_PROTOCOL="stratum+tcp"
 
 # Expanse (EXP)
 EXP_ADDRESS="replace_with_your_address"
-EXP_EXTENSION_ARGUMENTS="" 
+EXP_EXTENSION_ARGUMENTS=""   
 EXP_POOL="exp-us.dwarfpool.com:"
 EXP_PORT="81"
 EXP_WORKER="$WORKERNAME"
@@ -602,7 +733,7 @@ MONA_POOL_PROTOCOL="stratum+tcp"
 
 # Music Coin (MUSIC)
 MUSIC_ADDRESS="replace_with_your_address"
-MUSIC_EXTENSION_ARGUMENTS="" 
+MUSIC_EXTENSION_ARGUMENTS=""   
 MUSIC_POOL="eus.gmc.epool.io"
 MUSIC_PORT="8008"
 MUSIC_WORKER="$WORKERNAME"
@@ -623,9 +754,25 @@ ORB_PORT="3031"
 ORB_WORKER="$WORKERNAME"
 ORB_POOL_PROTOCOL="stratum+tcp"
 
+# Pascal Coin (PASC)
+PASC_ADDRESS="replace_with_your_address"
+PASC_EXTENSION_ARGUMENTS=""
+PASC_POOL="pasc-us-east1.nanopool.org"
+PASC_PORT="15555"
+PASC_WORKER="$WORKERNAME"
+PASC_POOL_PROTOCOL="stratum+tcp"
+
+# Pascal Lite (PASL)
+PASL_ADDRESS="replace_with_your_address"
+PASL_EXTENSION_ARGUMENTS=""
+PASL_POOL="mine.pasl.fairpool.xyz"
+PASL_PORT="4009"
+PASL_WORKER="$WORKERNAME"
+PASL_POOL_PROTOCOL="stratum+tcp"
+
 # Pirl Coin (PIRL)
 PIRL_ADDRESS="replace_with_your_address"
-PIRL_EXTENSION_ARGUMENTS="" 
+PIRL_EXTENSION_ARGUMENTS=""   
 PIRL_POOL="PIRL POOL"
 PIRL_PORT="PIRL PORT"
 PIRL_WORKER="$WORKERNAME"
@@ -683,7 +830,7 @@ SMART_POOL_PROTOCOL="stratum+tcp"
 
 # SOILcoin (SOIL)
 SOIL_ADDRESS="replace_with_your_address"
-SOIL_EXTENSION_ARGUMENTS="" 
+SOIL_EXTENSION_ARGUMENTS=""   
 SOIL_POOL="soil.pool.sexy"
 SOIL_PORT="9009"
 SOIL_WORKER="$WORKERNAME"
@@ -707,7 +854,7 @@ TZC_POOL_PROTOCOL="stratum+tcp"
 
 # Ubiq (UBQ)
 UBQ_ADDRESS="replace_with_your_address"
-UBQ_EXTENSION_ARGUMENTS="" 
+UBQ_EXTENSION_ARGUMENTS=""   
 UBQ_POOL="us.ubiqpool.io"
 UBQ_PORT="8008"
 UBQ_WORKER="$WORKERNAME"
@@ -728,6 +875,14 @@ VTC_POOL="hub.miningpoolhub.com"
 VTC_PORT="20507"
 VTC_WORKER="$WORKERNAME"
 VTC_POOL_PROTOCOL="stratum+tcp"
+
+# XDNA (XDNA)
+XDNA_ADDRESS="replace_with_your_address"
+XDNA_EXTENSION_ARGUMENTS=""
+XDNA_POOL="XMN_POOL_ADDRESS"
+XDNA_PORT="XMN_POOL_PORT"
+XDNA_WORKER="$WORKERNAME"
+XDNA_POOL_PROTOCOL="stratum+tcp"
 
 # Motion (XMN)
 XMN_ADDRESS="replace_with_your_address"
@@ -778,7 +933,7 @@ ZCL_WORKER="$WORKERNAME"
 ZCL_POOL_PROTOCOL="stratum+tcp"
 
 # Zcash (ZEC)
-ZEC_ADDRESS="replace_with_your_address" 
+ZEC_ADDRESS="t1XfkZUZWME8FnRiFxHZQAQ2K1UdQMbshJp" # replace_with_your_address
 ZEC_EXTENSION_ARGUMENTS=""
 ZEC_POOL="zec-us-east1.nanopool.org"
 ZEC_PORT="6666"
@@ -800,42 +955,81 @@ plusCPU_POOL="$XMR_POOL"
 plusCPU_PORT="$XMR_PORT"
 plusCPU_WORKER="$XMR_WORKER"
 
+# example, adding NEWCOIN:
+#
+#   ## Newcoin (NEWCOIN)
+#   NEWCOIN_ADDRESS="replace_with_your_address"
+#   NEWCOIN_EXTENSION_ARGUMENTS=""
+#   NEWCOIN_POOL="newpool.example.org"
+#   NEWCOIN_PORT="4242"
+#   NEWCOIN_WORKER="$WORKERNAME"
+#   NEWCOIN_POOL_PROTOCOL="stratum+tcp"
+
+
 ###################################################
-# Claymore_Dual Mining #
-# Set COIN="CLAYMORE_DUAL" # 
+# Claymore_Dual Mining                            #
+# Set COIN="CLAYMORE_DUAL"                        #  
 ###################################################
 
-DUAL_ECOIN="MAIN COIN"
-DUAL_EPOOL="MAIN COIN POOL ADDREES" 
-DUAL_EPORT="MAIN COIN POOL PORT" 
-DUAL_EWAL="MAIN COIN WALLET ADDRESS" 
-DUAL_EPSW="$MINER_PWD" 
-DUAL_EWORKER="$WORKER"
 
-DUAL_DCOIN="DUAL COIN"
-DUAL_DPOOL="DUAL COIN POOL ADDRESS" 
-DUAL_DPORT="DUAL COIN POOL PORT" 
-DUAL_DWAL="DUAL COIN WALLET ADDRESS" 
-DUAL_DPSW="$MINER_PWD" 
-DUAL_DWORKER="$WORKER" 
 
-DCRI="40" 
-ALL_POOLS="0" 
-ALL_COINS="0" 
-MPORT="-3333" 
-MPSW=""
-DUAL_ADDITIONAL_ARGUMENTS="" 
+DUAL_ECOIN="MAIN COIN"                
+DUAL_EPOOL="MAIN COIN POOL ADDREES"      
+DUAL_EPORT="MAIN COIN POOL PORT"        
+DUAL_EWAL="MAIN COIN WALLET ADDRESS"     
+DUAL_EPSW="$MINER_PWD"            
+DUAL_EWORKER="$WORKER"            
+
+DUAL_DCOIN="DUAL COIN"                   
+DUAL_DPOOL="DUAL COIN POOL ADDRESS"     
+DUAL_DPORT="DUAL COIN POOL PORT"      
+DUAL_DWAL="DUAL COIN WALLET ADDRESS"     
+DUAL_DPSW="$MINER_PWD"         
+DUAL_DWORKER="$WORKER"   
+
+DCRI="40"     
+ALL_POOLS="0"  
+ALL_COINS="0"                        
+MPORT="-3333"                             
+MPSW=""                                    
+DUAL_ADDITIONAL_ARGUMENTS=""                
+
+
+###################################################
+# Bminer_Dual Mining                              #
+# Set COIN="BMINER_DUAL"                          #  
+###################################################
+
+
+MAIN_COIN=""                             
+MAIN_COIN_ADDRESS="replace_with_your_address" 
+MAIN_COIN_POOL="POOL_ADDRESS"               
+MAIN_COIN_PORT="POOL_PORT" 
+MAIN_COIN_WORKER="$WORKERNAME"      
+MAIN_COIN_POOL_PROTOCOL="ethash"  
+
+DUAL_COIN=""                            
+DUAL_COIN_ADDRESS="replace_with_your_address"
+DUAL_COIN_POOL="POOL_ADDRESS"               
+DUAL_COIN_PORT="PORT"                    
+DUAL_COIN_WORKER="$WORKERNAME"            
+DUAL_COIN_POOL_PROTOCOL="blake2s"       
+
 
 ########################################################
-###############      NiceHash Info     #################
+#                                                      #
+###############    NiceHash Info       #################
+#                                                      #
 ########################################################
 
+## Nicehash autoconverts to BTC: ensure you update NICE_ADDRESS
 
 # NICE_ETHASH 
 NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
 NICE_ETHASH_PORT="3353"
 NICE_ETHASH_WORKER="$WORKERNAME"
-NICE_ETHASH_EXTENSION_ARGUMENTS="" 
+NICE_ETHASH_EXTENSION_ARGUMENTS=""            # To mine with claymore add "-esm 3 -allpools 1 -estale 0"
+NICE_ETHASH_POOL_PROTOCOL=""  
 
 # Nice Equihash
 NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
@@ -887,9 +1081,12 @@ NICE_X16R_EXTENSION_ARGUMENTS=""
 
 
 ########################################################
-################      ZPOOL Info     ###################
+#                                                      #
+################    ZPOOL Info       ###################
+#                                                      #
 ########################################################
 
+## ZPOOL uses your BTC_ADDRESS 
 
 # ZPOOL_SKUNK 
 ZPOOL_SKUNK_POOL="skunk.mine.zpool.ca"
@@ -928,7 +1125,9 @@ ZPOOL_SKEIN_WORKER="$WORKERNAME"
 ZPOOL_SKEIN_EXTENSION_ARGUMENTS=""
 
 ########################################################
-#############     MiningPoolHub Info      ##############
+#                                                      #
+#############    MiningPoolHub Info       ##############
+#                                                      #
 ########################################################
 
 # MPH_EQUIHASH
@@ -986,109 +1185,112 @@ MPH_GRS_EXTENSION_ARGUMENTS=""
 
 
 #####################################################################
-# Individual GPU_SPECIFIC Power Limit, Temp and Clock settings #
+#                                                                   #
+# Individual GPU_SPECIFIC Power Limit, Temp and Clock settings      #
+#                                                                   #
 #####################################################################
 
 # Set individual target temps here if INDIVIDUAL_TARGET_TEMPS="YES"
-TARGET_TEMP_0="75"
-TARGET_TEMP_1="75"
-TARGET_TEMP_2="75"
-TARGET_TEMP_3="75"
-TARGET_TEMP_4="75"
-TARGET_TEMP_5="75"
-TARGET_TEMP_6="75"
-TARGET_TEMP_7="75"
-TARGET_TEMP_8="75"
-TARGET_TEMP_9="75"
-TARGET_TEMP_10="75"
-TARGET_TEMP_11="75"
-TARGET_TEMP_12="75"
-TARGET_TEMP_13="75"
-TARGET_TEMP_14="75"
-TARGET_TEMP_15="75"
-TARGET_TEMP_16="75"
-TARGET_TEMP_17="75"
-TARGET_TEMP_18="75"
+TARGET_TEMP_0=75
+TARGET_TEMP_1=75
+TARGET_TEMP_2=75
+TARGET_TEMP_3=75
+TARGET_TEMP_4=75
+TARGET_TEMP_5=75
+TARGET_TEMP_6=75
+TARGET_TEMP_7=75
+TARGET_TEMP_8=75
+TARGET_TEMP_9=75
+TARGET_TEMP_10=75
+TARGET_TEMP_11=75
+TARGET_TEMP_12=75
+TARGET_TEMP_13=75
+TARGET_TEMP_14=75
+TARGET_TEMP_15=75
+TARGET_TEMP_16=75
+TARGET_TEMP_17=75
+TARGET_TEMP_18=75
 
 
 # Set individual powerlimits here if POWERLIMIT_MODE is GPU_SPECIFIC
-INDIVIDUAL_POWERLIMIT_0="100"
-INDIVIDUAL_POWERLIMIT_1="100"
-INDIVIDUAL_POWERLIMIT_2="100"
-INDIVIDUAL_POWERLIMIT_3="100"
-INDIVIDUAL_POWERLIMIT_4="100"
-INDIVIDUAL_POWERLIMIT_5="100"
-INDIVIDUAL_POWERLIMIT_6="100"
-INDIVIDUAL_POWERLIMIT_7="100"
-INDIVIDUAL_POWERLIMIT_8="100"
-INDIVIDUAL_POWERLIMIT_9="100"
-INDIVIDUAL_POWERLIMIT_10="100"
-INDIVIDUAL_POWERLIMIT_11="100"
-INDIVIDUAL_POWERLIMIT_12="100"
-INDIVIDUAL_POWERLIMIT_13="100"
-INDIVIDUAL_POWERLIMIT_14="100"
-INDIVIDUAL_POWERLIMIT_15="100"
-INDIVIDUAL_POWERLIMIT_16="100"
-INDIVIDUAL_POWERLIMIT_17="100"
-INDIVIDUAL_POWERLIMIT_18="100"
+INDIVIDUAL_POWERLIMIT_0=100
+INDIVIDUAL_POWERLIMIT_1=100
+INDIVIDUAL_POWERLIMIT_2=100
+INDIVIDUAL_POWERLIMIT_3=100
+INDIVIDUAL_POWERLIMIT_4=100
+INDIVIDUAL_POWERLIMIT_5=100
+INDIVIDUAL_POWERLIMIT_6=100
+INDIVIDUAL_POWERLIMIT_7=100
+INDIVIDUAL_POWERLIMIT_8=100
+INDIVIDUAL_POWERLIMIT_9=100
+INDIVIDUAL_POWERLIMIT_10=100
+INDIVIDUAL_POWERLIMIT_11=100
+INDIVIDUAL_POWERLIMIT_12=100
+INDIVIDUAL_POWERLIMIT_13=100
+INDIVIDUAL_POWERLIMIT_14=100
+INDIVIDUAL_POWERLIMIT_15=100
+INDIVIDUAL_POWERLIMIT_16=100
+INDIVIDUAL_POWERLIMIT_17=100
+INDIVIDUAL_POWERLIMIT_18=100
 
 # Set individual clocks here if OVERCLOCK_MODE is GPU_SPECIFIC
-__CORE_OVERCLOCK_0="100"
-MEMORY_OVERCLOCK_0="100"
+__CORE_OVERCLOCK_0=100
+MEMORY_OVERCLOCK_0=100
 
-__CORE_OVERCLOCK_1="100"
-MEMORY_OVERCLOCK_1="100"
+__CORE_OVERCLOCK_1=100
+MEMORY_OVERCLOCK_1=100
 
-__CORE_OVERCLOCK_2="100"
-MEMORY_OVERCLOCK_2="100"
+__CORE_OVERCLOCK_2=100
+MEMORY_OVERCLOCK_2=100
 
-__CORE_OVERCLOCK_3="100"
-MEMORY_OVERCLOCK_3="100"
+__CORE_OVERCLOCK_3=100
+MEMORY_OVERCLOCK_3=100
 
-__CORE_OVERCLOCK_4="100"
-MEMORY_OVERCLOCK_4="100"
+__CORE_OVERCLOCK_4=100
+MEMORY_OVERCLOCK_4=100
 
-__CORE_OVERCLOCK_5="100"
-MEMORY_OVERCLOCK_5="100"
+__CORE_OVERCLOCK_5=100
+MEMORY_OVERCLOCK_5=100
 
-__CORE_OVERCLOCK_6="100"
-MEMORY_OVERCLOCK_6="100"
+__CORE_OVERCLOCK_6=100
+MEMORY_OVERCLOCK_6=100
 
-__CORE_OVERCLOCK_7="100"
-MEMORY_OVERCLOCK_7="100"
+__CORE_OVERCLOCK_7=100
+MEMORY_OVERCLOCK_7=100
 
-__CORE_OVERCLOCK_8="100"
-MEMORY_OVERCLOCK_8="100"
+__CORE_OVERCLOCK_8=100
+MEMORY_OVERCLOCK_8=100
 
-__CORE_OVERCLOCK_9="100"
-MEMORY_OVERCLOCK_9="100"
+__CORE_OVERCLOCK_9=100
+MEMORY_OVERCLOCK_9=100
 
-__CORE_OVERCLOCK_10="100"
-MEMORY_OVERCLOCK_10="100"
+__CORE_OVERCLOCK_10=100
+MEMORY_OVERCLOCK_10=100
 
-__CORE_OVERCLOCK_11="100"
-MEMORY_OVERCLOCK_11="100"
+__CORE_OVERCLOCK_11=100
+MEMORY_OVERCLOCK_11=100
 
-__CORE_OVERCLOCK_12="100"
-MEMORY_OVERCLOCK_12="100"
+__CORE_OVERCLOCK_12=100
+MEMORY_OVERCLOCK_12=100
 
-__CORE_OVERCLOCK_13="100"
-MEMORY_OVERCLOCK_13="100"
+__CORE_OVERCLOCK_13=100
+MEMORY_OVERCLOCK_13=100
 
-__CORE_OVERCLOCK_14="100"
-MEMORY_OVERCLOCK_14="100"
+__CORE_OVERCLOCK_14=100
+MEMORY_OVERCLOCK_14=100
 
-__CORE_OVERCLOCK_15="100"
-MEMORY_OVERCLOCK_15="100"
+__CORE_OVERCLOCK_15=100
+MEMORY_OVERCLOCK_15=100
 
-__CORE_OVERCLOCK_16="100"
-MEMORY_OVERCLOCK_16="100"
+__CORE_OVERCLOCK_16=100
+MEMORY_OVERCLOCK_16=100
 
-__CORE_OVERCLOCK_17="100"
-MEMORY_OVERCLOCK_17="100"
+__CORE_OVERCLOCK_17=100
+MEMORY_OVERCLOCK_17=100
 
-__CORE_OVERCLOCK_18="100"
-MEMORY_OVERCLOCK_18="100"
+__CORE_OVERCLOCK_18=100
+MEMORY_OVERCLOCK_18=100
+
 
 
 ########################################################
@@ -1126,6 +1328,12 @@ EQUIHASH_MEMORY_OVERCLOCK="0"
 ETHASH_POWERLIMIT_WATTS="100"
 ETHASH_CORE_OVERCLOCK="0"
 ETHASH_MEMORY_OVERCLOCK="0"
+
+# HEX
+HEX_POWERLIMIT_WATTS="100" 
+HEX_CORE_OVERCLOCK="0" 
+HEX_MEMORY_OVERCLOCK="0" 
+
 
 # lyra2vRev2
 LYRA2REV2_POWERLIMIT_WATTS="100" 
