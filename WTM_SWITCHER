@@ -14,6 +14,9 @@
 # v=0006 : papampi    : Comment out some output logs to prevent conflicts with 8wtm_auto_switch
 # v=0007 : papampi    : Added more sources to get BTC exchange rate
 # v=0008 : papampi    : NICE* prefix compatibility
+# v=0009 : papampi    : Fix can not get data
+# v=0010 : papampi    : BTC price workaround if failed to fetch (Thanks to PM-2Ring)
+
 
 
 from collections import OrderedDict
@@ -57,26 +60,58 @@ def saveTopCoin(data):
     return
 
 #Get BTC exchange rate 
-try:
-    exchrate=float(json.loads(requests.get("http://api.coindesk.com/v1/bpi/currentprice.json").read())['bpi'][currency]['rate_float'])
-    print exchrate
-except:
-        try:
-            print("Can not get data from coindesk.com")
-            print("Trying to get data from coinbase.com")
-            exchrate=float(json.loads(urllib2.urlopen("https://api.coinbase.com/v2/exchange-rates?currency=BTC").read())["data"]["rates"][currency])
-            print exchrate
-        except:
-            try:
-                print("Can not get data from coinbase.com")
-                print("Trying to get data from blockchain.info")
-                exchrate=float(json.loads(urllib2.urlopen("https://blockchain.info/ticker").read())[currency]["last"])
-                print exchrate
-            except:
-                print("Can not get data from blockchain.info")
-                print("Failed to get BTC exchange rate")
-                sys.exit()
+apis = [
+    {
+        "name": "coindesk.com",
+        "url": "https://api.coindesk.com/v1/bpi/currentprice.json",
+        "keys": ("bpi", currency, "rate_float"),
+    },
+    {
+        "name": "coinbase.com",
+        "url": "https://api.coinbase.com/v2/exchange-rates?currency=BTC",
+        "keys": ("data", "rates", currency),
+    },
+    {
+        "name": "blockchain.info",
+        "url": "https://blockchain.info/ticker",
+        "keys": (currency, "last"),
+    },
+]
 
+for d in apis:
+    name, url, keys = d["name"], d["url"], d["keys"]
+    print"Getting BTC price from", name
+    try:
+        req = requests.get(url)
+        req.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(e)
+        print"Cannot get data from", name
+        continue
+
+    try:
+        # Extract the exchange rate
+        data = req.json()
+        for k in keys:
+            data = data[k]
+    except KeyError as e:
+        print("Bad key!:", e)
+        continue
+
+    try:
+        # Convert the exchange rate to a float.
+        # Some APIs return it as a float, but coinbase.com returns
+        # a string. This code also handles None, which in JSON is null
+        exchrate = float(data) 
+        break
+    except (ValueError, TypeError) as e:
+        print("Invalid exchange rate data", data, type(data))
+else:
+    print"Failed to get latest BTC price, use last fetched."
+    file = open(outputDir + "/WTM_BTC_EXCHANGE_RATE", 'r')
+    lastprice = file.read()
+    exchrate = float(lastprice.split(" ")[0])
+    
 #BTC Rates for web, output, ...
 print "BTC PRICE: " + str(exchrate) + " " + str(currency)
 exchrateLog = open(outputDir + "/WTM_BTC_EXCHANGE_RATE", "w")
@@ -116,6 +151,8 @@ for i in filter(lambda x: data[x]["tag"] not in includedCoins, data):
     data.pop(i)
 
 #save current revenue
+print " "
+print "Current Revenue:"
 RevLog = open(outputDir + "/WTM_current_revenue", "w")
 for i in data:
     RevLog.write("%s:%02.2f\n" % (data[i]["tag"], float(data[i]["btc_revenue"])*exchrate) )
@@ -123,7 +160,8 @@ for i in data:
 RevLog.close()
 
 # save current profit
-print "New profits"
+print " "
+print "Current Profit:"
 profitLog = open(outputDir + "/WTM_current_profit", "w")
 for i in data:
     profitLog.write("%s:%s\n" % (data[i]["tag"], data[i]["profitability"]))
@@ -137,6 +175,7 @@ except:
     print "Currently mining coin was not found in inclusion list, will switch to the new best one"
     minimumDifference = 0
 
+print " "
 newTopCoin = oldTopCoin
 # try searching for a new top coin comparing its profit with current mining coin profit
 try:

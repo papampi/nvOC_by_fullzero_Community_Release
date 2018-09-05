@@ -104,6 +104,7 @@ then
     sudo teamviewer --daemon enable
     sleep 2
     guake -n teamviewer -r teamviewer -e "teamviewer" &
+    sleep 1
     running=""
     if [[ $RESOLUTION != "" ]]
     then
@@ -141,6 +142,7 @@ then
   HCD=${NVOC}/SRR
   if ! ps ax | grep -q '[S]RR';  then
     guake -n $HCD -r SRR -e "bash ${NVOC}/SRR" &
+    sleep 1
   fi
 fi
 
@@ -157,6 +159,7 @@ then
   if ! ps ax | grep -q '[l]og_rotate'
   then
     guake -n $HCD -r LOG_ROTATE -e "bash ${NVOC}/log_rotate" &
+    sleep 1
   fi
 fi
 
@@ -300,6 +303,7 @@ then
   if ! ps ax | grep -q '[7]reboot'
   then
     guake -n $HCD -r AUTO_REBOOT -e "bash ${NVOC}/7reboot" &
+    sleep 1
   fi
 fi
 
@@ -315,6 +319,7 @@ then
     echo "process in guake terminal Tab (f12)"
     echo ""
     guake -n $HCD -r PX_LP_upPASTE -e "bash ${NVOC}/upPASTE" &
+    sleep 1
   fi
 fi
 
@@ -336,6 +341,7 @@ then
       #if guake tab is already showing temp control output dont open a new one
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[t]empcontrol-screenlog.0"; then
         guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -n 0 -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" &
+        sleep 1
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
       echo "process in screen temp; 'nvOC temp-log'"
@@ -350,6 +356,7 @@ then
   if ! ps ax | grep -q '[7]telegram'
   then
     guake -n $HCD -r TELEGRAM_MESSAGES -e "bash ${NVOC}/7telegram" &
+    sleep 1
     running=""
   fi
 fi
@@ -378,6 +385,7 @@ EOF
   if ! ps ax | grep -q '[8]wtm_profit_check'
   then
     guake -n $HCD -r WTM_PROFIT_CHECK -e "bash ${NVOC}/8wtm_profit_check" &
+    sleep 1
     running=""
   fi
 fi
@@ -488,27 +496,27 @@ then
    "daggerhashimoto": {
      "speed": 0.087, "power": 0.397,
      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
-     "cmd": "${NVOC}/miners/ethminer/latest/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
+     "cmd": "${NVOC}/miners/ETHMINER/recommended/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U"
    },
    "equihash": {
      "speed": 0.000001140, "power": 0.397,
      "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
-     "cmd": "${NVOC}/miners/ewbf/3_4/miner --eexit 3 --fee 0 --pec --server equihash.usa.nicehash.com --user {ADDR}.{MINER} --pass z --port 3357"
+     "cmd": "${NVOC}/miners/EWBF/recommended/miner --eexit 3 --fee 0 --pec --server equihash.usa.nicehash.com --user {ADDR}.{MINER} --pass z --port 3357"
    },
    "neoscrypt": {
      "speed": 0.002160, "power": 0.397,
      "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
-     "cmd": "${NVOC}/miners/KTccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
    },
    "lyra2rev2": {
      "speed": 0.081, "power": 0.386,
      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
-     "cmd": "${NVOC}/miners/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
    },
    "lbry": {
      "speed": 0.639, "power": 0.392,
      "power_limit": $pwr_lim_lbry, "gpu_oc": $gpu_clks_lbry, "mem_oc": $mem_clks_lbry, "fan": 0,
-     "cmd": "${NVOC}/miners/SPccminer/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/SPccminer/recommended/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
    }
  }
 }
@@ -533,79 +541,79 @@ then
   {
     "Cryptonight-Monero":
     {
-      "bin": "${NVOC}/miners/xmr-stak/xmr-stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
+      "bin": "${NVOC}/miners/XMR_Stak/recommended/xmr-stak --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
       "power_limit": $pwr_lim_cryptonight_monero, "gpu_oc": $gpu_clks_cryptonight_monero, "mem_oc": $mem_clks_cryptonight_monero, "fan": 0,
       "speed": 0.000002, "power": 0.325
     },
     "Equihash":
     {
-      "bin": "${NVOC}/miners/ewbf/3_4/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",
+      "bin": "${NVOC}/miners/EWBF/recommended/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",
       "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
       "speed": 0.000001140, "power": 0.397
     },
     "Ethash":
     {
-      "bin": "${NVOC}/miners/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "bin": "${NVOC}/miners/ETHMINER/recommended/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
       "power_limit": $pwr_lim_ethash, "gpu_oc": $gpu_clks_ethash, "mem_oc": $mem_clks_ethash, "fan": 0,
       "speed": 0.087, "power": 0.397
     },
     "Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0,
       "speed": 0.0853, "power": 0.392
     },
     "Keccak":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0,
       "speed": 1.45, "power": 0.391
     },
     "Lyra2RE2":
     {
-      "bin": "${NVOC}/miners//SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners//SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_lyra2re2, "gpu_oc": $gpu_clks_lyra2re2, "mem_oc": $mem_clks_lyra2re2, "fan": 0,
       "speed": 0.081, "power": 0.386
     },
     "Myriad-Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0,
       "speed": 0.158, "power": 0.391
     },
     "NeoScrypt":
     {
-      "bin": "${NVOC}/miners/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
       "speed": 0.002160, "power": 0.397
     },
     "Qubit":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0,
       "speed": 0.0509, "power": 0.382
     },
     "Scrypt":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0,
       "speed": 0.00224, "power": 0.403
     },
     "Sia":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0,
       "speed": 3.700, "power": 0.403
     },
     "Skein":
     {
-      "bin": "${NVOC}/miners/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/ASccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0,
       "speed": 0.835, "power": 0.383
     },
     "X11":
     {
-      "bin": "${NVOC}/miners/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_x11, "gpu_oc": $gpu_clks_x11, "mem_oc": $mem_clks_x11, "fan": 0,
       "speed": 0.0327, "power": 0.403
     }
@@ -628,77 +636,77 @@ then
   {
     "Cryptonight":
     {
-      "bin": "${NVOC}/miners/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
+      "bin": "${NVOC}/miners/KTccminer_cryptonight/recommended/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
       "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0
     },
     "Cryptonight-Monero":
     {
-      "bin": "${NVOC}/miners/xmr-stak/xmr-stak_miner --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
+      "bin": "${NVOC}/miners/XMR_Stak/recommended/xmr-stak --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
       "power_limit": $pwr_lim_cryptonight_monero, "gpu_oc": $gpu_clks_cryptonight_monero, "mem_oc": $mem_clks_cryptonight_monero, "fan": 0
     },
     "Cryptonight-Heavy":
     {
-      "bin": "${NVOC}/miners/xmrig-nvidia/xmrig-nvidia -a cryptonight-heavy -o {HOST}:{PORT} -u {NAME} -p x -k",
+      "bin": "${NVOC}/miners/XMR_Stak/recommended/xmr-stak -a cryptonight-heavy --noCPU --noAMD -o {HOST}:{PORT} -u {NAME} -p x -k",
       "power_limit": $pwr_lim_cryptonight, "gpu_oc": $gpu_clks_cryptonight, "mem_oc": $mem_clks_cryptonight, "fan": 0
     },
     "Equihash":
     {
-      "bin": "${NVOC}/miners/dstm/latest/zm_miner --server {HOST} --port {PORT} --user {NAME}.{MINER} --pass x --telemetry=0.0.0.0:2222 --time --color",
+      "bin": "${NVOC}/miners/DSTM/recommended/miner --server {HOST} --port {PORT} --user {NAME}.{MINER} --pass x --telemetry=0.0.0.0:2222 --time --color",
       "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0
     },
     "Ethash":
     {
-      "bin": "${NVOC}/miners/ethminer/latest/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "bin": "${NVOC}/miners/ETHMINER/recommended/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
       "power_limit": $pwr_lim_ethash, "gpu_oc": $gpu_clks_ethash, "mem_oc": $mem_clks_ethash, "fan": 0
     },
     "Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0
     },
     "Keccak":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0
     },
     "Lyra2RE2":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_lyra2re2, "gpu_oc": $gpu_clks_lyra2re2, "mem_oc": $mem_clks_lyra2re2, "fan": 0
     },
     "Myriad-Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0
     },
     "NeoScrypt":
     {
-      "bin": "${NVOC}/miners/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0
     },
     "Qubit":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0
     },
     "Scrypt":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0
     },
     "Sia":
     {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0
     },
     "Skein":
     {
-      "bin": "${NVOC}/miners/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/ASccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0
     },
     "X11":
     {
-      "bin": "${NVOC}/miners/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_x11, "gpu_oc": $gpu_clks_x11, "mem_oc": $mem_clks_x11, "fan": 0
     }
   }
@@ -740,6 +748,7 @@ EOF
       echo "process in screen wtm, guake terminal Tab (f12)"
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[8]_wtmautoswitchlog"; then
         guake -n ${NVOC}/8wtm_auto_switch -r WTM_SWITCHING -e "tail -n 0 -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" &
+        sleep 1
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
       echo "process in screen wtm, 'nvOC wtm-log'"
@@ -800,6 +809,7 @@ then
     if [[ $LOCALorREMOTE == LOCAL ]]
     then
       guake -n $HCD -r ETH_PILL -e "screen -r eth_pill" &
+      sleep 1
     fi
   fi
 else
@@ -941,6 +951,7 @@ then
       if [[ $LOCALorREMOTE == LOCAL ]]
       then
         guake -n $HCD -r cpuminer -e "tail -f ${NVOC}/nvoc_logs/cpuminer-screenlog.0" &
+        sleep 1
         echo "cpuminer process in guake terminal Tab (f12)"
       else
         echo "process in screen wdog; 'nvOC cpuminer-log'"
@@ -971,6 +982,7 @@ then
         #if guake tab is already showing watchdog output dont open a new one
         if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[w]atchdog-screenlog.0" |grep -v grep ;then
           guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -n 0 -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" &
+          sleep 1
         fi
         echo ""
       elif [[ $LOCALorREMOTE == REMOTE ]]
@@ -1037,6 +1049,7 @@ then
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then
         touch ${NVOC}/nvoc_logs/screenlog.0
         guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0" &
+        sleep 1
       fi
       echo "mining process in Guake Tab"
       echo ""

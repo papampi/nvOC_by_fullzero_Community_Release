@@ -114,10 +114,14 @@ v0035="LuKePicci;Uniform plusCPU handling"
 v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
 v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
 v0038="Spiral;Added max temperature shutdown option & resolution option for teamviewer"
+v0039="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
+v0040="papampi;BMiner Dual mining"
+v0041="papampi;XDNA COIN, HEX ALGO"
+
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0038"
+nvOC_1bash_ver="0041"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
@@ -162,8 +166,9 @@ nvOC_1bash_last_compatible="0035"
 #                                                      #
 ########################################################
 
-COIN="ZEC"                  # Choose manually the coin to mine (like ETH, ZEC ...)
-                            # or pick an automatic profit-based switcher below
+COIN="ZEC"                  # Manual mining, choose the coin to mine (like "ETH", "ZEC", ...)
+			    # Dual mining: "DUAL_CLAYMORE" or "DUAL_BMINER"
+                            # Automatic profit-based switchers below
 
 AUTO_START_MINER="NO"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
 
@@ -193,15 +198,12 @@ RESOLUTION="1366x768"       # Default system resolution used when connecting thr
 SSH="YES"                   # YES or NO # If you use SSH to remotely connect to this rig set this to YES
 
 
-
 AUTO_REBOOT="NO"            # YES or NO # If you want this rig to periodically reboot set this to YES
 
 REBOOT_TIMEOUT_IN_MINUTES=2880  # If AUTO_REBOOT is set to YES, use this to set how often to reboot, 1440 = 24 hours, 2880 = 48 hours
 
 
-
 SLOW_USB_KEY_MODE="NO"      # YES or NO # If you are using a slow USB flash drive (eg. USB 1.0 or USB 2.0) set this to YES
-
 
 
 GLOBAL_WORKERNAME="YES"     # YES or NO # Use same workername for all coins
@@ -211,11 +213,6 @@ AUTO_WORKERNAME="HOST"      # HOST or MAC or CUSTOM # Use HOST IP address or net
 CUSTOM_WORKERNAME="19_2"    # If AUTO_WORKERNAME="CUSTOM" enter your desired workername here
 
 
-#Auto update is disabled on v0019-2.x Community Release.
-AUTO_UPDATE="STABLE"        # STABLE or BETA # To update to the latest STABLE or BETA releases, manually run 4update in guake terminal 
-
-
-
 _Parallax_MODE="NO"         # YES or NO # To deploy 1bash remotely from pastebin.com . You will need to create account
 
 pasteBASH="your_PASTE_here" # pastebin.com setting - enter paste link here
@@ -223,13 +220,11 @@ pasteBASH="your_PASTE_here" # pastebin.com setting - enter paste link here
 upPASTE_TIMEOUT_IN_MINUTES=60  # pastebin.com setting - timeout
 
 
-
 CLEAR_LOGS_ON_BOOT="NO"     # YES or NO # Clear all logs when rig boots up
 
 LOG_ROTATE="YES"            # Rotate (clean) all logs every x hours. Highly recommended to set this to yes!
 
 LOG_ROTATE_INTERVAL="3"     # Time between log rotations in hours. Default is: 3
-
 
 
 SRR="NO"                    # YES or NO # Remote SRR control using Raspberry Pi device with SRR board
@@ -243,6 +238,11 @@ CONTROL_GPU_LED="YES"       # YES or NO # Control GPU LED light. NOTE: It only w
 
 LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OFF, 100 = full brightness
 
+########################################################
+#                                                      #
+# MINER_WATCHDOG settings                              #
+#                                                      #
+########################################################
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
@@ -310,12 +310,6 @@ GPUPowerMizerMode_Adjust="NO"      # YES or NO # Use nvidia PowerMizerMode
 
 GPUPowerMizerMode=1                # Set PowerMizerMode
 
-MANUAL_FAN="NO"                    # YES or NO # Manually set the fans, no auto adjustment. Set this to NO if using the auto MINER_TEMP_CONTROL
-
-FAN_SPEED=75                       # Set fan speed percentage if MANUAL_FAN="YES" (Do not write the % sign)
-
-MINER_TEMP_CONTROL="YES"           # YES or NO # Automatically adjusts the fan speed to keep the desired temp. Highly recommended to use this!
-
 OhGodAnETHlargementPill="NO"       # YES or NO, Set to YES for mining Ethash algos with 1080 or 1080TI cards
 
 
@@ -327,11 +321,17 @@ OhGodAnETHlargementPill="NO"       # YES or NO, Set to YES for mining Ethash alg
 
 # Automatically adjusts the fan speed to keep the desired target temp. If the actual temp is above the target temp this script will increase the fan speed. If the actual temp is 2C below the target temp this script will reduce the fan speed. If the target temperature can't be reached with fan adjustments it will decrease the Power Limit. If actual temp is above the desired target temp and fan speed is already at 100%, the script will lower the Power Limit. Once the target temp is reached, Power Limit will be restored.
 
+MINER_TEMP_CONTROL="YES"           # YES or NO # Automatically adjusts the fan speed to keep the desired temp. Highly recommended to use this!
+
+MANUAL_FAN="NO"                    # YES or NO # Manually set the fans, no auto adjustment. Set this to NO if using the auto MINER_TEMP_CONTROL
+
+FAN_SPEED=75                       # Set fan speed percentage if MANUAL_FAN="YES" (Do not write the % sign)
+
 INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO, if YES global target temperature is overridden by individual per-GPU setting found later in this file
 
 TARGET_TEMP=65                # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
 
-HOT_SHUTDOWN="YES"	      # YES or NO, if YES system will shutdown when SHUTDOWN_TEMP is exceeded.
+HOT_SHUTDOWN="NO"	      # YES or NO, if YES system will shutdown when SHUTDOWN_TEMP is exceeded.
 SHUTDOWN_TEMP=85	      # If HOT_SHUTDOWN is YES then the system will shutdown if this number is exceeded. (Celsius)
 
 ALLOWED_TEMP_DIFF=2           # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
@@ -392,6 +392,7 @@ DECRED_COINS="DCR"
 EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
 ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
 GRS_COINS="GRS,MPH_GRS"
+HEX_COINS="XDNA"
 LBRY_COINS="LBC,ZPOOL_LBRY"
 LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
 LYRA2Z_COINS="XZC,MPH_LYRA2Z"
@@ -448,17 +449,20 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 #        Test intensity on your rig and edit it or miner will set default values.
 #        Choose the wallet address format your pool requires, or leave common format.
 #        You can define new mappings as in the example at the end of this section.
+#        Read BMINER available scheme in coin section 
 
 # Available builtin miners:
 #        Various algos:
-#          "KTccminer", "SPccminer", "TPccminer", "ASccminer", "ZENEMYminer",
-#          "SILENTminer", "SUPRminer", "ANXccminer", "vertminer", "xmr-stak"
+#          "ANXccminer", "ASccminer", "CryptoDredge", "KTccminer",  
+#          "KXccminer", "SILENTminer", "SPccminer",  "SUPRminer",   
+#          "TPccminer", "VERTMINER", "XMR_Stak", "ZENEMYminer"
 #        Equihash:
 #          "DSTM", "EWBF", "BMINER"
 #        Zhash:
-#          "Z_EWBF"
+#          "Z_EWBF", "BMINER"
 #        Ethash:
-#          "CLAYMORE", "ETHMINER", "GENOIL"
+#          "CLAYMORE", "ETHMINER", "GENOIL", "BMINER"
+
 
 ## BITCORE, TIMETRAVEL10
 BITCORE_INTENSITY="0"
@@ -472,12 +476,12 @@ CRYPTONIGHT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHT-V7
 CRYPTONIGHTV7_INTENSITY="0"
-CRYPTONIGHTV7_MINER="xmr-stak"
+CRYPTONIGHTV7_MINER="XMR_Stak"
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## CRYPTONIGHTHEAVY
 CRYPTONIGHTHEAVY_INTENSITY="0"
-CRYPTONIGHTHEAVY_MINER="xmr-stak"
+CRYPTONIGHTHEAVY_MINER="XMR_Stak"
 CRYPTONIGHTHEAVY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Decred
@@ -498,6 +502,11 @@ GROESTL_INTENSITY="0"
 GROESTL_MINER="TPccminer"
 GROESTL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+## HEX
+HEX_INTENSITY="0"
+HEX_MINER="ZENEMYminer"
+HEX_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
 ## KECCAK
 KECCAK_INTENSITY="0"
 KECCAK_MINER="TPccminer"
@@ -509,8 +518,8 @@ LBRY_MINER="SPccminer"
 LBRY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LYRA2REV2
-LYRA2V2_INTENSITY="0"
-LYRA2V2_MINER="TPccminer"
+LYRA2V2_INTENSITY="1"
+LYRA2V2_MINER="CryptoDredge"
 LYRA2V2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LYRA2Z
@@ -524,8 +533,8 @@ MYR_GR_MINER="TPccminer"
 MYR_GR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Neoscrypt
-NEOSCRYPT_INTENSITY="0"
-NEOSCRYPT_MINER="KTccminer"
+NEOSCRYPT_INTENSITY="1"
+NEOSCRYPT_MINER="CryptoDredge"
 NEOSCRYPT_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PASCAL
@@ -613,22 +622,25 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 #                                                      #
 ########################################################
 
-CLAYMORE_VERSION="latest"                        # Choose: latest or any version you add its folder.
+CLAYMORE_VERSION="recommended"                   # Choose: latest or any version you add its folder.
 CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 
 ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
+ETHMINER_VERSION="recommended"
 
 DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
+DSTM_VERSION="recommended"
 
 EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
 EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_VERSION="3_4"                               # choose "3_3" or "3_4" # EWBF Equihash Miner version
+EWBF_VERSION="recommended"                       # choose "3_3" or "3_4" # EWBF Equihash Miner version
 
 Z_EWBF_PERCENT="0"                               # EWBF ZHASH Dev fee percent to alter donation percent   
 Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
-Z_EWBF_VERSION="latest"                          # EWBF ZHASH Miner version,  "latest" or add the version you installed 
+Z_EWBF_VERSION="recommended"                     # EWBF ZHASH Miner version,  "latest" or add the version you installed 
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
+BMINER_VERSION="recommended"
 #BMINER_PROTOCOL, Deprecated, use COIN_POOL_PROTOCOL
 
 CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
@@ -648,7 +660,7 @@ CCMINER_OPTS=""                                  # ccminer optional arguments. A
 #        Default Coin Pool Protocols is stratum+tcp, If your pool has other protocols check miner support before changing it
 #        stratum+ssl, stratum+tcp, stratum+tls, stratum+tls12, stratum1+ssl, stratum1+tcp, stratum1+tls, stratum1+tls12, stratum2+ssl, stratum2+tcp, stratum2+tls, stratum2+tls12
 #
-#        If using bminer use these on coin pool protocols:
+#        If using BMINER use these in coin pool protocols:
 #        Equihash Stratum: "stratum", Equihash Stratum+SSL:"stratum+ssl" 
 #        Ethash Stratum:"ethash", Ethash Stratum+SSL:"ethash+ssl", Ethereum Proxy:"ethproxy" ethereum Stratum:"ethstratum"
 #        ZHash Algos like BTG: "zhash"
@@ -1039,6 +1051,14 @@ VTC_PORT="20507"
 VTC_WORKER="$WORKERNAME"
 VTC_POOL_PROTOCOL="stratum+tcp"
 
+# XDNA (XDNA)
+XDNA_ADDRESS="replace_with_your_address"
+XDNA_EXTENSION_ARGUMENTS=""
+XDNA_POOL="XMN_POOL_ADDRESS"
+XDNA_PORT="XMN_POOL_PORT"
+XDNA_WORKER="$WORKERNAME"
+XDNA_POOL_PROTOCOL="stratum+tcp"
+
 # Motion (XMN)
 XMN_ADDRESS="replace_with_your_address"
 XMN_EXTENSION_ARGUMENTS=""
@@ -1156,6 +1176,28 @@ MPORT="-3333"                               #remote monitoring/management port. 
 MPSW=""                                     #remote monitoring/management password.
 DUAL_ADDITIONAL_ARGUMENTS=""                #Additional arguments if needed
 
+
+###################################################
+# Bminer_Dual Mining                              #
+# Set COIN="BMINER_DUAL"                          #  
+###################################################
+
+
+MAIN_COIN=""                                  #Main Coin, Ethereum or any Ethash Coin
+MAIN_COIN_ADDRESS="replace_with_your_address" #Main Coin wallet address
+MAIN_COIN_POOL="POOL_ADDRESS"                 #Main Coin pool address
+MAIN_COIN_PORT="POOL_PORT"                    #Main Coin pool port
+MAIN_COIN_WORKER="$WORKERNAME"                #Main Coin worker name
+MAIN_COIN_POOL_PROTOCOL="ethash"              #Main Coin pool protocol: "ethash", "ethproxy", "ethstratum", "ethash+ssl"
+
+DUAL_COIN=""                                  #Dual Coin, blake14r and blake2s coins
+DUAL_COIN_ADDRESS="replace_with_your_address" #Dual Coin wallet address
+DUAL_COIN_POOL="POOL_ADDRESS"                 #Dual Coin pool address
+DUAL_COIN_PORT="PORT"                         #Dual Coin pool port
+DUAL_COIN_WORKER="$WORKERNAME"                #Dual Coin worker name
+DUAL_COIN_POOL_PROTOCOL="blake2s"             #Dual Coin Supported algos: "blake14r", "blake2s" 
+
+
 ########################################################
 #                                                      #
 ###############    NiceHash Info       #################
@@ -1169,6 +1211,7 @@ NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
 NICE_ETHASH_PORT="3353"
 NICE_ETHASH_WORKER="$WORKERNAME"
 NICE_ETHASH_EXTENSION_ARGUMENTS=""            # To mine with claymore add "-esm 3 -allpools 1 -estale 0"
+NICE_ETHASH_POOL_PROTOCOL=""  
 
 # Nice Equihash
 NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
@@ -1480,6 +1523,11 @@ EQUIHASH_MEMORY_OVERCLOCK=0              # Recommended value for some GTX-1060: 
 ETHASH_POWERLIMIT_WATTS=100              # Recommended value for some GTX-1060: 76
 ETHASH_CORE_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
 ETHASH_MEMORY_OVERCLOCK=0                # Recommended value for some GTX-1060: 1600
+
+# HEX
+HEX_POWERLIMIT_WATTS="100" 
+HEX_CORE_OVERCLOCK="0" 
+HEX_MEMORY_OVERCLOCK="0" 
 
 # lyra2v2, Lyura2Rev2
 LYRA2V2_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 65
