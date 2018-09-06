@@ -622,29 +622,34 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 #                                                      #
 ########################################################
 
-CLAYMORE_VERSION="recommended"                   # Choose: latest or any version you add its folder.
 CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
+CLAYMORE_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
 
 ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
-ETHMINER_VERSION="recommended"
+ETHMINER_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
 
 DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
-DSTM_VERSION="recommended"
+DSTM_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
 EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
 EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_VERSION="recommended"                       # choose "3_3" or "3_4" # EWBF Equihash Miner version
+EWBF_VERSION="recommended"                       # "latest", "recommended" or the version folder name. If choose 3.3 you should extract 3.3 in miner folder to 3.3 folder
 
 Z_EWBF_PERCENT="0"                               # EWBF ZHASH Dev fee percent to alter donation percent   
 Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
-Z_EWBF_VERSION="recommended"                     # EWBF ZHASH Miner version,  "latest" or add the version you installed 
+Z_EWBF_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
-BMINER_VERSION="recommended"
+BMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 #BMINER_PROTOCOL, Deprecated, use COIN_POOL_PROTOCOL
 
 CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
+ASccminer_VERSION="recommended"
+KTccminer_VERSION="recommended"
+KTccminer_cryptonight_VERSION="recommended"
+TPccminer_VERSION="recommended"
+ZENEMYminer_VERSION="recommended"
 
 ########################################################
 #                                                      #
