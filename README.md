@@ -46,15 +46,15 @@ Version: always the latest, from configurable branch (default: [release](https:/
 
 | host | size   | download                                                                       |
 |------|--------|--------------------------------------------------------------------------------|
-| MEGA | 3,50GB | [link](https://mega.nz/#!4AsFBJ4C!q6jGWxQEO0s8fVM5-Sp0GTw3Vhhmp9Wog952uSTNb0Y) |
+| MEGA | 3,50GB | UPLOADING |
 | GDrive | 3,50GB | Coiming Soon                                                                 |
 
 Checksums:
 
 | file                                                 | type   | value                                                            |
 |------------------------------------------------------|--------|------------------------------------------------------------------|
-| nvOC_19-2.1_U18.04_Dual-Cuda_N396_2018-09-05.7z      | sha256 | 6334067606176ed90191b3e4980b21102d14a9c8f14ec63508669d1cb27d6e33 |
-| nvOC_19-2.1_U18.04_Dual-Cuda_N396_2018-09-05.img     | sha256 | 7F170ED64A257D3F1D865C77DC3E49EF5D990F4C910F472E9D1EBA5BB63E6954 |
+| nvOC_19-2.1_U18.04_Dual-Cuda_N396_2018-09-05.7z      | sha256 | B9E0F548E7119C062D828CB1984E7531FB56CE619FCDEB596BADE4F292809D5E |
+| nvOC_19-2.1_U18.04_Dual-Cuda_N396_2018-09-05.img     | sha256 | 6C5C0373B19F463C77C0557D27A915EF90B11663AC972C0A5A354760D89CD10B |
 
 
 ### nvOC_V19-2.1beta_U16.04_N390_D180707 (for nvOC >= 2.1)
