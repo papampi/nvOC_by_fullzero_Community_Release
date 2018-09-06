@@ -645,10 +645,12 @@ BMINER_VERSION="recommended"                     # "latest", "recommended" or th
 
 CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
-ASccminer_VERSION="recommended"
+ASccminer_VERSION="recommended"                  # "latest", "recommended" or the version folder name.
+CryptoDredge_VERSION="recommended"
 KTccminer_VERSION="recommended"
 KTccminer_cryptonight_VERSION="recommended"
 TPccminer_VERSION="recommended"
+XMR_Stak_VERSION="recommended"
 ZENEMYminer_VERSION="recommended"
 
 ########################################################
