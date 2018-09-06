@@ -25,6 +25,12 @@ then
   exit
 fi
 
+if [ ! -e "${NVOC}/1bash.template" ]
+then
+  echo "1bash.template is missing, downloading it"
+  wget -N https://github.com/papampi/nvOC_by_fullzero_Community_Release/blob/release/1bash.template -O ${NVOC}/1bash.template
+fi
+
 # check 1bash revision mismatch
 source "${NVOC}/1bash"
 current_1bash_ver="$nvOC_1bash_ver"

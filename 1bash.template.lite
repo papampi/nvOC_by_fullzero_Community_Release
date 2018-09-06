@@ -5,59 +5,13 @@
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 
-
 ## 1bash with no help and info ##
-
-
-v0001="Community Release"
-v0002="Papampi; Telegram changes"
-v0003="Papampi; WTM_MINIMUM_MINING_TIME"
-v0004="Papampi; More NiceHash mining algos"
-v0005="damNmad; New Coins LUX, SUMO, DSR"
-v0006="Papampi; New Coins ELLA, XVG, GBX, CRC"
-v0007="Papampi; EQUIHASH_MINER, ETHASH_MINER, bminer"
-v0008="Papampi; Nicehash bug fixes"
-v0009="papampi; Added P104 and changed P106 to P10X"
-v0010="papampi; WTM minimum mining time and force switch"
-v0011="papampi; Pool Wallet Address Format"
-v0012="papampi; New claymore dual mining "
-v0013="damNmad; Added BTCP & notes for $WALLET_ADDRESS_FORMAT variable"
-v0014="Falcon; Added RavenCoin (RVN)"
-v0015="papampi; Temp Control Maximum fan speed" 
-v0016="papampi; Some fix in claymore_dual"
-v0017="papampi; NEOSCRYPT_MINER, LYRA2V2_MINER, SKUNK_MINER, SKEIN_MINER"
-v0018="papampi; Alternate Pool Switch"
-v0019="papampi; WTM 2nd lower minimum difference to switch"
-v0020="LukePicci; Relocate nvOC to arbitrary install directory"
-v0021="papampi; More miner optional arguments"
-v0022="papampi; OhGodAnETHlargementPill"
-v0023="LukePicci; Simplified ALGO specific settings"
-v0024="papampi; HEADLEASS_MODE"
-v0025="LuKePicci; AUTO_SWITCH generalized implementetion"
-v0026="papampi, sizzlephizzle; Algo mining unification" 
-v0027="LuKePicci; Separate algo_id"
-v0028="LuKePicci; More tempcontrol alert color and verbosity options"
-v0029="papampi; Nice Algo extension arguments"
-v0030="papampi;CryptoNightHeavy"  
-v0031="papampi;New EWBF v0.3"  
-v0032="papampi;Version numbering"
-v0033="papampi;ZHASH, PHI1612, PHI2 Algos, Z_EWBF Miner and NICE_X16R"
-v0034="LuKePicci;Rearrange settings and explaination comments"
-v0035="LuKePicci;Uniform plusCPU handling"
-v0036="papampi;Ethminer new arguments, Coin Pool Protocol"
-v0037="papampi;Added bminer scheme info for zhash & tensority based coins"
-v0038="Spiral;Added max temperature shutdown option & resolution option for teamviewer"
-v0039="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
-v0040="papampi;BMiner Dual mining"
-v0041="papampi;XDNA COIN, HEX ALGO"
-
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
 nvOC_1bash_ver="0041"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
-
 
 
 ########################################################
@@ -432,13 +386,6 @@ XEVAN_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 ZHASH_MINER="Z_EWBF"
 ZHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
-# example, adding miner for NEWALGO:
-#
-#   ## Newalgo
-#   NEWALGO_MINER="builtin_or_pluggable_miner_name"
-#   NEWALGO_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
-
-
 ################################################################
 #                                                              #
 # CPU mining settings                                          #
@@ -459,8 +406,8 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 #                                                      #
 ########################################################
 
-CLAYMORE_VERSION="recommended"
 CLAYMORE_OPTS=""
+CLAYMORE_VERSION="recommended"
 
 ETHMINER_OPTS=""
 ETHMINER_VERSION="recommended"
@@ -482,13 +429,19 @@ BMINER_VERSION="recommended"
 
 CCMINER_OPTS=""
 
+ASccminer_VERSION="recommended"
+CryptoDredge_VERSION="recommended"
+KTccminer_VERSION="recommended"
+KTccminer_cryptonight_VERSION="recommended"
+TPccminer_VERSION="recommended"
+XMR_Stak_VERSION="recommended"
+
 
 ########################################################
 #                                                      #
 # COIN, POOL, PORT info section, sorted alphabetically #
 #                                                      #
 ########################################################
-
 
 
 # AION
@@ -955,23 +908,11 @@ plusCPU_POOL="$XMR_POOL"
 plusCPU_PORT="$XMR_PORT"
 plusCPU_WORKER="$XMR_WORKER"
 
-# example, adding NEWCOIN:
-#
-#   ## Newcoin (NEWCOIN)
-#   NEWCOIN_ADDRESS="replace_with_your_address"
-#   NEWCOIN_EXTENSION_ARGUMENTS=""
-#   NEWCOIN_POOL="newpool.example.org"
-#   NEWCOIN_PORT="4242"
-#   NEWCOIN_WORKER="$WORKERNAME"
-#   NEWCOIN_POOL_PROTOCOL="stratum+tcp"
-
 
 ###################################################
 # Claymore_Dual Mining                            #
 # Set COIN="CLAYMORE_DUAL"                        #  
 ###################################################
-
-
 
 DUAL_ECOIN="MAIN COIN"                
 DUAL_EPOOL="MAIN COIN POOL ADDREES"      
@@ -993,7 +934,6 @@ ALL_COINS="0"
 MPORT="-3333"                             
 MPSW=""                                    
 DUAL_ADDITIONAL_ARGUMENTS=""                
-
 
 ###################################################
 # Bminer_Dual Mining                              #
@@ -1463,8 +1403,11 @@ x11_POWERLIMIT_WATTS="100"
 x11_CORE_OVERCLOCK="0"
 x11_MEMORY_OVERCLOCK="0"
 
+
+################################################################
 ################################################################
 # AUTOMATIC PROFIT-BASED MINING SWITCHERS #
+################################################################
 ################################################################
 
 
