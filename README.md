@@ -47,7 +47,7 @@ Version: always the latest, from configurable branch (default: [release](https:/
 | host | size   | download                                                                       |
 |------|--------|--------------------------------------------------------------------------------|
 | MEGA | 3,50GB | [link](https://mega.nz/#!4AsFBJ4C!q6jGWxQEO0s8fVM5-Sp0GTw3Vhhmp9Wog952uSTNb0Y) |
-| GDrive | 3,50GB |                                                                              |
+| GDrive | 3,50GB | Coiming Soon                                                                 |
 
 Checksums:
 
