@@ -803,6 +803,7 @@ if [[ $OhGodAnETHlargementPill == YES && $ALGO == ETHASH ]]
 then
   echo " Launching OhGodAnETHlargementPill"
   HCD="${NVOC}/OhGodAnETHlargementPill-r2"
+  chmod a+x "${NVOC}/OhGodAnETHlargementPill-r2"
   if ! ps ax | grep -q '[O]hGodAnETHlargementPill'
   then
     screen -dmS eth_pill sudo $HCD
