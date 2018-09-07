@@ -41,20 +41,20 @@ You can refer to https://github.com/papampi/nvOC_miners README for more help on 
 
 ## Download pre-built OS images
 
-### nvOC_19-2.1 beta Ubuntu 18.04 Dual-Cuda Nvidia 396 2018-09-05 (for nvOC >= 2.1)
+### nvOC_19-2.1 beta Ubuntu 18.04 Dual-Cuda Nvidia 396 2018-09-07 (for nvOC >= 2.1)
 Version: always the latest, from configurable branch (default: [release](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/release))
 
 | host | size   | download                                                                       |
 |------|--------|--------------------------------------------------------------------------------|
-| MEGA | 3,50GB | [link](https://mega.nz/#!4AsFBJ4C!q6jGWxQEO0s8fVM5-Sp0GTw3Vhhmp9Wog952uSTNb0Y) |
+| MEGA | 3,50GB | [link](https://mega.nz/#!BFthBShR!88rChE-cQRJM30n021x9HTGJjFav8VPTuTUci4KXHXM) |
 | GDrive | 3,50GB | Coiming Soon                                                                 |
 
 Checksums:
 
 | file                                                 | type   | value                                                            |
 |------------------------------------------------------|--------|------------------------------------------------------------------|
-| nvOC_19-2.1_U18.04_Dual-Cuda_N396_2018-09-05.7z      | sha256 | 6334067606176ed90191b3e4980b21102d14a9c8f14ec63508669d1cb27d6e33 |
-| nvOC_19-2.1_U18.04_Dual-Cuda_N396_2018-09-05.img     | sha256 | 7F170ED64A257D3F1D865C77DC3E49EF5D990F4C910F472E9D1EBA5BB63E6954 |
+| nvOC_19-2.1_U18.04_Dual-Cuda_N396_2018-09-05.7z      | sha256 | 2384B639142123F13D9E8BAE834F248A293F4F7142B05D5CBF55FBE2DBCB6903 |
+| nvOC_19-2.1_U18.04_Dual-Cuda_N396_2018-09-05.img     | sha256 | 27090E4CF4C4928619AFE456995870F9FAC0996F7876B7791898BD18F2B21D00 |
 
 
 ### nvOC_V19-2.1beta_U16.04_N390_D180707 (for nvOC >= 2.1)
