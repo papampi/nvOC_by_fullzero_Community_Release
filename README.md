@@ -41,7 +41,7 @@ You can refer to https://github.com/papampi/nvOC_miners README for more help on 
 
 ## Download pre-built OS images
 
-### nvOC_19-2.1 beta Ubuntu 18.04 Dual-Cuda Nvidia 396 2018-09-05 (for nvOC >= 2.1)
+### nvOC_19-2.1 beta Ubuntu 18.04 Dual-Cuda Nvidia 396 2018-09-07 (for nvOC >= 2.1)
 Version: always the latest, from configurable branch (default: [release](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/release))
 
 | host | size   | download                                                                       |
