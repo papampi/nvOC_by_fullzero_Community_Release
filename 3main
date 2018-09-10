@@ -96,36 +96,6 @@ NVD=nvidia-settings
 
 screen -wipe
 
-if [[ $TEAMVIEWER == YES ]]
-then
-  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
-  if [ "$running" == "" ]
-  then
-    sudo teamviewer --daemon enable
-    sleep 2
-    guake -n teamviewer -r teamviewer -e "teamviewer" &
-    sleep 1
-    running=""
-    if [[ $RESOLUTION != "" ]]
-    then
-      echo "Setting resolution to $RESOLUTION"
-      xrandr --fb $RESOLUTION
-      echo "" 
-    fi
-  fi  
-fi
-
-if [[ $TEAMVIEWER == NO ]]
-then
-  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
-  if [ "$running" != "" ]
-  then
-    sudo teamviewer --daemon disable
-    sleep 2
-    running=""
-  fi
-fi
-
 if [[ $SSH == YES ]]
 then
   sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
@@ -324,6 +294,36 @@ then
 fi
 
 sleep 2
+
+if [[ $TEAMVIEWER == YES ]]
+then
+  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
+  if [ "$running" == "" ]
+  then
+    sudo teamviewer --daemon enable
+    sleep 2
+    guake -n teamviewer -r teamviewer -e "teamviewer" &
+    sleep 1
+    running=""
+    if [[ $RESOLUTION != "" ]]
+    then
+      echo "Setting resolution to $RESOLUTION"
+      xrandr --fb $RESOLUTION
+      echo "" 
+    fi
+  fi  
+fi
+
+if [[ $TEAMVIEWER == NO ]]
+then
+  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
+  if [ "$running" != "" ]
+  then
+    sudo teamviewer --daemon disable
+    sleep 2
+    running=""
+  fi
+fi
 
 if [[ $MINER_TEMP_CONTROL == YES ]]
 then
