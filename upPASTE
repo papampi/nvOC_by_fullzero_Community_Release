@@ -3,46 +3,45 @@
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 TIMEOUT=$(($upPASTE_TIMEOUT_IN_MINUTES * 60))
-echo ""
+echo
 echo "checks for a 1bash update every $TIMEOUT seconds"
-echo ""
+echo
 
-BITCOIN="theGROUND"
-
-while [ $BITCOIN == "theGROUND" ]
+while true
 do
+  if [[ wget -O "${NVOC}/temp1bash" $pasteBASH && -f "${NVOC}/temp1bash" ]]
+  then
+    old=$(md5sum "${NVOC}/1bash" | sed 's/[^0-9]*//g')
+    echo $old
+    echo
+    new=$(md5sum "${NVOC}/temp1bash" | sed 's/[^0-9]*//g')
+    echo $new
+    echo
 
-cd /tmp
-wget $pasteBASH       # Assumes the file we are getting is called 1bash
-cp '/tmp/1bash' "${NVOC}/temp1bash"
-rm '/tmp/1bash'
+    if [[ $old != $new ]]
+    then
+      # ensure unix encoding
+      dos2unix "${NVOC}/temp1bash"
 
-change="NO"
+      # check new 1bash for errors
+      if [[ "$(which shellcheck)" != "" && $(shellcheck -e 2034 -f gcc "${NVOC}/temp1bash" | grep -c error) != 0 ]]
+      then
+        echo "################################################################################"
+        echo " !!  There is something wrong with your 1bash file at $pasteBASH"
+        echo "     Current 1bash file will not be replaced."
+        echo
+      fi
+      
+      cp "${NVOC}/temp1bash" "${NVOC}/1bash"
+      echo
+      echo "1bash updated from paste: $pasteBASH"
+      echo "restarting nvOC..."
+      bash ${NVOC}/nvOC restart
+    else
+      echo "same 1bash, no changes"
+      echo
+    fi
 
-old=$(md5sum "${NVOC}/1bash" | sed 's/[^0-9]*//g')
-echo $old
-echo ""
-sleep 2
-new=$(md5sum "${NVOC}/temp1bash" | sed 's/[^0-9]*//g')
-echo $new
-echo ""
-
-if [ $old != $new ]
-then
-  change="YES"
-  cp "${NVOC}/temp1bash" "${NVOC}/1bash"
-  echo ""
-  echo "1bash updated from paste: $pasteBASH"
-  echo ""
-  sleep 2
-  bash ${NVOC}/nvOC restart
-fi
-
-if [ $change == "NO" ]
-then
-echo "no changes"
-echo ""
-fi
-sleep $TIMEOUT
+  fi
+  sleep $TIMEOUT
 done
-fi
