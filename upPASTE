@@ -30,13 +30,13 @@ do
         echo " !!  There is something wrong with your 1bash file at $pasteBASH"
         echo "     Current 1bash file will not be replaced."
         echo
+      else
+        cp "${NVOC}/temp1bash" "${NVOC}/1bash"
+        echo
+        echo "1bash updated from paste: $pasteBASH"
+        echo "restarting nvOC..."
+        bash ${NVOC}/nvOC restart
       fi
-      
-      cp "${NVOC}/temp1bash" "${NVOC}/1bash"
-      echo
-      echo "1bash updated from paste: $pasteBASH"
-      echo "restarting nvOC..."
-      bash ${NVOC}/nvOC restart
     else
       echo "same 1bash, no changes"
       echo
