@@ -46,8 +46,9 @@ Version: always the latest, from configurable branch (default: [release](https:/
 
 | host | size   | download                                                                       |
 |------|--------|--------------------------------------------------------------------------------|
-| MEGA | 3,50GB | [link](https://mega.nz/#!BFthBShR!88rChE-cQRJM30n021x9HTGJjFav8VPTuTUci4KXHXM) |
-| GDrive | 3,50GB | Coiming Soon                                                                 |
+| MEGA | 3,61GB | [link](https://mega.nz/#!BFthBShR!88rChE-cQRJM30n021x9HTGJjFav8VPTuTUci4KXHXM) |
+| GDrive | 3,61GB | [link](https://drive.google.com/open?id=1Gl_h8aGGNzC-XXhmEHavHWJXfKFMU90R)   |
+| OneDrive | 3,61GB | [link](https://bit.ly/2Qjqr33)                                             |
 
 Checksums:
 

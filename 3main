@@ -106,6 +106,25 @@ then
   sudo cp /etc/init/ssh.conf-off /etc/init/ssh.conf
 fi
 
+if [[ $TEAMVIEWER == YES ]]
+then
+  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
+  if [ "$running" == "" ]
+  then
+    sudo teamviewer --daemon enable
+    sleep 2
+    guake -n teamviewer -r teamviewer -e "teamviewer" &
+    sleep 1
+    running=""
+    if [[ $RESOLUTION != "" ]]
+    then
+      echo "Setting resolution to $RESOLUTION"
+      xrandr --fb $RESOLUTION
+      echo "" 
+    fi
+  fi  
+fi
+
 if [[ $SRR == YES ]]
 then
   sleep 2
@@ -294,25 +313,6 @@ then
 fi
 
 sleep 2
-
-if [[ $TEAMVIEWER == YES ]]
-then
-  running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
-  if [ "$running" == "" ]
-  then
-    sudo teamviewer --daemon enable
-    sleep 2
-    guake -n teamviewer -r teamviewer -e "teamviewer" &
-    sleep 1
-    running=""
-    if [[ $RESOLUTION != "" ]]
-    then
-      echo "Setting resolution to $RESOLUTION"
-      xrandr --fb $RESOLUTION
-      echo "" 
-    fi
-  fi  
-fi
 
 if [[ $TEAMVIEWER == NO ]]
 then
