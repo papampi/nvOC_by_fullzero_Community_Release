@@ -61,9 +61,10 @@
 #          New miners directory and miner version
 # v=0025 : papampi
 #          BMINER Dual Mining
+# v=0026 : papampi
+#          lolMiner
 
-
-nvOC_0miner_dev="0025"
+nvOC_0miner_dev="0026"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 
