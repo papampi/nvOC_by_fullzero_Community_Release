@@ -235,7 +235,7 @@ then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   elif [[ $ZHASH_MINER == LOLMINER ]]
   then
-    HCD="${NVOC}/miners/LOLMINER/"${!xversion}"/lolminer -coin=$COIN -pool=${!xproto}//${!xpool} -port=${!xport} -user=${!xaddr}${!xwallet}${!xwork} $LOLMINER_OPTS ${!xext}"  
+    HCD="${NVOC}/miners/LOLMINER/"${!xversion}"/lolminer -coin=$COIN -pool=${!xpool} -port=${!xport} -user=${!xaddr}${!xwallet}${!xwork} $LOLMINER_OPTS ${!xext}"  
   fi
   eval $LAUNCH $HCD
 
