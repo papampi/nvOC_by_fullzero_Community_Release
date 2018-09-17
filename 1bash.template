@@ -117,11 +117,12 @@ v0038="Spiral;Added max temperature shutdown option & resolution option for team
 v0039="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyra2z, NeoScrypt, PHI1612, Phi2, Skein, Skunkhash, Tribus"
 v0040="papampi;BMiner Dual mining"
 v0041="papampi;XDNA COIN, HEX ALGO"
+v0042="papampi;lolMiner"
 
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0041"
+nvOC_1bash_ver="0042"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
@@ -459,7 +460,7 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 #        Equihash:
 #          "DSTM", "EWBF", "BMINER"
 #        Zhash:
-#          "Z_EWBF", "BMINER"
+#          "Z_EWBF", "BMINER", "LOLMINER"
 #        Ethash:
 #          "CLAYMORE", "ETHMINER", "GENOIL", "BMINER"
 
