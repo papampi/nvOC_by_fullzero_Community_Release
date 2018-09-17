@@ -233,9 +233,11 @@ then
   elif [[ $ZHASH_MINER == BMINER ]]
   then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
+  elif [[ $ZHASH_MINER == LOLMINER ]]
+  then
+    HCD="${NVOC}/miners/LOLMINER/"${!xversion}"/lolminer -coin=$COIN -pool=${!xpool} -port=${!xport} -user=${!xaddr}${!xwallet}${!xwork} $LOLMINER_OPTS ${!xext}"  
   fi
   eval $LAUNCH $HCD
-
 
 ## Various Algos
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI1612 || $ALGO == PHI2 || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
