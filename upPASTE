@@ -9,7 +9,7 @@ echo
 
 while true
 do
-  if [[ wget -O "${NVOC}/temp1bash" $pasteBASH && -f "${NVOC}/temp1bash" ]]
+  if wget -O "${NVOC}/temp1bash" $pasteBASH && [[ -f "${NVOC}/temp1bash" ]]
   then
     old=$(md5sum "${NVOC}/1bash" | sed 's/[^0-9]*//g')
     echo $old
