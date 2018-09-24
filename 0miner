@@ -63,8 +63,10 @@
 #          BMINER Dual Mining
 # v=0026 : papampi
 #          lolMiner
+# v=0027 : papampi
+#          PhoenixMiner
 
-nvOC_0miner_dev="0026"
+nvOC_0miner_dev="0027"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 
@@ -205,6 +207,9 @@ then
   elif [[ $ETHASH_MINER == BMINER ]]
   then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
+  elif [[ $ETHASH_MINER == PhoenixMiner ]]
+  then
+    HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xpool}:${!xport} -wal ${!xaddr}${!xwallet}${!xwork} -pass $MINER_PWD ${!xext} $PhoenixMiner_OPTS"
   fi
   eval $LAUNCH $HCD
 
