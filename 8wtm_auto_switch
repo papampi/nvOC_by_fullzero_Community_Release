@@ -95,6 +95,12 @@ else
   TOP_COIN=$(sed 's/:[0-9]*//' < ${NVOC}/WTM_top_coin)
 fi
 
+# Prevent first run error on no WTM_24H_REV
+if [[ ! -e ${NVOC}/WTM_24H_REV ]]
+then
+  touch ${NVOC}/WTM_24H_REV
+fi
+
 # Check last top coin and change if not in coin list any more
 if [ ! $(echo "$WTM_AUTO_SWITCH_COINS" | grep "$TOP_COIN") ]
 then

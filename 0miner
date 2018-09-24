@@ -266,6 +266,9 @@ then
 elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
 then
 
+# Large memory page support
+  sudo sysctl -w vm.nr_hugepages=128
+
 # Remove nvidia.txt if cards count changed
   if [ -f ~/nvidia.txt ]
   then
