@@ -118,11 +118,12 @@ v0039="papampi;CryptoDredge miner, Suported Algos: Allium, Blake2s, Lyra2v2, Lyr
 v0040="papampi;BMiner Dual mining"
 v0041="papampi;XDNA COIN, HEX ALGO"
 v0042="papampi;lolMiner"
+v0042="papampi;PhoenixMiner"
 
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0042"
+nvOC_1bash_ver="0043"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
@@ -462,7 +463,7 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 #        Zhash:
 #          "Z_EWBF", "BMINER", "LOLMINER"
 #        Ethash:
-#          "CLAYMORE", "ETHMINER", "GENOIL", "BMINER"
+#          "CLAYMORE", "ETHMINER", "GENOIL", "BMINER", "PhoenixMiner"
 
 
 ## BITCORE, TIMETRAVEL10
@@ -643,6 +644,12 @@ Z_EWBF_VERSION="recommended"                     # "latest", "recommended" or th
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 BMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 #BMINER_PROTOCOL, Deprecated, use COIN_POOL_PROTOCOL
+
+LOLMINER_OPTS=""                                 # LOLMINER optional arguments.
+LOLMINER_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
+
+PhoenixMiner_OPTS=""                                 # PhoenixMiner optional arguments. Read the README file inside PhoenixMiner folder
+PhoenixMiner_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
 
 CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
 
