@@ -209,7 +209,7 @@ then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   elif [[ $ETHASH_MINER == PhoenixMiner ]]
   then
-    HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xpool}:${!xport} -wal ${!xaddr}${!xwallet}${!xwork} -pass $MINER_PWD ${!xext} $PhoenixMiner_OPTS"
+    HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xproto}://${!xpool}:${!xport} -wal ${!xaddr} -worker ${!xwork} -pass $MINER_PWD ${!xext} $PhoenixMiner_OPTS"
   fi
   eval $LAUNCH $HCD
 
