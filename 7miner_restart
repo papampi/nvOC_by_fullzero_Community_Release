@@ -1,0 +1,20 @@
+
+#!/bin/bash
+
+source ${NVOC}/1bash
+
+TIMEIN=$MINER_RESTART_TIMEOUT_IN_MINUTES
+
+TIMEOUT=$(($TIMEIN * 60))
+
+sleep 2
+
+echo ""
+echo "Restart miner in $MINER_RESTART_TIMEOUT_IN_MINUTES minutes"
+
+sleep $TIMEOUT
+echo "restart miner in 10 seconds by restart miner timer" | tee -a /home/m1/5_watchdoglog
+sleep 10
+pkill -ef screenrc
+pkill -ef 3main
+echo ""
