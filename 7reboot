@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/1bash
+source ${NVOC}/1bash
 
 TIMEIN=$REBOOT_TIMEOUT_IN_MINUTES
 
