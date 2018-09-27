@@ -289,7 +289,7 @@ fi
 if [[ $AUTO_REBOOT == YES ]]
 then
   HCD="${NVOC}/7reboot"
-  if ! ps ax | grep -q '[7r]eboot'
+  if ! ps ax | grep -q '[7]reboot'
   then
     guake -n $HCD -r AUTO_REBOOT -e "bash ${NVOC}/7reboot" &
     sleep 1
@@ -299,7 +299,7 @@ fi
 if [[ $MINER_RESTART == YES ]]
 then
   HCD="${NVOC}/7miner_restart"
-  if ! ps ax | grep -q '[7m]iner_restart'
+  if ! ps ax | grep -q '[7]miner_restart'
   then
     guake -n $HCD -r MINER_RESTART -e "bash ${NVOC}/7miner_restart" &
     sleep 1
