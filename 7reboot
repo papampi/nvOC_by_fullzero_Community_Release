@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
 TIMEIN=$REBOOT_TIMEOUT_IN_MINUTES
