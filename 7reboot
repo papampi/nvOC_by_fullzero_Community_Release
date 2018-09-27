@@ -3,19 +3,18 @@ export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
 TIMEIN=$REBOOT_TIMEOUT_IN_MINUTES
-
 TIMEOUT=$(($TIMEIN * 60))
 
 sleep 2
 
 echo ""
-echo "Reboot in $(($TIMEIN / 60 )) Hours"
+echo "$(date) - Auto Reboot activated, Rebooting system in $(($TIMEIN / 60 )) Hours"
 
 sleep $TIMEOUT
-pkill -e gnome-terminal
-pkill -f 3main
-pkill -e screen
+echo "$(date) - Reboot timer reached, Rebooting system in 10 seconds" | tee -a /home/m1/5_watchdoglog
+pkill -ef gnome-terminal
+pkill -ef screenrc
+pkill -ef 3main
 echo ""
-echo "reboot in 10 seconds by reboot timer" | tee -a /home/m1/5_watchdoglog
 sleep 10
 sudo reboot
