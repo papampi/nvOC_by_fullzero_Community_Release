@@ -119,11 +119,12 @@ v0040="papampi;BMiner Dual mining"
 v0041="papampi;XDNA COIN, HEX ALGO"
 v0042="papampi;lolMiner"
 v0043="papampi;PhoenixMiner"
+v0044="papampi;Auto restart miner"
 
 
 # Do not edit these lines
 nvOC_Ver="v0019-2.1" 
-nvOC_1bash_ver="0043"
+nvOC_1bash_ver="0044"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
@@ -203,6 +204,10 @@ SSH="YES"                   # YES or NO # If you use SSH to remotely connect to 
 AUTO_REBOOT="NO"            # YES or NO # If you want this rig to periodically reboot set this to YES
 
 REBOOT_TIMEOUT_IN_MINUTES=2880  # If AUTO_REBOOT is set to YES, use this to set how often to reboot, 1440 = 24 hours, 2880 = 48 hours
+
+MINER_RESTART="NO"            # YES or NO # If you want to periodically restart miner set this to YES
+
+MINER_RESTART_TIMEOUT_IN_MINUTES=720  # If MINER_RESTART is set to YES, use this to set how often to restart miner, 720 = 12 hours
 
 
 SLOW_USB_KEY_MODE="NO"      # YES or NO # If you are using a slow USB flash drive (eg. USB 1.0 or USB 2.0) set this to YES
