@@ -1,6 +1,5 @@
-
 #!/bin/bash
-
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
 TIMEIN=$MINER_RESTART_TIMEOUT_IN_MINUTES
