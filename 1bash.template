@@ -119,7 +119,7 @@ v0040="papampi;BMiner Dual mining"
 v0041="papampi;XDNA COIN, HEX ALGO"
 v0042="papampi;lolMiner"
 v0043="papampi;PhoenixMiner"
-v0044="papampi;Auto restart miner"
+v0044="papampi;Auto restart miner,T_Rex miner"
 
 
 # Do not edit these lines
@@ -462,7 +462,7 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 #        Various algos:
 #          "ANXccminer", "ASccminer", "CryptoDredge", "KTccminer",  
 #          "KXccminer", "SILENTminer", "SPccminer",  "SUPRminer",   
-#          "TPccminer", "VERTMINER", "XMR_Stak", "ZENEMYminer"
+#          "TPccminer", "T_Rex", "VERTMINER", "XMR_Stak", "ZENEMYminer"
 #        Equihash:
 #          "DSTM", "EWBF", "BMINER"
 #        Zhash:
