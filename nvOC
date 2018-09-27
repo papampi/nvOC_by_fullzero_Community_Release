@@ -845,11 +845,6 @@ Ethernet      :  $ethernet"
   then
     echo $ALGO "INTENSITY ..........:" ${!ALGO_INTENSITY_TMP}
   fi
-  COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
-  if [[ ${!COIN_AUTOCONVERT_TO_BTC_TMP} != "" ]]
-  then
-    echo "${COIN}_AUTOCONVERT_TO_BTC ....:" ${!COIN_AUTOCONVERT_TO_BTC_TMP}
-  fi
 
   echo
   echo "[/code]"
