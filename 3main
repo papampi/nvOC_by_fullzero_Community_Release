@@ -296,6 +296,16 @@ then
   fi
 fi
 
+if [[ $MINER_RESTART == YES ]]
+then
+  HCD="${NVOC}/7miner_restart"
+  if ! ps ax | grep -q '[7]miner_restart'
+  then
+    guake -n $HCD -r MINER_RESTART -e "bash ${NVOC}/7miner_restart" &
+    sleep 1
+  fi
+fi
+
 if [[ $_Parallax_MODE == YES ]]
 then
   HCD="${NVOC}/upPASTE"
