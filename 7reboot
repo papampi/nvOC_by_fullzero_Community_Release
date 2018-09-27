@@ -12,9 +12,8 @@ echo "$(date) - Auto Reboot activated, Rebooting system in $(($TIMEIN / 60 )) Ho
 
 sleep $TIMEOUT
 echo "$(date) - Reboot timer reached, Rebooting system in 10 seconds" | tee -a /home/m1/5_watchdoglog
+sleep 10
 pkill -ef gnome-terminal
 pkill -ef screenrc
 pkill -ef 3main
-echo ""
-sleep 10
 sudo reboot
