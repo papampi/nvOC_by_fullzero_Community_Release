@@ -436,7 +436,7 @@ then
     hash_average="$((total_hash / hash_count)) MH/s"
   elif tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[k]H/s"
   then
-    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "OK" | grep "[k]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]* MH/s" | sed 's:MH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
+    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "OK" | grep "[k]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]* kH/s" | sed 's:MH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
     hash_average="$((total_hash / hash_count)) kH/s"
   fi
 
