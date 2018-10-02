@@ -2,6 +2,7 @@
 # Safe Reboot Using Magic SysRq Key
 # Suggested by abdeldev in bitcointalk forum
 
+sleep 2
 
 echo 1 > /proc/sys/kernel/sysrq
 
@@ -16,7 +17,7 @@ echo 1 > /proc/sys/kernel/sysrq
 
 # (*S*nc) Sync all cached disk operations to disk
 echo s > /proc/sysrq-trigger
-
+sleep 2
 # (*U*mount) Umounts all mounted partitions ##
 echo u > /proc/sysrq-trigger
 
