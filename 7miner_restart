@@ -12,7 +12,7 @@ echo "$(date) - Auto Restart miner activated, Restarting miner in $MINER_RESTART
 
 sleep $TIMEOUT
 echo ""
-echo "$(date) - Miner restart timer reached, Restarting miner in 10 seconds" | tee -a /home/m1/5_watchdoglog
+echo "$(date) - Miner restart timer reached, Restarting miner in 10 seconds" | tee -a ${NVOC}/5_watchdoglog
 sleep 10
 pkill -ef screenrc
 pkill -ef 3main
