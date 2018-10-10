@@ -440,6 +440,7 @@ then
     hash_average="$((total_hash / hash_count)) kH/s"
   fi
   rejected_shares=$(tail -n 50 ${NVOC}/nvoc_logs/screenlog.0 | grep "INFO" | grep -o "[0-9]*/[0-9]* Accepted" | tail -1)
+  miner_error=$(tail -100  ${NVOC}/nvoc_logs/screenlog.0 | grep "ERROR" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' )
 
 elif  ps ax | grep miner | grep -q "[Z]_EWBF"
 then
