@@ -1,14 +1,14 @@
 #!/bin/bash
 
 ##########################################################################
-#################   nvOC v0019-2.1 - Community Release   #################
+#################   nvOC v0019-3.0 - Community Release   #################
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 
 ## 1bash with no help and info ##
 
 # Do not edit these lines
-nvOC_Ver="v0019-2.1" 
+nvOC_Ver="v0019-3.0" 
 nvOC_1bash_ver="0041"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
