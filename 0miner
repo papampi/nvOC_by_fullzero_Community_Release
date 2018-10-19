@@ -185,10 +185,12 @@ fi
 if [[ ${!xversion} != "" && -f ${mpath}//"${!xversion}"/nvoc-miner.json ]]
 then
   HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${mpath}/"${!xversion}"/nvoc-miner.json)"
+  echo "$LAUNCH $HCD"
   eval $LAUNCH $HCD
 elif [[ -f ${mpath}/nvoc-miner.json ]]
 then
   HCD="${mpath}/$(jq -r .hcd ${mpath}/nvoc-miner.json)"
+  echo "$LAUNCH $HCD"
   eval $LAUNCH $HCD
 
 
@@ -211,6 +213,7 @@ then
   then
     HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xproto}://${!xpool}:${!xport} -wal ${!xaddr} -worker ${!xwork} -pass $MINER_PWD ${!xext} $PhoenixMiner_OPTS"
   fi
+  echo "$LAUNCH $HCD"
   eval $LAUNCH $HCD
 
 
@@ -227,6 +230,7 @@ then
   then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
+  echo "$LAUNCH $HCD"
   eval $LAUNCH $HCD
 
 
@@ -243,6 +247,7 @@ then
   then
     HCD="${NVOC}/miners/LOLMINER/"${!xversion}"/lolMiner -coin=$COIN -pool=${!xpool} -port=${!xport} -user=${!xaddr}${!xwallet}${!xwork} $LOLMINER_OPTS ${!xext}"  
   fi
+  echo "$LAUNCH $HCD"
   eval $LAUNCH $HCD
 
 ## Various Algos
@@ -250,6 +255,7 @@ elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $A
 then
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
+  echo "$LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}"
   eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 
@@ -259,10 +265,12 @@ then
   if [[ $CRYPTONIGHT_MINER == KTccminer_cryptonight ]]
   then
     HCD="${NVOC}"/miners/KTccminer_cryptonight/"${!xversion}"/ccminer
+    echo "$LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $CCMINER_OPTS ${!xext}"
     eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $CCMINER_OPTS ${!xext}
   else
     UCCALGO="-a ${ALGO,,}"
     HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
+    echo "$LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}"
     eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
   fi
 
