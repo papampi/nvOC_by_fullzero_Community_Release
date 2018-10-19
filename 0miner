@@ -65,8 +65,10 @@
 #          lolMiner
 # v=0027 : papampi
 #          PhoenixMiner
+# v=0028 : papampi
+#          echo miner command, changes for XMR_Stak 2.5.1 
 
-nvOC_0miner_dev="0027"
+nvOC_0miner_dev="0028"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 
@@ -185,10 +187,12 @@ fi
 if [[ ${!xversion} != "" && -f ${mpath}//"${!xversion}"/nvoc-miner.json ]]
 then
   HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${mpath}/"${!xversion}"/nvoc-miner.json)"
+  echo $LAUNCH $HCD
   eval $LAUNCH $HCD
 elif [[ -f ${mpath}/nvoc-miner.json ]]
 then
   HCD="${mpath}/$(jq -r .hcd ${mpath}/nvoc-miner.json)"
+  echo $LAUNCH $HCD
   eval $LAUNCH $HCD
 
 
@@ -211,6 +215,7 @@ then
   then
     HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xproto}://${!xpool}:${!xport} -wal ${!xaddr} -worker ${!xwork} -pass $MINER_PWD ${!xext} $PhoenixMiner_OPTS"
   fi
+  echo $LAUNCH $HCD
   eval $LAUNCH $HCD
 
 
@@ -227,6 +232,7 @@ then
   then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
+  echo $LAUNCH $HCD
   eval $LAUNCH $HCD
 
 
@@ -243,6 +249,7 @@ then
   then
     HCD="${NVOC}/miners/LOLMINER/"${!xversion}"/lolMiner -coin=$COIN -pool=${!xpool} -port=${!xport} -user=${!xaddr}${!xwallet}${!xwork} $LOLMINER_OPTS ${!xext}"  
   fi
+  echo $LAUNCH $HCD
   eval $LAUNCH $HCD
 
 ## Various Algos
@@ -250,6 +257,7 @@ elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $A
 then
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
+  echo $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
   eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
 
 
@@ -259,16 +267,18 @@ then
   if [[ $CRYPTONIGHT_MINER == KTccminer_cryptonight ]]
   then
     HCD="${NVOC}"/miners/KTccminer_cryptonight/"${!xversion}"/ccminer
+    echo $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $CCMINER_OPTS ${!xext}
     eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $CCMINER_OPTS ${!xext}
   else
     UCCALGO="-a ${ALGO,,}"
     HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
+    echo $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
     eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
   fi
 
 
 ## CRYPTONIGHTV7
-elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
+elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY || $ALGO == CRYPTONIGHTV8 ]];
 then
 
 # Large memory page support
@@ -292,12 +302,17 @@ then
   fi
   if [[ $ALGO == "CRYPTONIGHTV7" ]]
   then
-    UCCALGO="--currency monero7"
+    UCCALGO="--currency cryptonight_v7"
+  elif [[ $ALGO == "CRYPTONIGHTV8" ]]
+  then
+    UCCALGO="--currency cryptonight_v8"
   elif [[ $ALGO == "CRYPTONIGHTHEAVY" ]]
   then
-    UCCALGO="-a cryptonight-heavy"
+    UCCALGO="--currency cryptonight_heavy"
   fi
+
   HCD=${NVOC}/miners/XMR_Stak/"${!xversion}"/xmr-stak
+  echo $LAUNCH $HCD  $UCCALGO --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
   eval $LAUNCH $HCD  $UCCALGO --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
 
 
