@@ -306,7 +306,7 @@ then
     UCCALGO="--currency cryptonight_v8"
   elif [[ $ALGO == "CRYPTONIGHTHEAVY" ]]
   then
-    UCCALGO="--currency cryptonight-heavy"
+    UCCALGO="--currency cryptonight_heavy"
   fi
 
   HCD=${NVOC}/miners/XMR_Stak/"${!xversion}"/xmr-stak
