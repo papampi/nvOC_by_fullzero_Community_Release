@@ -268,7 +268,7 @@ then
 
 
 ## CRYPTONIGHTV7
-elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
+elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY || $ALGO == CRYPTONIGHTV8 ]];
 then
 
 # Large memory page support
@@ -292,12 +292,17 @@ then
   fi
   if [[ $ALGO == "CRYPTONIGHTV7" ]]
   then
-    UCCALGO="--currency monero7"
+    UCCALGO="--currency cryptonight_v7"
+  elif [[ $ALGO == "CRYPTONIGHTV8" ]]
+  then
+    UCCALGO="--currency cryptonight_v8"
   elif [[ $ALGO == "CRYPTONIGHTHEAVY" ]]
   then
-    UCCALGO="-a cryptonight-heavy"
+    UCCALGO="--currency cryptonight-heavy"
   fi
+
   HCD=${NVOC}/miners/XMR_Stak/"${!xversion}"/xmr-stak
+  echo "$LAUNCH $HCD  $UCCALGO --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0"
   eval $LAUNCH $HCD  $UCCALGO --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
 
 
