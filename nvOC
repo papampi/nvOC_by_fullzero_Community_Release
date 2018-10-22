@@ -934,7 +934,18 @@ Restore()
 MinersUpgrade()
 {
   echo "Checking for nvOC miners updates..."
-  git -C ${NVOC} submodule update --init --force --depth 1 --remote miners
+  chckt_cmd="git -C ${NVOC} submodule update --init --force --depth 1 --remote miners"
+  if ! ${chckt_cmd}
+  then
+    echo "Checkout from current branch failed, fetching other branches..."
+    git -C "${NVOC}/miners" remote set-branches origin '*'
+    git -C "${NVOC}/miners" fetch
+    if ! ${chckt_cmd}
+    then
+      echo "Unable to checkout latest miners submodule, can't find target commit."
+      return
+    fi
+  fi
 
   echo "Running updates installer"
   pushd .
