@@ -41,6 +41,23 @@ You can refer to https://github.com/papampi/nvOC_miners README for more help on 
 
 ## Download pre-built OS images
 
+### nvOC_19-3.x, Ubuntu 16.04, Dual-Cuda 8+9.2, Nvidia 410, 2018-10-27 (for nvOC >= 2.1)
+Version: always the latest, from configurable branch (default: [release](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/release))
+
+| host | size   | download                                                                       |
+|------|--------|--------------------------------------------------------------------------------|
+| MEGA | 3,8 GB | [link](https://mega.nz/#!VYl0yIab!TWctArrWrr2euuHRm2C8lgAE7COYAvTWwWRmdiAQNsE) |
+| GDrive | 3,8 GB | Coming soon   |
+| OneDrive | 3,8 GB | Coming soon                                             |
+
+Checksums:
+
+| file                                                 | type   | value                                                            |
+|------------------------------------------------------|--------|------------------------------------------------------------------|
+| nvOC_19-3.x_U16.04_Cuda_8-9.2_N410_2018-10-27.7z      | sha256 | 95faf1267ad196bd4f70a47929f0a1b32e7bc9b7095879a0e87ad44c2dd9650f |
+| nvOC_19-3.x_U16.04_Cuda_8-9.2_N410_2018-10-27.img    | sha256 | b9f4d01b487772231df593966c5e5e4368ed881a4112d7c6708f60de3660b1d6 |
+
+
 ### nvOC_19-2.1 beta Ubuntu 18.04 Dual-Cuda Nvidia 396 2018-09-07 (for nvOC >= 2.1)
 Version: always the latest, from configurable branch (default: [release](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/release))
 
