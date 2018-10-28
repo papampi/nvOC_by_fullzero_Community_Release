@@ -48,8 +48,7 @@ Version: always the latest, from configurable branch (default: [release](https:/
 |------|--------|--------------------------------------------------------------------------------|
 | MEGA | 3,8 GB | [link](https://mega.nz/#!VYl0yIab!TWctArrWrr2euuHRm2C8lgAE7COYAvTWwWRmdiAQNsE) |
 | GDrive | 3,8 GB | Coming soon   |
-| OneDrive | 3,8 GB | [link](https://polimi365-my.sharepoint.com/:u:/g/personal/10434559_polimi_it/EQruOF1Zu0ZNqPvaA68818MB-EFQGivU_zCBTCHD5j_N6g?e=WKBYsC)
-                                             |
+| OneDrive | 3,8 GB | [link](https://polimi365-my.sharepoint.com/:u:/g/personal/10434559_polimi_it/EQruOF1Zu0ZNqPvaA68818MB-EFQGivU_zCBTCHD5j_N6g?e=WKBYsC)|
 
 Checksums:
 
