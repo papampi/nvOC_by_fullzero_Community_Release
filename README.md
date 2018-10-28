@@ -91,16 +91,3 @@ Checksums:
 | nvOC_V19-2.1beta_U16.04_N390_D180707.img.zip | sha256 | 6334067606176ed90191b3e4980b21102d14a9c8f14ec63508669d1cb27d6e33 |
 | nvOC_V19-2.1beta_U16.04_N390_D180707.img     | sha256 | f1f02c1cd704d3a33c954f64c5b6856f3a75612243b68d66da2fc9acd7bea8a5 |
 
-### nvOC_V19-2.1beta_U16.04_N390_D180619
-Version: beta testing snapshot branch [19-2.1@a3e92bd976997327fc971b549066f8a566781538](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/a3e92bd976997327fc971b549066f8a566781538)
-
-| host | size   | download                                                                       |
-|------|--------|--------------------------------------------------------------------------------|
-| MEGA | 3,43GB | deprecated, get newer versions |
-
-Checksums:
-
-| file                                         | type   | value                                                            |
-|----------------------------------------------|--------|------------------------------------------------------------------|
-| nvOC_V19-2.1beta_U16.04_N390_D180619.img.zip | sha256 | 7700dfdfc1cabab8a1dd9816a6322d6653c89943cb63afa59e79f88cfe14a6a9 |
-| nvOC_V19-2.1beta_U16.04_N390_D180619.img     | sha256 | cb607c8e028d3bc0a0e274c34b4e0def0c71330053f0c8328120a717e0029938 |
