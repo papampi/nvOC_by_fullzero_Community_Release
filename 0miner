@@ -312,8 +312,8 @@ then
   fi
 
   HCD=${NVOC}/miners/XMR_Stak/"${!xversion}"/xmr-stak
-  echo $LAUNCH $HCD  $UCCALGO --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
-  eval $LAUNCH $HCD  $UCCALGO --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
+  echo $LAUNCH $HCD  $UCCALGO --config "${NVOC}/miners/XMR_Stak/${!xversion}/config.txt" --poolconf "${NVOC}/miners/XMR_Stak/${!xversion}/pools.txt" --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
+  eval $LAUNCH $HCD  $UCCALGO --config "${NVOC}/miners/XMR_Stak/${!xversion}/config.txt" --poolconf "${NVOC}/miners/XMR_Stak/${!xversion}/pools.txt" --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
 
 
 else
