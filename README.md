@@ -1,5 +1,5 @@
-# nvOC easy-to-use Linux Nvidia Mining OS (19-3.1 alpha)
-Looking for Latest stable version? Go here: https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/19.2
+# nvOC easy-to-use Linux Nvidia Mining OS
+Looking for Latest stable version? Go here: https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/release
 ## Community Edition - Quick start how-to
 You can get nvOC running on your mining rig in some different ways:
 - Picking and burning a pre-built whole disk OS image (recommended)
@@ -41,30 +41,4 @@ You can refer to https://github.com/papampi/nvOC_miners README for more help on 
 
 ## Download pre-built OS images
 
-### nvOC_V19-2.1beta_U16.04_N390_D180707 (for nvOC >= 2.1)
-Version: always the latest, from configurable branch (default: [release](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/release))
-
-| host | size   | download                                                                       |
-|------|--------|--------------------------------------------------------------------------------|
-| MEGA | 3,50GB | [link](https://mega.nz/#!od1HGYjZ!kMp4ihj2TK81hNz6GkBR1--UkPhNf-JmdGHHEeDw3Ig) |
-
-Checksums:
-
-| file                                         | type   | value                                                            |
-|----------------------------------------------|--------|------------------------------------------------------------------|
-| nvOC_V19-2.1beta_U16.04_N390_D180707.img.zip | sha256 | 6334067606176ed90191b3e4980b21102d14a9c8f14ec63508669d1cb27d6e33 |
-| nvOC_V19-2.1beta_U16.04_N390_D180707.img     | sha256 | f1f02c1cd704d3a33c954f64c5b6856f3a75612243b68d66da2fc9acd7bea8a5 |
-
-### nvOC_V19-2.1beta_U16.04_N390_D180619
-Version: beta testing snapshot branch [19-2.1@a3e92bd976997327fc971b549066f8a566781538](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/a3e92bd976997327fc971b549066f8a566781538)
-
-| host | size   | download                                                                       |
-|------|--------|--------------------------------------------------------------------------------|
-| MEGA | 3,43GB | [link](https://mega.nz/#!dNVTBIAC!7GGJpn9F-kehJOd1gW60CcR28BHTR3WMJxS7K-hd6Tg) |
-
-Checksums:
-
-| file                                         | type   | value                                                            |
-|----------------------------------------------|--------|------------------------------------------------------------------|
-| nvOC_V19-2.1beta_U16.04_N390_D180619.img.zip | sha256 | 7700dfdfc1cabab8a1dd9816a6322d6653c89943cb63afa59e79f88cfe14a6a9 |
-| nvOC_V19-2.1beta_U16.04_N390_D180619.img     | sha256 | cb607c8e028d3bc0a0e274c34b4e0def0c71330053f0c8328120a717e0029938 |
+No pre-built image has been released for this dev branch, use one from the latest stable branch and follow instructions for insiders as described above.

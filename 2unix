@@ -18,11 +18,17 @@ then
   echo "################################################################################"
   echo " !!  There is something wrong with your 1bash settings file, nvOC can't start."
   echo "     Check if it exists or contains errors. SSH access is now being enabled to"
-  echo "     let you debug. This program will restart in a minute from now..."
+  echo "     let you debug. This program will restart in a minute"
   echo ""
   sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
   sleep 60
   exit
+fi
+
+if [ ! -e "${NVOC}/1bash.template" ]
+then
+  echo "1bash.template is missing, downloading it"
+  wget -N https://github.com/papampi/nvOC_by_fullzero_Community_Release/blob/release/1bash.template -O ${NVOC}/1bash.template
 fi
 
 # check 1bash revision mismatch
@@ -30,18 +36,46 @@ source "${NVOC}/1bash"
 current_1bash_ver="$nvOC_1bash_ver"
 source "${NVOC}/1bash.template"
 template_1bash_ver="$nvOC_1bash_ver"
+last_compatible_1bash_ver="$nvOC_1bash_last_compatible"
+least_compatible_1bash_ver="$nvOC_1bash_least_compatible"
 
-if [[ ${current_1bash_ver} != ${template_1bash_ver} ]]
+
+if [ $current_1bash_ver -lt $least_compatible_1bash_ver ]
+then
+  echo -e " $(tput bold)################################################################################ $(tput sgr0)"
+  echo ""
+  echo -e " \e[31m     Your 1bash revision is not compatible with latest update"
+  echo "      Please update your 1bash with latest 1bash.template and restart nvOC"
+  echo "      SSH access will be enabled and this program restarts in a minute"
+  echo -e " $(tput sgr0)"
+  echo -e " $(tput bold)################################################################################ $(tput sgr0)"
+  sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
+  sleep 60
+  exit
+
+
+elif [ $current_1bash_ver -lt $last_compatible_1bash_ver ]
 then
   echo "################################################################################"
-  echo " !!  Your 1bash settings file revision is different from the template one."
-  echo "     This could potentially cause errors. SSH access is now being enabled to"
-  echo "     let you debug. Please, update your 1bash to comply with the template."
-  echo "     nvOC will now try to run anyway in 10 seconds from now..."
+  echo " !!  Your 1bash revision is older than last compatible version. This could"
+  echo "     potentially cause errors if you're using features that have been reworked."
+  echo "     Updating your 1bash with latest 1bash.template is strongly recommanded."
+  echo "     SSH access is now being enabled to let you update yor 1bash. "
+  echo "     nvOC will now try to run anyway in 10 seconds"
   echo ""
   sudo cp /etc/init/ssh.conf-on /etc/init/ssh.conf
   sleep 10
+
+
+elif [ $current_1bash_ver -lt $template_1bash_ver ]
+then
+  echo "################################################################################"
+  echo " !!  Your 1bash revision is older than the available template.There are new"
+  echo "     features available if you update your 1bash with latest 1bash.template."
+  echo "     However, Updating your 1bash is not strictly required."
+  echo ""
 fi
+
 
 # TODO: if this is a git repo, check updates on current git branch, give warning, start pre-fetching in background, do not pull them automatically
 

@@ -220,7 +220,7 @@ StartGnomeTerminal()
   then
     export DISPLAY=:0
   fi
-  if ps ax | grep "[g]nome-terminal"
+  if ps ax | grep -q "[g]nome-terminal"
   then
     echo "nvOC already running, use ./nvOC restart"
   else
@@ -235,12 +235,12 @@ StopGnomeTerminal()
   echo -e "${B}Stopping nvOC processes...${N}"; echo
 
   # Kill off the nv_OC processes
-  pkill -f gnome-terminal
-  pkill -f 5watchdog
-  pkill -f 7telegram
-  pkill -f 6tempcontrol
-  pkill -f 8wtm
-  pkill -e screen
+  pkill -ef gnome-terminal
+  pkill -ef 5watchdog
+  pkill -ef 7telegram
+  pkill -ef 6tempcontrol
+  pkill -ef 8wtm
+  pkill -ef screenrc
   echo; echo "...done."
 }
 
@@ -843,11 +843,6 @@ Ethernet      :  $ethernet"
   then
     echo $ALGO "INTENSITY ..........:" ${!ALGO_INTENSITY_TMP}
   fi
-  COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
-  if [[ ${!COIN_AUTOCONVERT_TO_BTC_TMP} != "" ]]
-  then
-    echo "${COIN}_AUTOCONVERT_TO_BTC ....:" ${!COIN_AUTOCONVERT_TO_BTC_TMP}
-  fi
 
   echo
   echo "[/code]"
@@ -884,9 +879,35 @@ Upgrade()
   echo "Checking for nvOC updates...  (target: '${NVOC}')"
   git -C ${NVOC} pull
 
-  echo -e "nvOC has been upgraded.
-There may be new required miners packages to be installed.
-Would you like to check for further miners updates and install them now?"
+  echo -e "nvOC has been upgraded."
+
+# check 1bash revision mismatch
+source "${NVOC}/1bash"
+current_1bash_ver="$nvOC_1bash_ver"
+source "${NVOC}/1bash.template"
+template_1bash_ver="$nvOC_1bash_ver"
+last_compatible_1bash_ver="$nvOC_1bash_last_compatible"
+least_compatible_1bash_ver="$nvOC_1bash_least_compatible"
+
+if (( current_1bash_ver < least_compatible_1bash_ver ))
+then
+  echo -e " $(tput bold)################################################################################"
+  echo ""
+  echo -e "\e[31m       Your 1bash revision is not compatible with latest update"
+  echo "       Please update your 1bash from 1bash.template before restarting nvOC"
+  echo -e " $(tput sgr0)"
+  echo -e " $(tput bold)################################################################################ $(tput sgr0)"
+elif (( current_1bash_ver < last_compatible_1bash_ver ))
+then
+  echo -e " $(tput bold)################################################################################"
+  echo "     Your 1bash revision is older than last compatible version"
+  echo "     There are new features available if you update your 1bash with latest 1bash.template."
+  echo "     Please, update your 1bash to comply with 1bash.template."
+  echo "################################################################################ $(tput sgr0)"
+fi
+
+  echo -e "There may be new required miners packages to be installed.
+  Would you like to check for further miners updates and install them now?"
 
   read -p "Do you want to continue (Y/n)?  " -n 1 ans
   echo
@@ -911,7 +932,18 @@ Restore()
 MinersUpgrade()
 {
   echo "Checking for nvOC miners updates..."
-  git -C ${NVOC} submodule update --init --force --depth 1 --remote miners
+  chckt_cmd="git -C ${NVOC} submodule update --init --force --depth 1 --remote miners"
+  if ! ${chckt_cmd}
+  then
+    echo "Checkout from current branch failed, fetching other branches..."
+    git -C "${NVOC}/miners" remote set-branches origin '*'
+    git -C "${NVOC}/miners" fetch
+    if ! ${chckt_cmd}
+    then
+      echo "Unable to checkout latest miners submodule, can't find target commit."
+      return
+    fi
+  fi
 
   echo "Running updates installer"
   pushd .
@@ -1030,7 +1062,7 @@ restore-xorg()
   echo -e "${B}Restoring default nvOC xorg.conf ...${N}"
   touch "${NVOC}/xorg_flag"
   echo > "${NVOC}/xorg_flag"
-  sudo wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf.default -O /etc/X11/xorg.conf.default
+  sudo wget -N --no-check-certificate https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/3.0-stable/xorg.conf.default -O /etc/X11/xorg.conf.default
   sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   echo "Default xorg.conf restored, Rebooting system in 5 sec."
   echo "System may reboot again if HEADLESS_MODE=YES"; echo

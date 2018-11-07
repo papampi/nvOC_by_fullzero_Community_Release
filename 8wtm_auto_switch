@@ -2,7 +2,7 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-2.1 - Community Release   #################
+#################   nvOC v0019-3.0 - Community Release   #################
 ##############        by papampi, Stubo and leenoox         ##############
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
@@ -92,6 +92,12 @@ else
   TOP_COIN=$(sed 's/:[0-9]*//' < ${NVOC}/WTM_top_coin)
 fi
 
+# Prevent first run error on no WTM_24H_REV
+if [[ ! -e ${NVOC}/WTM_24H_REV ]]
+then
+  touch ${NVOC}/WTM_24H_REV
+fi
+
 # Check last top coin and change if not in coin list any more
 if [ ! $(echo "$WTM_AUTO_SWITCH_COINS" | grep "$TOP_COIN") ]
 then
@@ -104,21 +110,10 @@ MINER_START_TIME=$(date +%s)
 while true
 do
   source ${NVOC}/1bash
+  source ${NVOC}/helpers/coin_algo_mapping
   TIMEOUT=$((WTM_AUTO_SWITCH_SYNC_INTERVAL * 60))
   
   if [[ $AUTO_START_MINER == YES ]]; then
-
-    #Waiting for miner start before start switching
-    if [[ !  $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];then
-      echo "Miner not running"
-      echo ""
-      while [[ -z $(ps ax | grep SCREEN | grep miner | grep -v cpuminer) ]];  do
-        echo "Miner still not running, waiting ..."
-        echo ""
-        sleep 5
-      done
-      echo "Miner is running now"
-    fi
 
     CURRENT_TIME=$(date +%s)
     CURRENT_COIN=$COIN
@@ -127,6 +122,13 @@ do
     MINER_TIME_MIN=$(( MINER_TIME / 60 ))
     echo "Mining $CURRENT_COIN for $MINER_TIME_MIN minutes"
 
+    
+    # If WTM_SWITCHER is frozen kill it.
+    if ps ax | grep -q [WTM]_SWITCHER 
+    then
+      pkill -f WTM_SWITCHER
+    fi
+    
     if (( MINER_TIME >= WTM_MINIMUM_MINING_TIME ))
     then
       echo "Minimum mining time passed, checking for new coins with ${WTM_LOWER_MIN_DIFFERENCE}% more profit"
@@ -135,7 +137,7 @@ do
       echo "Minimum mining time not reached, checking for new coins with ${WTM_MIN_DIFFERENCE}% more profit"
       python2.7 ${NVOC}/WTM_SWITCHER ${NVOC}/WTM.json
     fi
-
+    echo " "
     sleep 5
     TOP_COIN=$(sed 's/:[0-9]*//' < ${NVOC}/WTM_top_coin)
 
@@ -179,6 +181,8 @@ do
         echo ""
       else
         echo "Mining $CURRENT_COIN ($CURRENT_COIN_ALGORITHM) for $MINER_TIME_MIN minutes, continue mining $CURRENT_COIN for $((WTM_MINIMUM_MINING_TIME - MINER_TIME)) more seconds"
+        echo ""
+        echo ""
       fi
       
     else
@@ -197,6 +201,6 @@ do
   else
     echo "Auto start miner set to NO"
   fi
+
   sleep $TIMEOUT
 done
-

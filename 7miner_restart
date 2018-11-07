@@ -1,0 +1,19 @@
+#!/bin/bash
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${NVOC}/1bash
+
+TIMEIN=$MINER_RESTART_TIMEOUT_IN_MINUTES
+TIMEOUT=$(($TIMEIN * 60))
+
+sleep 2
+
+echo ""
+echo "$(date) - Auto Restart miner activated, Restarting miner in $MINER_RESTART_TIMEOUT_IN_MINUTES minutes"
+
+sleep $TIMEOUT
+echo ""
+echo "$(date) - Miner restart timer reached, Restarting miner in 10 seconds" | tee -a ${NVOC}/5_watchdoglog
+sleep 10
+pkill -ef screenrc
+pkill -ef 3main
+echo ""
