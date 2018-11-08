@@ -213,21 +213,6 @@ sleep $SLEEP_TIME
 ### Watchdog Main Loop [infinite]
 while true
 do
-  #If WTM auto switch python cant sync, kill it
-  if [[ $AUTO_SWITCH  ==  WTM_SWITCHING || $WTM_PROFIT_CHECK == YES ]]
-  then
-    WTM_S_PID=$(ps -ef | grep WTM_SWITCHER | grep -v grep |awk '{print $2}')
-    if  [[ -n $WTM_S_PID ]]
-    then
-      WTM_S_PID_TIME=$(ps -eo pid,etimes | grep $WTM_S_PID | awk  '$2> 30 { print $1}')
-      echo "WTM Switcher Syncing"
-      if  [[ -n "$WTM_S_PID_TIME" ]]
-      then
-        echo "$(date) - [WARNING] - WTM switcher can't sync, kill it"
-        ps -eo pid,etimes | grep $(pgrep -f WTM_SWITCHER) | awk  '$2> 30 { print $1}'  | xargs kill -9
-      fi
-    fi
-  fi
 
   # If 1, 5 and 15 min load average are more than double cpu core give warning
   HIGH_AVERAGE=$(( $(nproc) * 2 ))
@@ -407,6 +392,9 @@ do
       fi
 
       ######################## Beginning Pool Check
+      
+      source ${NVOC}/1bash
+
       if [[ $COIN == *DUAL* ]] ;   then
         COIN=$(echo $COIN| sed 's/DUAL_//' | cut -d _ -f 1)
         COIN_POOL=${COIN}_POOL
@@ -448,6 +436,7 @@ do
         echo ""
 
       else
+        source ${NVOC}/1bash
         COIN_POOL=${COIN}_POOL
         COIN_PORT=${COIN}_PORT
         COIN_POOL_2=${COIN}_POOL_2

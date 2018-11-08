@@ -286,33 +286,6 @@ then
   echo ENVIRONMENTAL VARIBLES SET
 fi
 
-if [[ $CONTROL_GPU_LED == YES ]]
-then
-  sudo ${NVD} -a GPULogoBrightness="$LED_BRIGHTNESS"
-fi
-
-if [[ $plusCPU == YES && $AUTO_START_MINER == YES ]]
-then
-  HCD="${NVOC}/miners/cpuOPT/cpuminer"
-  XMRADDR="$XMR_ADDRESS.$XMR_WORKER"
-  echo ""
-  echo ""
-  echo "LAUNCHING:  plusCPU"
-  if ! ps ax | grep -q '[c]puminer'
-  then
-    if [[ $LOCALorREMOTE == LOCAL ]]
-    then
-      guake -n $HCD -r plusCPU -e "$HCD -a cryptonightv7 -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT" &
-    else
-      screen -c ${NVOC}/screenrc-miner -dmS plusCPU $HCD -a cryptonightv7 -o stratum+tcp://$XMR_POOL:$XMR_PORT -u $XMRADDR -p x -t $threadCOUNT
-    fi
-    echo ""
-    echo "plusCPU process in guake terminal Tab (f12)"
-    echo ""
-    running=""
-  fi
-fi
-
 if [[ $AUTO_REBOOT == YES ]]
 then
   HCD="${NVOC}/7reboot"
@@ -429,13 +402,51 @@ fi
 
 if [[ ${AUTO_SWITCH:0:7} == SALFTER ]]
 then
-  for a in daggerhashimoto equihash neoscrypt lyra2rev2 lbry blake_vanilla cryptonight cryptonight_monero groestl keccak myriad_groestl qubit scrypt sia skein x11
+  NICE_ALGO_NAMES="cryptonight cryptonightv7 daggerhashimoto lbry lyra2rev2"
+  MPH_ALGO_NAMES="cryptonight_monero ethash groestl lyra2re2 myriad_groestl skein"
+  SHARED_ALGO_NAMES="equihash keccak neoscrypt qubit scrypt sia x11"
+  for a in $NICE_ALGO_NAMES $MPH_ALGO_NAMES $SHARED_ALGO_NAMES
   do
-    if [[ $OVERCLOCK_MODE == NO ]]
+    checkdef=${a}_POWERLIMIT_WATTS
+    if [[ ${!checkdef} == "" ]]
     then
-      eval gpu_clks_$a=0
-      eval mem_clks_$a=0
-    elif [[ $OVERCLOCK_MODE == GLOBAL ]]
+      eval ${a}_POWERLIMIT_WATTS=$_POWERLIMIT_WATTS
+    fi
+
+    if [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
+    then
+      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
+    elif [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
+    then
+      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
+    elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
+    then
+      eval pwr_lim_$a=$((${a}_POWERLIMIT_WATTS))
+    elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+    then
+      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
+    else
+      if [[ $POWERLIMIT_MODE != GLOBAL ]]
+      then
+          echo "WARNING: '$POWERLIMIT_MODE' is not a valid powerlimit mode, falling back to 'GLOBAL'"
+      fi
+      eval pwr_lim_$a=$_POWERLIMIT_WATTS
+    fi
+    
+
+    checkdef=${a}_CORE_OVERCLOCK
+    if [[ ${!checkdef} == "" ]]
+    then
+      eval ${a}_CORE_OVERCLOCK=$_CORE_OVERCLOCK
+    fi
+
+    checkdef=${a}_MEMORY_OVERCLOCK
+    if [[ ${!checkdef} == "" ]]
+    then
+      eval ${a}_MEMORY_OVERCLOCK=$_MEMORY_OVERCLOCK
+    fi
+    
+    if [[ $OVERCLOCK_MODE == GLOBAL ]]
     then
       eval gpu_clks_$a=$_CORE_OVERCLOCK
       eval mem_clks_$a=$_MEMORY_OVERCLOCK
@@ -455,27 +466,18 @@ then
     then
       eval gpu_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_CORE_OVERCLOCK + __CORE_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
       eval mem_clks_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_/' -e 's/$/))/' | paste -s -d, -)]"
+    else
+      if [[ $OVERCLOCK_MODE != NO ]]
+      then
+        echo "WARNING: '$OVERCLOCK_MODE' is not a valid overclock mode, falling back to 'NO'"
+      fi
+      eval gpu_clks_$a=0
+      eval mem_clks_$a=0
     fi
-    OVERCLOCK_MODE="MANAGED_BY_SWITCHER"
-
-    if [[ $POWERLIMIT_MODE == GLOBAL ]]
-    then
-      eval pwr_lim_$a=$_POWERLIMIT_WATTS
-    elif [[ $POWERLIMIT_MODE == GLOBAL_with_GPU_OFFSET ]]
-    then
-      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
-    elif [[ $POWERLIMIT_MODE == GPU_SPECIFIC ]]
-    then
-      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\${INDIVIDUAL_POWERLIMIT_/' -e 's/$/}/' | paste -s -d, -)]"
-    elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC ]]
-    then
-      eval pwr_lim_$a=$((${a}_POWERLIMIT_WATTS))
-    elif [[ $POWERLIMIT_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
-    then
-      eval pwr_lim_$a="[$(seq 0 $((GPUS-1)) | sed -e 's/^/\$((${a}_POWERLIMIT_WATTS+INDIVIDUAL_POWERLIMIT_/' -e 's/$/))/' | paste -s -d, -)]"
-    fi
-    POWERLIMIT_MODE="MANAGED_BY_SWITCHER"
   done
+  
+  POWERLIMIT_MODE="MANAGED_BY_SWITCHER"
+  OVERCLOCK_MODE="MANAGED_BY_SWITCHER"
 fi
 
 if [[ $AUTO_SWITCH == SALFTER_NICEHASH_SWITCHING ]]
@@ -547,12 +549,6 @@ then
   "min_profit": $MINIMUM_PROFIT,
   "miners":
   {
-    "Blake-Vanilla":
-    {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
-      "power_limit": $pwr_lim_blake_vanilla, "gpu_oc": $gpu_clks_blake_vanilla, "mem_oc": $mem_clks_blake_vanilla, "fan": 0,
-      "speed": 12.3, "power": 0.389
-    },
     "Cryptonight-Monero":
     {
       "bin": "${NVOC}/miners/XMR_Stak/recommended/xmr-stak --currency monero7 --noCPU --noAMD -o {HOST}:{PORT} -u {NAME}.{MINER} -p x -i 0",
@@ -648,11 +644,6 @@ then
   "config_json_url": "$PROGRAMATIC_SWITCH_CONFIG_JSON_URL",
   "miners":
   {
-    "Blake-Vanilla":
-    {
-      "bin": "${NVOC}/miners/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
-      "power_limit": $pwr_lim_blake_vanilla, "gpu_oc": $gpu_clks_blake_vanilla, "mem_oc": $mem_clks_blake_vanilla, "fan": 0
-    },
     "Cryptonight":
     {
       "bin": "${NVOC}/miners/KTccminer_cryptonight/recommended/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME} -p x",
@@ -778,7 +769,9 @@ else
   pkill -f 8wtm_auto_switch
 fi
 
-source ${NVOC}/0algo_id
+source ${NVOC}/helpers/coin_algo_mapping
+
+UNDEFINED_POWERLIMIT_WATTS=$_POWERLIMIT_WATTS
 
 if [[ $POWERLIMIT_MODE == GLOBAL ]]
 then
@@ -834,14 +827,10 @@ else
   pkill -f OhGodAnETHlargementPill-r2
 fi
 
-if [[ $OVERCLOCK_MODE == NO ]]
-then
-  for i in $(seq 0 $((GPUS-1)))
-  do
-    __CORE_OVERCLOCK[$i]=0
-    MEMORY_OVERCLOCK[$i]=0
-  done
-elif [[ $OVERCLOCK_MODE == GLOBAL ]]
+UNDEFINED_CORE_OVERCLOCK=$_CORE_OVERCLOCK
+UNDEFINED_MEMORY_OVERCLOCK=$_MEMORY_OVERCLOCK
+
+if [[ $OVERCLOCK_MODE == GLOBAL ]]
 then
   for i in $(seq 0 $((GPUS-1)))
   do
@@ -862,29 +851,34 @@ then
     __CORE_OVERCLOCK[$i]=$((__CORE_OVERCLOCK_$i))
     MEMORY_OVERCLOCK[$i]=$((MEMORY_OVERCLOCK_$i))
   done
+elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=$(( ${ALGO}_CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
+    MEMORY_OVERCLOCK[$i]=$(( ${ALGO}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
+  done
+elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
+then
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=$((${ALGO}_CORE_OVERCLOCK))
+    MEMORY_OVERCLOCK[$i]=$((${ALGO}_MEMORY_OVERCLOCK))
+  done
 elif [[ $OVERCLOCK_MODE == MANAGED_BY_SWITCHER ]]
 then
   echo "INFO: An auto-switcher is taking over GPU Core and Memory clocks management."
   echo
 else
-  UNDEFINED_CORE_OVERCLOCK=$_CORE_OVERCLOCK
-  UNDEFINED_MEMORY_OVERCLOCK=$_MEMORY_OVERCLOCK
-
-  if [[ $OVERCLOCK_MODE == ALGO_SPECIFIC_with_GPU_OFFSET ]]
+  if [[ $OVERCLOCK_MODE != NO ]]
   then
-    for i in $(seq 0 $((GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=$(( ${ALGO}_CORE_OVERCLOCK + __CORE_OVERCLOCK_$i ))
-      MEMORY_OVERCLOCK[$i]=$(( ${ALGO}_MEMORY_OVERCLOCK + MEMORY_OVERCLOCK_$i ))
-    done
-  elif [[ $OVERCLOCK_MODE == ALGO_SPECIFIC ]]
-  then
-    for i in $(seq 0 $((GPUS-1)))
-    do
-      __CORE_OVERCLOCK[$i]=$((${ALGO}_CORE_OVERCLOCK))
-      MEMORY_OVERCLOCK[$i]=$((${ALGO}_MEMORY_OVERCLOCK))
-    done
+    echo "WARNING: '$OVERCLOCK_MODE' is not a valid overclock mode, falling back to 'NO'"
   fi
+  for i in $(seq 0 $((GPUS-1)))
+  do
+    __CORE_OVERCLOCK[$i]=0
+    MEMORY_OVERCLOCK[$i]=0
+  done
 fi
 
 if [[ $SLOW_USB_KEY_MODE == YES ]]
@@ -932,6 +926,11 @@ then
     NVD_SETTINGS="${NVD_SETTINGS} -a [gpu:$gpu]/GPUPowerMizerMode=${GPUPowerMizerMode}"
     gpu=$((gpu+1))
   done
+fi
+
+if [[ $CONTROL_GPU_LED == YES ]]
+then
+   NVD_SETTINGS="${NVD_SETTINGS} -a GPULogoBrightness=$LED_BRIGHTNESS"
 fi
 
 # Apply GPU settings
@@ -1026,7 +1025,7 @@ then
     echo "    "
     bash ${NVOC}/0miner
     echo "    "
-    echo "    "$(ps ax | grep -i screen | grep miner | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
+    echo "    "$(ps ax | grep -i screen | grep miner | grep -v cpuminer | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
     echo "    "
 
     if [[ $LOCALorREMOTE == REMOTE ]]

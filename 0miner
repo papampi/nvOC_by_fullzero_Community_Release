@@ -70,7 +70,7 @@
 
 nvOC_0miner_dev="0028"
 source "${NVOC}/1bash"
-source "${NVOC}/0algo_id"
+source "${NVOC}/helpers/coin_algo_mapping"
 source "${NVOC}/helpers/disabled_gpu.sh"
 
 nvOC_0miner_ver="$nvOC_Ver.$nvOC_0miner_dev" # Do not edit this
@@ -89,24 +89,30 @@ fi
 ## Unify COIN Start
 UPOOL="_POOL"
 UPORT="_PORT"
+UPROTO="_POOL_PROTOCOL"
 UADDR="_ADDRESS"
 UWORK="_WORKER"
 UEXT="_EXTENSION_ARGUMENTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
+UVERSION="_VERSION"
 UCUDA="_CUDA"
 
 xpool=$COIN$UPOOL
 xport=$COIN$UPORT
+xproto=$COIN$UPROTO
 xaddr=$COIN$UADDR
 xwork=$COIN$UWORK
 xext=$COIN$UEXT
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
+xversion=${!xminer}$UVERSION
 xcuda=$ALGO$UCUDA
 miner_opts="$(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")"
+
+mpath="${NVOC}/miners/${!xminer}"
 
 # List of cuda-8.0 miners
 CUDA_8_MINERS="ANXccminer ASccminer KXccminer MSFTccminer NAccminer SILENTminer SPccminer SUPRminer VERTMINER"
@@ -177,7 +183,7 @@ fi
 if [[ $COIN == BMINER_DUAL ]]
 then
   HCD=${NVOC}/miners/BMINER/$BMINER_VERSION/bminer
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -uri $MAIN_COIN_POOL_PROTOCOL://$MAIN_COIN_ADDRESS.$MAIN_COIN_WORKER:$MINER_PWD@$MAIN_COIN_POOL:$MAIN_COIN_PORT -uri2 $DUAL_COIN_POOL_PROTOCOL://$DUAL_COIN_ADDRESS.$DUAL_COIN_WORKER:$MINER_PWD@$DUAL_COIN_POOL:$DUAL_COIN_PORT $BMINER_OPTS
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -uri $MAIN_COIN_POOL_PROTOCOL://$MAIN_COIN_ADDRESS.$MAIN_COIN_WORKER:$MINER_PWD@$MAIN_COIN_POOL:$MAIN_COIN_PORT -uri2 $DUAL_COIN_POOL_PROTOCOL://$DUAL_COIN_ADDRESS.$DUAL_COIN_WORKER:$MINER_PWD@$DUAL_COIN_POOL:$DUAL_COIN_PORT $miner_opts
 fi
 
 
@@ -193,9 +199,8 @@ then
 
 
 ## ETHASH
-if [[ $ALGO == ETHASH ]]
+elif [[ $ALGO == ETHASH ]]
 then
-## Declare Miner Start
   if [[ $ETHASH_MINER == GENOIL ]]
   then
     # skipping GENOIL's setting, since i'm not sure what's it's device options prefix ,etc
@@ -216,7 +221,7 @@ then
   elif [[ $ETHASH_MINER == PhoenixMiner ]]
   then
     miner_opts="$(dgh_enabled_devices '-gpus ' ',' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xproto}://${!xpool}:${!xport} -wal ${!xaddr} -worker ${!xwork} -pass $MINER_PWD ${!xext} $PhoenixMiner_OPTS"
+    HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xproto}://${!xpool}:${!xport} -wal ${!xaddr} -worker ${!xwork} -pass $MINER_PWD ${!xext} $miner_opts"
   fi
   eval $LAUNCH $HCD
 
@@ -279,7 +284,7 @@ then
   else
     UCCALGO="-a ${ALGO,,}"
     HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
-    eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $CCMINER_OPTS ${!xext}
+    eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
   fi
 
 
