@@ -23,6 +23,8 @@ Download the latest full nvOC OS image, then:
 You can find all files needed to run nvOC in this repo but it's recommended you run nvOC from inside a pre-built nvOC image for optimal support. You may have issues trying to setup nvOC from repo on generic Ubuntu or other Linux distro installations.
 1. Create a folder in a nice place on your drive and clone this repo into it, we suggest '~/NVOC/mining' but you are free to choose
 
+git clone https://github.com/gamesmod/nvOC_by_fullzero_Community_Release mining
+
 Starting from nvOC 2.1+ you can clone different versions of nvOC in different folders and keep all of them installed side-by-side for actual 'mining', 'testing' or other purposes. However a single running nvOC instance is supported: you cannot run multiple ones at the same time. Please, avoid cloning this repo directly into the user home directory
 
 2. Setup your system to launch 2unix script from that folder on startup
