@@ -50,6 +50,7 @@ LSB_RELEASE=$(lsb_release -s -d)
 UNAME=$(uname -r)
 SYSTEM_BOOT_TIME=$(uptime -s)
 SYSTEM_UP_TIME=$(uptime -p)
+INTERNET_IP=$(curl smart-ip.net/myip)
 
 # If number gpu installed is set in 1bash give a comparison
 # Reduce nvidia-smi query by trying to read from watchdog log first
@@ -548,6 +549,8 @@ then
 fi
 echo '<h3>'  "nvOC $nvOC_Ver - Community Release"
 echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "</tt>"  '</h4>'
+
+echo "Internet IP: " "<tt style=\"text-align:left; color:white; \">" "$INTERNET_IP <br> </tt>"
 
 echo "Boot Time: " "<tt style=\"text-align:left; color:white; \">" "$SYSTEM_BOOT_TIME <br> </tt>"
 
