@@ -14,6 +14,10 @@
 # BaliMiner:    TELEGRAM_MESSAGES
 #               ( BTC address:  1HbzxQ6AVeWYvFm322KtxZcJJLAqfJHpN8 )
 
+# brightskye:   DISABLED_GPUS
+#               Allow turning off gpu by utilizing each miner's -device options
+#               
+
 # damNmad:      damNmad_ALGO_SPECIFIC_OC
 #               nvOC discord channel https://discordapp.com/invite/8YDFEvY
 #               Added Lots of COIN selections
@@ -120,11 +124,12 @@ v0041="papampi;XDNA COIN, HEX ALGO"
 v0042="papampi;lolMiner"
 v0043="papampi;PhoenixMiner"
 v0044="papampi;Auto restart miner,T_Rex miner"
+v0045="brightskye; DISABLED_GPUS"
 
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.0" 
-nvOC_1bash_ver="0044"
+nvOC_1bash_ver="0045"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
@@ -189,6 +194,8 @@ AUTO_SWITCH="NO"       # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING,
 #          custom api URL following its own profitability logic
 
 NUMBER_GPUS_INSTALLED=""    # Number or "" # Set number of GPUs installed. Watchdog will check installed vs detected. Leave empty to not check
+
+DISABLED_GPUS=""           # space seperated list of devices to be ignore by the miner, start from 0, e.g. 0 1 2 3 4 ...
 
 LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local access to the rig. Set to REMOTE if logging remotely to the rig
 # LOCAL will attach the mining process to the gnome or guake terminal
@@ -1276,7 +1283,7 @@ NICE_CRYPTONIGHTNHEAVY_PORT="3364"
 NICE_CRYPTONIGHTNHEAVY_WORKER="$WORKERNAME"
 NICE_CRYPTONIGHTNHEAVY_EXTENSION_ARGUMENTS=""
 
-#NICE_X11GOST 
+#NICE_X11GOST
 NICE_X11GOST_POOL="x11gost.eu.nicehash.com"
 NICE_X11GOST_PORT="3359"
 NICE_X11GOST_WORKER="$WORKERNAME"
