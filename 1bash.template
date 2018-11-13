@@ -125,11 +125,11 @@ v0042="papampi;lolMiner"
 v0043="papampi;PhoenixMiner"
 v0044="papampi;Auto restart miner,T_Rex miner"
 v0045="brightskye; DISABLED_GPUS"
-v0046="Add Foreman monitoring"
+v0046="papampi; Add Foreman monitoring"
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.0" 
-nvOC_1bash_ver="0045"
+nvOC_1bash_ver="0046"
 nvOC_1bash_least_compatible="0034"
 nvOC_1bash_last_compatible="0035"
 
