@@ -125,7 +125,7 @@ v0042="papampi;lolMiner"
 v0043="papampi;PhoenixMiner"
 v0044="papampi;Auto restart miner,T_Rex miner"
 v0045="brightskye; DISABLED_GPUS"
-
+v0046="Add Foreman monitoring"
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.0" 
@@ -363,6 +363,25 @@ RESTORE_POWER_LIMIT=85        # Restore original Power Limit if fan speed is low
 WARN_PL_DROPS="NO"            # Gives a Warning every time an auto-adjustment occurs and Powerlimit gets dropped
 
 USE_COLOR="YES"               # YES or NO, enables Text output beautifier, use bold text and colors
+
+
+########################################################
+#                                                      #
+#           Foreman monitor settings                   #
+#                                                      #
+########################################################
+
+# Monitor your miners remotely
+# Only need to be set and run on one rig 
+# Dont set all your rigs to yes
+
+FOREMAN_MONITOR="NO"          # Enable or Disable foreman monitor, register at https://dashboard.foreman.mn 
+
+FOREMAN_APIKEY=""             # After register, open https://dashboard.foreman.mn/dashboard/support/pickaxe/ to get your api
+
+FOREMANAPIURL="https://dashboard.foreman.mn/api/metrics/123"
+
+FOREMANCONFIGURL="https://dashboard.foreman.mn/api/config/123"
 
 
 ########################################################################################
