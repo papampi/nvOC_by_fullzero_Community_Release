@@ -2,13 +2,13 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-2.1 - Community Release   #################
+#################   nvOC v0019-3.0 - Community Release   #################
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
 
 
-# 3main for v0019-2.1
+# 3main for v0019-3.0
 #
 # Dev Mod Log:
 #
@@ -214,7 +214,7 @@ then
     sudo cp ${NVOC}/xorg.conf.default /etc/X11/xorg.conf.default
   else
     echo "Downloading default xorg.conf"
-    wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf.default -O /tmp/xorg.conf.default
+    wget -N https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/3.0-stable/xorg.conf.default -O /tmp/xorg.conf.default
     echo "Restore default xorg.conf"
     sudo cp /tmp/xorg.conf.default /etc/X11/xorg.conf.default
   fi
@@ -292,6 +292,16 @@ then
   if ! ps ax | grep -q '[7]reboot'
   then
     guake -n $HCD -r AUTO_REBOOT -e "bash ${NVOC}/7reboot" &
+    sleep 1
+  fi
+fi
+
+if [[ $MINER_RESTART == YES ]]
+then
+  HCD="${NVOC}/7miner_restart"
+  if ! ps ax | grep -q '[7]miner_restart'
+  then
+    guake -n $HCD -r MINER_RESTART -e "bash ${NVOC}/7miner_restart" &
     sleep 1
   fi
 fi

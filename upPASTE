@@ -9,20 +9,20 @@ echo
 
 while true
 do
-  if [[ wget -O "${NVOC}/temp1bash" $pasteBASH && -f "${NVOC}/temp1bash" ]]
+  if wget -O "${NVOC}/temp1bash" $pasteBASH && [[ -f "${NVOC}/temp1bash" ]]
   then
-    old=$(md5sum "${NVOC}/1bash" | sed 's/[^0-9]*//g')
+    # ensure unix encoding
+    dos2unix "${NVOC}/temp1bash"
+    
+    old=$(md5sum "${NVOC}/1bash" | sed 's/[^0-9a-f]*//g')
     echo $old
     echo
-    new=$(md5sum "${NVOC}/temp1bash" | sed 's/[^0-9]*//g')
+    new=$(md5sum "${NVOC}/temp1bash" | sed 's/[^0-9a-f]*//g')
     echo $new
     echo
 
     if [[ $old != $new ]]
     then
-      # ensure unix encoding
-      dos2unix "${NVOC}/temp1bash"
-
       # check new 1bash for errors
       if [[ "$(which shellcheck)" != "" && $(shellcheck -e 2034 -f gcc "${NVOC}/temp1bash" | grep -c error) != 0 ]]
       then

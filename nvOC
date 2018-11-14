@@ -845,11 +845,6 @@ Ethernet      :  $ethernet"
   then
     echo $ALGO "INTENSITY ..........:" ${!ALGO_INTENSITY_TMP}
   fi
-  COIN_AUTOCONVERT_TO_BTC_TMP='$'${COIN}_AUTOCONVERT_TO_BTC
-  if [[ ${!COIN_AUTOCONVERT_TO_BTC_TMP} != "" ]]
-  then
-    echo "${COIN}_AUTOCONVERT_TO_BTC ....:" ${!COIN_AUTOCONVERT_TO_BTC_TMP}
-  fi
 
   echo
   echo "[/code]"
@@ -939,7 +934,18 @@ Restore()
 MinersUpgrade()
 {
   echo "Checking for nvOC miners updates..."
-  git -C ${NVOC} submodule update --init --force --depth 1 --remote miners
+  chckt_cmd="git -C ${NVOC} submodule update --init --force --depth 1 --remote miners"
+  if ! ${chckt_cmd}
+  then
+    echo "Checkout from current branch failed, fetching other branches..."
+    git -C "${NVOC}/miners" remote set-branches origin '*'
+    git -C "${NVOC}/miners" fetch
+    if ! ${chckt_cmd}
+    then
+      echo "Unable to checkout latest miners submodule, can't find target commit."
+      return
+    fi
+  fi
 
   echo "Running updates installer"
   pushd .
@@ -1069,7 +1075,7 @@ restore-xorg()
   echo -e "${B}Restoring default nvOC xorg.conf ...${N}"
   touch "${NVOC}/xorg_flag"
   echo > "${NVOC}/xorg_flag"
-  sudo wget -N --no-check-certificate https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/19-2.1/xorg.conf.default -O /etc/X11/xorg.conf.default
+  sudo wget -N --no-check-certificate https://raw.githubusercontent.com/papampi/nvOC_by_fullzero_Community_Release/3.0-stable/xorg.conf.default -O /etc/X11/xorg.conf.default
   sudo cp /etc/X11/xorg.conf.default /etc/X11/xorg.conf
   echo "Default xorg.conf restored, Rebooting system in 5 sec."
   echo "System may reboot again if HEADLESS_MODE=YES"; echo

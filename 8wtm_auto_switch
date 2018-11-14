@@ -2,7 +2,7 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-2.1 - Community Release   #################
+#################   nvOC v0019-3.0 - Community Release   #################
 ##############        by papampi, Stubo and leenoox         ##############
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
@@ -93,6 +93,12 @@ then
   TOP_COIN=$FIRST_COIN
 else
   TOP_COIN=$(sed 's/:[0-9]*//' < ${NVOC}/WTM_top_coin)
+fi
+
+# Prevent first run error on no WTM_24H_REV
+if [[ ! -e ${NVOC}/WTM_24H_REV ]]
+then
+  touch ${NVOC}/WTM_24H_REV
 fi
 
 # Check last top coin and change if not in coin list any more
