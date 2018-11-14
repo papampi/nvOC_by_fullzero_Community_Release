@@ -110,6 +110,8 @@ xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
 xversion=${!xminer}$UVERSION
 xcuda=$ALGO$UCUDA
+## Unify COIN End
+
 miner_opts="$(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")"
 
 mpath="${NVOC}/miners/${!xminer}"
@@ -124,38 +126,26 @@ do
   fi
 done
 
-## Unify COIN End
+if [[ ${!xaddr} == "" ]]
+then
+  ## NICEHASH
+  if [[ ${COIN:0:4} == NICE ]]
+  then
+    eval $xaddr="$NICE_ADDRESS"
+  ## ZPOOL
+  elif [[ ${COIN:0:5} == ZPOOL ]]
+  then
+    eval $xaddr="$ZPOOL_ADDRESS"
+  ## MPH
+  elif [[ ${COIN:0:3} == MPH ]]
+  then
+    eval $xaddr="$MPH_ADDRESS"
+  fi
+fi
 
-## NICEHASH
-if [[ ${COIN:0:4} == NICE ]]
+if [[ ${!xaddr} == "" ]]
 then
-  NICE_NEOSCRYPT_ADDRESS=$NICE_ADDRESS
-  NICE_LYRA2REV2_ADDRESS=$NICE_ADDRESS
-  NICE_X11GOST_ADDRESS=$NICE_ADDRESS
-  NICE_SKUNKHASH_ADDRESS=$NICE_ADDRESS
-  NICE_CRYPTONIGHT_ADDRESS=$NICE_ADDRESS
-  NICE_EQUIHASH_ADDRESS=$NICE_ADDRESS
-  NICE_ETHASH_ADDRESS=$NICE_ADDRESS
-## ZPOOL
-elif [[ ${COIN:0:5} == ZPOOL ]]
-then
-  ZPOOL_NEOSCRYPT_ADDRESS=$BTC_ADDRESS
-  ZPOOL_LYRA2REV2_ADDRESS=$BTC_ADDRESS
-  ZPOOL_SKUNK_ADDRESS=$BTC_ADDRESS
-  ZPOOL_EQUIHASH_ADDRESS=$BTC_ADDRESS
-  ZPOOL_LBRY_ADDRESS=$BTC_ADDRESS
-  ZPOOL_SKEIN_ADDRESS=$BTC_ADDRESS
-## MPH
-elif [[ ${COIN:0:3} == MPH ]]
-then
-  MPH_NEOSCRYPT_ADDRESS=$MPH_ADDRESS
-  MPH_LYRA2REV2_ADDRESS=$MPH_ADDRESS
-  MPH_LYRA2Z_ADDRESS=$MPH_ADDRESS
-  MPH_CRYPTONIGHT_ADDRESS=$MPH_ADDRESS
-  MPH_EQUIHASH_ADDRESS=$MPH_ADDRESS
-  MPH_ETHASH_ADDRESS=$MPH_ADDRESS
-  MPH_SKEIN_ADDRESS=$MPH_ADDRESS
-  MPH_CRYPTONIGHTV7==$MPH_ADDRESS
+  echo "WARNING: ${xaddr} is empty or not set"
 fi
 
 if [[ ${!xproto} == "" ]]
