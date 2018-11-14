@@ -247,7 +247,12 @@ do
         SMI_TEST_QUERY="$SMI_TEST_QUERY,power.draw"
       fi
 
-      echo -e "${R}${B}WARNING: $(date) - tempcontrol@[GPU$GPU] Problem detected: nvidia-smi failed to query current status. Watchdog has $ERR_TIMER seconds to react, otherwise we will reboot!${N}" | tee -a "$LOG_FILE"
+      echo -e "${Y}${B}WARNING: $(date) - tempcontrol@[GPU$GPU] Problem detected: nvidia-smi failed to query current status. Watchdog has $ERR_TIMER seconds to react, otherwise we will reboot!${N}" | tee -a "$LOG_FILE"
+      (
+          echo "========= SMI Query output with errors:"
+          echo $SMI_QUERY
+          echo "========= End of SMI query output"
+      ) >> "$LOG_FILE"
       if [[ $TELEGRAM_ALERTS == YES ]]
       then
         bash "${NVOC}/telegram" &
@@ -263,7 +268,7 @@ do
           if ! [[ $_CURRENT_TEMP =~ $numtest && $_CURRENT_FAN =~ $numtest && $_PWRLIMIT =~ $numtest && ( $GPU_NAME =~ 1050 || $_POWERDRAW =~ $numtest ) ]]
           then
             ERR_TIMER=$((ERR_TIMER - 15))
-            echo -e "${R}${B}WARNING: $(date) - tempcontrol@[GPU$GPU] Problem persists: watchdog has $ERR_TIMER seconds to react, otherwise we will reboot!${N}" | tee -a "$LOG_FILE"
+            echo -e "${Y}${B}WARNING: $(date) - tempcontrol@[GPU$GPU] Problem persists: watchdog has $ERR_TIMER seconds to react, otherwise we will reboot!${N}" | tee -a "$LOG_FILE"
           else
             ERR_TIMER=$ERR_TIMER_BRK
             echo -e "${G}${B}INFO: $(date) - tempcontrol@[GPU$GPU] Problem solved.${N}" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
@@ -271,7 +276,7 @@ do
           fi
           if (( ERR_TIMER <= 0 ))
           then
-            echo -e "${R}${B}WARNING: $(date) - tempcontrol@[GPU$GPU] Problem persists: the GPU is in unkonwn status. System is now rebooting to correct the problem.${N}" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
+            echo -e "${R}${B}ERROR: $(date) - tempcontrol@[GPU$GPU] Problem persists: the GPU is in unkonwn status. System is now rebooting to correct the problem.${N}" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
             if [[ $TELEGRAM_ALERTS == YES ]]
             then
               bash "${NVOC}/telegram" &
