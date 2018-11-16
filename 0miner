@@ -92,7 +92,7 @@ UPORT="_PORT"
 UPROTO="_POOL_PROTOCOL"
 UADDR="_ADDRESS"
 UWORK="_WORKER"
-UEXT="_EXTENSION_ARGUMENTS"
+UCOINOPTS="_OPTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
@@ -104,7 +104,7 @@ xport=$COIN$UPORT
 xproto=$COIN$UPROTO
 xaddr=$COIN$UADDR
 xwork=$COIN$UWORK
-xext=$COIN$UEXT
+xcoinopts=$COIN$UEXT
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
@@ -112,7 +112,7 @@ xversion=${!xminer}$UVERSION
 xcuda=$ALGO$UCUDA
 ## Unify COIN End
 
-miner_opts="$(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")"
+OPTS="${!xcoinopts} $(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")"
 
 mpath="${NVOC}/miners/${!xminer}"
 
@@ -163,29 +163,46 @@ fi
 if [[ $COIN == CLAYMORE_DUAL ]]
 then
   # add claymore opts?
-  # miner_opts="$(dgh_enabled_devices '-di ' '' 'A' "$miner_opts")"
+  # OPTS="$(dgh_enabled_devices '-di ' '' 'A' "$OPTS")"
   HCD=${NVOC}/miners/CLAYMORE/$CLAYMORE_VERSION/ethdcrminer64
   E_ADDR="$DUAL_EWAL""$ETHASH_WALLET_FORMAT""$DUAL_EWORKER"
   D_ADDR="$DUAL_DWAL""$DUAL_WALLET_FORMAT""$DUAL_DWORKER"
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS" $miner_opts
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -epool "$DUAL_EPOOL":"$DUAL_EPORT" -ewal "$E_ADDR" -epsw "$DUAL_EPSW" -dpool stratum+tcp://"$DUAL_DPOOL":"$DUAL_DPORT" -dwal "$D_ADDR" -dpsw "$DUAL_DPSW" -dcoin "$DUAL_DCOIN" -allpools "$ALL_POOLS" -dbg -1 -mport "$MPORT" -mpsw "$MPSW" "$DUAL_ADDITIONAL_ARGUMENTS" $OPTS
 fi
 
 if [[ $COIN == BMINER_DUAL ]]
 then
   HCD=${NVOC}/miners/BMINER/$BMINER_VERSION/bminer
-  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -uri $MAIN_COIN_POOL_PROTOCOL://$MAIN_COIN_ADDRESS.$MAIN_COIN_WORKER:$MINER_PWD@$MAIN_COIN_POOL:$MAIN_COIN_PORT -uri2 $DUAL_COIN_POOL_PROTOCOL://$DUAL_COIN_ADDRESS.$DUAL_COIN_WORKER:$MINER_PWD@$DUAL_COIN_POOL:$DUAL_COIN_PORT $miner_opts
+  screen -c "${NVOC}"/screenrc-miner -dmSL miner "$HCD" -uri $MAIN_COIN_POOL_PROTOCOL://$MAIN_COIN_ADDRESS.$MAIN_COIN_WORKER:$MINER_PWD@$MAIN_COIN_POOL:$MAIN_COIN_PORT -uri2 $DUAL_COIN_POOL_PROTOCOL://$DUAL_COIN_ADDRESS.$DUAL_COIN_WORKER:$MINER_PWD@$DUAL_COIN_POOL:$DUAL_COIN_PORT $OPTS
 fi
 
 
 ## Pluggable miners
-if [[ ${!xversion} != "" && -f ${mpath}//"${!xversion}"/nvoc-miner.json ]]
+if [[ ${!xversion} != "" && -f ${mpath}/"${!xversion}"/nvoc-miner.json || -f ${mpath}/nvoc-miner.json ]]
 then
-  HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${mpath}/"${!xversion}"/nvoc-miner.json)"
-  eval $LAUNCH $HCD
-elif [[ -f ${mpath}/nvoc-miner.json ]]
-then
-  HCD="${mpath}/$(jq -r .hcd ${mpath}/nvoc-miner.json)"
-  eval $LAUNCH $HCD
+  pm_manifest=${mpath}/${!xversion}/nvoc-miner.json
+  
+  # parse device enable params
+  dev_enable_arg=$(eval $(jq -r .devlist_argument ${pm_manifest}))
+  if [[ $dev_enable_arg != "" ]]
+  then
+    dev_enable_sep=$(eval $(jq -r .devlist_separator ${pm_manifest}))
+    dev_enable_fmt=$(eval $(jq -r .devlist_format ${pm_manifest}))
+    $OPTS="$(dgh_enabled_devices '${dev_enable_arg}' '${dev_enable_sep}' '${dev_enable_fmt}' "$OPTS")"
+  fi
+  
+  if [[ $FOREMAN_MONITOR == YES ]]
+  then
+    # parse foreman monitor params
+    api_ext=$(eval $(jq -r .foreman.api_ext ${pm_manifest}))
+    if [[ $api_ext != "" ]]
+    then
+      OPTS="$OPTS $api_ext"
+    fi
+  fi
+
+  HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${pm_manifest})"
+  eval $LAUNCH $HCD $OPTS
 
 
 ## ETHASH
@@ -194,24 +211,24 @@ then
   if [[ $ETHASH_MINER == GENOIL ]]
   then
     # skipping GENOIL's setting, since i'm not sure what's it's device options prefix ,etc
-    # miner_opts="$(dgh_enabled_devices '-di ' '' 'A' "$miner_opts")"
-    HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U ${!xext} $miner_opts"
+    # OPTS="$(dgh_enabled_devices '-di ' '' 'A' "$OPTS")"
+    HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U $OPTS"
   elif [[ $ETHASH_MINER == ETHMINER ]]
   then
-    miner_opts="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/ETHMINER/"${!xversion}"/ethminer -P ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} -U ${!xext} $miner_opts"
+    OPTS="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$OPTS")"
+    HCD="${NVOC}/miners/ETHMINER/"${!xversion}"/ethminer -P ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} -U $OPTS"
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
-    miner_opts="$(dgh_enabled_devices '-di ' '' 'A' "$miner_opts")"
-    HCD="${NVOC}/miners/CLAYMORE/"${!xversion}"/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -dbg -1 ${!xext} $miner_opts"
+    OPTS="$(dgh_enabled_devices '-di ' '' 'A' "$OPTS")"
+    HCD="${NVOC}/miners/CLAYMORE/"${!xversion}"/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -dbg -1 $OPTS"
   elif [[ $ETHASH_MINER == BMINER ]]
   then
-    miner_opts="$(dgh_enabled_devices '-devices ' ',' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $miner_opts ${!xext}"
+    OPTS="$(dgh_enabled_devices '-devices ' ',' 'N' "$OPTS")"
+    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $OPTS"
   elif [[ $ETHASH_MINER == PhoenixMiner ]]
   then
-    miner_opts="$(dgh_enabled_devices '-gpus ' ',' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xproto}://${!xpool}:${!xport} -wal ${!xaddr} -worker ${!xwork} -pass $MINER_PWD ${!xext} $miner_opts"
+    OPTS="$(dgh_enabled_devices '-gpus ' ',' 'N' "$OPTS")"
+    HCD="${NVOC}/miners/PhoenixMiner/"${!xversion}"/PhoenixMiner -pool ${!xproto}://${!xpool}:${!xport} -wal ${!xaddr} -worker ${!xwork} -pass $MINER_PWD $OPTS"
   fi
   eval $LAUNCH $HCD
 
@@ -221,16 +238,16 @@ elif [[ $ALGO == EQUIHASH ]]
 then
   if [[ $EQUIHASH_MINER == DSTM ]]
   then
-    miner_opts="$(dgh_enabled_devices '--dev ' ' ' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/DSTM/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $miner_opts ${!xext}"
+    OPTS="$(dgh_enabled_devices '--dev ' ' ' 'N' "$OPTS")"
+    HCD="${NVOC}/miners/DSTM/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $OPTS"
   elif [[ $EQUIHASH_MINER == EWBF ]]
   then
-    miner_opts="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/EWBF/"${!xversion}"/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $miner_opts ${!xext}"
+    OPTS="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$OPTS")"
+    HCD="${NVOC}/miners/EWBF/"${!xversion}"/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $OPTS"
   elif [[ $EQUIHASH_MINER == BMINER ]]
   then
-    miner_opts="$(dgh_enabled_devices '-devices ' ',' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $miner_opts ${!xext}"
+    OPTS="$(dgh_enabled_devices '-devices ' ',' 'N' "$OPTS")"
+    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $OPTS"
   fi
   eval $LAUNCH $HCD
 
@@ -240,41 +257,41 @@ elif [[ $ALGO == ZHASH ]]
 then
   if [[ $ZHASH_MINER == Z_EWBF ]]
   then
-    miner_opts="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/Z_EWBF/"${!xversion}"/miner --fee $Z_EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $miner_opts ${!xext}"
+    OPTS="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$OPTS")"
+    HCD="${NVOC}/miners/Z_EWBF/"${!xversion}"/miner --fee $Z_EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $OPTS"
   elif [[ $ZHASH_MINER == BMINER ]]
   then
-    miner_opts="$(dgh_enabled_devices '-devices ' ',' 'N' "$miner_opts")"
-    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $miner_opts ${!xext}"
+    OPTS="$(dgh_enabled_devices '-devices ' ',' 'N' "$OPTS")"
+    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $OPTS"
   elif [[ $ZHASH_MINER == LOLMINER ]]
   then
     ## Not sure what are the devices options
-    miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")" 
-    HCD="${NVOC}/miners/LOLMINER/"${!xversion}"/lolMiner -coin=$COIN -pool=${!xpool} -port=${!xport} -user=${!xaddr}${!xwallet}${!xwork} $miner_opts ${!xext}"  
+    OPTS="$(dgh_enabled_devices '--devices ' ',' 'N' "$OPTS")" 
+    HCD="${NVOC}/miners/LOLMINER/"${!xversion}"/lolMiner -coin=$COIN -pool=${!xpool} -port=${!xport} -user=${!xaddr}${!xwallet}${!xwork} $OPTS"  
   fi
   eval $LAUNCH $HCD
 
 ## Various Algos
 elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI1612 || $ALGO == PHI2 || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
 then
-  miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
+  OPTS="$(dgh_enabled_devices '--devices ' ',' 'N' "$OPTS")"
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
-  eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
+  eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $OPTS
 
 
 ## CRYPTONIGHT
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
-  miner_opts="$(dgh_enabled_devices '--devices ' ',' 'N' "$miner_opts")"
+  OPTS="$(dgh_enabled_devices '--devices ' ',' 'N' "$OPTS")"
   if [[ $CRYPTONIGHT_MINER == KTccminer_cryptonight ]]
   then
     HCD="${NVOC}"/miners/KTccminer_cryptonight/"${!xversion}"/ccminer
-    eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $miner_opts ${!xext}
+    eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $OPTS
   else
     UCCALGO="-a ${ALGO,,}"
     HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
-    eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $miner_opts ${!xext}
+    eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $OPTS
   fi
 
 
