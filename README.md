@@ -61,6 +61,8 @@ Checksums:
 ### nvOC_19-2.1 beta Ubuntu 18.04 Dual-Cuda Nvidia 396 2018-09-07 (for nvOC >= 2.1)
 Version: always the latest, from configurable branch (default: [release](https://github.com/papampi/nvOC_by_fullzero_Community_Release/tree/release))
 
+Note: Ubuntu 18.04 may have some conflicts with tempcontrol
+
 | host | size   | download                                                                       |
 |------|--------|--------------------------------------------------------------------------------|
 | MEGA | 3,61GB | [link](https://mega.nz/#!BFthBShR!88rChE-cQRJM30n021x9HTGJjFav8VPTuTUci4KXHXM) |
