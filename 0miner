@@ -215,7 +215,7 @@ then
     HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U $OPTS"
   elif [[ $ETHASH_MINER == ETHMINER ]]
   then
-    OPTS="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$OPTS")"
+    OPTS="$(dgh_enabled_devices '--cuda-devices ' ' ' 'N' "$OPTS")"
     HCD="${NVOC}/miners/ETHMINER/"${!xversion}"/ethminer -P ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} -U $OPTS"
   elif [[ $ETHASH_MINER == CLAYMORE ]]
   then
