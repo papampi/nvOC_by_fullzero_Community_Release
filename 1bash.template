@@ -374,16 +374,13 @@ USE_COLOR="YES"               # YES or NO, enables Text output beautifier, use b
 ########################################################
 
 # Monitor your miners remotely
-# Only need to be set and run on one rig 
-# Dont set all your rigs to yes
 
-FOREMAN_MONITOR="NO"          # Enable or Disable foreman monitor, register at https://dashboard.foreman.mn 
+FOREMAN_MONITOR="NO"          # Enable or Disable Foreman monitoring.
+                              # To use Foreman, you must register an account at https://foreman.mn
 
-FOREMAN_APIKEY=""             # After register, open https://dashboard.foreman.mn/dashboard/support/pickaxe/ to get your api
-
-FOREMANAPIURL="https://dashboard.foreman.mn/api/metrics/123"
-
-FOREMANCONFIGURL="https://dashboard.foreman.mn/api/config/123"
+FOREMAN_CLIENT_ID=""          # After registering, open https://dashboard.foreman.mn/dashboard/profile/ to
+                              # get your client ID and API key.  These are needed so your rigs can be
+FOREMAN_API_KEY=""            # correctly associated with your private dashboard
 
 
 ########################################################################################

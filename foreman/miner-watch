@@ -1,0 +1,203 @@
+#!/bin/bash
+
+source $NVOC/1bash
+source $NVOC/foreman/package.sh
+
+MINERS=$NVOC/miners
+FOREMAN_PICKAXE_ID=$(frmn_get_pickaxe_id)
+
+message() {
+    echo "$(date "+%F %T") $1"
+}
+
+get_ccminer_port() {
+    pgrep -afn "$MINERS" | grep -Eo "b 127.0.0.1:[0-9]{1,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs
+}
+
+check_miner() {
+    MINER=$(pgrep -afn "$MINERS" | awk '{ print $2 }')
+    MINER=${MINER#"$MINERS"}
+    MINER=$(echo $MINER | cut -d '/' -f 2 | tr '[:upper:]' '[:lower:]')
+
+    if [ -z $MINER ]; then
+        message "Failed to find a running miner"
+        return
+    fi
+
+    # Convert the miner name to a name that Foreman recognizes
+    case $MINER in
+        "anxccminer")
+            MINER="ccminer-phi"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "asccminer")
+            MINER="ccminer-alexis78"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "bminer")
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "api 127.0.0.1:[0-9]{1,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs)
+            ;;
+        "claymore")
+            MINER="claymore-eth"
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "mport [0-9]{1,5}" | cut -d ' ' -f2 | xargs)
+            ;;
+        "cryptodredge")
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "dstm")
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "telemetry=127.0.0.1:[0-9]{1,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs)
+            ;;
+        "ethminer")
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo 'api-port [0-9]{1,5}' | cut -d ' ' -f2 | xargs)
+            ;;
+        "ewbf")
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "api 127.0.0.1:[0-9]{1,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs)
+            ;;
+        "ktccminer")
+            MINER="ccminer-klaust"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "kxccminer")
+            MINER="ccminer-xevan"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "lolminer")
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "apiport=[0-9]{1,5}" | cut -d '=' -f2 | xargs)
+            ;;
+        "msftccminer")
+            MINER="ccminer-msft"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "naccminer")
+            MINER="ccminer-nanashi"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "phoenixminer")
+            MINER="phoenix"
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "cdmport [0-9]{1,5}" | cut -d ' ' -f2 | xargs)
+            ;;
+        "silentminer")
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "sp_suprminer")
+            MINER="suprminer-sp-hash"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "spccminer")
+            MINER="ccminer-sp-hash"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "suprminer")
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "tpccminer")
+            MINER="ccminer-tpruvot"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "t_rex")
+            MINER="trex"
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "api-bind-http 127.0.0.1:[0-9]{1,5}" | cut -d ' ' -f2 | cut -d ':' -f2 | xargs)
+            ;;
+        "vertminer")
+            MINER="vertminer-nvidia"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "xmr_stak")
+            MINER="xmrstak"
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "httpd [0-9]{1,5}" | cut -d ' ' -f2 | xargs)
+            ;;
+        "zenemyminer")
+            MINER="z-enemy"
+            API_PORT=$(get_ccminer_port)
+            ;;
+        "z_ewbf")
+            MINER="ewbf"
+            API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "api 127.0.0.1:[0-9]{1,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs)
+            ;;
+        *)
+            message "Unmapped miner '$MINER' found - can't update"
+            return
+            ;;
+    esac
+
+    # Check to see if Foreman's miner type matches the currently running miner
+    FOREMAN_MINER_DETAIL=$(curl \
+                            -s \
+                            -H "Authorization: Token $FOREMAN_API_KEY" \
+                            https://dev-dan.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID | \
+                            jq -r '.[] | select(.platform=="nvOC" and .apiIp=="127.0.0.1")')
+    FOREMAN_MINER_ID=$(echo $FOREMAN_MINER_DETAIL | jq -r ".id")
+    FOREMAN_MINER_TYPE=$(echo $FOREMAN_MINER_DETAIL | jq -r ".minerType")
+
+    if [ -z "$FOREMAN_MINER_TYPE" ]; then
+        # Miner doesn't exist - make one
+        message "No matching miner exists in Foreman - creating one for worker '$WORKERNAME'"
+        MINER_JSON=$(jq -n --arg name "$WORKERNAME" \
+                           --arg platform "nvOC" \
+                           --arg minerType "$MINER" \
+                           --arg apiIp "127.0.0.1" \
+                           --arg apiPort $API_PORT '. | 
+                            {
+                                name: $name, 
+                                platform: $platform,
+                                minerType: $minerType,
+                                apiIp: $apiIp,
+                                apiPort: $apiPort|tonumber
+                            }')
+        STATUS=$(curl \
+                    -s \
+                    -o /dev/null \
+                    -w "%{http_code}" \
+                    -X POST \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Token $FOREMAN_API_KEY" \
+                    -d "$MINER_JSON" \
+                    https://dev-dan.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID)
+        if [ $STATUS -eq 201 ]; then
+            message "Successfully created a new miner in Foreman"
+        else
+            message "Failed to create a new miner in Foreman"
+        fi
+    fi
+
+    message "Miner currently running: $MINER"
+    message "Miner in Foreman:        $FOREMAN_MINER_TYPE"
+
+    if [ "$MINER" != "$FOREMAN_MINER_TYPE" ]; then
+        # The miner type changed - update it in Foreman
+        message "Miner has changed for worker '$WORKERNAME' - updating it to '$MINER'"
+        MINER_JSON=$(jq -n --arg name "$WORKERNAME" \
+                       --arg platform "nvOC" \
+                       --arg minerType "$MINER" \
+                       --arg apiIp "127.0.0.1" \
+                       --arg apiPort $API_PORT '. | 
+                        {
+                            name: $name, 
+                            platform: $platform,
+                            minerType: $minerType,
+                            apiIp: $apiIp,
+                            apiPort: $apiPort|tonumber
+                        }')
+        STATUS=$(curl \
+                    -s \
+                    -o /dev/null \
+                    -w "%{http_code}" \
+                    -X PUT \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Token $FOREMAN_API_KEY" \
+                    -d "$MINER_JSON" \
+                    https://dev-dan.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID/$FOREMAN_MINER_ID)
+        if [ $STATUS -eq 200 ]; then
+            message "Successfully updated the miner type"
+        else
+            message "Failed to update the miner type"
+        fi
+    fi
+}
+
+message "Starting Foreman miner monitoring process"
+while true
+do
+    check_miner
+    sleep 30
+done
