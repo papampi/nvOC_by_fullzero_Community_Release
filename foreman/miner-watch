@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# The following script provides a mechanism to automatically identify when the running
+# miner doesn't match the miner entered into Foreman.  Once there's a difference, the miner
+# in Foreman is automatically updated to match the running miner type.
+
 source $NVOC/1bash
 source $NVOC/foreman/package.sh
 
