@@ -38,6 +38,17 @@ function frmn_create_pickaxe() {
             jq -r '.key')
 }
 
+function frmn_get_current_chisel_version() {
+    if [ -d $NVOC/foreman/chisel ]; then
+        echo $(unzip \
+                -q \
+                -c $NVOC/foreman/chisel/lib/chisel-*.jar META-INF/MANIFEST.MF | \
+                grep "Implementation-Version" | cut -d ':' -f2 | tr -d '\r' | xargs)
+    else
+        echo ""
+    fi
+}
+
 function frmn_get_current_pickaxe_version() {
     if [ -d $NVOC/foreman/pickaxe ]; then
         echo $(unzip \
@@ -47,6 +58,13 @@ function frmn_get_current_pickaxe_version() {
     else
         echo ""
     fi
+}
+
+function frmn_get_latest_chisel_version() {
+    echo $(wget \
+            -qO- \
+            https://api.github.com/repos/delawr0190/foreman-chisel/releases | \
+            jq -r '[.[] | .tag_name][0]')
 }
 
 function frmn_get_latest_pickaxe_version() {

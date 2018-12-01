@@ -346,32 +346,35 @@ then
       FOREMAN_PICKAXE_ID=$(frmn_create_pickaxe)
     fi
 
-    # Is a pickaxe upgrade needed?
-    if [[ "$(frmn_get_current_pickaxe_version)" != "$(frmn_get_latest_pickaxe_version)" ]]
+    # Is a Foreman upgrade needed?
+    if [[ "$(frmn_get_current_pickaxe_version)" != "$(frmn_get_latest_pickaxe_version)" || "$(frmn_get_current_chisel_version)" != "$(frmn_get_latest_chisel_version)" ]]
     then
       # Upgrade needed
-      echo "Upgrading Foreman pickaxe to latest version"
+      echo "Upgrading Foreman to latest version"
 
       # Download and run the install/upgrade script
       wget https://gist.githubusercontent.com/delawr0190/8cb40ab12c9f784d88b80d105e69933b/raw/install.sh \
         -o /dev/null \
         -q \
-        -O $FOREMAN_HOME/install-pickaxe
-      chmod +x $FOREMAN_HOME/install-pickaxe
+        -O $FOREMAN_HOME/foreman-install
+      chmod +x $FOREMAN_HOME/foreman-install
       export FOREMAN_HOME
-      sudo -E bash $FOREMAN_HOME/install-pickaxe $FOREMAN_CLIENT_ID $FOREMAN_API_KEY $FOREMAN_PICKAXE_ID
+      sudo -E bash $FOREMAN_HOME/foreman-install pickaxe $FOREMAN_CLIENT_ID $FOREMAN_API_KEY $FOREMAN_PICKAXE_ID
+      sudo -E bash $FOREMAN_HOME/foreman-install chisel
 
       # Script is no longer needed
-      rm $FOREMAN_HOME/install-pickaxe
+      rm $FOREMAN_HOME/foreman-install
     fi
 
     # Start everything
+    $FOREMAN_HOME/chisel/bin/chisel.sh restart
     $FOREMAN_HOME/pickaxe/bin/pickaxe.sh restart
     $FOREMAN_HOME/miner-watch >> $NVOC/nvoc_logs/foreman-miner-monitor &
   fi
 elif ps ax | grep -q '[f]oreman'
 then
-  # Foreman is no longer being used - stop the running Pickaxe
+  # Foreman is no longer being used - stop the running apps
+  $FOREMAN_HOME/chisel/bin/chisel.sh stop
   $FOREMAN_HOME/pickaxe/bin/pickaxe.sh stop
 fi
 
