@@ -34,7 +34,7 @@ function frmn_create_pickaxe() {
             -H "Content-Type: application/json" \
             -H "Authorization: Token $FOREMAN_API_KEY" \
             -d "$pickaxe_json" \
-            https://dev-dan.foreman.mn/api/pickaxe/$FOREMAN_CLIENT_ID | \
+            https://dashboard.foreman.mn/api/pickaxe/$FOREMAN_CLIENT_ID | \
             jq -r '.key')
 }
 

@@ -128,7 +128,7 @@ check_miner() {
     FOREMAN_MINER_DETAIL=$(curl \
                             -s \
                             -H "Authorization: Token $FOREMAN_API_KEY" \
-                            https://dev-dan.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID | \
+                            https://dashboard.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID | \
                             jq -r '.[] | select(.platform=="nvOC" and .apiIp=="127.0.0.1")')
     FOREMAN_MINER_ID=$(echo $FOREMAN_MINER_DETAIL | jq -r ".id")
     FOREMAN_MINER_TYPE=$(echo $FOREMAN_MINER_DETAIL | jq -r ".minerType")
@@ -156,7 +156,7 @@ check_miner() {
                     -H "Content-Type: application/json" \
                     -H "Authorization: Token $FOREMAN_API_KEY" \
                     -d "$MINER_JSON" \
-                    https://dev-dan.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID)
+                    https://dashboard.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID)
         if [ $STATUS -eq 201 ]; then
             message "Successfully created a new miner in Foreman"
         else
@@ -190,7 +190,7 @@ check_miner() {
                     -H "Content-Type: application/json" \
                     -H "Authorization: Token $FOREMAN_API_KEY" \
                     -d "$MINER_JSON" \
-                    https://dev-dan.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID/$FOREMAN_MINER_ID)
+                    https://dashboard.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID/$FOREMAN_MINER_ID)
         if [ $STATUS -eq 200 ]; then
             message "Successfully updated the miner type"
         else
