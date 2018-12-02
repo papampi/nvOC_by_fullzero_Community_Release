@@ -157,10 +157,13 @@ check_miner() {
                     -H "Authorization: Token $FOREMAN_API_KEY" \
                     -d "$MINER_JSON" \
                     https://dashboard.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID)
+
         if [ $STATUS -eq 201 ]; then
             message "Successfully created a new miner in Foreman"
+            FOREMAN_MINER_TYPE=$MINER
         else
             message "Failed to create a new miner in Foreman"
+            return
         fi
     fi
 
