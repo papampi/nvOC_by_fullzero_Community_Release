@@ -39,10 +39,10 @@ function frmn_create_pickaxe() {
 }
 
 function frmn_get_current_chisel_version() {
-    if [ -d $NVOC/foreman/chisel ]; then
+    if [ -d ~/.foreman/chisel ]; then
         echo $(unzip \
                 -q \
-                -c $NVOC/foreman/chisel/lib/chisel-*.jar META-INF/MANIFEST.MF | \
+                -c ~/.foreman/chisel/lib/chisel-*.jar META-INF/MANIFEST.MF | \
                 grep "Implementation-Version" | cut -d ':' -f2 | tr -d '\r' | xargs)
     else
         echo ""
@@ -50,10 +50,10 @@ function frmn_get_current_chisel_version() {
 }
 
 function frmn_get_current_pickaxe_version() {
-    if [ -d $NVOC/foreman/pickaxe ]; then
+    if [ -d ~/.foreman/pickaxe ]; then
         echo $(unzip \
                 -q \
-                -c $NVOC/foreman/pickaxe/lib/foreman-pickaxe-*.jar META-INF/MANIFEST.MF | \
+                -c ~/.foreman/pickaxe/lib/foreman-pickaxe-*.jar META-INF/MANIFEST.MF | \
                 grep "Implementation-Version" | cut -d ':' -f2 | tr -d '\r' | xargs)
     else
         echo ""
@@ -75,7 +75,7 @@ function frmn_get_latest_pickaxe_version() {
 }
 
 function frmn_get_pickaxe_id() {
-    echo $(grep -s "pickaxeId" $NVOC/foreman/pickaxe/conf/pickaxe.yml | cut -d ':' -f 2 | xargs)
+    echo $(grep -s "pickaxeId" ~/.foreman/pickaxe/conf/pickaxe.yml | cut -d ':' -f 2 | xargs)
 }
 
 frmn_main

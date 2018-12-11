@@ -190,11 +190,11 @@ then
     dev_enable_fmt=$(eval $(jq -r .devlist_format ${pm_manifest}))
     $OPTS="$(dgh_enabled_devices '${dev_enable_arg}' '${dev_enable_sep}' '${dev_enable_fmt}' "$OPTS")"
   fi
-  
+
   if [[ $FOREMAN_MONITOR == YES ]]
   then
     # parse foreman monitor params
-    api_ext=$(eval $(jq -r .foreman.api_ext ${pm_manifest}))
+    api_ext=$(jq -r .foreman.api_ext ${pm_manifest})
     if [[ $api_ext != "" ]]
     then
       OPTS="$OPTS $api_ext"
