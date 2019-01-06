@@ -67,11 +67,11 @@
 #          PhoenixMiner
 # v=0028 : papampi
 #          echo miner command, changes for XMR_Stak 2.5.1 
-# v=0028 : papampi
+# v=0029 : papampi
 #          Gminer
 
 
-nvOC_0miner_dev="0028"
+nvOC_0miner_dev="0029"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 
