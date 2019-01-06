@@ -67,6 +67,9 @@
 #          PhoenixMiner
 # v=0028 : papampi
 #          echo miner command, changes for XMR_Stak 2.5.1 
+# v=0028 : papampi
+#          Gminer
+
 
 nvOC_0miner_dev="0028"
 source "${NVOC}/1bash"
@@ -248,6 +251,9 @@ then
   elif [[ $ZHASH_MINER == LOLMINER ]]
   then
     HCD="${NVOC}/miners/LOLMINER/"${!xversion}"/lolMiner -coin=$COIN -pool=${!xpool} -port=${!xport} -user=${!xaddr}${!xwallet}${!xwork} $LOLMINER_OPTS ${!xext}"  
+  elif [[ $ZHASH_MINER == GMINER ]]
+  then
+    HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
   fi
   echo $LAUNCH $HCD
   eval $LAUNCH $HCD
