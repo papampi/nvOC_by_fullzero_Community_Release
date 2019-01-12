@@ -69,9 +69,10 @@
 #          echo miner command, changes for XMR_Stak 2.5.1 
 # v=0029 : papampi
 #          Gminer
+# v=0030 : papampi
+#          ENERGIMINER
 
-
-nvOC_0miner_dev="0029"
+nvOC_0miner_dev="0030"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 
@@ -258,6 +259,16 @@ then
   echo $LAUNCH $HCD
   eval $LAUNCH $HCD
 
+## Energi
+elif [[ $ALGO == ENERGI ]]
+then
+  if [[ $ENERGI_MINER == ENERGIMINER ]]
+  then
+    HCD="${NVOC}/miners/ENERGIMINER/"${!xversion}"/energiminer ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $ENERGIMINER_OPTS ${!xext}"
+  fi
+  echo $LAUNCH $HCD
+  eval $LAUNCH $HCD
+  
 ## Various Algos
 elif [[ $ALGO == X22I || $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI1612 || $ALGO == PHI2 || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
 then
