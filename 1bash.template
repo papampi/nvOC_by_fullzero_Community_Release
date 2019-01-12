@@ -677,7 +677,7 @@ LOLMINER_VERSION="recommended"                   # "latest", "recommended" or th
 PhoenixMiner_OPTS=""                                 # PhoenixMiner optional arguments. Read the README file inside PhoenixMiner folder
 PhoenixMiner_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
 
-ENERGIMINER_OPTS=""                                     # ENERGIMINER Miner optional arguments
+ENERGIMINER_OPTS="-U --response-timeout 10 --cuda-parallel-hash 8 --cuda-block-size 256"            # ENERGIMINER Miner optional arguments
 ENERGIMINER_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
 
