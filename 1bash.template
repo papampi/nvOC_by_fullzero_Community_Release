@@ -1602,9 +1602,9 @@ CRYPTONIGHTHEAVY_CORE_OVERCLOCK=0        # Recommended value for some GTX-1060: 
 CRYPTONIGHTHEAVY_MEMORY_OVERCLOCK=0      # Recommended value for some GTX-1060: -300
 
 # ENERGI
-ENERGI_POWERLIMIT_WATTS=100              # No Recommendation
-ENERGI_CORE_OVERCLOCK=0                  # No Recommendation
-ENERGI_MEMORY_OVERCLOCK=0                # No Recommendation
+ENERGI_POWERLIMIT_WATTS=100              # Same as Ethash
+ENERGI_CORE_OVERCLOCK=0                  # Same as Ethash
+ENERGI_MEMORY_OVERCLOCK=0                # Same as Ethash
 
 # Equihash
 EQUIHASH_POWERLIMIT_WATTS=100            # Recommended value for some GTX-1060: 76
