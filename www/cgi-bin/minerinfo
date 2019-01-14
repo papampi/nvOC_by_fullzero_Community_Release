@@ -473,7 +473,7 @@ fi
 ##################################################################
 ########################### WTM Hash Rate ########################
 
-if [[ $ALGO == ETHASH ]]
+if [[ $ALGO == ETHASH || $ALGO == ENERGI ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Beth_hr%5D=[0-9]*' | cut -f2- -d=)
 
