@@ -364,6 +364,13 @@ then
   hash_average="$((total_hash / hash_count)) MH/s"
   rejected_shares=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -o "R[0-9]*+[0-9]*" | sed 's/R//' | tail -1)
 
+elif  ps ax | grep miner | grep -q "[e]nergiminer"
+then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o '[0-9]*.[0-9]* Mh/s' | awk '{print$1}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v grep | wc -l | awk '{print $1}')
+  hash_average="$((total_hash / hash_count)) MH/s"
+  rejected_shares=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -o "R[0-9]*" | sed 's/R//' | tail -1)
+
 elif  ps ax |  grep miner | grep -q "[C]LAYMORE"
 then
   total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $5}' | awk '{s+=$1} END {printf "%.0f", s}')
