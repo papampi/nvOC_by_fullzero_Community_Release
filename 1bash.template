@@ -374,16 +374,13 @@ USE_COLOR="YES"               # YES or NO, enables Text output beautifier, use b
 ########################################################
 
 # Monitor your miners remotely
-# Only need to be set and run on one rig 
-# Dont set all your rigs to yes
 
-FOREMAN_MONITOR="NO"          # Enable or Disable foreman monitor, register at https://dashboard.foreman.mn 
+FOREMAN_MONITOR="NO"          # Enable or Disable Foreman monitoring.
+                              # To use Foreman, you must register an account at https://foreman.mn
 
-FOREMAN_APIKEY=""             # After register, open https://dashboard.foreman.mn/dashboard/support/pickaxe/ to get your api
-
-FOREMANAPIURL="https://dashboard.foreman.mn/api/metrics/123"
-
-FOREMANCONFIGURL="https://dashboard.foreman.mn/api/config/123"
+FOREMAN_CLIENT_ID=""          # After registering, open https://dashboard.foreman.mn/dashboard/profile/ to
+                              # get your client ID and API key.  These are needed so your rigs can be
+FOREMAN_API_KEY=""            # correctly associated with your private dashboard
 
 
 ########################################################################################
@@ -667,33 +664,34 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 #            NEWMINER_VERSION="4.2.0"    # default: "recommended", otherwise you can choose "latest" or the exact version number
 #            NEWMINER_OPTS=""            # default: empty
 
-CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
-CLAYMORE_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
+CLAYMORE_OPTS=""                                   # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
+CLAYMORE_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-ETHMINER_OPTS=""                                 # Ethminer optional arguments. add "--api-port -3333" if you want web info
-ETHMINER_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
+ETHMINER_OPTS=""                                   # Ethminer optional arguments. add "--api-port -3333" if you want web info
+ETHMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-DSTM_OPTS=""                                     # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
-DSTM_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
+DSTM_OPTS="--telemetry=127.0.0.1:2222"             # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
+DSTM_VERSION="recommended"                         # "latest", "recommended" or the version folder name.
 
-EWBF_PERCENT="0"                                 # change EWBF_PERCENT to alter donation percent for EWBF Miner   
-EWBF_OPTS=""                                     # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
-EWBF_VERSION="recommended"                       # "latest", "recommended" or the version folder name. If choose 3.3 you should extract 3.3 in miner folder to 3.3 folder
+EWBF_PERCENT="0"                                   # change EWBF_PERCENT to alter donation percent for EWBF Miner   
+EWBF_OPTS="--api 127.0.0.1:42000"                  # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
+EWBF_VERSION="recommended"                         # "latest", "recommended" or the version folder name. If choose 3.3 you should extract 3.3 in miner folder to 3.3 folder
 
-Z_EWBF_PERCENT="0"                               # EWBF ZHASH Dev fee percent to alter donation percent   
-Z_EWBF_OPTS=""                                   # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
-Z_EWBF_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
+Z_EWBF_PERCENT="0"                                 # EWBF ZHASH Dev fee percent to alter donation percent   
+Z_EWBF_OPTS="--api 127.0.0.1:42000"                # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
+Z_EWBF_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
-BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
-BMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
+BMINER_OPTS=""                                     # Bminer optional arguments. add "--api $IPW:42000" if you want web info
+BMINER_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
-LOLMINER_OPTS=""                                 # LOLMINER optional arguments.
-LOLMINER_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
+LOLMINER_OPTS="-apiport=9999"                      # LOLMINER optional arguments.
+LOLMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-PhoenixMiner_OPTS=""                                 # PhoenixMiner optional arguments. Read the README file inside PhoenixMiner folder
-PhoenixMiner_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
+PhoenixMiner_OPTS="-cdm 1 -cdmport 127.0.0.1:3333" # PhoenixMiner optional arguments. Read the README file inside PhoenixMiner folder
+PhoenixMiner_VERSION="recommended"                 # "latest", "recommended" or the version folder name.
 
-CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
+CCMINER_OPTS="-b 127.0.0.1:4028"                   # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want 
+                                                   # web info (first one allows remote monitoring by default)
 
 ########################################################
 #                                                      #

@@ -155,6 +155,19 @@ WARN_PL_DROPS="NO"
 USE_COLOR="YES"
 
 
+########################################################
+#                                                      #
+#           Foreman monitor settings                   #
+#                                                      #
+########################################################
+
+FOREMAN_MONITOR="NO"
+
+FOREMAN_CLIENT_ID=""
+
+FOREMAN_API_KEY=""
+
+
 ########################################################################################
 # GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section                    #
 ########################################################################################
@@ -394,28 +407,33 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 #                                                      #
 ########################################################
 
-CLAYMORE_OPTS=""
+CLAYMORE_OPTS="-mport 3333"
 CLAYMORE_VERSION="recommended"
 
 ETHMINER_OPTS=""
 ETHMINER_VERSION="recommended"
 
-DSTM_OPTS=""
+DSTM_OPTS="--telemetry=127.0.0.1:2222"
 DSTM_VERSION="recommended"
 
 EWBF_PERCENT="0"
-EWBF_OPTS=""
+EWBF_OPTS="--api 127.0.0.1:42000"
 EWBF_VERSION="recommended"
 
 Z_EWBF_PERCENT="0"
-Z_EWBF_OPTS=""
+Z_EWBF_OPTS="--api 127.0.0.1:42000"
 Z_EWBF_VERSION="recommended"
 
-BMINER_OPTS=""
+BMINER_OPTS="-api 127.0.0.1:1880"
 BMINER_VERSION="recommended"
-#BMINER_PROTOCOL, Deprecated, use COIN_POOL_PROTOCOL
 
-CCMINER_OPTS=""
+LOLMINER_OPTS="-apiport=9999"
+LOLMINER_VERSION="recommended"
+
+PhoenixMiner_OPTS="-cdm 1 -cdmport 127.0.0.1:3333"
+PhoenixMiner_VERSION="recommended"
+
+CCMINER_OPTS="-b 127.0.0.1:4028"
 
 ASccminer_VERSION="recommended"
 CryptoDredge_VERSION="recommended"
@@ -423,6 +441,7 @@ KTccminer_VERSION="recommended"
 KTccminer_cryptonight_VERSION="recommended"
 TPccminer_VERSION="recommended"
 XMR_Stak_VERSION="recommended"
+ZENEMYminer_VERSION="recommended"
 
 
 ########################################################

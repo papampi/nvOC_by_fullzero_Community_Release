@@ -328,25 +328,53 @@ sleep 2
 
 if [[ $FOREMAN_MONITOR == YES ]] 
 then
-  if ! grep -q $FOREMAN_APIKEY "${NVOC}/foreman_monitor/conf/pickaxe.yml"
-  then
-  cat <<EOF >${NVOC}/foreman_monitor/conf/pickaxe.yml
-{
- "apiKey":  "$FOREMAN_APIKEY",
- "foremanApiUrl": "$FOREMANAPIURL",
- "foremanConfigUrl": "$FOREMANCONFIGURL"
-}
-EOF
-  fi
-  if ! ps ax | grep -q '[f]oreman'
-  then
-    ${NVOC}/foreman_monitor/bin/pickaxe.sh start &
-  fi
-else
-    ${NVOC}/foreman_monitor/bin/pickaxe.sh stop &
-fi
+  echo "Running with Foreman integration"
 
-sleep 2
+  FOREMAN_NVOC=$NVOC/foreman
+
+  source $FOREMAN_NVOC/package.sh
+
+  # Verify that the user's client ID and API key are defined
+  if [[ -z $FOREMAN_CLIENT_ID || -z $FOREMAN_API_KEY ]]
+  then
+    echo "Either your FOREMAN_CLIENT_ID or FOREMAN_API_KEY haven't been set - check your 1bash"
+  else
+    FOREMAN_HOME=~/.foreman
+
+    FOREMAN_PICKAXE_ID=$(frmn_get_pickaxe_id)
+    if [[ -z $FOREMAN_PICKAXE_ID ]]
+    then
+      # No pickaxe ID - create one for this rig
+      FOREMAN_PICKAXE_ID=$(frmn_create_pickaxe)
+    fi
+
+    # Is a Foreman upgrade needed?
+    if [[ "$(frmn_get_current_pickaxe_version)" != "$(frmn_get_latest_pickaxe_version)" || "$(frmn_get_current_chisel_version)" != "$(frmn_get_latest_chisel_version)" ]]
+    then
+      # Upgrade needed
+      echo "Upgrading Foreman to latest version"
+
+      # Download and run the install/upgrade script
+      wget https://gist.githubusercontent.com/delawr0190/8cb40ab12c9f784d88b80d105e69933b/raw/install.sh \
+        -o /dev/null \
+        -q \
+        -O $FOREMAN_NVOC/foreman-install
+      chmod +x $FOREMAN_NVOC/foreman-install
+      export FOREMAN_HOME
+      sudo -E bash $FOREMAN_NVOC/foreman-install pickaxe $FOREMAN_CLIENT_ID $FOREMAN_API_KEY $FOREMAN_PICKAXE_ID
+      sudo -E bash $FOREMAN_NVOC/foreman-install chisel
+      sudo chown -R $(logname):$(logname) $FOREMAN_HOME
+
+      # Script is no longer needed
+      rm $FOREMAN_NVOC/foreman-install
+    fi
+
+    # Start everything
+    $FOREMAN_HOME/chisel/bin/chisel.sh restart
+    $FOREMAN_HOME/pickaxe/bin/pickaxe.sh restart
+    $FOREMAN_NVOC/miner-watch &
+  fi
+fi
 
 if [[ $TEAMVIEWER == NO ]]
 then
