@@ -654,9 +654,18 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ########################################################
 #                                                      #
-# Builtin GPU miners settings                          #
+# GPU miners settings                                  #
 #                                                      #
 ########################################################
+
+# Notes: This list of miner settings is incomplete, take it as an example.
+#        You can find here some hints about common mining options for special cases.
+#        Remember to add here any needed settings for yout miner of choice
+#        like in the following example, otherwise defaults will apply.
+#        Assuming your miner name is NEWMINER:
+#
+#            NEWMINER_VERSION="4.2.0"    # default: "recommended", otherwise you can choose "latest" or the exact version number
+#            NEWMINER_OPTS=""            # default: empty
 
 CLAYMORE_OPTS=""                                 # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 CLAYMORE_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
@@ -677,7 +686,6 @@ Z_EWBF_VERSION="recommended"                     # "latest", "recommended" or th
 
 BMINER_OPTS=""                                   # Bminer optional arguments. add "--api $IPW:42000" if you want web info
 BMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
-#BMINER_PROTOCOL, Deprecated, use COIN_POOL_PROTOCOL
 
 LOLMINER_OPTS=""                                 # LOLMINER optional arguments.
 LOLMINER_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
@@ -686,14 +694,6 @@ PhoenixMiner_OPTS=""                                 # PhoenixMiner optional arg
 PhoenixMiner_VERSION="recommended"                   # "latest", "recommended" or the version folder name.
 
 CCMINER_OPTS=""                                  # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want web info (first one allows remote monitoring by default)
-
-ASccminer_VERSION="recommended"                  # "latest", "recommended" or the version folder name.
-CryptoDredge_VERSION="recommended"
-KTccminer_VERSION="recommended"
-KTccminer_cryptonight_VERSION="recommended"
-TPccminer_VERSION="recommended"
-XMR_Stak_VERSION="recommended"
-ZENEMYminer_VERSION="recommended"
 
 ########################################################
 #                                                      #

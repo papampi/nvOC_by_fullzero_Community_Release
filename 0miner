@@ -213,18 +213,7 @@ then
     # skipping GENOIL's setting, since i'm not sure what's it's device options prefix ,etc
     # OPTS="$(dgh_enabled_devices '-di ' '' 'A' "$OPTS")"
     HCD="${NVOC}/miners/Genoil-U/ethminer -S ${!xpool}:${!xport} -O ${!xaddr}${!xwallet}${!xwork}:$MINER_PWD -SP 1 -U $OPTS"
-  elif [[ $ETHASH_MINER == ETHMINER ]]
-  then
-    OPTS="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$OPTS")"
-    HCD="${NVOC}/miners/ETHMINER/"${!xversion}"/ethminer -P ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} -U $OPTS"
-  elif [[ $ETHASH_MINER == CLAYMORE ]]
-  then
-    OPTS="$(dgh_enabled_devices '-di ' '' 'A' "$OPTS")"
-    HCD="${NVOC}/miners/CLAYMORE/"${!xversion}"/ethdcrminer64 -epool ${!xpool}:${!xport} -ewal ${!xaddr}${!xwallet}${!xwork} -epsw $MINER_PWD -mode 1 -dbg -1 $OPTS"
-  elif [[ $ETHASH_MINER == BMINER ]]
-  then
-    OPTS="$(dgh_enabled_devices '-devices ' ',' 'N' "$OPTS")"
-    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $OPTS"
+  # Looking for BMINER, CLAYMORE, ETHMINER? They have already been ported to PMs
   elif [[ $ETHASH_MINER == PhoenixMiner ]]
   then
     OPTS="$(dgh_enabled_devices '-gpus ' ',' 'N' "$OPTS")"
@@ -240,14 +229,7 @@ then
   then
     OPTS="$(dgh_enabled_devices '--dev ' ' ' 'N' "$OPTS")"
     HCD="${NVOC}/miners/DSTM/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --port ${!xport} --pass $MINER_PWD --time $OPTS"
-  elif [[ $EQUIHASH_MINER == EWBF ]]
-  then
-    OPTS="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$OPTS")"
-    HCD="${NVOC}/miners/EWBF/"${!xversion}"/miner --eexit 3 --fee $EWBF_PERCENT --pec --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $OPTS"
-  elif [[ $EQUIHASH_MINER == BMINER ]]
-  then
-    OPTS="$(dgh_enabled_devices '-devices ' ',' 'N' "$OPTS")"
-    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $OPTS"
+  # Looking for EWBF, BMINER? They have already been ported to PMs
   fi
   eval $LAUNCH $HCD
 
@@ -255,15 +237,8 @@ then
 ## ZHASH
 elif [[ $ALGO == ZHASH ]]
 then
-  if [[ $ZHASH_MINER == Z_EWBF ]]
-  then
-    OPTS="$(dgh_enabled_devices '--cuda_devices ' ' ' 'N' "$OPTS")"
-    HCD="${NVOC}/miners/Z_EWBF/"${!xversion}"/miner --fee $Z_EWBF_PERCENT --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $OPTS"
-  elif [[ $ZHASH_MINER == BMINER ]]
-  then
-    OPTS="$(dgh_enabled_devices '-devices ' ',' 'N' "$OPTS")"
-    HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $OPTS"
-  elif [[ $ZHASH_MINER == LOLMINER ]]
+    # Looking for Z_EWBF, BMINER? They have already been ported to PMs
+  if [[ $ZHASH_MINER == LOLMINER ]]
   then
     ## Not sure what are the devices options
     OPTS="$(dgh_enabled_devices '--devices ' ',' 'N' "$OPTS")" 
@@ -284,51 +259,13 @@ then
 elif [[ $ALGO == CRYPTONIGHT ]]
 then
   OPTS="$(dgh_enabled_devices '--devices ' ',' 'N' "$OPTS")"
-  if [[ $CRYPTONIGHT_MINER == KTccminer_cryptonight ]]
-  then
-    HCD="${NVOC}"/miners/KTccminer_cryptonight/"${!xversion}"/ccminer
-    eval $LAUNCH $HCD -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" $OPTS
-  else
+  # Looking for KTccminer_cryptonight? It has already been ported to PMs
     UCCALGO="-a ${ALGO,,}"
     HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
     eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $OPTS
-  fi
-
-
+  
 ## CRYPTONIGHTV7
-elif [[ $ALGO == CRYPTONIGHTV7 || $ALGO == CRYPTONIGHTHEAVY ]];
-then
-
-# Large memory page support
-  sudo sysctl -w vm.nr_hugepages=128
-
-# Remove nvidia.txt if cards count changed
-  if [ -f ~/nvidia.txt ]
-  then
-    if [ "$(grep -c "// gpu:" ~/nvidia.txt)" != "$(nvidia-smi -i 0 --query-gpu=count --format=csv,noheader,nounits)" ]
-    then
-      rm ~/nvidia.txt
-    fi
-  fi
-# Change verbosity to show hashrate in output log
-  if [ -f ~/config.txt ]
-  then
-    if grep -q '"verbose_level" : 3' ~/config.txt
-    then
-      sed -i 's/"verbose_level" : 3/"verbose_level" : 4/g' ~/config.txt
-    fi
-  fi
-  if [[ $ALGO == "CRYPTONIGHTV7" ]]
-  then
-    UCCALGO="--currency monero7"
-  elif [[ $ALGO == "CRYPTONIGHTHEAVY" ]]
-  then
-    UCCALGO="-a cryptonight-heavy"
-  fi
-  HCD=${NVOC}/miners/XMR_Stak/"${!xversion}"/xmr-stak
-  eval $LAUNCH $HCD  $UCCALGO --noCPU --noAMD -o "${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i 0
-
-
+  # Looking for XMR_Stak? It has already been ported to PMs
 else
   echo ""
   echo "COIN/ALGO not found, Check your settings"
