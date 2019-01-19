@@ -2,12 +2,12 @@
 
 ##########################################################################
 ##########################################################################
-################# nvOC v0019-3.0 - Community Release     #################
-#########  Based on the original nvOC v0019-1.4 by fullzero     ##########
+####################   nvOC 3.1 - Community Release   ####################
+##########   Based on the original nvOC v0019-1.4 by fullzero   ############
 ##########################################################################
 ##########################################################################
 
-# 0miner for nvOC v0019-3.0
+# 0miner for nvOC v0019-3.1
 
 # DEV Mod Log:
 # v=0001 : papampi: Initial Release
@@ -67,8 +67,12 @@
 #          PhoenixMiner
 # v=0028 : brightskye
 #          disabled_gpu helper
+# v=0029 : papampi
+#          echo miner command
+# v=0030 : LuKePicci
+#          remove first batch of legacy miners
 
-nvOC_0miner_dev="0028"
+nvOC_0miner_dev="0030"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 source "${NVOC}/helpers/disabled_gpu.sh"
@@ -202,6 +206,7 @@ then
   fi
 
   HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${pm_manifest})"
+  echo $LAUNCH $HCD $OPTS
   eval $LAUNCH $HCD $OPTS
 
 
@@ -247,7 +252,7 @@ then
   eval $LAUNCH $HCD
 
 ## Various Algos
-elif [[ $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI1612 || $ALGO == PHI2 || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
+elif [[ $ALGO == X22I || $ALGO == X16R || $ALGO == SIB || $ALGO == LYRA2Z || $ALGO == SKUNK || $ALGO == KECCAK || $ALGO == SKEIN || $ALGO == NEOSCRYPT || $ALGO == LYRA2V2 || $ALGO == BITCORE || $ALGO == PHI1612 || $ALGO == PHI2 || $ALGO == LBRY || $ALGO == DMD_GR || $ALGO == GROESTL || $ALGO == MYR_GR || $ALGO == DECRED || $ALGO == SIA || $ALGO == X13 || $ALGO == XEVAN ]]
 then
   OPTS="$(dgh_enabled_devices '--devices ' ',' 'N' "$OPTS")"
   UCCALGO="-a ${ALGO,,}"

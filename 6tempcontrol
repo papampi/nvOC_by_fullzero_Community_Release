@@ -2,7 +2,7 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-3.0 - Community Release   #################
+####################   nvOC 3.1 - Community Release   ####################
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
@@ -39,12 +39,14 @@
 #          Add loop to shutdown rig if SHUTDOWN_TEMP exceeded
 # v=0009 : brightskye
 #          Add supports for disabled_gpu
+# v=0010 : LuKePicci
+#          parallel tempcontrol threads
 
 source ${NVOC}/1bash
 source ${NVOC}/helpers/coin_algo_mapping
 source ${NVOC}/helpers/disabled_gpu.sh
 
-nvOC_temp_Dev="0009"
+nvOC_temp_Dev="0010"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0

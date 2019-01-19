@@ -7,10 +7,7 @@ You can get nvOC running on your mining rig in some different ways:
 - Cloning this repo on existing OS installations
 
 ### Noob-proof: Pre-built images
-Download the latest full nvOC OS image (links below), then:
-1. Write the image with your favourite HDD image writer of choicce
-2. Browse to the small fat partition you can see on the drive. Download the latest nvOC configuration file named '1bash.template' from latest 'release' [here](https://github.com/papampi/nvOC_by_fullzero_Community_Release/raw/release/1bash.tamplate) and save it there as '1bash'.
-3. Edit this file with all your settings. The same file contains settings descriptions that will help you completing the setup.
+Beta branches are not for noobs, become an insider and read below.
 
 ### For insiders: Pre-built images targeting beta/pre-release branches
 Download the latest full nvOC OS image, then:

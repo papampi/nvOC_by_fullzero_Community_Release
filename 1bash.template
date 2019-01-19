@@ -2,7 +2,7 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-3.0 - Community Release   #################
+####################   nvOC 3.1 - Community Release   ####################
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
@@ -16,14 +16,12 @@
 
 # brightskye:   DISABLED_GPUS
 #               Allow turning off gpu by utilizing each miner's -device options
-#               
 
 # damNmad:      damNmad_ALGO_SPECIFIC_OC
 #               nvOC discord channel https://discordapp.com/invite/8YDFEvY
 #               Added Lots of COIN selections
 #               Alternative telegram alert
 #               ( BTC address: 1Mtf6K7c3ZhBDcPz91c4wcQ95DxLn88zC )
-
 
 # IAmNotAJeep:  IAmNotAJeep_and_Maxximus007_WATCHDOG
 #               Methods for improved system stability
@@ -128,10 +126,11 @@ v0045="brightskye;DISABLED_GPUS"
 v0046="LuKePicci;Address settings for nicehash, zpool and mph moved from 0miner to 1bash"
 v0047="papampi;Add Foreman monitoring"
 v0048="LuKePicci;Changes for brightskye's extended miner options handling"
+v0049="papampi;CryptoNightV8, X22I, SUQA, Energi Algo, ENERGIMINER, NRG COIN"
 
 # Do not edit these lines
-nvOC_Ver="v0019-3.0" 
-nvOC_1bash_ver="0048"
+nvOC_Ver="v0019-3.1" 
+nvOC_1bash_ver="0049"
 nvOC_1bash_least_compatible="0048"
 nvOC_1bash_last_compatible="0048"
 
@@ -414,7 +413,7 @@ fi
 #        support it and a compatilbe miner in the next sections.
 #        See the example for NEWCOIN/NEWALGO at the end of this section.
 
-ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 DECRED EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R XEVAN ZHASH"
+ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 CRYPTONIGHTV8 DECRED ENERGI EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R X22I XEVAN ZHASH"
 
 BITCORE_COINS="BTX"
 CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
@@ -422,6 +421,7 @@ CRYPTONIGHTV7_COINS="ETN,NICE_CRYPTONIGHTV7"
 CRYPTONIGHTV8_COINS="XMR,MPH_CRYPTONIGHTV8,NICE_CRYPTONIGHTV8"
 CRYPTONIGHTHEAVY_COINS="LOKI,NICE_CRYPTONIGHTHEAVY"
 DECRED_COINS="DCR"
+ENERGI_COINS="NRG"
 EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
 ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
 GRS_COINS="GRS,MPH_GRS"
@@ -440,6 +440,7 @@ SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
 SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN,NICE_X16R"
+X22I_COINS="SUQA"
 XEVAN_COINS="BSD"
 ZHASH_COINS="AION,BTG"
 
@@ -489,12 +490,14 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 #          "ANXccminer", "ASccminer", "CryptoDredge", "KTccminer",  
 #          "KXccminer", "SILENTminer", "SPccminer",  "SUPRminer",   
 #          "TPccminer", "T_Rex", "VERTMINER", "XMR_Stak", "ZENEMYminer"
+#        Energi:
+#          "ENERGIMINER"
 #        Equihash:
 #          "DSTM", "EWBF", "BMINER"
-#        Zhash:
-#          "Z_EWBF", "BMINER", "LOLMINER"
 #        Ethash:
 #          "CLAYMORE", "ETHMINER", "GENOIL", "BMINER", "PhoenixMiner"
+#        Zhash:
+#          "Z_EWBF", "BMINER", "LOLMINER"
 
 
 ## BITCORE, TIMETRAVEL10
@@ -512,6 +515,11 @@ CRYPTONIGHTV7_INTENSITY="0"
 CRYPTONIGHTV7_MINER="XMR_Stak"
 CRYPTONIGHTV7_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+## CRYPTONIGHT-V8
+CRYPTONIGHTV8_INTENSITY="0"
+CRYPTONIGHTV8_MINER="XMR_Stak"
+CRYPTONIGHTV8_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
 ## CRYPTONIGHTHEAVY
 CRYPTONIGHTHEAVY_INTENSITY="0"
 CRYPTONIGHTHEAVY_MINER="XMR_Stak"
@@ -521,6 +529,10 @@ CRYPTONIGHTHEAVY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 DCR_INTENSITY="0"
 DCR_MINER="TPccminer"
 DCR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## ENERGI
+ENERGI_MINER="ENERGIMINER"
+ENERGI_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## EQUIHASH
 EQUIHASH_MINER="DSTM"
@@ -615,6 +627,11 @@ X16R_INTENSITY="0"
 X16R_MINER="ZENEMYminer"
 X16R_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
+## X22I
+X22I_INTENSITY="0"
+X22I_MINER="T_Rex"
+X22I_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
 ## XEVAN
 XEVAN_INTENSITY="0"
 XEVAN_MINER="ZENEMYminer"
@@ -666,6 +683,9 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 CLAYMORE_OPTS=""                                   # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 CLAYMORE_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
+
+ENERGIMINER_OPTS="-U --response-timeout 10 --cuda-parallel-hash 8 --cuda-block-size 256"    # ENERGIMINER Miner optional arguments
+ENERGIMINER_VERSION="recommended"                  # "latest", "recommended" or the version folder name.
 
 ETHMINER_OPTS=""                                   # Ethminer optional arguments. add "--api-port -3333" if you want web info
 ETHMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
@@ -824,6 +844,14 @@ ELLA_POOL="replace_with_pool_address"
 ELLA_PORT="replace_with_pool_port"
 ELLA_WORKER="$WORKERNAME"
 ELLA_POOL_PROTOCOL="stratum+tcp"
+
+# Energi Coin (NRG)
+NRG_ADDRESS="replace_with_your_address"
+NRG_EXTENSION_ARGUMENTS=""
+NRG_POOL="stratum.nrg.minecrypto.pro"
+NRG_PORT="9999"
+NRG_WORKER="$WORKERNAME"
+NRG_POOL_PROTOCOL="stratum"
 
 # Ethereum Classic (ETC)
 ETC_ADDRESS="replace_with_your_address"
@@ -1065,6 +1093,14 @@ SUMO_POOL="SUMO_POOL"
 SUMO_PORT="SUMO_PORT"
 SUMO_WORKER="$WORKERNAME"
 SUMO_POOL_PROTOCOL="stratum+tcp"
+
+# SUQA (SUQA)
+SUQA_ADDRESS="replace_with_your_address"
+SUQA_EXTENSION_ARGUMENTS=""
+SUQA_POOL="SUQA_POOL"
+SUQA_PORT="SUQA_PORT"
+SUQA_WORKER="$WORKERNAME"
+SUQA_POOL_PROTOCOL="stratum+tcp"
 
 # TrezarCoin (TZC)
 TZC_ADDRESS="replace_with_your_address"
@@ -1613,6 +1649,11 @@ CRYPTONIGHTHEAVY_POWERLIMIT_WATTS=100    # Recommended value for some GTX-1060: 
 CRYPTONIGHTHEAVY_CORE_OVERCLOCK=0        # Recommended value for some GTX-1060: 155
 CRYPTONIGHTHEAVY_MEMORY_OVERCLOCK=0      # Recommended value for some GTX-1060: -300
 
+# ENERGI
+ENERGI_POWERLIMIT_WATTS=100              # Same as Ethash
+ENERGI_CORE_OVERCLOCK=0                  # Same as Ethash
+ENERGI_MEMORY_OVERCLOCK=0                # Same as Ethash
+
 # Equihash
 EQUIHASH_POWERLIMIT_WATTS=100            # Recommended value for some GTX-1060: 76
 EQUIHASH_CORE_OVERCLOCK=0                # Recommended value for some GTX-1060: 150
@@ -1662,6 +1703,11 @@ SKUNK_MEMORY_OVERCLOCK=0                 # Recommended value for some GTX-1060: 
 X16R_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
 X16R_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
 X16R_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+
+# X22I
+X22I_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
+X22I_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
+X22I_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
 
 # Xevan
 XEVAN_POWERLIMIT_WATTS=100               # Recommended value for some GTX-1060: 65
