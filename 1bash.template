@@ -127,10 +127,11 @@ v0046="LuKePicci;Address settings for nicehash, zpool and mph moved from 0miner 
 v0047="papampi;Add Foreman monitoring"
 v0048="LuKePicci;Changes for brightskye's extended miner options handling"
 v0049="papampi;CryptoNightV8, X22I, SUQA, Energi Algo, ENERGIMINER, NRG COIN"
+v0050="papampi;Miner Schedule"
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
-nvOC_1bash_ver="0049"
+nvOC_1bash_ver="0050"
 nvOC_1bash_least_compatible="0048"
 nvOC_1bash_last_compatible="0048"
 
@@ -217,6 +218,11 @@ MINER_RESTART="NO"            # YES or NO # If you want to periodically restart 
 
 MINER_RESTART_TIMEOUT_IN_MINUTES=720  # If MINER_RESTART is set to YES, use this to set how often to restart miner, 720 = 12 hours
 
+MINER_SCHEDULE="NO"        # Schedule mining to stop and start between given times
+
+SCHEDULE_START="07:00"     # Mining start at this time
+
+SCHEDULE_END="19:00"       # Mining stop at this time
 
 SLOW_USB_KEY_MODE="NO"      # YES or NO # If you are using a slow USB flash drive (eg. USB 1.0 or USB 2.0) set this to YES
 
