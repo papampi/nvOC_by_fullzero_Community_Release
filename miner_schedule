@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ${NVOC}/1bash
 #giving nvOC enough time to start all scripts
 sleep 120
 
