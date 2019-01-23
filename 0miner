@@ -188,11 +188,11 @@ then
   pm_manifest=${mpath}/${!xversion}/nvoc-miner.json
   
   # parse device enable params
-  dev_enable_arg=$(eval $(jq -r .devlist_argument ${pm_manifest}))
+  dev_enable_arg="$(jq -r .devlist_argument ${pm_manifest})"
   if [[ $dev_enable_arg != "" ]]
   then
-    dev_enable_sep=$(eval $(jq -r .devlist_separator ${pm_manifest}))
-    dev_enable_fmt=$(eval $(jq -r .devlist_format ${pm_manifest}))
+    dev_enable_sep="$(jq -r .devlist_separator ${pm_manifest})"
+    dev_enable_fmt="$(jq -r .devlist_format ${pm_manifest})"
     $OPTS="$(dgh_enabled_devices '${dev_enable_arg}' '${dev_enable_sep}' '${dev_enable_fmt}' "$OPTS")"
   fi
 
@@ -207,7 +207,7 @@ then
   fi
 
   HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${pm_manifest})"
-  echo $LAUNCH $HCD $OPTS
+  eval echo $LAUNCH $HCD $OPTS
   eval $LAUNCH $HCD $OPTS
 
 
