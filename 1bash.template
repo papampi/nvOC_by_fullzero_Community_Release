@@ -847,7 +847,7 @@ ELLA_POOL_PROTOCOL="stratum+tcp"
 
 # Energi Coin (NRG)
 NRG_ADDRESS="replace_with_your_address"
-NRG_EXTENSION_ARGUMENTS=""
+NRG_OPTS=""
 NRG_POOL="stratum.nrg.minecrypto.pro"
 NRG_PORT="9999"
 NRG_WORKER="$WORKERNAME"
@@ -1096,7 +1096,7 @@ SUMO_POOL_PROTOCOL="stratum+tcp"
 
 # SUQA (SUQA)
 SUQA_ADDRESS="replace_with_your_address"
-SUQA_EXTENSION_ARGUMENTS=""
+SUQA_OPTS=""
 SUQA_POOL="SUQA_POOL"
 SUQA_PORT="SUQA_PORT"
 SUQA_WORKER="$WORKERNAME"
