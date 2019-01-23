@@ -74,10 +74,12 @@
 #	   Set resolution from 1bash for teamviewer usage
 # v=0027 : papampi
 #	   Add Foreman Monitor
+# v=0028 : papampi
+#	   Miner Schedule
 
 source ${NVOC}/1bash
 
-nvOC_3main_Dev="0027"
+nvOC_3main_Dev="0028"
 nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"             # Do not edit this
 
 #########################################################################
@@ -150,6 +152,16 @@ then
   if ! ps ax | grep -q '[l]og_rotate'
   then
     guake -n $HCD -r LOG_ROTATE -e "bash ${NVOC}/log_rotate" &
+    sleep 1
+  fi
+fi
+
+if [[ $MINER_SCHEDULE == YES ]]
+then
+  HCD="${NVOC}/miner_schedule"
+  if ! ps ax | grep -q '[m]iner_schedule'
+  then
+    guake -n $HCD -r SCHEDULE -e "bash ${NVOC}/miner_schedule" &
     sleep 1
   fi
 fi
