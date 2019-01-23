@@ -211,7 +211,7 @@ fi
 # we are adding 0.5 seconds delay between every GPU check so that
 # we don't overload nvidia API (previously the API was spammed, especialy on
 # systems with 13+ GPU's causing slight delay for the miner. This has reduced stale shares for me)
-LOOP_TIMER=$(( LOOP_TIMER_SLEEP - GPUS * 0.5 ))
+LOOP_TIMER=$(echo "$LOOP_TIMER_SLEEP - ( $GPUS * 0.5 )" | bc )
 
 # When API returns error message due to frozen/hung GPU, the original Temp Control script
 # was breaking with error because it was expecting numeric but received a text value, leaving

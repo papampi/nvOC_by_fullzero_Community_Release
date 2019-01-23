@@ -100,6 +100,7 @@ UCOINOPTS="_OPTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
+UFEE="_FEE"
 UVERSION="_VERSION"
 UCUDA="_CUDA"
 
@@ -108,10 +109,11 @@ xport=$COIN$UPORT
 xproto=$COIN$UPROTO
 xaddr=$COIN$UADDR
 xwork=$COIN$UWORK
-xcoinopts=$COIN$UEXT
+xcoinopts=$COIN$UCOINOPTS
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
+xfee=${!xminer}$UFEE
 xversion=${!xminer}$UVERSION
 xcuda=$ALGO$UCUDA
 ## Unify COIN End
@@ -188,12 +190,12 @@ then
   pm_manifest=${mpath}/${!xversion}/nvoc-miner.json
   
   # parse device enable params
-  dev_enable_arg=$(eval $(jq -r .devlist_argument ${pm_manifest}))
+  dev_enable_arg="$(jq -r .devlist_argument ${pm_manifest})"
   if [[ $dev_enable_arg != "" ]]
   then
-    dev_enable_sep=$(eval $(jq -r .devlist_separator ${pm_manifest}))
-    dev_enable_fmt=$(eval $(jq -r .devlist_format ${pm_manifest}))
-    $OPTS="$(dgh_enabled_devices '${dev_enable_arg}' '${dev_enable_sep}' '${dev_enable_fmt}' "$OPTS")"
+    dev_enable_sep="$(jq -r .devlist_separator ${pm_manifest})"
+    dev_enable_fmt="$(jq -r .devlist_format ${pm_manifest})"
+    OPTS="$(dgh_enabled_devices '${dev_enable_arg}' '${dev_enable_sep}' '${dev_enable_fmt}' "$OPTS")"
   fi
 
   if [[ $FOREMAN_MONITOR == YES ]]
@@ -207,7 +209,7 @@ then
   fi
 
   HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${pm_manifest})"
-  echo $LAUNCH $HCD $OPTS
+  eval echo $LAUNCH $HCD $OPTS
   eval $LAUNCH $HCD $OPTS
 
 
