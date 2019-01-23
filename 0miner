@@ -100,6 +100,7 @@ UCOINOPTS="_OPTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
+UFEE="_FEE"
 UVERSION="_VERSION"
 UCUDA="_CUDA"
 
@@ -108,10 +109,11 @@ xport=$COIN$UPORT
 xproto=$COIN$UPROTO
 xaddr=$COIN$UADDR
 xwork=$COIN$UWORK
-xcoinopts=$COIN$UEXT
+xcoinopts=$COIN$UCOINOPTS
 xintensity=$ALGO$UINTENSITY
 xwallet=$ALGO$UWALLET
 xminer=$ALGO$UMINER
+xfee=${!xminer}$UFEE
 xversion=${!xminer}$UVERSION
 xcuda=$ALGO$UCUDA
 ## Unify COIN End

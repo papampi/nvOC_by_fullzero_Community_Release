@@ -706,8 +706,8 @@ ENERGIMINER_VERSION="recommended"                  # "latest", "recommended" or 
 ETHMINER_OPTS=""                                   # Ethminer optional arguments. add "--api-port -3333" if you want web info
 ETHMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-EWBF_PERCENT="0"                                   # change EWBF_PERCENT to alter donation percent for EWBF Miner   
-EWBF_OPTS="--api 127.0.0.1:42000"                  # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
+EWBF_FEE="0"                                       # change fee value to alter donation percent for EWBF Miner   
+EWBF_OPTS=""                                       # EWBF Equihash Miner optional arguments
 EWBF_VERSION="recommended"                         # "latest", "recommended" or the version folder name. If choose 3.3 you should extract 3.3 in miner folder to 3.3 folder
 
 GMINER_OPTS=""
@@ -722,8 +722,8 @@ PhoenixMiner_VERSION="recommended"                 # "latest", "recommended" or 
 T_REX_OPTS=""                                      # T_REX optional arguments.
 T_REX_VERSION="recommended"                        # "latest", "recommended" or the version folder name.
 
-Z_EWBF_PERCENT="0"                                 # EWBF ZHASH Dev fee percent to alter donation percent   
-Z_EWBF_OPTS="--api 127.0.0.1:42000"                # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
+Z_EWBF_FEE="0"                                     # EWBF ZHASH Dev fee percent to alter donation percent   
+Z_EWBF_OPTS=""                                     # EWBF ZHASH Miner optional arguments
 Z_EWBF_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
 ZENEMYminer_OPTS=""
