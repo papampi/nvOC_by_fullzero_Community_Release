@@ -211,7 +211,7 @@ fi
 # we are adding 0.5 seconds delay between every GPU check so that
 # we don't overload nvidia API (previously the API was spammed, especialy on
 # systems with 13+ GPU's causing slight delay for the miner. This has reduced stale shares for me)
-LOOP_TIMER=$(echo "$LOOP_TIMER_SLEEP - ( $GPUS * 0.5 )" | bc )
+LOOP_TIMER=$(( LOOP_TIMER_SLEEP - GPUS * 0.5 ))
 
 # When API returns error message due to frozen/hung GPU, the original Temp Control script
 # was breaking with error because it was expecting numeric but received a text value, leaving
@@ -226,95 +226,74 @@ ERR_TIMER_BRK=$ERR_TIMER
 # The Main Loop
 while true
 do
-  SMI_QUERY=$(${SMI} --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw,name --format=csv,noheader,nounits)
+  SMI_VARS="CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW GPU_NAME"
+  SMI_QUERY_OUTPUT=$(${SMI} --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw,name --format=csv,noheader,nounits)
   NVD_SETTINGS=""
   GPU=0
   while (( GPU < GPUS ))
   do
     if [ ${DISABLED_GPU_ARRAY[$GPU]} ]; then
       # skip if disabled
-      echo -e "${B}GPU $GPU,${N} ${R}${B}Disabled${N}"
       (( GPU++ ))
       continue
     fi
-    { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW GPU_NAME; } < <(echo "$SMI_QUERY" | sed "$((GPU+1))q;d")
+    { IFS=', ' read $SMI_VARS; } < <(echo "$SMI_QUERY_OUTPUT" | sed "$((GPU+1))q;d")
 
     # Numeric check to avoid script breakage should nvidia-smi return error, also acts as backup watchdog
 
     #Shutdown rig if SHUTDOWN_TEMP reached
-    if [[ $CURRENT_TEMP -gt $SHUTDOWN_TEMP ]] && [[ $HOT_SHUTDOWN == "YES" ]]
+    if [[ $HOT_SHUTDOWN == YES ]] && (( CURRENT_TEMP > SHUTDOWN_TEMP ))
     then
-	if [[ $TELEGRAM_ALERTS == "YES" ]] || [[ $TELEGRAM_MESSAGES == "YES" ]]
+	      if [[ $TELEGRAM_ALERTS == YES || $TELEGRAM_MESSAGES == YES ]]
         then
-          /usr/bin/curl -m 5 -s -X POST --output /dev/null https://api.telegram.org/bot$TELEGRAM_APIKEY/sendMessage -d "text=GPU$GPU exceeded $SHUTDOWN_TEMP c. System shutting down." -d chat_id=$TELEGRAM_CHATID
+          /usr/bin/curl -m 5 -s -X POST --output /dev/null https://api.telegram.org/bot$TELEGRAM_APIKEY/sendMessage -d "text=GPU$GPU exceeded $SHUTDOWN_TEMP c. System shutting down." -d chat_id=$TELEGRAM_CHATID &
         fi
         sleep 2
         sudo poweroff -f      
     fi
 
-    # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
-    if [[ $GPU_NAME =~ 1050 ]]
-    then
-      if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+    if ! [[ $CURRENT_TEMP =~ $numtest && $CURRENT_FAN =~ $numtest && $PWRLIMIT =~ $numtest && ( $GPU_NAME =~ 1050 || $POWERDRAW =~ $numtest ) ]]
+    then 
+      SMI_TESTS="_CURRENT_TEMP _CURRENT_FAN _PWRLIMIT"
+      SMI_TEST_QUERY="temperature.gpu,fan.speed,power.limit"
+      # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
+      if [[ ! $GPU_NAME =~ 1050 ]]
       then
-        # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
-        while (( ERR_TIMER > 0 ))
-        do
-          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a "$LOG_FILE"
-          if [[ $TELEGRAM_ALERTS == "YES" ]]
-          then
-            bash "${NVOC}/telegram" &
-          fi
-          sleep 15
-          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit --format=csv,noheader,nounits)
-          if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
-          then
-            ERR_TIMER=$((ERR_TIMER - 15))
-          else
-            ERR_TIMER=$ERR_TIMER_BRK
-            break
-          fi
-          if (( ERR_TIMER <= 0 ))
-          then
-            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
-            if [[ $TELEGRAM_ALERTS == "YES" ]]
-            then
-              bash "${NVOC}/telegram"
-            fi
-            sleep 3
-            if [[ $SYSRQ_REBOOT == YES ]]
-            then
-              sudo bash ${NVOC}/sysrq_reboot.sh
-            else
-              sudo reboot
-            fi
-          fi
-        done
+        SMI_TESTS="$SMI_TESTS _POWERDRAW"
+        SMI_TEST_QUERY="$SMI_TEST_QUERY,power.draw"
       fi
-    else
-      if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+
+      echo -e "${Y}${B}WARNING: $(date) - tempcontrol@[GPU$GPU] Problem detected: nvidia-smi failed to query current status. Watchdog has $ERR_TIMER seconds to react, otherwise we will reboot!${N}" | tee -a "$LOG_FILE"
+      (
+          echo "========= SMI Query output with errors @[GPU$GPU]:"
+          echo $SMI_QUERY_OUTPUT
+          echo "========= End of SMI query output"
+      ) >> "$LOG_FILE"
+      if [[ $TELEGRAM_ALERTS == YES ]]
       then
+        bash "${NVOC}/telegram" &
+      fi
+      
+      (
+        sleep $(( GPU * 3 ))
         # Non numeric value! Problem detected! Give watchdog 60 seconds to react, if not, assume watchdog froze - we will reboot in 60 sec (backup watchdog function)
         while (( ERR_TIMER > 0 ))
         do
-          echo -e "${R}${B}WARNING: $(date) - Problem detected! GPU$GPU is not responding. Will give watchdog $ERR_TIMER seconds to react, if not we will reboot!${N}" | tee -a "$LOG_FILE"
-          if [[ $TELEGRAM_ALERTS == "YES" ]]
-          then
-            bash "${NVOC}/telegram" &
-          fi
           sleep 15
-          { IFS=', ' read CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW; } < <(${SMI} -i $GPU --query-gpu=temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
-          if ! [[ ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+          { IFS=', ' read ${SMI_TESTS}; } < <(${SMI} -i $GPU --query-gpu=${SMI_TEST_QUERY} --format=csv,noheader,nounits)
+          if ! [[ $_CURRENT_TEMP =~ $numtest && $_CURRENT_FAN =~ $numtest && $_PWRLIMIT =~ $numtest && ( $GPU_NAME =~ 1050 || $_POWERDRAW =~ $numtest ) ]]
           then
             ERR_TIMER=$((ERR_TIMER - 15))
+            echo -e "${Y}${B}WARNING: $(date) - tempcontrol@[GPU$GPU] Problem persists: watchdog has $ERR_TIMER seconds to react, otherwise we will reboot!${N}" | tee -a "$LOG_FILE"
           else
             ERR_TIMER=$ERR_TIMER_BRK
+            echo -e "${G}${B}INFO: $(date) - tempcontrol@[GPU$GPU] Problem solved.${N}" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
             break
           fi
           if (( ERR_TIMER <= 0 ))
           then
-            echo -e "${R}${B}WARNING: $(date) - Problem detected with GPU$GPU. Watchdog didn't react. System will reboot by the TEMP_CONTROL to correct the problem!" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
-            if [[ $TELEGRAM_ALERTS == "YES" ]]
+            echo -e "${R}${B}ERROR: $(date) - tempcontrol@[GPU$GPU] Problem persists: the GPU is in unkonwn status. System is now rebooting to correct the problem.${N}" | tee -a "$LOG_FILE" "$WD_LOG_FILE"
+            if [[ $TELEGRAM_ALERTS == YES ]]
             then
               bash "${NVOC}/telegram" &
             fi
@@ -327,8 +306,12 @@ do
             fi
           fi
         done
-      fi
+      ) &
+
+      continue # fast forward to next gpu tempcontrol loop
+      # NOTE: if nvidia-smi query failed we are likely getting errors for more gpus 
     fi
+    
 
     POWERLIMIT=${PWRLIMIT%%.*}
     TEMP_DIFF=$(( CURRENT_TEMP - TARGET_TEMP[GPU] ))
