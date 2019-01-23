@@ -127,10 +127,11 @@ v0046="LuKePicci;Address settings for nicehash, zpool and mph moved from 0miner 
 v0047="papampi;Add Foreman monitoring"
 v0048="LuKePicci;Changes for brightskye's extended miner options handling"
 v0049="papampi;CryptoNightV8, X22I, SUQA, Energi Algo, ENERGIMINER, NRG COIN"
+v0050="papampi;MTP Algo"
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
-nvOC_1bash_ver="0049"
+nvOC_1bash_ver="0050"
 nvOC_1bash_least_compatible="0048"
 nvOC_1bash_last_compatible="0048"
 
@@ -428,7 +429,8 @@ GRS_COINS="GRS,MPH_GRS"
 HEX_COINS="XDNA"
 LBRY_COINS="LBC,ZPOOL_LBRY"
 LYRA2V2_COINS="MONA,VTC,NICE_LYRA2REV2,XVG,MPH_LYRA2V2,ZPOOL_LYRA2V2"
-LYRA2Z_COINS="XZC,MPH_LYRA2Z"
+LYRA2Z_COINS="MPH_LYRA2Z"
+MTP_COINS="XZC"
 MYR_GR_COINS="XMY,MPH_MYR_GR"
 NEOSCRYPT_COINS="FTC,ORB,PXC,VIVO,TZC,NICE_NEOSCRYPT,DSR,CRC,GBX,MPH_NEOSCRYPT,ZPOOL_NEOSCRYPT"
 PASCAL_COINS="PASC,PASL"
@@ -571,6 +573,11 @@ LYRA2V2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 LYRA2Z_INTENSITY="0"
 LYRA2Z_MINER="TPccminer"
 LYRA2Z_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## MTP 
+MTP_INTENSITY="0"
+MTP_MINER="CryptoDredge"
+MTP_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## Myriad Groestl
 MYR_GR_INTENSITY="0"
@@ -1189,8 +1196,8 @@ XVG_POOL_PROTOCOL="stratum+tcp"
 # ZCoin (XZC)
 XZC_ADDRESS="replace_with_your_address"
 XZC_OPTS=""
-XZC_POOL="xzc.suprnova.cc"
-XZC_PORT="1569"
+XZC_POOL="xzc.2miners.com"
+XZC_PORT="8080"
 XZC_WORKER="$WORKERNAME"
 XZC_POOL_PROTOCOL="stratum+tcp"
 
@@ -1690,6 +1697,11 @@ LYRA2V2_MEMORY_OVERCLOCK=0               # Recommended value for some GTX-1060: 
 LYRA2Z_POWERLIMIT_WATTS=100           # Recommended value for some GTX-1060: 65
 LYRA2Z_CORE_OVERCLOCK=0               # Recommended value for some GTX-1060: 135
 LYRA2Z_MEMORY_OVERCLOCK=0             # Recommended value for some GTX-1060: -1200
+
+# MTP
+MTP_POWERLIMIT_WATTS=100               # No Recommendations
+MTP_CORE_OVERCLOCK=0                   # No Recommendations
+MTP_MEMORY_OVERCLOCK=0                 # No Recommendations
 
 # Neoscrypt
 NEOSCRYPT_POWERLIMIT_WATTS=100           # Recommended value for some GTX-1060: 80
