@@ -59,7 +59,7 @@ then
   echo "################################################################################"
   echo " !!  Your 1bash revision is older than last compatible version. This could"
   echo "     potentially cause errors if you're using features that have been reworked."
-  echo "     Updating your 1bash with latest 1bash.template is strongly recommanded."
+  echo "     Updating your 1bash with latest 1bash.template is strongly recommended."
   echo "     SSH access is now being enabled to let you update yor 1bash. "
   echo "     nvOC will now try to run anyway in 10 seconds"
   echo ""
