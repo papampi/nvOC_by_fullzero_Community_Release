@@ -684,7 +684,7 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 CLAYMORE_OPTS=""                                   # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
 CLAYMORE_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-ENERGIMINER_OPTS="-U --response-timeout 10 --cuda-parallel-hash 8 --cuda-block-size 256"    # ENERGIMINER Miner optional arguments
+ENERGIMINER_OPTS="--response-timeout 10 --cuda-parallel-hash 8 --cuda-block-size 256"    # ENERGIMINER Miner optional arguments
 ENERGIMINER_VERSION="recommended"                  # "latest", "recommended" or the version folder name.
 
 ETHMINER_OPTS=""                                   # Ethminer optional arguments. add "--api-port -3333" if you want web info
