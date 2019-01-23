@@ -693,11 +693,11 @@ ETHMINER_VERSION="recommended"                     # "latest", "recommended" or 
 DSTM_OPTS="--telemetry=127.0.0.1:2222"             # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 DSTM_VERSION="recommended"                         # "latest", "recommended" or the version folder name.
 
-EWBF_PERCENT="0"                                   # change EWBF_PERCENT to alter donation percent for EWBF Miner   
+EWBF_FEE="0"                                       # change EWBF_FEE to alter donation percent for EWBF Miner   
 EWBF_OPTS="--api 127.0.0.1:42000"                  # EWBF Equihash Miner optional arguments. add "--api $IPW:42000" if you want web info
 EWBF_VERSION="recommended"                         # "latest", "recommended" or the version folder name. If choose 3.3 you should extract 3.3 in miner folder to 3.3 folder
 
-Z_EWBF_PERCENT="0"                                 # EWBF ZHASH Dev fee percent to alter donation percent   
+Z_EWBF_FEE="0"                                     # EWBF ZHASH Dev fee percent to alter donation percent   
 Z_EWBF_OPTS="--api 127.0.0.1:42000"                # EWBF ZHASH Miner optional arguments. add "--api $IPW:42000" if you want web info
 Z_EWBF_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
