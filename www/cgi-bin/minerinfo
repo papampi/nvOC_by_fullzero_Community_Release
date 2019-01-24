@@ -97,7 +97,7 @@ else
 fi
 
 REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
-MINER_PID=$(pgrep -f -o  miner)
+MINER_PID=$(pgrep -fn "${NVOC}/miners")
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 TEMP_FAN_POWER=$(tail  -50 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
 TEMP_ALERT_LOG=$(cat ${NVOC}/6_autotemplog | awk '{print $0,"<br>"}')
@@ -109,7 +109,8 @@ DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
 MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
 FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
 CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
-MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
+MINER_CMD=$(pgrep -afn "${NVOC}/miners" | cut -d ' ' -f 1 --complement)
+MINER_PATH="$(dirname "$(pgrep -afn "${NVOC}/miners" | cut -d ' ' -f 2)")"
 MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 eval 'COIN_POOL=${COIN}_POOL'
 default_cuda_version=$(sed 's/CUDA Version//' "/usr/local/cuda/version.txt" )
@@ -389,9 +390,18 @@ then
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
   hash_average=$((total_hash / hash_count))
 
+elif  ps ax | grep miner | grep -q "[z]m_miner"
+then
+  miner_error=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  rejected_shares=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
+
 fi
 ##################################################################
 ########################### WTM Hash Rate ########################
+
+# TODO: I think it doesn't make much sense to have a further mapping below, should be defined in 1bash as well
+#       like WTM_HR="ETHASH=eth,EQUIHASH=eq,NEOSCRYPT=ns,...", and then we just need here
+#       WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o \'%5B$(filter_on(WTM_HR))_hr%5D=[0-9]*\' | cut -f2- -d=)
 
 if [[ $ALGO == ETHASH ]]
 then
@@ -445,17 +455,6 @@ elif [[ $ALGO == LYRA2Z ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bl2z_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
-else
-  WTM_HASH="Not Available"
-fi
-########################################################################
-########################### Miner ERROR Logs ###########################
-
-if  ps ax | grep -q "[z]m_miner"
-then
-  MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
-
 elif [[ $ALGO == CRYPTONIGHTHEAVY ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcnh_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
@@ -464,8 +463,12 @@ elif [[ $ALGO == PHI2 ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bphi2_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
+elif [[ $ALGO == ZHASH ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bzh_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
 else
-  MINER_ERROR="Send us your miner error logs to add"
+  WTM_HASH="Not Available"
 fi
 
 ###################################################################
