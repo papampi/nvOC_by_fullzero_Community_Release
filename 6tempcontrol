@@ -109,7 +109,7 @@ echo ""
 for i in {16..21} ; do
   echo -en "\e[48;5;${i}m "
 done
-echo -en "${B}TEMP_CONTROL $nvOC_temp_ver by leenoox${N}"
+echo -en "${B}TEMP_CONTROL $nvOC_temp_ver - nvOC $nvOC_Ver - Community Release${N}"
 for i in {21..16} ; do
   echo -en "\e[48;5;${i}m \e[0m"
 done
