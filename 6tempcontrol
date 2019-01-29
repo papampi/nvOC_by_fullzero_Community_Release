@@ -307,7 +307,7 @@ do
           fi
         done
       ) &
-
+      (( GPU++ ))
       continue # fast forward to next gpu tempcontrol loop
       # NOTE: if nvidia-smi query failed we are likely getting errors for more gpus 
     fi
