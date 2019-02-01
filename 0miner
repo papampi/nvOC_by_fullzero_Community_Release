@@ -124,7 +124,7 @@ OPTS="${!xcoinopts} $(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")"
 mpath="${NVOC}/miners/${!xminer}"
 
 # List of cuda-8.0 miners
-CUDA_8_MINERS="ANXccminer ASccminer KXccminer MSFTccminer NAccminer SILENTminer SPccminer SUPRminer VERTMINER"
+CUDA_8_MINERS=""
 LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
 for miner in $CUDA_8_MINERS
 do
@@ -190,11 +190,11 @@ then
   pm_manifest=${mpath}/${!xversion}/nvoc-miner.json
   
   # parse device enable params
-  dev_enable_arg="$(jq -r .devlist_argument ${pm_manifest})"
+  dev_enable_arg=$(eval $(jq -r .devlist_argument ${pm_manifest}))
   if [[ $dev_enable_arg != "" ]]
   then
-    dev_enable_sep="$(jq -r .devlist_separator ${pm_manifest})"
-    dev_enable_fmt="$(jq -r .devlist_format ${pm_manifest})"
+    dev_enable_sep=$(eval $(jq -r .devlist_separator ${pm_manifest}))
+    dev_enable_fmt=$(eval $(jq -r .devlist_format ${pm_manifest}))
     OPTS="$(dgh_enabled_devices '${dev_enable_arg}' '${dev_enable_sep}' '${dev_enable_fmt}' "$OPTS")"
   fi
 
@@ -260,7 +260,7 @@ then
   OPTS="$(dgh_enabled_devices '--devices ' ',' 'N' "$OPTS")"
   UCCALGO="-a ${ALGO,,}"
   HCD="${NVOC}"/miners/"${!xminer}"/"${!xversion}"/ccminer
-  eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $OPTS
+  eval $LAUNCH $HCD $UCCALGO -o ${!xproto}://"${!xpool}":"${!xport}" -u "${!xaddr}""${!xwallet}""${!xwork}" -p "$MINER_PWD" -i "${!xintensity}" $OPTS $CCMINER_OPTS
 
 
 ## CRYPTONIGHT

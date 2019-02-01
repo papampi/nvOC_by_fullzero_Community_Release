@@ -495,9 +495,7 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 
 # Available builtin miners:
 #        Various algos:
-#          "ANXccminer", "ASccminer", "CryptoDredge", "KTccminer",  
-#          "KXccminer", "SILENTminer", "SPccminer",  "SUPRminer",   
-#          "TPccminer", "T_Rex", "VERTMINER", "XMR_Stak", "ZENEMYminer"
+#          "CryptoDredge", "TPccminer", "T_Rex", "XMR_Stak", "ZENEMYminer"
 #        Energi:
 #          "ENERGIMINER"
 #        Equihash:
@@ -567,7 +565,7 @@ KECCAK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LBRY
 LBRY_INTENSITY="0"
-LBRY_MINER="SPccminer"
+LBRY_MINER="TPccminer"
 LBRY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LYRA2REV2
@@ -602,7 +600,7 @@ PASCAL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PHI1612
 PHI1612_INTENSITY="0"
-PHI1612_MINER="ANXccminer"
+PHI1612_MINER="CryptoDredge"
 PHI1612_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PHI2
@@ -612,7 +610,7 @@ PHI2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## SIA
 SIA_INTENSITY="0"
-SIA_MINER="SPccminer"
+SIA_MINER="TPccminer"
 SIA_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## SKEIN
@@ -627,7 +625,7 @@ SKUNK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X11GHOST, SIB
 X11GHOST_INTENSITY="0"
-X11GHOST_MINER="SPccminer"
+X11GHOST_MINER="TPccminer"
 X11GHOST_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X13
@@ -703,7 +701,7 @@ CLAYMORE_VERSION="recommended"                     # "latest", "recommended" or 
 CryptoDredge_OPTS=""                                   # CryptoDredge optional arguments
 CryptoDredge_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-DSTM_OPTS="--telemetry=127.0.0.1:2222"             # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
+DSTM_OPTS=""                                       # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
 DSTM_VERSION="recommended"                         # "latest", "recommended" or the version folder name.
 
 ENERGIMINER_OPTS="--response-timeout 10 --cuda-parallel-hash 8 --cuda-block-size 256"    # ENERGIMINER Miner optional arguments
@@ -735,8 +733,8 @@ Z_EWBF_VERSION="recommended"                       # "latest", "recommended" or 
 ZENEMYminer_OPTS=""
 ZENEMYminer_VERSION="recommended"                  # "latest", "recommended" or the version folder name.
 
-CCMINER_OPTS="-b 127.0.0.1:4028"                   # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want 
-                                                   # web info (first one allows remote monitoring by default)
+CCMINER_OPTS="-b 127.0.0.1:4068"                   # ccminer optional arguments. Add "-b 0.0.0.0:4068" if you want 
+                                                   # web info
 
 ########################################################
 #                                                      #

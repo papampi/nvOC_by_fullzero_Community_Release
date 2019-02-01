@@ -40,81 +40,12 @@ check_miner() {
         # Attempt to parse the command line for the information.  This should all be removed
         # once everything is migrated to the new pluggable miner design
         case $MINER in
-            "anxccminer")
-                MINER="ccminer-phi"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "asccminer")
-                MINER="ccminer-alexis78"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "bminer")
-                API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "api 127.0.0.1:[0-9]{4,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs)
-                ;;
-            "claymore")
-                MINER="claymore-eth"
-                API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "mport [0-9]{4,5}" | cut -d ' ' -f2 | xargs)
-                ;;
-            "cryptodredge")
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "dstm")
-                API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "telemetry=127.0.0.1:[0-9]{4,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs)
-                ;;
-            "ewbf")
-                API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "api 127.0.0.1:[0-9]{4,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs)
-                ;;
-            "ktccminer")
-                MINER="ccminer-klaust"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "kxccminer")
-                MINER="ccminer-xevan"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "lolminer")
-                API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "apiport=[0-9]{4,5}" | cut -d '=' -f2 | xargs)
-                ;;
-            "msftccminer")
-                MINER="ccminer-msft"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "naccminer")
-                MINER="ccminer-nanashi"
-                API_PORT=$(get_ccminer_port)
-                ;;
             "phoenixminer")
                 MINER="phoenix"
                 API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "cdmport [0-9]{4,5}" | cut -d ' ' -f2 | xargs)
                 ;;
-            "silentminer")
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "sp_suprminer")
-                MINER="suprminer-sp-hash"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "spccminer")
-                MINER="ccminer-sp-hash"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "suprminer")
-                API_PORT=$(get_ccminer_port)
-                ;;
             "tpccminer")
                 MINER="ccminer-tpruvot"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "t_rex")
-                MINER="trex"
-                API_PORT=$(pgrep -afn "$MINERS" | grep -Eo "api-bind-http 127.0.0.1:[0-9]{4,5}" | cut -d ' ' -f2 | cut -d ':' -f2 | xargs)
-                ;;
-            "vertminer")
-                MINER="vertminer-nvidia"
-                API_PORT=$(get_ccminer_port)
-                ;;
-            "zenemyminer")
-                MINER="z-enemy"
                 API_PORT=$(get_ccminer_port)
                 ;;
             *)
