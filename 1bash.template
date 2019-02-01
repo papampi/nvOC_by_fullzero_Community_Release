@@ -717,7 +717,7 @@ EWBF_VERSION="recommended"                         # "latest", "recommended" or 
 GMINER_OPTS=""
 GMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-LOLMINER_OPTS="-apiport=9999"                      # LOLMINER optional arguments.
+LOLMINER_OPTS=""                                   # LOLMINER optional arguments.
 LOLMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
 PhoenixMiner_OPTS="-cdm 1 -cdmport 127.0.0.1:3333" # PhoenixMiner optional arguments. Read the README file inside PhoenixMiner folder
