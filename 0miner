@@ -71,8 +71,11 @@
 #          Gminer
 # v=0030 : papampi
 #          ENERGIMINER
+# v=0031 : papampi
+#          CUCKAROO29 and CUCKOO ALGO
 
-nvOC_0miner_dev="0030"
+
+nvOC_0miner_dev="0031"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 
@@ -101,6 +104,7 @@ UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
 UVERSION="_VERSION"
 UCUDA="_CUDA"
+UCCALGO="-a ${ALGO,,}"
 
 xpool=$COIN$UPOOL
 xport=$COIN$UPORT
@@ -259,6 +263,27 @@ then
   echo $LAUNCH $HCD
   eval $LAUNCH $HCD
 
+## CUCKOO
+elif [[ $ALGO == CUCKOO ]]
+then
+  if  [[ $CUCKOO_MINER == GMINER ]]
+  then
+    HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
+  fi
+  echo $LAUNCH $HCD $UCCALGO
+  eval $LAUNCH $HCD $UCCALGO
+
+## CUCKAROO29
+elif [[ $ALGO == CUCKAROO29 ]]
+then
+  if  [[ $CUCKAROO29_MINER == GMINER ]]
+  then
+    HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
+  fi
+  echo $LAUNCH $HCD $UCCALGO
+  eval $LAUNCH $HCD $UCCALGO
+
+  
 ## Energi
 elif [[ $ALGO == ENERGI ]]
 then
