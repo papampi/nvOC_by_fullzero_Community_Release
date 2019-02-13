@@ -143,6 +143,8 @@ then
   NICE_CRYPTONIGHT_ADDRESS=$NICE_ADDRESS
   NICE_EQUIHASH_ADDRESS=$NICE_ADDRESS
   NICE_ETHASH_ADDRESS=$NICE_ADDRESS
+  NICE_CUCKAROO29_ADDRESS=$NICE_ADDRESS
+  NICE_CUCKATOO31_ADDRESS=$NICE_ADDRESS
 ## ZPOOL
 elif [[ ${COIN:0:5} == ZPOOL ]]
 then
@@ -275,14 +277,25 @@ then
   eval $LAUNCH $HCD $UCCALGO
 
 ## CUCKAROO29
-elif [[ $ALGO == CUCKAROO29 || $ALGO == CUCKATOO31 ]]
+elif [[ $ALGO == CUCKAROO29 ]]
 then
-  if  [[ $CUCKAROO29_MINER == GMINER || $CUCKATOO31_MINER == GMINER ]]
+  if  [[ $CUCKAROO29_MINER == GMINER ]]
   then
     HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
   fi
   echo $LAUNCH $HCD $UCCALGO
   eval $LAUNCH $HCD $UCCALGO
+
+## CUCKATOO31
+elif [[ $ALGO == CUCKATOO31 ]]
+then
+  if  [[ $CUCKATOO31_MINER == GMINER ]]
+  then
+    HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
+  fi
+  echo $LAUNCH $HCD $UCCALGO
+  eval $LAUNCH $HCD $UCCALGO
+
 
   
 ## Energi
