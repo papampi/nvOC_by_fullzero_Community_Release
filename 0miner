@@ -73,9 +73,10 @@
 #          ENERGIMINER
 # v=0031 : papampi
 #          CUCKAROO29 and CUCKOO ALGO
+# v=0032 : papampi
+#          CUCKAROO31 ALGO
 
-
-nvOC_0miner_dev="0031"
+nvOC_0miner_dev="0032"
 source "${NVOC}/1bash"
 source "${NVOC}/helpers/coin_algo_mapping"
 
@@ -274,9 +275,9 @@ then
   eval $LAUNCH $HCD $UCCALGO
 
 ## CUCKAROO29
-elif [[ $ALGO == CUCKAROO29 ]]
+elif [[ $ALGO == CUCKAROO29 || $ALGO == CUCKAROO31 ]]
 then
-  if  [[ $CUCKAROO29_MINER == GMINER ]]
+  if  [[ $CUCKAROO29_MINER == GMINER || $CUCKAROO31_MINER == GMINER ]]
   then
     HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
   fi
