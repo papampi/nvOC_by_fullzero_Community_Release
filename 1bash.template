@@ -125,7 +125,7 @@ v0046="papampi;X22I, SUQA"
 v0047="papampi;Energi Algo, ENERGIMINER, NRG COIN"
 v0048="papampi;cuckaroo29 and cuckoo Algo"
 v0049="papampi;MTP Algo"
-v0050="papampi;cuckatoo31 Algo"
+v0050="papampi;cuckatoo31 Algo, Nice_Cuckatoo31 and Nice_Cuckaroo29 "
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.0" 
@@ -1312,7 +1312,7 @@ DUAL_COIN_POOL_PROTOCOL="blake2s"             #Dual Coin Supported algos: "blake
 
 
 #NICE_CUCKAROO29
-NICE_CUCKAROO29_POOL="grincuckaroo29.eu.nicehash.com:3371"
+NICE_CUCKAROO29_POOL="grincuckaroo29.eu.nicehash.com"
 NICE_CUCKAROO29_PORT="3371"
 NICE_CUCKAROO29_WORKER="$WORKERNAME"
 NICE_CUCKAROO29_EXTENSION_ARGUMENTS=""
