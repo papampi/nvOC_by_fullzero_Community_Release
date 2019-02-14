@@ -286,8 +286,8 @@ then
   then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
-  echo $LAUNCH $HCD $UCCALGO
-  eval $LAUNCH $HCD $UCCALGO
+  echo $LAUNCH $HCD 
+  eval $LAUNCH $HCD 
 
 ## CUCKATOO31
 elif [[ $ALGO == CUCKATOO31 ]]
@@ -299,8 +299,8 @@ then
   then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
   fi
-  echo $LAUNCH $HCD $UCCALGO
-  eval $LAUNCH $HCD $UCCALGO
+  echo $LAUNCH $HCD 
+  eval $LAUNCH $HCD 
 
 
   
