@@ -382,6 +382,17 @@ then
     rejected_shares=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
   fi
 
+elif  ps ax |  grep miner | grep -q "[P]hoenixMiner"
+then
+  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Eth speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $3}' | awk '{s+=$1} END {printf "%.0f", s}')
+  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Eth speed:" | grep -v grep | wc -l | awk '{print $1}')
+  hash_average="$((total_hash / hash_count)) MH/s"
+  miner_error=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
+  then
+    rejected_shares=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
+  fi
+
 elif  ps ax | grep miner | grep -q "[K]Tccminer"
 then
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
