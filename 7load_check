@@ -1,6 +1,7 @@
 #!bin/bash
 source ${NVOC}/1bash
-LOG_FILE=${NVOC}/5_watchdoglog
+WARNING_LOG="${NVOC}/5_watchdoglog"
+LOG_FILE="${NVOC}/nvoc_logs/watchdog-screenlog.0"
 
 while true
 do
@@ -42,14 +43,14 @@ do
   then
     if [[ $AVRG_1 == "HIGH" ]] && [[ $AVRG_5 == "HIGH" ]] && [[ $AVRG_15 == "HIGH" ]]
     then
-      echo "WARNING: $(date) - Load Averages are too high" | tee -a ${LOG_FILE}
+      echo "WARNING: $(date) - Load Averages are too high" | tee -a ${WARNING_LOG}
       if [[ $TELEGRAM_ALERTS == "YES" ]]
       then
         bash "${NVOC}/telegram"
       fi
       if [[ $HIGH_LOAD_REBOOT  == "YES" ]]
       then
-        echo "WARNING: $(date) - Rebooting system in 5 sec" | tee -a ${LOG_FILE}
+        echo "WARNING: $(date) - Rebooting system in 5 sec" | tee -a ${WARNING_LOG}
         sleep 5
         if [[ SYSRQ_REBOOT == "YES"  ]]
         then
