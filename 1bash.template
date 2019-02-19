@@ -135,7 +135,7 @@ v0053="papampi;load average check"
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
-nvOC_1bash_ver="0052"
+nvOC_1bash_ver="0053"
 nvOC_1bash_least_compatible="0048"
 nvOC_1bash_last_compatible="0048"
 
@@ -271,14 +271,13 @@ LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OF
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
-LOAD_CHECK="NO"             # Check system load average and reboot if HIGH_LOAD_REBOOT="YES", not works if using plusCPU 
+LOAD_CHECK="YES"            # YES or NO, Check system load average and reboot if HIGH_LOAD_REBOOT="YES", not works if using plusCPU 
 
-HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want watchdog reboot when all load averages (1 min, 5 min and 15 min) goes over double the CPU cores.
-                            # This option uses sysrq_reboot to reboot the rig.
+HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want LOAD_CHECK reboot when all load averages (1 min, 5 min and 15 min) goes over double the CPU cores.
 			    # Works only if not using plusCPU.
 			    
 SYSRQ_REBOOT="NO"           # YES or NO # Use sys request reboot or normal reboot. 
-                            # Set "YES", watchdog and tempcontrol use sysrq reboot to prevent kernel panic and freeze if GPU drops off the bus
+                            # Set "YES", watchdog, tempcontrol and load_check use sysrq reboot to prevent kernel panic and freeze if GPU drops off the bus
 
 WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU utilization
 
