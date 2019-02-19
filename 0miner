@@ -118,6 +118,7 @@ xversion=${!xminer}$UVERSION
 xcuda=$ALGO$UCUDA
 ## Unify COIN End
 UCCALGO="-a ${ALGO,,}"
+UCCCOIN="${COIN,,}"
 
 OPTS="${!xcoinopts} $(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")"
 
