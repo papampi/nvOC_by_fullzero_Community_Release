@@ -586,7 +586,7 @@ KECCAK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LBRY
 LBRY_INTENSITY="0"
-LBRY_MINER="SPccminer"
+LBRY_MINER="TPccminer"
 LBRY_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## LYRA2REV2
@@ -621,7 +621,7 @@ PASCAL_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PHI1612
 PHI1612_INTENSITY="0"
-PHI1612_MINER="ANXccminer"
+PHI1612_MINER="CryptoDredge"
 PHI1612_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## PHI2
@@ -631,7 +631,7 @@ PHI2_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## SIA
 SIA_INTENSITY="0"
-SIA_MINER="SPccminer"
+SIA_MINER="TPccminer"
 SIA_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## SKEIN
@@ -646,7 +646,7 @@ SKUNK_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X11GHOST, SIB
 X11GHOST_INTENSITY="0"
-X11GHOST_MINER="SPccminer"
+X11GHOST_MINER="TPccminer"
 X11GHOST_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X13
@@ -713,22 +713,22 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 #            NEWMINER_VERSION="4.2.0"    # default: "recommended", otherwise you can choose "latest" or the exact version number
 #            NEWMINER_OPTS=""            # default: empty
 
-BMINER_OPTS=""                                     # Bminer optional arguments. add "--api $IPW:42000" if you want web info
+BMINER_OPTS=""                                     # Bminer optional arguments
 BMINER_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
-CLAYMORE_OPTS=""                                   # Claymore optional arguments. EX: add "-esm 2" for miningpoolhub
+CLAYMORE_OPTS=""                                   # Claymore optional arguments. tip: add "-esm 2" for miningpoolhub
 CLAYMORE_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-CryptoDredge_OPTS=""                                   # CryptoDredge optional arguments
-CryptoDredge_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
+CryptoDredge_OPTS=""                               # CryptoDredge optional arguments
+CryptoDredge_VERSION="recommended"                 # "latest", "recommended" or the version folder name.
 
-DSTM_OPTS="--telemetry=127.0.0.1:2222"             # DSTM Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
+DSTM_OPTS=""                                       # DSTM Miner optional arguments
 DSTM_VERSION="recommended"                         # "latest", "recommended" or the version folder name.
 
 ENERGIMINER_OPTS="--response-timeout 10 --cuda-parallel-hash 8 --cuda-block-size 256"    # ENERGIMINER Miner optional arguments
 ENERGIMINER_VERSION="recommended"                  # "latest", "recommended" or the version folder name.
 
-ETHMINER_OPTS=""                                   # Ethminer optional arguments. add "--api-port -3333" if you want web info
+ETHMINER_OPTS=""                                   # Ethminer optional arguments
 ETHMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
 EWBF_FEE="0"                                       # change fee value to alter donation percent for EWBF Miner   
@@ -736,12 +736,12 @@ EWBF_OPTS=""                                       # EWBF Equihash Miner optiona
 EWBF_VERSION="recommended"                         # "latest", "recommended" or the version folder name. If choose 3.3 you should extract 3.3 in miner folder to 3.3 folder
 
 GMINER_OPTS=""
-GMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
+GMINER_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
-LOLMINER_OPTS="-apiport=9999"                      # LOLMINER optional arguments.
+LOLMINER_OPTS=""                                   # LOLMINER optional arguments.
 LOLMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
-PhoenixMiner_OPTS="-cdm 1 -cdmport 127.0.0.1:3333" # PhoenixMiner optional arguments. Read the README file inside PhoenixMiner folder
+PhoenixMiner_OPTS=""                               # PhoenixMiner optional arguments. Read the README file inside PhoenixMiner folder
 PhoenixMiner_VERSION="recommended"                 # "latest", "recommended" or the version folder name.
 
 T_REX_OPTS=""                                      # T_REX optional arguments.
@@ -751,11 +751,11 @@ Z_EWBF_FEE="0"                                     # EWBF ZHASH Dev fee percent 
 Z_EWBF_OPTS=""                                     # EWBF ZHASH Miner optional arguments
 Z_EWBF_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
-ZENEMYminer_OPTS=""
+ZENEMYminer_OPTS=""                                # ZENEMYminer optional arguments
 ZENEMYminer_VERSION="recommended"                  # "latest", "recommended" or the version folder name.
 
-CCMINER_OPTS="-b 127.0.0.1:4028"                   # ccminer optional arguments. Add "-b 0.0.0.0:4028", or "-b $IPW:42000" if you want 
-                                                   # web info (first one allows remote monitoring by default)
+TPccminer_OPTS=""                                  # ccminer optional arguments
+TPccminer_VERSION="recommended"                    # "latest", "recommended" or the version folder name.
 
 ########################################################
 #                                                      #
@@ -779,7 +779,7 @@ CCMINER_OPTS="-b 127.0.0.1:4028"                   # ccminer optional arguments.
 
 # Aeternity (AE)
 AE_ADDRESS="replace_with_your_address"
-AE_EXTENSION_ARGUMENTS=""
+AE_OPTS=""
 AE_POOL="AE POOL"
 AE_PORT="AE PORT"
 AE_WORKER="$WORKERNAME"
@@ -971,7 +971,7 @@ GBX_POOL_PROTOCOL="stratum+tcp"
 
 # GrinCoin (GRIN)
 GRIN_ADDRESS="replace_with_your_address"
-GRIN_EXTENSION_ARGUMENTS=""
+GRIN_OPTS=""
 GRIN_POOL="GRIN_POOL"
 GRIN_PORT="GRIN_PORT"
 GRIN_WORKER="$WORKERNAME"
