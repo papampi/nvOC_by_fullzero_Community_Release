@@ -130,6 +130,8 @@ v0049="papampi;CryptoNightV8, X22I, SUQA, Energi Algo, ENERGIMINER, NRG COIN"
 v0050="papampi;Miner Schedule"
 v0051="papampi;MTP Algo"
 v0052="papampi;cuckaroo29, cuckoo, cuckatoo31 Algo"
+v0053="papampi;load average check"
+
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
@@ -277,7 +279,9 @@ WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU uti
 WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
 
 GPU_UTIL_THRESHOLD="70"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recommended values 70-90) 
-	    
+
+LOAD_CHECK="NO"             # Check system load average and reboot if HIGH_LOAD_REBOOT="YES" 
+
 HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want watchdog reboot when all load averages (1 min, 5 min and 15 min) goes over double the CPU cores.
                             # This option uses sysrq_reboot to reboot the rig.
 			    # Works only if not using plusCPU.
