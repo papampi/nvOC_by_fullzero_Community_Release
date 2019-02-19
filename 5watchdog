@@ -171,7 +171,7 @@ do
   then
     echo "$(date) - [WARNING] - Name resolution problem while ping is ok, waited 10 minutes, restarting system" | tee -a ${LOG_FILE}
     sleep 10
-    sudo reboot
+    sudo reboot -f
   fi
   echo "$(date) - [WARNING] - Internet is down, checking ..."
   if ping -c1 8.8.8.8 &> /dev/null
@@ -252,7 +252,7 @@ do
         then
           sudo bash ${NVOC}/sysrq_reboot.sh
         else
-          sudo reboot
+          sudo reboot -f
         fi
       elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
@@ -277,7 +277,7 @@ do
         then
           sudo bash ${NVOC}/sysrq_reboot.sh
         else
-          sudo reboot
+          sudo reboot -f
         fi
       elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
@@ -466,7 +466,7 @@ do
         then
           sudo bash ${NVOC}/sysrq_reboot.sh
         else
-          sudo reboot
+          sudo reboot -f
         fi
       fi
 
