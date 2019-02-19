@@ -4,7 +4,7 @@ source ${NVOC}/1bash
 # If 1, 5 and 15 min load average are more than double cpu core give warning
 HIGH_AVERAGE=$(( $(nproc) * 2 ))
 AVERAGES=$(uptime | sed 's/.*: //g')
-echo "Load Average: $AVERAGES"
+echo "Load Average: $AVERAGES" | tee -a ${NVOC}/5_watchdoglog
 
 # Prevent slow single core cpus gives warning
 if [[ "$HIGH_AVERAGE" < 4 ]]
