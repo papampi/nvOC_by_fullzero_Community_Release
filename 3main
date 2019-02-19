@@ -166,6 +166,16 @@ then
   fi
 fi
 
+if [[ $LOAD_CHECK == YES ]]
+then
+  HCD="${NVOC}/7load_check"
+  if ! ps ax | grep -v grep | grep -q '7load_check'
+  then
+    guake -n $HCD -r LOAD_CHK -e "bash ${NVOC}/7load_check" &
+    sleep 1
+  fi
+fi
+
 if [ ! -f ${NVOC}/nvoc_logs/tempa ]
 then
   nvidia-smi -L > ${NVOC}/nvoc_logs/tempa
