@@ -273,7 +273,7 @@ MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically cor
 
 LOAD_CHECK="YES"            # YES or NO, Check system load average and reboot if HIGH_LOAD_REBOOT="YES", not works if using plusCPU 
 
-HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want LOAD_CHECK reboot when all load averages (1 min, 5 min and 15 min) goes over double the CPU cores.
+HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want LOAD_CHECK reboot the rig when all load averages (1 min, 5 min and 15 min) are too much higher than normal.
 			    # Works only if not using plusCPU.
 			    
 SYSRQ_REBOOT="NO"           # YES or NO # Use sys request reboot or normal reboot. 
