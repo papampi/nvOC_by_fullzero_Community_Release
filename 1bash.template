@@ -132,11 +132,12 @@ v0051="papampi;MTP Algo"
 v0052="papampi;cuckaroo29, cuckoo, cuckatoo31 Algo"
 v0053="papampi;load average check"
 v0054="papampi;tempcontrol cycle"
+v0054="papampi;x21s algo, RITO Coin"
 
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
-nvOC_1bash_ver="0054"
+nvOC_1bash_ver="0055"
 nvOC_1bash_least_compatible="0048"
 nvOC_1bash_last_compatible="0048"
 
@@ -427,7 +428,7 @@ fi
 #        support it and a compatilbe miner in the next sections.
 #        See the example for NEWCOIN/NEWALGO at the end of this section.
 
-ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 CRYPTONIGHTV8 CUCKAROO29 CUCKATOO31 CUCKOO DECRED ENERGI EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R X22I XEVAN ZHASH"
+ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 CRYPTONIGHTV8 CUCKAROO29 CUCKATOO31 CUCKOO DECRED ENERGI EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R X21S X22I XEVAN ZHASH"
 
 BITCORE_COINS="BTX"
 CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
@@ -458,6 +459,7 @@ SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
 SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="RVN,XMN,NICE_X16R"
+X21S_COINS="RITO"
 X22I_COINS="SUQA"
 XEVAN_COINS="BSD"
 ZHASH_COINS="AION,BTG"
@@ -661,6 +663,11 @@ X13_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 X16R_INTENSITY="0"
 X16R_MINER="ZENEMYminer"
 X16R_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+
+## X21S
+X21S_INTENSITY="0"
+X21S_MINER="T_Rex"
+X21S_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## X22I
 X22I_INTENSITY="0"
@@ -1098,6 +1105,14 @@ PXC_POOL="atlas.phoenixcoin.org:"
 PXC_PORT="10554"
 PXC_WORKER="$WORKERNAME"
 PXC_POOL_PROTOCOL="stratum+tcp"
+
+# RITO Coin (RITO)
+RITO_ADDRESS="replace_with_your_address"
+RITO_OPTS=""
+RITO_POOL="RITO_POOL_ADDRESS"
+RITO_PORT="RITO_POOL_PORT"
+RITO_WORKER="$WORKERNAME"
+RITO_POOL_PROTOCOL="stratum+tcp"
 
 # Raven Coin (RVN)
 RVN_ADDRESS="replace_with_your_address"
@@ -1785,6 +1800,11 @@ SKUNK_MEMORY_OVERCLOCK=0                 # Recommended value for some GTX-1060: 
 X16R_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
 X16R_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
 X16R_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+
+# X21S
+X21S_POWERLIMIT_WATTS=100                # No recommended value available
+X21S_CORE_OVERCLOCK=0                    # No recommended value available
+X21S_MEMORY_OVERCLOCK=0                  # No recommended value available
 
 # X22I
 X22I_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
