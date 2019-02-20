@@ -41,12 +41,15 @@
 #          Add supports for disabled_gpu
 # v=0010 : LuKePicci
 #          parallel tempcontrol threads
+# v=0011 : papampi
+#          tempcontrol cycle
+
 
 source ${NVOC}/1bash
 source ${NVOC}/helpers/coin_algo_mapping
 source ${NVOC}/helpers/disabled_gpu.sh
 
-nvOC_temp_Dev="0010"
+nvOC_temp_Dev="0011"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
@@ -197,7 +200,7 @@ echo ""
 
 # How often should TEMP_CONTROL check and adjust the fans
 # Allowed value between 15 and 30 seconds (IMO, 20 seconds works well)
-LOOP_TIMER_SLEEP=20
+LOOP_TIMER_SLEEP=$TEMP_CONTROL_CYCLE
 
 if (( LOOP_TIMER_SLEEP < 15 ))
 then
