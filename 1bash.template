@@ -131,13 +131,14 @@ v0050="papampi;Miner Schedule"
 v0051="papampi;MTP Algo"
 v0052="papampi;cuckaroo29, cuckoo, cuckatoo31 Algo"
 v0053="papampi;load average check"
+v0054="Multi instance"
 
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
-nvOC_1bash_ver="0053"
-nvOC_1bash_least_compatible="0048"
-nvOC_1bash_last_compatible="0048"
+nvOC_1bash_ver="0054"
+nvOC_1bash_least_compatible="0054"
+nvOC_1bash_last_compatible="0054"
 
 # Open the terminal to launch miner; will auto launch on boot
 
@@ -199,6 +200,9 @@ AUTO_SWITCH="NO"       # NO, WTM_SWITCHING, SALFTER_NICEHASH_SWITCHING,
 #        - SALFTER_PROGRAMATIC_SWITCHING switch algo over pools provided by any
 #          custom api URL following its own profitability logic
 
+MULTI_INSTANCE="NO"         # YES or NO, Set this to yes if you want to mine with 2 sets of GPUs 2nd miners/coins.
+                            # Select disabled GPUS bellow to mine with 2nd miner/coin
+			    
 NUMBER_GPUS_INSTALLED=""    # Number or "" # Set number of GPUs installed. Watchdog will check installed vs detected. Leave empty to not check
 
 DISABLED_GPUS=""           # space seperated list of devices to be ignore by the miner, start from 0, e.g. 0 1 2 3 4 ...
