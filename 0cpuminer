@@ -35,40 +35,72 @@ fi
 ## Unify Start
 UPOOL="_POOL"
 UPORT="_PORT"
+UPROTO="_POOL_PROTOCOL"
 UADDR="_ADDRESS"
 UWORK="_WORKER"
-UEXT="_OPTS"
+UCOINOPTS="_OPTS"
 UINTENSITY="_INTENSITY"
 UWALLET="_WALLET_FORMAT"
 UMINER="_MINER"
+UFEE="_FEE"
 UVERSION="_VERSION"
 
 PLUSCPU="plusCPU"
 
 xpool=$PLUSCPU$UPOOL
 xport=$PLUSCPU$UPORT
+xproto=$PLUSCPU$UPROTO
 xaddr=$PLUSCPU$UADDR
 xwork=$PLUSCPU$UWORK
-xext=$PLUSCPU$UEXT
+xcoinopts=$PLUSCPU$UCOINOPTS
 xintensity=$PLUSCPU$UINTENSITY
 xwallet=$PLUSCPU$UWALLET
 xminer=$PLUSCPU$UMINER
+xfee=${!xminer}$UFEE
 xversion=${!xminer}$UVERSION
+## Unify End
+UCCALGO="-a ${ALGO,,}"
+UCCCOIN="${COIN,,}"
+
+OPTS="${!xcoinopts} $(dgh_get_miner_opts "${!xminer}" "$COIN" "$ALGO")"
 
 mpath="${NVOC}/miners/${!xminer}"
 
 LAUNCH="screen -c ${NVOC}/screenrc-cpuminer -dmSL cpuminer"
 
-## Unify End
+if [[ ${!xaddr} == "" ]]
+then
+  echo "WARNING: ${xaddr} is empty or not set"
+fi
 
-if [[ ${!xversion} != "" && -f ${mpath}//${!xversion}/nvoc-miner.json ]]
+if [[ ${!xproto} == "" ]]
 then
-  HCD="${mpath}/${!xversion}/$(jq -r .hcd ${mpath}/${!xversion}/nvoc-miner.json)"
-  eval $LAUNCH $HCD
-elif [[ -f ${mpath}/nvoc-miner.json ]]
+  eval $xproto="stratum+tcp"
+fi
+
+if [[ ${!xversion} == "" ]]
 then
-  HCD="${mpath}/$(jq -r .hcd ${mpath}/nvoc-miner.json)"
-  eval $LAUNCH $HCD
+  eval $xversion="recommended"
+fi
+
+## Pluggable miners
+if [[ ${!xversion} != "" && -f ${mpath}/"${!xversion}"/nvoc-miner.json || -f ${mpath}/nvoc-miner.json ]]
+then
+  pm_manifest=${mpath}/${!xversion}/nvoc-miner.json
+
+  if [[ $FOREMAN_MONITOR == YES ]]
+  then
+    # parse foreman monitor params
+    api_ext=$(jq -r .foreman.api_ext ${pm_manifest})
+    if [[ $api_ext != "" ]]
+    then
+      OPTS="$OPTS $api_ext"
+    fi
+  fi
+
+  HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${pm_manifest})"
+  eval echo $LAUNCH $HCD $OPTS
+  eval $LAUNCH $HCD $OPTS
 
 elif [[ ${!xminer} == cpuOPT ]]
 then
