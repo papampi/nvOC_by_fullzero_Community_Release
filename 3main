@@ -159,9 +159,9 @@ fi
 if [[ $MINER_SCHEDULE == YES ]]
 then
   HCD="${NVOC}/miner_schedule"
-  if ! ps ax | grep -q '[m]iner_schedule'
+  if ! ps ax | grep ${NVOC} | grep -q '[m]iner_schedule'
   then
-    guake -n $HCD -r SCHEDULE -e "bash ${NVOC}/miner_schedule" &
+    guake -n $HCD -r ${NVOC}_SCHEDULE -e "bash ${NVOC}/miner_schedule" &
     sleep 1
   fi
 fi
@@ -323,9 +323,9 @@ fi
 if [[ $MINER_RESTART == YES ]]
 then
   HCD="${NVOC}/7miner_restart"
-  if ! ps ax | grep -q '[7]miner_restart'
+  if ! ps ax |  grep ${NVOC} | grep -q '[7]miner_restart'
   then
-    guake -n $HCD -r MINER_RESTART -e "bash ${NVOC}/7miner_restart" &
+    guake -n $HCD -r ${NVOC}_MINER_RESTART -e "bash ${NVOC}/7miner_restart" &
     sleep 1
   fi
 fi
@@ -411,20 +411,20 @@ fi
 
 if [[ $MINER_TEMP_CONTROL == YES ]]
 then
-  if ps ax | grep -q '[6]tempcontrol'; then
-    ps -ef | awk '$NF~"6tempcontrol" {print $2}' | xargs kill
+  if ps ax | grep ${NVOC} | grep -q '[6]tempcontrol'; then
+    ps -ef | grep ${NVOC} | awk '$NF~"6tempcontrol" {print $2}' | xargs kill
   fi
   sleep 2
   echo ""
-  if ! ps ax | grep -q '[6]tempcontrol'; then
+  if ! ps ax | grep ${NVOC} | grep -q '[6]tempcontrol'; then
     echo "LAUNCHING:  MINER TEMPCONTROL"
-    screen -c ${NVOC}/screenrc-tempcontrol -dmSL temp bash ${NVOC}/6tempcontrol
+    screen -c ${NVOC}/screenrc-tempcontrol -dmSL ${NVOC}_temp bash ${NVOC}/6tempcontrol
     echo ""
     if [[ $LOCALorREMOTE == LOCAL ]]; then
       echo "process in screen temp, guake terminal Tab (f12), 'nvOC temp-log'"
       #if guake tab is already showing temp control output dont open a new one
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[t]empcontrol-screenlog.0"; then
-        guake -n ${NVOC}/6tempcontrol -r MINER_TEMP_CONTROL -e "tail -n 0 -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" &
+        guake -n ${NVOC}/6tempcontrol -r ${NVOC}_MINER_TEMP_CONTROL -e "tail -n 0 -f ${NVOC}/nvoc_logs/tempcontrol-screenlog.0" &
         sleep 1
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
@@ -437,9 +437,9 @@ fi
 if [[ $TELEGRAM_MESSAGES == YES ]]
 then
   HCD="${NVOC}/7telegram"
-  if ! ps ax | grep -q '[7]telegram'
+  if ! ps ax | grep ${NVOC} | grep -q '[7]telegram'
   then
-    guake -n $HCD -r TELEGRAM_MESSAGES -e "bash ${NVOC}/7telegram" &
+    guake -n $HCD -r ${NVOC}_TELEGRAM_MESSAGES -e "bash ${NVOC}/7telegram" &
     sleep 1
     running=""
   fi
@@ -466,9 +466,9 @@ then
 }
 EOF
   HCD="${NVOC}/8wtm_profit_check"
-  if ! ps ax | grep -q '[8]wtm_profit_check'
+  if ! ps ax | grep ${NVOC} | grep -q '[8]wtm_profit_check'
   then
-    guake -n $HCD -r WTM_PROFIT_CHECK -e "bash ${NVOC}/8wtm_profit_check" &
+    guake -n $HCD -r ${NVOC}_WTM_PROFIT_CHECK -e "bash ${NVOC}/8wtm_profit_check" &
     sleep 1
     running=""
   fi
@@ -824,14 +824,14 @@ EOF
 "currency":"$WTM_CURRENCY"
 }
 EOF
-  if ! ps ax | grep -q '[8]wtm_auto_switch'
+  if ! ps ax | grep ${NVOC} | grep -q '[8]wtm_auto_switch'
   then
-    screen -c ${NVOC}/screenrc-wtm -dmSL wtm bash ${NVOC}/8wtm_auto_switch
+    screen -c ${NVOC}/screenrc-wtm -dmSL ${NVOC}_wtm bash ${NVOC}/8wtm_auto_switch
     if [[ $LOCALorREMOTE == LOCAL ]]; then
       echo ""
       echo "process in screen wtm, guake terminal Tab (f12)"
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[8]_wtmautoswitchlog"; then
-        guake -n ${NVOC}/8wtm_auto_switch -r WTM_SWITCHING -e "tail -n 0 -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" &
+        guake -n ${NVOC}/8wtm_auto_switch -r ${NVOC}_WTM_SWITCHING -e "tail -n 0 -f ${NVOC}/nvoc_logs/8_wtmautoswitchlog" &
         sleep 1
       fi
     elif [[ $LOCALorREMOTE == REMOTE ]]; then
@@ -1045,10 +1045,10 @@ then
     fi
   fi
 
-  while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
+  while ps ax | grep SCREEN | grep ${NVOC} | grep -v cpuminer | grep -q miner ; do
     echo "" | tee -a ${NVOC}/nvoc_logs/screenlog.0
     echo "$(date) - Miner is running, 3main killing miner" | tee -a ${NVOC}/nvoc_logs/screenlog.0
-    ps ax | grep SCREEN | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
+    ps ax | grep SCREEN | grep ${NVOC} | grep -v cpuminer | grep miner | awk '"miner" {print $1}' | xargs kill -9
     sleep 2
   done
 
@@ -1056,7 +1056,7 @@ then
   then
     echo ""
     sleep 2
-    if ! ps ax | grep -q '[5]watchdog'
+    if ! ps ax | grep ${NVOC} | grep -q '[5]watchdog'
     then
       screen -c ${NVOC}/screenrc-watchdog -dmSL wdog bash ${NVOC}/5watchdog
       if [[ $LOCALorREMOTE == LOCAL ]]
@@ -1066,7 +1066,7 @@ then
         echo "process in screen wdog, guake terminal Tab (f12), 'nvOC wdog-log'"
         #if guake tab is already showing watchdog output dont open a new one
         if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[w]atchdog-screenlog.0" |grep -v grep ;then
-          guake -n ${NVOC}/5watchdog -r MINER_WATCHDOG -e "tail -n 0 -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" &
+          guake -n ${NVOC}/5watchdog -r ${NVOC}_MINER_WATCHDOG -e "tail -n 0 -f ${NVOC}/nvoc_logs/watchdog-screenlog.0" &
           sleep 1
         fi
         echo ""
@@ -1099,7 +1099,7 @@ then
     echo "    "
     bash ${NVOC}/0miner
     echo "    "
-    echo "    "$(ps ax | grep -i screen | grep miner | grep -v cpuminer | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
+    echo "    "$(ps ax | grep -i screen | grep ${NVOC} | grep miner | grep -v cpuminer | grep -o 'SCREEN.*') | tee -a ${NVOC}/nvoc_logs/screenlog.0
     echo "    "
 
     if [[ $LOCALorREMOTE == REMOTE ]]
@@ -1133,7 +1133,7 @@ then
     then
       if ! ps ax | grep "tail -n 0 -f ${NVOC}/nvoc_logs/[s]creenlog.0" ; then
         touch ${NVOC}/nvoc_logs/screenlog.0
-        guake -n 1 -r AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0" &
+        guake -n 1 -r ${NVOC}_AUTO_SWITCH  -e "tail -n 0 -f ${NVOC}/nvoc_logs/screenlog.0" &
         sleep 1
       fi
       echo "mining process in Guake Tab"
