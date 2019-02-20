@@ -590,17 +590,17 @@ then
    "neoscrypt": {
      "speed": 0.002160, "power": 0.397,
      "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
-     "cmd": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
    },
    "lyra2rev2": {
      "speed": 0.081, "power": 0.386,
      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
-     "cmd": "${NVOC}/miners/SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
    },
    "lbry": {
      "speed": 0.639, "power": 0.392,
      "power_limit": $pwr_lim_lbry, "gpu_oc": $gpu_clks_lbry, "mem_oc": $mem_clks_lbry, "fan": 0,
-     "cmd": "${NVOC}/miners/SPccminer/recommended/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/TPccminer/recommended/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
    }
  }
 }
@@ -643,55 +643,55 @@ then
     },
     "Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0,
       "speed": 0.0853, "power": 0.392
     },
     "Keccak":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0,
       "speed": 1.45, "power": 0.391
     },
     "Lyra2RE2":
     {
-      "bin": "${NVOC}/miners//SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners//CryptoDredge/recommended/CryptoDredge -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_lyra2re2, "gpu_oc": $gpu_clks_lyra2re2, "mem_oc": $mem_clks_lyra2re2, "fan": 0,
       "speed": 0.081, "power": 0.386
     },
     "Myriad-Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0,
       "speed": 0.158, "power": 0.391
     },
     "NeoScrypt":
     {
-      "bin": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
       "speed": 0.002160, "power": 0.397
     },
     "Qubit":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0,
       "speed": 0.0509, "power": 0.382
     },
     "Scrypt":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0,
       "speed": 0.00224, "power": 0.403
     },
     "Sia":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0,
       "speed": 3.700, "power": 0.403
     },
     "Skein":
     {
-      "bin": "${NVOC}/miners/ASccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0,
       "speed": 0.835, "power": 0.383
     },
@@ -745,47 +745,47 @@ then
     },
     "Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0
     },
     "Keccak":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0
     },
     "Lyra2RE2":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_lyra2re2, "gpu_oc": $gpu_clks_lyra2re2, "mem_oc": $mem_clks_lyra2re2, "fan": 0
     },
     "Myriad-Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0
     },
     "NeoScrypt":
     {
-      "bin": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0
     },
     "Qubit":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0
     },
     "Scrypt":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0
     },
     "Sia":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0
     },
     "Skein":
     {
-      "bin": "${NVOC}/miners/ASccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0
     },
     "X11":
