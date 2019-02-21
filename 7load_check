@@ -43,7 +43,7 @@ do
   then
     if [[ $AVRG_1 == "HIGH" ]] && [[ $AVRG_5 == "HIGH" ]] && [[ $AVRG_15 == "HIGH" ]]
     then
-      echo "WARNING: $(date) - Load Averages are too high" | tee -a ${WARNING_LOG}
+      echo "WARNING: $(date) - Load Averages are too high: $AVERAGES" | tee -a ${WARNING_LOG}
       if [[ $TELEGRAM_ALERTS == "YES" ]]
       then
         bash "${NVOC}/telegram"
