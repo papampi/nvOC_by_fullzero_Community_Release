@@ -2,6 +2,12 @@
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
+# Prevent too many reboots
+if (( REBOOT_TIMEOUT_IN_MINUTES < 60 ))
+then
+  REBOOT_TIMEOUT_IN_MINUTES=60
+fi
+
 TIMEIN=$REBOOT_TIMEOUT_IN_MINUTES
 TIMEOUT=$(($TIMEIN * 60))
 
