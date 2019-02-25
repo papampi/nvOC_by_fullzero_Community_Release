@@ -797,7 +797,7 @@ TPccminer_VERSION="recommended"                    # "latest", "recommended" or 
 
 # Aeternity (AE)
 AE_ADDRESS="replace_with_your_address"
-AE_OPTS=""
+AE_OPTS="--algo aeternity"
 AE_POOL="AE POOL"
 AE_PORT="AE PORT"
 AE_WORKER="$WORKERNAME"
@@ -805,7 +805,7 @@ AE_POOL_PROTOCOL="stratum+tcp"
 
 # AION
 AION_ADDRESS="replace_with_your_address"
-AION_OPTS="--algo aion"
+AION_OPTS="--algo aion"                           # If using GMiner use" --algo 210_9 --pers AION0PoW" with Z_EWBF use "--algo aion"
 AION_POOL="AION POOL"
 AION_PORT="AION PORT"
 AION_WORKER="$WORKERNAME"
@@ -989,19 +989,19 @@ GBX_POOL_PROTOCOL="stratum+tcp"
 
 # GrinCoin (GRIN)
 GRIN_ADDRESS="replace_with_your_address"
-GRIN_OPTS=""
+GRIN_OPTS=""                                     # If using GMiner add "--algo cuckaroo29" 
 GRIN_POOL="GRIN_POOL"
 GRIN_PORT="GRIN_PORT"
 GRIN_WORKER="$WORKERNAME"
-GRIN_POOL_PROTOCOL="stratum+tcp"
+GRIN_POOL_PROTOCOL="stratum+tcp"                 # If using bminer use "cuckaroo29"
 
 # Grin31Coin (GRIN31)
 GRIN31_ADDRESS="replace_with_your_address"
-GRIN31_OPTS=""
+GRIN31_OPTS=""                                     # If using GMiner add "--algo cuckaroo31" 
 GRIN31_POOL="GRIN_POOL"
 GRIN31_PORT="GRIN_PORT"
 GRIN31_WORKER="$WORKERNAME"
-GRIN31_POOL_PROTOCOL="stratum+tcp"
+GRIN31_POOL_PROTOCOL="stratum+tcp"                 # If using bminer use "cuckaroo31"
 
 # Groestl (GRS)
 GRS_ADDRESS="replace_with_your_address"
