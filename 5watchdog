@@ -188,11 +188,19 @@ then
   echo "$(date) - [INFO] - There was a problem with network, now its ok" | tee -a ${LOG_FILE}
 fi  
 
-## Before starting to check GPU utilization in main loop check if miner start was successful or not
-## in case there is problem in miner variables or other problems, dont start main loop to restart 3main and eventually reboot.
+# Prevent too high/low cycles
+if (( WATCHDOG_CYCLE < 15 ))
+then
+  WATCHDOG_CYCLE=15
+elif (( WATCHDOG_CYCLE > 45 ))
+then
+  WATCHDOG_CYCLE=45
+fi
 echo "Giving miner enough to stabilize"
 sleep $WATCHDOG_CYCLE
 
+## Before starting to check GPU utilization in main loop check if miner start was successful or not
+## in case there is problem in miner variables or other problems, dont start main loop to restart 3main and eventually reboot.
 if ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
 then
   echo "$(date) - [INFO] - Miner is running: going on watch"
