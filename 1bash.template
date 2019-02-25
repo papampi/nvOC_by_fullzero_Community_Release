@@ -373,7 +373,7 @@ MINIMAL_FAN_SPEED=50          # Lowest fan speed that will be used. Recommended 
 
 MAXIMAL_FAN_SPEED=95          # Highest fan speed before temp control drops power limit to reach TARGET_TEMP. Recommended ranges: 90 - 100
 
-ALLOWED_FAN_DIFF=2            # Allowed fan difference to set fan speed if difference is more.
+ALLOWED_FAN_DIFF=2            # Allowed fan difference to set fan speed if difference is more. If current fan speed has more/less difference than what it should be, set it.
 
 __FAN_ADJUST=5                # Fan adjustment size in percent
 
