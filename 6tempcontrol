@@ -305,7 +305,7 @@ do
             then
               sudo bash ${NVOC}/sysrq_reboot.sh
             else
-              sudo reboot
+              sudo reboot -f
             fi
           fi
         done
