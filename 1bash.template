@@ -220,11 +220,11 @@ SSH="YES"                   # YES or NO # If you use SSH to remotely connect to 
 
 AUTO_REBOOT="NO"            # YES or NO # If you want this rig to periodically reboot set this to YES
 
-REBOOT_TIMEOUT_IN_MINUTES=2880  # If AUTO_REBOOT is set to YES, use this to set how often to reboot, 1440 = 24 hours, 2880 = 48 hours
+REBOOT_TIMEOUT_IN_MINUTES=2880  # If AUTO_REBOOT is set to YES, use this to set how often to reboot, 1440 = 24 hours, 2880 = 48 hours, minimum 60.
 
 MINER_RESTART="NO"            # YES or NO # If you want to periodically restart miner set this to YES
 
-MINER_RESTART_TIMEOUT_IN_MINUTES=720  # If MINER_RESTART is set to YES, use this to set how often to restart miner, 720 = 12 hours
+MINER_RESTART_TIMEOUT_IN_MINUTES=720  # If MINER_RESTART is set to YES, use this to set how often to restart miner, 720 = 12 hours, minimum 60.
 
 MINER_SCHEDULE="NO"        # Schedule mining to stop and start between given times
 
