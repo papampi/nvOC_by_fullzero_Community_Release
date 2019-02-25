@@ -158,10 +158,10 @@ fi
 
 if [[ $MINER_SCHEDULE == YES ]]
 then
-  HCD="${NVOC}/miner_schedule"
-  if ! ps ax | grep -q '[m]iner_schedule'
+  HCD="${NVOC}/7miner_schedule"
+  if ! ps ax | grep -v grep | grep -q '7miner_schedule'
   then
-    guake -n $HCD -r SCHEDULE -e "bash ${NVOC}/miner_schedule" &
+    guake -n $HCD -r SCHEDULE -e "bash ${NVOC}/7miner_schedule" &
     sleep 1
   fi
 fi
