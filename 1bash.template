@@ -845,7 +845,7 @@ BTCP_POOL_PROTOCOL="stratum+tcp"
 
 # Bitcoinz (BTCZ)
 BTCZ_ADDRESS="replace_with_your_address"
-BTCZ_OPTS=""
+BTCZ_OPTS="--algo 144_5 --pers BitcoinZ"
 BTCZ_POOL="btcz.suprnova.cc"
 BTCZ_PORT="5586"
 BTCZ_WORKER="$WORKERNAME"
@@ -1259,6 +1259,15 @@ XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
 XMY_PORT="20479"
 XMY_WORKER="$WORKERNAME"
 XMY_POOL_PROTOCOL="stratum+tcp"
+  
+ 
+# SnowGem (XSG)
+XSG_ADDRESS="replace_with_your_address"
+XSG_OPTS="--algo 144_5 --pers sngemPoW"
+XSG_POOL="replace_with_pool_address"
+XSG_PORT="replace_with_pool_port"
+XSG_WORKER="$WORKERNAME"
+XSG_POOL_PROTOCOL="stratum+tcp"
 
 # Verge (XVG)
 XVG_ADDRESS="replace_with_your_address"
@@ -1291,6 +1300,14 @@ ZEC_POOL="zec-us-east1.nanopool.org"
 ZEC_PORT="6666"
 ZEC_WORKER="$WORKERNAME"
 ZEC_POOL_PROTOCOL="stratum+tcp"
+
+# Zelcash (ZEL)
+ZEL_ADDRESS="replace_with_your_address"
+ZEL_OPTS="--algo 144_5 --pers ZelProof "
+ZEL_POOL="zel.2miners.com"
+ZEL_PORT="9090"
+ZEL_WORKER="$WORKERNAME"
+ZEL_POOL_PROTOCOL="stratum+tcp"
 
 # Zencash (ZEN)
 ZEN_ADDRESS="replace_with_your_address"
