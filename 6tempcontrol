@@ -305,7 +305,7 @@ do
             then
               sudo bash ${NVOC}/sysrq_reboot.sh
             else
-              sudo reboot
+              sudo reboot -f
             fi
           fi
         done
@@ -388,7 +388,7 @@ do
         fi
       fi
 
-    if (( NEW_FAN_SPEED != CURRENT_FAN ))
+    if (( NEW_FAN_SPEED > CURRENT_FAN + ALLOWED_FAN_DIFF )) ||  (( NEW_FAN_SPEED < CURRENT_FAN - ALLOWED_FAN_DIFF )) 
     then
       echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"
       echo ""
