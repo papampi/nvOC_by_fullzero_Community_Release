@@ -153,7 +153,7 @@ fi
 
 if [[ ${!xaddr} == "" ]]
 then
-  echo "WARNING: ${xaddr} is empty or not set"
+  echo "WARNING: ${xaddr} is empty or not set" | tee -a ${NVOC}/nvoc_logs/screenlog.0
 fi
 
 if [[ ${!xproto} == "" ]]
@@ -198,7 +198,7 @@ then
     dev_enable_fmt="$(jq -r .devlist_format ${pm_manifest})"
     OPTS="$(dgh_enabled_devices '${dev_enable_arg}' '${dev_enable_sep}' '${dev_enable_fmt}' "$OPTS")"
   else
-    echo "[WARNING] - Unable to instruct ${mpath}/${!xversion} about which GPUs to enable, it will likely use all of them"
+    echo "[WARNING] - Unable to instruct ${mpath}/${!xversion} about which GPUs to enable, it will likely use all of them" | tee -a ${NVOC}/nvoc_logs/screenlog.0
   fi
 
   if [[ $FOREMAN_MONITOR == YES ]]
