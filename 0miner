@@ -212,7 +212,7 @@ then
   fi
 
   HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${pm_manifest})"
-  eval echo $LAUNCH $HCD $OPTS
+  eval echo $LAUNCH $HCD $OPTS | tee -a ${NVOC}/nvoc_logs/screenlog.0
   eval $LAUNCH $HCD $OPTS
 
 
@@ -220,8 +220,8 @@ then
 
 else
   echo
-  echo "[ERROR] - '${mpath}/${!xversion}' not found, check your settings."
-  echo "          Make sure version '${!xversion}' exists for '${mpath}'"
-  echo "Miner not started, Stopping watchdog"
+  echo "[ERROR] - '${mpath}/${!xversion}' not found, check your settings." | tee -a ${NVOC}/nvoc_logs/screenlog.0
+  echo "          Make sure version '${!xversion}' exists for '${mpath}'" | tee -a ${NVOC}/nvoc_logs/screenlog.0
+  echo "Miner not started, Stopping watchdog" | tee -a ${NVOC}/nvoc_logs/screenlog.0
   pkill -f 5watchdog
 fi
