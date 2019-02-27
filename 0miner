@@ -219,8 +219,9 @@ then
   # What happened to all miners? They have been finally ported to PMs !
 
 else
-  echo ""
-  echo "COIN/ALGO not found, Check your settings"
+  echo
+  echo "[ERROR] - '${mpath}/${!xversion}' not found, check your settings."
+  echo "          Make sure version '${!xversion}' exists for '${mpath}'"
   echo "Miner not started, Stopping watchdog"
   pkill -f 5watchdog
 fi
