@@ -222,6 +222,6 @@ else
   echo
   echo "[ERROR] - '${mpath}/${!xversion}' not found, check your settings." | tee -a ${NVOC}/nvoc_logs/screenlog.0
   echo "          Make sure version '${!xversion}' exists for '${mpath}'" | tee -a ${NVOC}/nvoc_logs/screenlog.0
-  echo "Miner not started, Stopping watchdog" | tee -a ${NVOC}/nvoc_logs/screenlog.0
+  echo "Miner not started, Stopping watchdog" | tee -a ${NVOC}/5_watchdoglog
   pkill -f 5watchdog
 fi
