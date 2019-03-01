@@ -273,8 +273,8 @@ then
   then
     HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
   fi
-  echo $LAUNCH $HCD $UCCALGO
-  eval $LAUNCH $HCD $UCCALGO
+  echo $LAUNCH $HCD
+  eval $LAUNCH $HCD
 
 ## CUCKAROO29
 elif [[ $ALGO == CUCKAROO29 ]]
@@ -282,8 +282,8 @@ then
   if  [[ $CUCKAROO29_MINER == GMINER ]]
   then
     HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
-  echo $LAUNCH $HCD $UCCALGO
-  eval $LAUNCH $HCD $UCCALGO
+  echo $LAUNCH $HCD
+  eval $LAUNCH $HCD
   elif [[ $CUCKAROO29_MINER == BMINER ]]
   then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
@@ -298,8 +298,8 @@ then
   if  [[ $CUCKATOO31_MINER == GMINER ]]
   then
     HCD="${NVOC}/miners/GMINER/"${!xversion}"/miner --server ${!xpool} --user ${!xaddr}${!xwallet}${!xwork} --pass $MINER_PWD --port ${!xport} $GMINER_OPTS ${!xext}"
-    echo $LAUNCH $HCD $UCCALGO
-    eval $LAUNCH $HCD $UCCALGO
+    echo $LAUNCH $HCD
+    eval $LAUNCH $HCD
   elif [[ $CUCKATOO31_MINER == BMINER ]]
   then
     HCD="${NVOC}/miners/BMINER/"${!xversion}"/bminer -uri ${!xproto}://${!xaddr}${!xwallet}${!xwork}:$MINER_PWD@${!xpool}:${!xport} $BMINER_OPTS ${!xext}"
