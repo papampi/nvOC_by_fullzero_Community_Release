@@ -43,13 +43,14 @@
 #          parallel tempcontrol threads
 # v=0011 : papampi
 #          tempcontrol cycle
-
+# v=0012 : papampi
+#          Allowed fan diff
 
 source ${NVOC}/1bash
 source ${NVOC}/helpers/coin_algo_mapping
 source ${NVOC}/helpers/disabled_gpu.sh
 
-nvOC_temp_Dev="0011"
+nvOC_temp_Dev="0012"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
@@ -238,7 +239,7 @@ elif (( ALLOWED_FAN_DIFF < 0 )); then
   echo "ALLOWED_FAN_DIFF is negative, setting it to 0"
   ALLOWED_FAN_DIFF=0
 elif (( ALLOWED_FAN_DIFF > _FAN_ADJUST / 2 )); then 
-  echo "ALLOWED_FAN_DIFF is greater than FAN_ADJUST/2 ($(( _FAN_ADJUST / 2 )) ), setting it to $(( _FAN_ADJUST / 2 ))"
+  echo "ALLOWED_FAN_DIFF is greater than FAN_ADJUST/2, setting it to $(( _FAN_ADJUST / 2 ))"
   ALLOWED_FAN_DIFF=$(( _FAN_ADJUST / 2 ))
 fi
 
