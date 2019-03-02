@@ -226,6 +226,23 @@ numtest='^[0-9.]+$'
 ERR_TIMER=60
 ERR_TIMER_BRK=$ERR_TIMER
 
+
+#Allowed fan diff fail safe and protection
+if [ -z "${ALLOWED_FAN_DIFF+x}" ]; then 
+  echo "ALLOWED_FAN_DIFF is not set at all, setting it to 0"
+  ALLOWED_FAN_DIFF=0
+elif [[ $ALLOWED_FAN_DIFF == "" ]]; then 
+  echo "ALLOWED_FAN_DIFF is empty, setting it to 0"
+  ALLOWED_FAN_DIFF=0
+elif (( ALLOWED_FAN_DIFF < 0 )); then
+  echo "ALLOWED_FAN_DIFF is negative, setting it to 0"
+  ALLOWED_FAN_DIFF=0
+elif (( ALLOWED_FAN_DIFF > _FAN_ADJUST / 2 )); then 
+  echo "ALLOWED_FAN_DIFF is greater than FAN_ADJUST/2 ($(( _FAN_ADJUST / 2 )) ), setting it to $(( _FAN_ADJUST / 2 ))"
+  ALLOWED_FAN_DIFF=$(( _FAN_ADJUST / 2 ))
+fi
+
+
 # The Main Loop
 while true
 do
