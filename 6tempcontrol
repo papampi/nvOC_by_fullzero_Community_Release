@@ -238,9 +238,9 @@ elif [[ $ALLOWED_FAN_DIFF == "" ]]; then
 elif (( ALLOWED_FAN_DIFF < 0 )); then
   echo "ALLOWED_FAN_DIFF is negative, setting it to 0"
   ALLOWED_FAN_DIFF=0
-elif (( ALLOWED_FAN_DIFF > _FAN_ADJUST / 2 )); then 
-  echo "ALLOWED_FAN_DIFF is greater than FAN_ADJUST/2, setting it to $(( _FAN_ADJUST / 2 ))"
-  ALLOWED_FAN_DIFF=$(( _FAN_ADJUST / 2 ))
+elif (( ALLOWED_FAN_DIFF > __FAN_ADJUST / 2 )); then 
+  echo "ALLOWED_FAN_DIFF is greater than FAN_ADJUST/2, setting it to $(( __FAN_ADJUST / 2 ))"
+  ALLOWED_FAN_DIFF=$(( __FAN_ADJUST / 2 ))
 fi
 
 
