@@ -1,4 +1,5 @@
 #!/bin/bash
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source ${NVOC}/1bash
 #giving nvOC enough time to start all scripts
