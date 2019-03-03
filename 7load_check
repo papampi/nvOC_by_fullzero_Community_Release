@@ -1,4 +1,6 @@
-#!bin/bash
+#!/bin/bash
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 source ${NVOC}/1bash
 WARNING_LOG="${NVOC}/5_watchdoglog"
 LOG_FILE="${NVOC}/nvoc_logs/watchdog-screenlog.0"
