@@ -1,5 +1,8 @@
 # nvOC easy-to-use Linux Nvidia Mining OS
 This page is about the Latest stable version of nvOC Community Edition
+
+Looking for beta testing? Go here: https://github.com/papampi/nvOC_by_fullzero_Community_Release/wiki/nvOC-setup-from-a-git-clone
+
 ## Community Edition - Quick start how-to
 You can get nvOC running on your mining rig in some different ways:
 - Picking and burning a pre-built whole disk OS image (recommended)
