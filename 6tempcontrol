@@ -43,13 +43,14 @@
 #          parallel tempcontrol threads
 # v=0011 : papampi
 #          tempcontrol cycle
-
+# v=0012 : papampi
+#          Allowed fan diff
 
 source ${NVOC}/1bash
 source ${NVOC}/helpers/coin_algo_mapping
 source ${NVOC}/helpers/disabled_gpu.sh
 
-nvOC_temp_Dev="0011"
+nvOC_temp_Dev="0012"
 nvOC_temp_ver="$nvOC_Ver.$nvOC_temp_Dev"   # Do not edit this
 
 export DISPLAY=:0
@@ -226,6 +227,23 @@ numtest='^[0-9.]+$'
 ERR_TIMER=60
 ERR_TIMER_BRK=$ERR_TIMER
 
+
+#Allowed fan diff fail safe and protection
+if [ -z "${ALLOWED_FAN_DIFF+x}" ]; then 
+  echo "ALLOWED_FAN_DIFF is not set at all, setting it to 0"
+  ALLOWED_FAN_DIFF=0
+elif [[ $ALLOWED_FAN_DIFF == "" ]]; then 
+  echo "ALLOWED_FAN_DIFF is empty, setting it to 0"
+  ALLOWED_FAN_DIFF=0
+elif (( ALLOWED_FAN_DIFF < 0 )); then
+  echo "ALLOWED_FAN_DIFF is negative, setting it to 0"
+  ALLOWED_FAN_DIFF=0
+elif (( ALLOWED_FAN_DIFF > __FAN_ADJUST / 2 )); then 
+  echo "ALLOWED_FAN_DIFF is greater than FAN_ADJUST/2, setting it to $(( __FAN_ADJUST / 2 ))"
+  ALLOWED_FAN_DIFF=$(( __FAN_ADJUST / 2 ))
+fi
+
+
 # The Main Loop
 while true
 do
@@ -305,7 +323,7 @@ do
             then
               sudo bash ${NVOC}/sysrq_reboot.sh
             else
-              sudo reboot
+              sudo reboot -f
             fi
           fi
         done
@@ -388,7 +406,7 @@ do
         fi
       fi
 
-    if (( NEW_FAN_SPEED != CURRENT_FAN ))
+    if (( NEW_FAN_SPEED > CURRENT_FAN + ALLOWED_FAN_DIFF )) || (( NEW_FAN_SPEED < CURRENT_FAN - ALLOWED_FAN_DIFF )) 
     then
       echo -e "${B}GPU $GPU${N}, ${C}$(date) - Adjusting fan from: ${N}${B}$CURRENT_FAN${N} ${C}to: ${N}${B}$NEW_FAN_SPEED${N} ${C}Temp: ${N}${B}$CURRENT_TEMP${N}"
       echo ""

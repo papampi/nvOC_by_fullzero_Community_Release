@@ -135,11 +135,12 @@ v0054="papampi;tempcontrol cycle"
 v0055="papampi;x21s algo, RITO Coin"
 v0056="papampi;NICE_MTP, Nice_Cuckatoo31 and Nice_Cuckaroo29"
 v0057="papampi;Lyra2REv3"
+v0058="papampi;Allowed fan difference"
 
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
-nvOC_1bash_ver="0057"
+nvOC_1bash_ver="0058"
 nvOC_1bash_least_compatible="0048"
 nvOC_1bash_last_compatible="0048"
 
@@ -370,7 +371,9 @@ ALLOWED_TEMP_DIFF=2           # If current temp is 2C below the target temp redu
 
 MINIMAL_FAN_SPEED=50          # Lowest fan speed that will be used. Recommended ranges: 40 - 60
 
-MAXIMAL_FAN_SPEED=95          # HIghest fan speed before temp control drops power limit to reach TARGET_TEMP. Recommended ranges: 90 - 100
+MAXIMAL_FAN_SPEED=95          # Highest fan speed before temp control drops power limit to reach TARGET_TEMP. Recommended ranges: 90 - 100
+
+ALLOWED_FAN_DIFF=2            # Allowed fan difference to set fan speed if difference is more. If current fan speed has more/less difference than what it should be, set it.
 
 __FAN_ADJUST=5                # Fan adjustment size in percent
 
