@@ -7,15 +7,38 @@
 ##########################################################################
 ##########################################################################
 
-# fullzero:     nvOC creator
+# fullzero:     nvOC Creator
 
-# + contributors (in alphabetical order):
+# papampi:      nvOC Community Release Creator
+#               ( BTC address: 1NsnsnqkkVuopTGvUSGrkMhhug8kg6zgP9 )
 
-# BaliMiner:    TELEGRAM_MESSAGES
-#               ( BTC address:  1HbzxQ6AVeWYvFm322KtxZcJJLAqfJHpN8 )
+# nvOC Community Release contributors (in alphabetical order):
 
 # brightskye:   DISABLED_GPUS
 #               Allow turning off gpu by utilizing each miner's -device options
+
+# leenoox:      nvOC ver 0019-2.0 (community release)
+#               The new 0019-2.0 TEMP_CONTROL
+#               Methods for color output throughout nvOC scripts
+#               multiple bug fixes and enhacements for ver 0019-2.0
+
+# LukePicci:    nvOC Community Release Main Developer
+
+# obm_dan:      Foreman monitoring integration
+#               ( BTC address: 1MGxnFDozG1UTKjxryNaiAAU7XkqWpEqK2 )
+
+# SizzlePizzle: Algo mining unification 
+#               ( BTC address: bc1qq42xn9zea933j88kv7u8xqeae84rr8f8lmlx55 )
+
+# Stubo:        ver 0019-2.0 (community release) main developer
+#               nvOC function script
+#               minerinfo script
+#               multiple bug fixes and enhacements for ver 0019-2.0
+
+# Original nvOC contributors (in alphabetical order):
+
+# BaliMiner:    TELEGRAM_MESSAGES
+#               ( BTC address:  1HbzxQ6AVeWYvFm322KtxZcJJLAqfJHpN8 )
 
 # damNmad:      damNmad_ALGO_SPECIFIC_OC
 #               nvOC discord channel https://discordapp.com/invite/8YDFEvY
@@ -31,17 +54,10 @@
 #               Telegram Setup Video
 #               ( BTC address: 196pMZnByg5UaPvJPK67ErAHgDPeSyu8QV )
 
-# leenoox:      nvOC ver 0019-2.0 (community release) main developer
-#               The new 0019-2.0 TEMP_CONTROL
-#               Methods for color output throughout nvOC scripts
-#               multiple bug fixes and enhacements for ver 0019-2.0
-
 # lost_post:    upPASTE (timeout based _Parallax_ Mode auto-updating)
 #               Methods for separating settings and implementation
 #               Methods for AUTO_UPDATE
 #               ( BTC address: 1GFTEtLLvvwoa4ogDntD5oaXBgJLYokzTC )
-
-# LukePicci:    nvOC 19-2.1 main developer
 
 # Maxximus007:  Maxximus007_AUTO_TEMPERATURE_CONTROL
 #               Expectless 1bash
@@ -68,17 +84,10 @@
 #               SALFTER_MPH_PROFIT_SWITCHING
 #               ( BTC address: 1TipsGocnz2N5qgAm9f7JLrsMqkb3oXe2 )
 
-# SizzlePizzle: Algo mining unification
-#               
-# Stubo:        ver 0019-2.0 (community release) main developer
-#               nvOC function script
-#               minerinfo script
-#               multiple bug fixes and enhacements for ver 0019-2.0
-
 # xleejohnx:    SRR support
 #               ( BTC address: 1EY5WbiW3YkWanSKEGcjCETpQfCR81wc56 )
 
-v0001="Community Release"
+v0001="papampi;Community Release"
 v0002="Papampi;Telegram changes"
 v0003="Papampi;WTM_MINIMUM_MINING_TIME"
 v0004="Papampi;More NiceHash mining algos"
@@ -141,17 +150,18 @@ v0058="papampi;Allowed fan difference"
 # Do not edit these lines
 nvOC_Ver="v0019-3.1" 
 nvOC_1bash_ver="0058"
-nvOC_1bash_least_compatible="0048"
-nvOC_1bash_last_compatible="0048"
+nvOC_1bash_least_compatible="0058"
+nvOC_1bash_last_compatible="0058"
 
 # Open the terminal to launch miner; will auto launch on boot
 
 # firefox has an OP bookmark; look at the OP for more information
 
 # Supported Algorithms: 
-#               ETHASH, EQUIHASH, NEOSCRYPT, LYRA2V2, SKUNK, SKEIN, BITCORE, TIMETRAVEL10 
-#               KECCAK, LYRA2Z, X11GHOST, SIB, CRYPTONIGHT, CRYPTONIGHT-V7, PHI1612, PASCAL, LBRY 
-#               Diamond Groestl, GROESTL, Myriad Groestl, Decred, SIA, X13, X16R, XEVAN
+#               BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 CRYPTONIGHTV8 
+#               CUCKAROO29 CUCKATOO31 CUCKOOCYCLE DECRED ENERGI EQUIHASH ETHASH GRS 
+#               LBRY LYRA2V2 LYRA2RE3 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA 
+#               SIB SKEIN SKUNK X13 X16R X21S X22I XEVAN ZHASH
 
 # ALGO Mining with NiceHash (Auto converts to BTC)
 ######### NICE-ETHASH,NICE-EQUIHASH, NICE-LYRA2REV2, NICE-NEOSCRYPT, NICE-CRYPTONIGHT, NICE-X11GOST, NICE-SKUNKHASH
@@ -162,13 +172,16 @@ nvOC_1bash_last_compatible="0048"
 # ALGO Miningh with Miningpoolhub (Auto convert to any coins in MPH settings web page)
 #########MPH_EQUIHASH, MPH_ETHASH, MPH_SKEIN, MPH_LYRA2Z, MPH_NEOSCRYPT, MPH_LYRA2V2, MPH_CRYPTONIGHTV7, MPH_KECCAK
 
-# Claymore_Dual (ETHASH + Decred/Siacoin/Lbry/Pascal/Blake2s/Keccak)
-## All supported coins can be added in Claymore_Dual section
+# CLAYMORE_DUAL (ETHASH + Decred/Siacoin/Lbry/Pascal/Blake2s/Keccak)
+## All supported coins can be added in CLAYMORE_DUAL section
+
+# BMINER_DUAL (ETHASH + Decred/Siacoin/Lbry/Pascal/Blake2s/Keccak)
+## All supported coins can be added in BMINER_Dual section
 
 # Profit Switchers
-######### WhatToMine.com Auto switch
-######### SALFTER_NICEHASH_PROFIT_SWITCHING
-######### SALFTER_MPH_PROFIT_SWITCHING
+######### WTM_SWITCHING - Auto Switch based on WhatToMine.com API 
+######### SALFTER_NICEHASH_PROFIT_SWITCHING - NiceHash Profit Switching based on Nicehash API
+######### SALFTER_MPH_PROFIT_SWITCHING - MiningPoolHub  Profit Switching based on MPH API
 ######### SALFTER_PROGRAMATIC_SWITCHING       # - change what coin/algo you mine through an external JSON configuration file 
 
 # Choose any coins listed in coin section or add yours (Ask devs if you dont know how)
@@ -513,9 +526,7 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 
 # Available builtin miners:
 #        Various algos:
-#          "ANXccminer", "ASccminer", "CryptoDredge", "KTccminer",  
-#          "KXccminer", "SILENTminer", "SPccminer",  "SUPRminer",   
-#          "TPccminer", "T_Rex", "VERTMINER", "XMR_Stak", "ZENEMYminer"
+#          "CryptoDredge", "TPccminer", "T_Rex", "XMR_Stak", "ZENEMYminer" "GMiner"
 #        Energi:
 #          "ENERGIMINER"
 #        Equihash:

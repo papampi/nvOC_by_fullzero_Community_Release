@@ -345,7 +345,7 @@ then
   hash_count=$(eval $(jq -r .minerinfo.hash_count ${MINER_PATH}/nvoc-miner.json))
 
   solution_speed_unit=$(jq -r .minerinfo.solution_speed_unit ${MINER_PATH}/nvoc-miner.json)
-  hash_average="$((total_hash / hash_count)) $solution_speed_unit"
+  hash_average="$(echo $(echo "scale=2;($total_hash/$hash_count)" | bc)) $solution_speed_unit"
 
   miner_error=$(eval $(jq -r .minerinfo.miner_error ${MINER_PATH}/nvoc-miner.json))
   rejected_shares=$(eval $(jq -r .minerinfo.rejected_shares ${MINER_PATH}/nvoc-miner.json))
