@@ -2,13 +2,13 @@
 
 ##########################################################################
 ##########################################################################
-#################   nvOC v0019-3.0 - Community Release   #################
+####################   nvOC 3.1 - Community Release   ####################
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 ##########################################################################
 
 
-# 3main for v0019-3.0
+# 3main for v0019-3.1
 #
 # Dev Mod Log:
 #
@@ -72,10 +72,14 @@
 #          Support pluggable miners
 # v=0026 : Spiral
 #	   Set resolution from 1bash for teamviewer usage
+# v=0027 : papampi
+#	   Add Foreman Monitor
+# v=0028 : papampi
+#	   Miner Schedule
 
 source ${NVOC}/1bash
 
-nvOC_3main_Dev="0026"
+nvOC_3main_Dev="0028"
 nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"             # Do not edit this
 
 #########################################################################
@@ -148,6 +152,26 @@ then
   if ! ps ax | grep -q '[l]og_rotate'
   then
     guake -n $HCD -r LOG_ROTATE -e "bash ${NVOC}/log_rotate" &
+    sleep 1
+  fi
+fi
+
+if [[ $MINER_SCHEDULE == YES ]]
+then
+  HCD="${NVOC}/7miner_schedule"
+  if ! ps ax | grep -v grep | grep -q '7miner_schedule'
+  then
+    guake -n $HCD -r SCHEDULE -e "bash ${NVOC}/7miner_schedule" &
+    sleep 1
+  fi
+fi
+
+if [[ $LOAD_CHECK == YES ]]
+then
+  HCD="${NVOC}/7load_check"
+  if ! ps ax | grep -v grep | grep -q '7load_check'
+  then
+    guake -n $HCD -r LOAD_CHK -e "bash ${NVOC}/7load_check" &
     sleep 1
   fi
 fi
@@ -323,6 +347,57 @@ then
 fi
 
 sleep 2
+
+if [[ $FOREMAN_MONITOR == YES ]] 
+then
+  echo "Running with Foreman integration"
+
+  FOREMAN_NVOC=$NVOC/foreman
+
+  source $FOREMAN_NVOC/package.sh
+
+  # Verify that the user's client ID and API key are defined
+  if [[ -z $FOREMAN_CLIENT_ID || -z $FOREMAN_API_KEY ]]
+  then
+    echo "Either your FOREMAN_CLIENT_ID or FOREMAN_API_KEY haven't been set - check your 1bash"
+  else
+    FOREMAN_HOME=~/.foreman
+
+    FOREMAN_PICKAXE_ID=$(frmn_get_pickaxe_id)
+    if [[ -z $FOREMAN_PICKAXE_ID ]]
+    then
+      # No pickaxe ID - create one for this rig
+      FOREMAN_PICKAXE_ID=$(frmn_create_pickaxe)
+    fi
+
+    # Is a Foreman upgrade needed?
+    if [[ "$(frmn_get_current_pickaxe_version)" != "$(frmn_get_latest_pickaxe_version)" || "$(frmn_get_current_chisel_version)" != "$(frmn_get_latest_chisel_version)" ]]
+    then
+      # Upgrade needed
+      echo "Upgrading Foreman to latest version"
+
+      # Download and run the install/upgrade script
+      wget https://gist.githubusercontent.com/delawr0190/8cb40ab12c9f784d88b80d105e69933b/raw/install.sh \
+        -o /dev/null \
+        --no-check-certificate \
+        -q \
+        -O $FOREMAN_NVOC/foreman-install
+      chmod +x $FOREMAN_NVOC/foreman-install
+      export FOREMAN_HOME
+      sudo -E bash $FOREMAN_NVOC/foreman-install pickaxe $FOREMAN_CLIENT_ID $FOREMAN_API_KEY $FOREMAN_PICKAXE_ID
+      sudo -E bash $FOREMAN_NVOC/foreman-install chisel
+      sudo chown -R $(logname):$(logname) $FOREMAN_HOME
+
+      # Script is no longer needed
+      rm $FOREMAN_NVOC/foreman-install
+    fi
+
+    # Start everything
+    $FOREMAN_HOME/chisel/bin/chisel.sh restart
+    $FOREMAN_HOME/pickaxe/bin/pickaxe.sh restart
+    $FOREMAN_NVOC/miner-watch &
+  fi
+fi
 
 if [[ $TEAMVIEWER == NO ]]
 then
@@ -516,17 +591,17 @@ then
    "neoscrypt": {
      "speed": 0.002160, "power": 0.397,
      "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
-     "cmd": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
    },
    "lyra2rev2": {
      "speed": 0.081, "power": 0.386,
      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
-     "cmd": "${NVOC}/miners/SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
    },
    "lbry": {
      "speed": 0.639, "power": 0.392,
      "power_limit": $pwr_lim_lbry, "gpu_oc": $gpu_clks_lbry, "mem_oc": $mem_clks_lbry, "fan": 0,
-     "cmd": "${NVOC}/miners/SPccminer/recommended/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
+     "cmd": "${NVOC}/miners/TPccminer/recommended/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
    }
  }
 }
@@ -569,55 +644,55 @@ then
     },
     "Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0,
       "speed": 0.0853, "power": 0.392
     },
     "Keccak":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0,
       "speed": 1.45, "power": 0.391
     },
     "Lyra2RE2":
     {
-      "bin": "${NVOC}/miners//SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners//CryptoDredge/recommended/CryptoDredge -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_lyra2re2, "gpu_oc": $gpu_clks_lyra2re2, "mem_oc": $mem_clks_lyra2re2, "fan": 0,
       "speed": 0.081, "power": 0.386
     },
     "Myriad-Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0,
       "speed": 0.158, "power": 0.391
     },
     "NeoScrypt":
     {
-      "bin": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
       "speed": 0.002160, "power": 0.397
     },
     "Qubit":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0,
       "speed": 0.0509, "power": 0.382
     },
     "Scrypt":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0,
       "speed": 0.00224, "power": 0.403
     },
     "Sia":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0,
       "speed": 3.700, "power": 0.403
     },
     "Skein":
     {
-      "bin": "${NVOC}/miners/ASccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
       "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0,
       "speed": 0.835, "power": 0.383
     },
@@ -671,47 +746,47 @@ then
     },
     "Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_groestl, "gpu_oc": $gpu_clks_groestl, "mem_oc": $mem_clks_groestl, "fan": 0
     },
     "Keccak":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_keccak, "gpu_oc": $gpu_clks_keccak, "mem_oc": $mem_clks_keccak, "fan": 0
     },
     "Lyra2RE2":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_lyra2re2, "gpu_oc": $gpu_clks_lyra2re2, "mem_oc": $mem_clks_lyra2re2, "fan": 0
     },
     "Myriad-Groestl":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_myriad_groestl, "gpu_oc": $gpu_clks_myriad_groestl, "mem_oc": $mem_clks_myriad_groestl, "fan": 0
     },
     "NeoScrypt":
     {
-      "bin": "${NVOC}/miners/KTccminer/recommended/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/CryptoDredge/recommended/CryptoDredge -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0
     },
     "Qubit":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_qubit, "gpu_oc": $gpu_clks_qubit, "mem_oc": $mem_clks_qubit, "fan": 0
     },
     "Scrypt":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_scrypt, "gpu_oc": $gpu_clks_scrypt, "mem_oc": $mem_clks_scrypt, "fan": 0
     },
     "Sia":
     {
-      "bin": "${NVOC}/miners/SPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_sia, "gpu_oc": $gpu_clks_sia, "mem_oc": $mem_clks_sia, "fan": 0
     },
     "Skein":
     {
-      "bin": "${NVOC}/miners/ASccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
+      "bin": "${NVOC}/miners/TPccminer/recommended/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x -p c={COIN_CURRENCY}",
       "power_limit": $pwr_lim_skein, "gpu_oc": $gpu_clks_skein, "mem_oc": $mem_clks_skein, "fan": 0
     },
     "X11":

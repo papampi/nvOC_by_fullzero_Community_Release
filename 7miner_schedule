@@ -1,0 +1,24 @@
+#!/bin/bash
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source ${NVOC}/1bash
+#giving nvOC enough time to start all scripts
+sleep 120
+
+while true; do
+  currenttime=$(date +%H:%M)
+  if [[ "$currenttime" > $SCHEDULE_END ]] || [[ "$currenttime" < $SCHEDULE_START ]]
+  then
+    if ps ax |  grep SCREEN | grep -q 'miner'
+    then
+      bash ${NVOC}/nvOC stop
+    fi
+    sleep $(( $(date -d '$SCHEDULE_END' +%s) - $(date +%s) ))
+  else
+    if ! ps ax |  grep SCREEN | grep -q 'miner'
+    then
+      bash ${NVOC}/nvOC start
+    fi
+    sleep $(( $(date +%s) - $(date -d '$SCHEDULE_START' +%s) ))
+  fi
+done

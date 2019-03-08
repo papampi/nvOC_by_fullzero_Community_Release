@@ -1,0 +1,139 @@
+#!/bin/bash
+
+# The following script provides a mechanism to automatically identify when the running
+# miner doesn't match the miner entered into Foreman.  Once there's a difference, the miner
+# in Foreman is automatically updated to match the running miner type.
+
+source $NVOC/1bash
+source $NVOC/foreman/package.sh
+
+MINERS=$NVOC/miners
+FOREMAN_LOG_FILE=$NVOC/nvoc_logs/foreman-miner-monitor
+
+FOREMAN_PICKAXE_ID=$(frmn_get_pickaxe_id)
+
+message() {
+    echo "$(date "+%F %T") $1" >> $FOREMAN_LOG_FILE
+}
+
+get_ccminer_port() {
+    pgrep -afn "$MINERS" | grep -Eo "b 127.0.0.1:[0-9]{4,5}" | cut -d '=' -f2 | cut -d ':' -f2 | xargs
+}
+
+check_miner() {
+    MINER_PATH=$(pgrep -afn "$MINERS" | awk '{ print $2 }')
+    MINER=${MINER_PATH#"$MINERS"}
+    MINER=$(echo $MINER | cut -d '/' -f 2 | tr '[:upper:]' '[:lower:]')
+
+    if [ -z $MINER ]; then
+        message "Failed to find a running miner"
+        return
+    fi
+
+    # Check for a miner manifest for API information
+    PM_FILE="$(dirname $MINER_PATH)/nvoc-miner.json"
+    if [[ -f "$PM_FILE" ]]; then
+        # Extract information from the digest
+        MINER=$(jq -r .foreman.name $PM_FILE)
+        API_PORT=$(echo $(jq -r .foreman.api_ext $PM_FILE) | grep -Eo "[0-9]{4,5}")
+    else
+        # Attempt to parse the command line for the information.  This should all be removed
+        # once everything is migrated to the new pluggable miner design
+        case $MINER in
+            *)
+                message "Unmapped miner '$MINER' found - can't update"
+                return
+                ;;
+        esac
+    fi
+
+    # Check to see if Foreman's miner type matches the currently running miner
+    FOREMAN_MINER_DETAIL=$(curl \
+                            -s \
+                            -H "Authorization: Token $FOREMAN_API_KEY" \
+                            https://dashboard.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID | \
+                            jq -r '.[] | select(.platform=="nvOC" and .apiIp=="127.0.0.1")')
+    FOREMAN_MINER_ID=$(echo $FOREMAN_MINER_DETAIL | jq -r ".id")
+    FOREMAN_MINER_TYPE=$(echo $FOREMAN_MINER_DETAIL | jq -r ".minerType")
+
+    if [ -z "$FOREMAN_MINER_TYPE" ]; then
+        # Miner doesn't exist - make one
+        message "No matching miner exists in Foreman - creating one for worker '$WORKERNAME'"
+        MINER_JSON=$(jq -n --arg name "$WORKERNAME" \
+                           --arg platform "nvOC" \
+                           --arg minerType "$MINER" \
+                           --arg apiIp "127.0.0.1" \
+                           --arg apiPort $API_PORT '. | 
+                            {
+                                name: $name, 
+                                platform: $platform,
+                                minerType: $minerType,
+                                apiIp: $apiIp,
+                                apiPort: $apiPort|tonumber
+                            }')
+        STATUS=$(curl \
+                    -s \
+                    -o /dev/null \
+                    -w "%{http_code}" \
+                    -X POST \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Token $FOREMAN_API_KEY" \
+                    -d "$MINER_JSON" \
+                    https://dashboard.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID)
+
+        if [ $STATUS -eq 201 ]; then
+            message "Successfully created a new miner in Foreman"
+            FOREMAN_MINER_TYPE=$MINER
+        else
+            message "Failed to create a new miner in Foreman"
+            return
+        fi
+    fi
+
+    message "Miner currently running: $MINER"
+    message "Miner in Foreman:        $FOREMAN_MINER_TYPE"
+
+    if [ "$MINER" != "$FOREMAN_MINER_TYPE" ]; then
+        # The miner type changed - update it in Foreman
+        message "Miner has changed for worker '$WORKERNAME' - updating it to '$MINER'"
+        MINER_JSON=$(jq -n --arg name "$WORKERNAME" \
+                       --arg platform "nvOC" \
+                       --arg minerType "$MINER" \
+                       --arg apiIp "127.0.0.1" \
+                       --arg apiPort $API_PORT '. | 
+                        {
+                            name: $name, 
+                            platform: $platform,
+                            minerType: $minerType,
+                            apiIp: $apiIp,
+                            apiPort: $apiPort|tonumber
+                        }')
+        STATUS=$(curl \
+                    -s \
+                    -o /dev/null \
+                    -w "%{http_code}" \
+                    -X PUT \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Token $FOREMAN_API_KEY" \
+                    -d "$MINER_JSON" \
+                    https://dashboard.foreman.mn/api/miners/$FOREMAN_CLIENT_ID/$FOREMAN_PICKAXE_ID/$FOREMAN_MINER_ID)
+        if [ $STATUS -eq 200 ]; then
+            message "Successfully updated the miner type"
+        else
+            message "Failed to update the miner type"
+        fi
+    fi
+}
+
+message "Starting Foreman miner monitoring process"
+while true
+do
+    check_miner
+    
+    # Log file cleanup, if needed
+    if [ -e "$FOREMAN_LOG_FILE" ]; then
+        echo "$(tail -4000 $FOREMAN_LOG_FILE)" > $FOREMAN_LOG_FILE
+    fi
+
+    sleep 30
+done

@@ -3,7 +3,7 @@
 # Rev 0002
 # Rev 0003: papampi, Some clean up and additions
 # Rev 0004: papampi, Average Hash rate for zm and ethminer
-# Rev 0005: LukePicci, Relocate nvOC to arbitrary install directory
+# Rev 0005: LuKePicci, Relocate nvOC to arbitrary install directory
 # Rev 0006: papampi, More average Hash rate and reported hash rate to WTM
 # Rev 0007: papampi, Wait for watchdog to get gpu count
 # Rev 0008: papampi, Individual PL, OC, MC
@@ -11,9 +11,10 @@
 # Rev 0010: LuKePicci, Support pluggable miners
 # Rev 0011: papampi, More miner info
 # Rev 0012: papampi, T_Rex average hash rate
+# Rev 0013: LuKePicci, cleanup moved parsing rules
 
 
-nvOC_minerinfo_Dev="0012"
+nvOC_minerinfo_Dev="0013"
 
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -38,7 +39,7 @@ echo '<html>'
 echo '<head>'
 echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8\n\n">'
 source ${NVOC}/1bash
-source ${NVOC}/0algo_id
+source ${NVOC}/helpers/coin_algo_mapping
 
 echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
 echo '</style>'
@@ -96,7 +97,7 @@ else
 fi
 
 REBOOT_REQUIRED=$( [ -f /var/run/reboot-required ]  && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
-MINER_PID=$(pgrep -f -o  miner)
+MINER_PID=$(pgrep -fn "${NVOC}/miners")
 MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
 TEMP_FAN_POWER=$(tail  -50 ${NVOC}/nvoc_logs/tempcontrol-screenlog.0  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
 TEMP_ALERT_LOG=$(cat ${NVOC}/6_autotemplog | awk '{print $0,"<br>"}')
@@ -108,7 +109,8 @@ DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
 MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
 FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
 CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
-MINER_CMD=$(ps ax | grep -i screen | grep miner | grep -o 'miners.*')
+MINER_CMD=$(pgrep -afn "${NVOC}/miners" | cut -d ' ' -f 1 --complement)
+MINER_PATH="$(dirname "$(pgrep -afn "${NVOC}/miners" | cut -d ' ' -f 2)")"
 MINER_LOG=$(tail -n $(( $TAIL_GPU_COUNT * 2 )) ${NVOC}/nvoc_logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
 eval 'COIN_POOL=${COIN}_POOL'
 default_cuda_version=$(sed 's/CUDA Version//' "/usr/local/cuda/version.txt" )
@@ -343,7 +345,7 @@ then
   hash_count=$(eval $(jq -r .minerinfo.hash_count ${MINER_PATH}/nvoc-miner.json))
 
   solution_speed_unit=$(jq -r .minerinfo.solution_speed_unit ${MINER_PATH}/nvoc-miner.json)
-  hash_average="$((total_hash / hash_count)) $solution_speed_unit"
+  hash_average="$(echo $(echo "scale=2;($total_hash/$hash_count)" | bc)) $solution_speed_unit"
 
   miner_error=$(eval $(jq -r .minerinfo.miner_error ${MINER_PATH}/nvoc-miner.json))
   rejected_shares=$(eval $(jq -r .minerinfo.rejected_shares ${MINER_PATH}/nvoc-miner.json))
@@ -355,24 +357,6 @@ then
   hash_average="$((total_hash / hash_count)) Sols/s"
   miner_error=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
   rejected_shares=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
-
-elif  ps ax | grep miner | grep -q "[e]thminer"
-then
-  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o '[0-9]*.[0-9]* Mh/s' | awk '{print$1}' | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -v grep | wc -l | awk '{print $1}')
-  hash_average="$((total_hash / hash_count)) MH/s"
-  rejected_shares=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Speed" | grep -o "R[0-9]*+[0-9]*" | sed 's/R//' | tail -1)
-
-elif  ps ax |  grep miner | grep -q "[C]LAYMORE"
-then
-  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $5}' | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total Speed:" | grep -v grep | wc -l | awk '{print $1}')
-  hash_average="$((total_hash / hash_count)) MH/s"
-  miner_error=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
-  then
-    rejected_shares=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
-  fi
 
 elif  ps ax | grep miner | grep -q "[K]Tccminer"
 then
@@ -406,64 +390,18 @@ then
   hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "accepted" | grep -v grep |  wc -l | awk '{print $1}')
   hash_average=$((total_hash / hash_count))
 
-elif  ps ax | grep miner | grep -q "[B]MINER"
+elif  ps ax | grep miner | grep -q "[z]m_miner"
 then
-  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Total [0-9]*" | awk '{print $2}' | grep -v grep | wc -l | awk '{print $1}')
-  hash_average=$((total_hash / hash_count))
+  miner_error=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
+  rejected_shares=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
 
-elif  ps ax | grep miner | grep -q  "[Z]ENEMYminer"
-then
-  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | wc -l | awk '{print $1}')
-  if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"
-  then
-    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[M]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]*MH/s" | sed 's:MH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
-    hash_average="$((total_hash / hash_count)) MH/s"
-  elif tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[k]H/s"
-  then
-    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares" | grep "[k]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]*kH/s" | sed 's:kH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
-    hash_average="$((total_hash / hash_count)) kH/s"
-  fi
-  rejected_shares=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Shares:" | grep -o "R:[0-9]*.[0-9]*%" | cut -f2- -d: | tail -1)
-
-elif  ps ax | grep miner | grep -q "[T]_Rex"
-then
-  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "OK" | wc -l | awk '{print $1}')
-  if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"
-  then
-    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "OK" | grep "[M]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]* MH/s" | sed 's:MH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
-    hash_average="$((total_hash / hash_count)) MH/s"
-  elif tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[k]H/s"
-  then
-    total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "OK" | grep "[k]H/s" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | grep -o -E "[0-9]*.[0-9]* kH/s" | sed 's:kH/s::' | awk '{s+=$1} END {printf "%.0f", s}')
-    hash_average="$((total_hash / hash_count)) kH/s"
-  fi
-  rejected_shares=$(tail -n 50 ${NVOC}/nvoc_logs/screenlog.0 | grep "INFO" | grep -o "[0-9]*/[0-9]* Accepted" | tail -1)
-  miner_error=$(tail -100  ${NVOC}/nvoc_logs/screenlog.0 | grep "ERROR" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' )
-
-elif  ps ax | grep miner | grep -q "[Z]_EWBF"
-then
-  total_hash=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | grep -o "[0-9]*.[0-9]* Sol/s" |awk '{print $1}'| awk '{s+=$1} END {printf "%.0f", s}')
-  hash_count=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep "Total speed" | grep -v grep |  wc -l | awk '{print $1}')
-  hash_average=$((total_hash / hash_count))
-
-elif  ps ax | grep miner | grep -q "[C]ryptoDredge"
-then
-  hash_count=$(tail -200 ${NVOC}/nvoc_logs/screenlog.0 | grep "Accepted" | grep -v grep |  wc -l | awk '{print $1}')
-  if tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[M]H/s"
-  then
-    total_hash=$(tail -200 ${NVOC}/nvoc_logs/screenlog.0 | grep "Accepted" | grep -o '[0-9]*.[0-9]*MH/s' | sed -r 's@MH/s@@' | awk '{s+=$1} END {printf "%.0f", s}')
-    hash_average="$((total_hash / hash_count)) MH/s"
-  elif tail -20 ${NVOC}/nvoc_logs/screenlog.0 | grep -q "[K]H/s"
-  then
-    total_hash=$(tail -200 ${NVOC}/nvoc_logs/screenlog.0 | grep "Accepted" | grep -o '[0-9]*.[0-9]*KH/s' | sed -r 's@KH/s@@' | awk '{s+=$1} END {printf "%.0f", s}')
-    hash_average="$((total_hash / hash_count)) KH/s"
-  fi
-  rejected_shares=$(tail -200  ${NVOC}/nvoc_logs/screenlog.0  | grep -o "INFO  - [0-9]*/[0-9]*" | cut -f2- -d/ | tail -1)
-  miner_error=$(tail -200  ${NVOC}/nvoc_logs/screenlog.0 | grep "ERROR" | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' )
 fi
 ##################################################################
 ########################### WTM Hash Rate ########################
+
+# TODO: I think it doesn't make much sense to have a further mapping below, should be defined in 1bash as well
+#       like WTM_HR="ETHASH=eth,EQUIHASH=eq,NEOSCRYPT=ns,...", and then we just need here
+#       WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o \'%5B$(filter_on(WTM_HR))_hr%5D=[0-9]*\' | cut -f2- -d=)
 
 if [[ $ALGO == ETHASH ]]
 then
@@ -497,6 +435,10 @@ elif [[ $ALGO == X16R ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bx16r_hr%5D=[0-9]*' | cut -f2- -d=)
 
+elif [[ $ALGO == X22I ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bx22i_hr%5D=[0-9]*' | cut -f2- -d=)
+
 elif [[ $ALGO == XEVAN ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bxn_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
@@ -513,25 +455,6 @@ elif [[ $ALGO == LYRA2Z ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bl2z_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
-else
-  WTM_HASH="Not Available"
-fi
-########################################################################
-########################### Miner ERROR Logs ###########################
-
-if  ps ax | grep -q "[z]m_miner"
-then
-  MINER_ERROR=$(tail  -500 ${NVOC}/nvoc_logs/screenlog.0 | grep -E "invalid|timeout|closed" | tail -n $TAIL_GPU_COUNT |sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  REJECTED_SHARES=$(tail -1000 ${NVOC}/nvoc_logs/screenlog.0 |  grep  "reject" |  awk '{print $0,"<br>"}')
-
-elif  ps ax |  grep -q "[c]laymore"
-then
-  MINER_ERROR=$(tail -n 100 ${NVOC}/nvoc_logs/screenlog.0 |  grep "No new jobs" | tail -n $TAIL_GPU_COUNT |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | awk '{print $0,"<br>"}')
-  if (( $(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | awk '{print $2}' |tail -1) > 0 ))
-  then
-    REJECTED_SHARES=$(tail -100 ${NVOC}/nvoc_logs/screenlog.0 | grep -o "Rejected: [0-9]*" | tail -1 | awk '{print $2},"<br>"')
-  fi
-
 elif [[ $ALGO == CRYPTONIGHTHEAVY ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcnh_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
@@ -540,8 +463,12 @@ elif [[ $ALGO == PHI2 ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bphi2_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
 
+elif [[ $ALGO == ZHASH ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bzh_hr%5D=[0-9].[0-9]*' | cut -f2- -d=)
+
 else
-  MINER_ERROR="Send us your miner error logs to add"
+  WTM_HASH="Not Available"
 fi
 
 ###################################################################

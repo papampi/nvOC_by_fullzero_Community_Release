@@ -2,6 +2,13 @@
 export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
+
+# Prevent too many restarts
+if (( MINER_RESTART_TIMEOUT_IN_MINUTES < 60 ))
+then
+  MINER_RESTART_TIMEOUT_IN_MINUTES=60
+fi
+
 TIMEIN=$MINER_RESTART_TIMEOUT_IN_MINUTES
 TIMEOUT=$(($TIMEIN * 60))
 
