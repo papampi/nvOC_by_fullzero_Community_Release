@@ -167,6 +167,11 @@ function dgh_gpu_count () {
  #    $2 char - The delimiter between the GPU numbers, if there's no delimiter, pass in ''
  #                   E.g. pass ' ' for this arguments with the ETHMINER OPTS Example from above
  #    $3 str  - The original ETHMINER OPTS
+ #    $4 char - 'Z', 'N' or 'A', 
+ #            'Z' - generate the devices options in numeric form starting from zero: 0,1,2,3,..,10,... (Suitable for most miner)
+ #            'N' - generate the devices options in numeric form starting from one: 1,2,3,4,...,11,... (Suitable for some special miner)
+ #            'A' - generate the devices in alphanumeric: 0123...abc... ($2 must be set '' to void the delimiter)
+ #            # Refer dgh_all_enabled_devices $3
  #    GLOBAL:
  #        DISABLED_GPU_ARRAY
  # RETURNS:
@@ -183,6 +188,7 @@ function dgh_update_devices () {
   local prefix=$1
   local delimiter=$2
   local input=$3
+  local type=$4
   # do nothing and echo back the input if no disabled gpu defined
   [[ ! -v DISABLED_GPU_ARRAY[@] ]] && {
     echo $input
@@ -208,11 +214,16 @@ function dgh_update_devices () {
     # we put each group of alphanumeric into individual array position
     devices=($(echo ${match#$prefix} | grep -o "[0-9a-z]\+"))
   }
+  # echo "the array contains ${#devices[@]} elements"
+  # echo "the array contains ${#devices[@]} elements"
   local enabled_devices=''
+  local ind
   for dev in ${devices[@]}; do
+    ind=$dev
+    [[ $type = 'N' ]] && (( ind-- )) # normalized 1 based-index to 0 based-index for gpu checking
     # Check if device is disabled
     # append to enabled_devices if not disabled
-    dgh_is_gpu_disabled $dev || enabled_devices+="$dev$delimiter"
+    dgh_is_gpu_disabled $ind || enabled_devices+="$dev$delimiter"
   done
   # Strip extra delimiter at the end
   [[ ! -z $enabled_devices ]] && enabled_devices=${enabled_devices%$delimiter}
@@ -269,9 +280,11 @@ function dgh_all_enabled_devices () {
  #            E.g. ETHMINER OPTS is --cuda_devices 0 1 2 3, then pass '--cuda_devices ' as the arguments with trailing space
  #  $2 char - The delimiter between the GPU numbers, if there's no delimiter, pass in ''
  #            E.g. pass ' ' for this arguments with the ETHMINER OPTS Example from above
- #  $3 char - 'n' or 'a',
- #            'n' - generate the devices options in numeric: 0,1,2,3,..,10,... (Suitable for most miner)
- #            'a' - generate the devices in alphanumeric: 0123...abc... ($2 must be set '' to void the delimiter)
+ #  $3 char - 'Z', 'N' or 'A', 
+ #            'Z' - generate the devices options in numeric form starting from zero: 0,1,2,3,..,10,... (Suitable for most miner)
+ #            'N' - generate the devices options in numeric form starting from one: 1,2,3,4,...,11,... (Suitable for some special miner)
+ #            'A' - generate the devices in alphanumeric: 0123...abc... ($2 must be set '' to void the delimiter)
+ #            # Refer dgh_all_enabled_devices $3
  #  $4 str  - The original ETHMINER OPTS as input
  #  $5 int  - # of gpus, default to GLOBAL_VARIABLE GPUS or query via smi if not set
  #  GLOBAL:
@@ -293,7 +306,7 @@ function dgh_enabled_devices () {
   }
   # input contain matching prefix
   [[ ! -z $1 ]] && [[ $4 =~ $1 ]] && {
-    dgh_update_devices "$1" "$2" "$4"
+    dgh_update_devices "$1" "$2" "$4" "$3"
     return $?
   } 
   # no matching prefix
