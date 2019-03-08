@@ -46,7 +46,6 @@
 #               Alternative telegram alert
 #               ( BTC address: 1Mtf6K7c3ZhBDcPz91c4wcQ95DxLn88zC )
 
-
 # IAmNotAJeep:  IAmNotAJeep_and_Maxximus007_WATCHDOG
 #               Methods for improved system stability
 #               ( BTC address: 13PnEKpfVzNseWkrm6LoueKcCMPj74zPv7 )
@@ -243,6 +242,9 @@ MINER_RESTART="NO"            # YES or NO # If you want to periodically restart 
 MINER_RESTART_TIMEOUT_IN_MINUTES=720  # If MINER_RESTART is set to YES, use this to set how often to restart miner, 720 = 12 hours, minimum 60.
 
 MINER_SCHEDULE="NO"        # Schedule mining to stop and start between given times
+
+SCHEDULE_START="07:00"     # Mining start at this time
+
 
 SCHEDULE_START="07:00"     # Mining start at this time
 
