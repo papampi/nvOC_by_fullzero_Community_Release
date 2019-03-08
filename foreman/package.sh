@@ -63,6 +63,7 @@ function frmn_get_current_pickaxe_version() {
 function frmn_get_latest_chisel_version() {
     echo $(wget \
             -qO- \
+            --no-check-certificate \
             https://api.github.com/repos/delawr0190/foreman-chisel/releases | \
             jq -r '[.[] | .tag_name][0]')
 }
@@ -70,6 +71,7 @@ function frmn_get_latest_chisel_version() {
 function frmn_get_latest_pickaxe_version() {
     echo $(wget \
             -qO- \
+            --no-check-certificate \
             https://api.github.com/repos/delawr0190/foreman-apps/releases | \
             jq -r '[.[] | .tag_name][0]')
 }
