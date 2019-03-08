@@ -379,6 +379,7 @@ then
       # Download and run the install/upgrade script
       wget https://gist.githubusercontent.com/delawr0190/8cb40ab12c9f784d88b80d105e69933b/raw/install.sh \
         -o /dev/null \
+        --no-check-certificate \
         -q \
         -O $FOREMAN_NVOC/foreman-install
       chmod +x $FOREMAN_NVOC/foreman-install
