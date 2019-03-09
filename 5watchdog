@@ -225,6 +225,7 @@ do
 
   # Set/increment vars
   NUM_GPU_BLW_THRSHLD=0              # Track how many GPU are below threshold
+  REBOOTRESET=$((REBOOTRESET + 1))
 
   # Loop over each GPU and check utilization
   for (( GPU=0; GPU < GPU_COUNT; GPU++))
