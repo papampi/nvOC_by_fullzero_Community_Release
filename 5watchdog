@@ -288,8 +288,9 @@ do
           # Give 3main time to restart
           sleep $SLEEP_TIME
           echo "$(date) - [INFO] - Back 'on watch' after miner restart"
-        done
-      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+        fi
+      done
+      if (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
@@ -338,8 +339,9 @@ do
           # Give 3main time to restart
           sleep $SLEEP_TIME
           echo "$(date) - [INFO] - Back 'on watch' after miner restart"
-        done
-      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+        fi
+      done
+      if (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
         echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
         COUNT=$((COUNT - 1))
@@ -564,6 +566,6 @@ do
       REBOOTRESET=0
     fi
   fi
-# Delay until next cycle
+  # Delay until next cycle
   sleep $WATCHDOG_CYCLE
 done
