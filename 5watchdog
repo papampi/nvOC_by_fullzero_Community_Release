@@ -243,8 +243,8 @@ do
 
     # Numeric check: if any are not numeric, we have a mining problem
 
-    while ! [[ ( $UTIL =~ $numtest ) ]]
-    do
+    if ! [[ ( $UTIL =~ $numtest ) ]]
+    then
       # Not numeric so: Help we've lost a GPU
       echo "$(date) - [CRITICAL] - Lost GPU$GPU restarting 3main, it may solve the issue. Found GPU's:" | tee -a ${LOG_FILE}
       echo ""
@@ -281,8 +281,7 @@ do
           sudo reboot -f
         fi
       fi
-    done
-    if (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+    elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
     then
       echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
       COUNT=$((COUNT - 1))
