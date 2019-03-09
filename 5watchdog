@@ -289,6 +289,7 @@ do
           sleep $SLEEP_TIME
           echo "$(date) - [INFO] - Back 'on watch' after miner restart"
         fi
+        { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
       done
       if (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
@@ -340,6 +341,7 @@ do
           sleep $SLEEP_TIME
           echo "$(date) - [INFO] - Back 'on watch' after miner restart"
         fi
+        { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
       done
       if (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
       then
