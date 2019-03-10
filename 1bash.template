@@ -299,7 +299,7 @@ SYSRQ_REBOOT="NO"           # YES or NO # Use sys request reboot or normal reboo
 
 WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU utilization
 
-WATCHDOG_USE_COLOR="NO"     # Watchdog log beautifier, use bold text and colors
+WATCHDOG_USE_COLOR="YES"     # Watchdog log beautifier, use bold text and colors
 
 GPU_UTIL_THRESHOLD="70"     # GPU utilization threshold, If utilization bellow this value watchdog takes action (Recommended values 70-90) 
 
@@ -396,7 +396,7 @@ RESTORE_POWER_LIMIT=85        # Restore original Power Limit if fan speed is low
 
 WARN_PL_DROPS="NO"            # Gives a Warning every time an auto-adjustment occurs and Powerlimit gets dropped
 
-USE_COLOR="YES"               # YES or NO, enables Text output beautifier, use bold text and colors
+TEMPCONTROL_USE_COLOR="YES"               # YES or NO, enables Text output beautifier, use bold text and colors
 
 
 ########################################################
