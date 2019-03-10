@@ -69,13 +69,15 @@
 #          Optimize first run miner check
 # v=0023 : brightskye
 #          Adds support for disabled_gpu
+# v=0024 : papampi
+#          Restart 3main before reboot when GPU lost
 
 
 export DISPLAY=:0
 source ${NVOC}/1bash
 source ${NVOC}/helpers/disabled_gpu.sh
 
-nvOC_wdog_Dev="0023"
+nvOC_wdog_Dev="0024"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
 
 echo "Watchdog for nvOC $nvOC_Ver"
@@ -136,7 +138,7 @@ sleep 2
 
 # Don't send telegram alert after every WTM switch
 if [[ $TELEGRAM_ALERTS == "YES" && $AUTO_SWITCH == "NO" ]]; then
-  bash "${NVOC}/telegram"
+  bash "${NVOC}/telegram" &
 fi
 
 # Initialize vars
@@ -249,7 +251,7 @@ do
       nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
       echo ""
       if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-        bash "${NVOC}/telegram"
+        bash "${NVOC}/telegram" &
       fi
       # Kill the miner to be sure it's gone
       ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}' | xargs kill
@@ -263,7 +265,7 @@ do
       then
         echo "$(date) - [CRITICAL] - Lost GPU$GPU restarting 3main didnt help, reboot in 5 seconds"  | tee -a ${LOG_FILE}
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash "${NVOC}/telegram"
+          bash "${NVOC}/telegram" &
         fi
         sleep 5
         if [[ $SYSRQ_REBOOT == YES ]]
@@ -272,6 +274,8 @@ do
         else
           sudo reboot -f
         fi
+      else
+        echo "$(date) - [INFO] - Restarting 3main solved GPU$GPU issue, no need to reboot." | tee -a ${LOG_FILE}
       fi
     elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
     then
@@ -451,7 +455,7 @@ do
         echo ""
         if [[ $TELEGRAM_ALERTS == YES ]]
         then
-          bash "${NVOC}/telegram"
+          bash "${NVOC}/telegram" &
         fi
         sleep 10
         if [[ $SYSRQ_REBOOT == YES ]]
@@ -465,7 +469,7 @@ do
       echo "$(date) - [CRITICAL] - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE}
       if [[ $TELEGRAM_ALERTS == YES ]]
       then
-        bash "${NVOC}/telegram"
+        bash "${NVOC}/telegram" &
       fi
       # Kill the miner to be sure it's gone
       ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}' | xargs kill
