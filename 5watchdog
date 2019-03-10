@@ -240,7 +240,6 @@ do
     echo "$(date) - [INFO] - GPU$GPU Utilization: $UTIL%"
 
     # Numeric check: if any are not numeric, we have a mining problem
-
     if ! [[ ( $UTIL =~ $numtest ) ]]
     then
       # Not numeric so: Help we've lost a GPU
@@ -250,11 +249,6 @@ do
       nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
       echo ""
       if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-        bash "${NVOC}/telegram"
-      fi
-      echo "$(date) - [CRITICAL] - Lost GPU$GPU: restarting 3main..." | tee -a ${LOG_FILE}
-      if [[ $TELEGRAM_ALERTS == YES ]]
-      then
         bash "${NVOC}/telegram"
       fi
       # Kill the miner to be sure it's gone
@@ -285,8 +279,6 @@ do
       COUNT=$((COUNT - 1))
       NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
     fi
-
-
     sleep 0.5    # raise to 0.5 seconds delay until querying the next GPU to lower nvidia-smi impact
   done
 
