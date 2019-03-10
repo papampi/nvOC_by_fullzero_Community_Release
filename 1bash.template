@@ -227,7 +227,9 @@ LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local a
 
 
 TEAMVIEWER="NO"             # YES or NO # If you use Team Viewer to remotely connect to this rig set this to YES
+
 RESOLUTION="1366x768"       # Default system resolution used when connecting through TeamViewer
+
 
 SSH="YES"                   # YES or NO # If you use SSH to remotely connect to this rig set this to YES
 
@@ -236,9 +238,11 @@ AUTO_REBOOT="NO"            # YES or NO # If you want this rig to periodically r
 
 REBOOT_TIMEOUT_IN_MINUTES=2880  # If AUTO_REBOOT is set to YES, use this to set how often to reboot, 1440 = 24 hours, 2880 = 48 hours, minimum 60.
 
+
 MINER_RESTART="NO"            # YES or NO # If you want to periodically restart miner set this to YES
 
 MINER_RESTART_TIMEOUT_IN_MINUTES=720  # If MINER_RESTART is set to YES, use this to set how often to restart miner, 720 = 12 hours, minimum 60.
+
 
 MINER_SCHEDULE="NO"        # Schedule mining to stop and start between given times
 
@@ -246,14 +250,12 @@ SCHEDULE_START="07:00"     # Mining start at this time
 
 SCHEDULE_END="19:00"       # Mining stop at this time
 
-SLOW_USB_KEY_MODE="NO"      # YES or NO # If you are using a slow USB flash drive (eg. USB 1.0 or USB 2.0) set this to YES
-
 
 GLOBAL_WORKERNAME="YES"     # YES or NO # Use same workername for all coins
 
 AUTO_WORKERNAME="HOST"      # HOST or MAC or CUSTOM # Use HOST IP address or network card MAC address or CUSTOM name workername
 
-CUSTOM_WORKERNAME="19_2"    # If AUTO_WORKERNAME="CUSTOM" enter your desired workername here
+CUSTOM_WORKERNAME="19_3"    # If AUTO_WORKERNAME="CUSTOM" enter your desired workername here
 
 
 _Parallax_MODE="NO"         # YES or NO # To deploy 1bash remotely from pastebin.com . You will need to create account
@@ -277,9 +279,12 @@ SRR_SERIAL="000055"         # Remote SRR control setting
 __SRR_SLOT="1"              # Remote SRR control setting
 
 
-CONTROL_GPU_LED="YES"       # YES or NO # Control GPU LED light. NOTE: It only works on some models
+CONTROL_GPU_LED="NO"       # YES or NO # Control GPU LED light. NOTE: It only works on some models
 
 LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OFF, 100 = full brightness
+
+
+SLOW_USB_KEY_MODE="NO"      # YES or NO # If you are using a slow USB flash drive (eg. USB 1.0 or USB 2.0) set this to YES
 
 ########################################################
 #                                                      #
@@ -289,15 +294,13 @@ LED_BRIGHTNESS=100          # 0 - 100 # Set the LED brightness intensity. 0 = OF
 
 MINER_WATCHDOG="YES"        # YES or NO # Monitors the rig and automatically corrects the detected problems. Highly recommended to use this!
 
-LOAD_CHECK="YES"            # YES or NO, Check system load average and reboot if HIGH_LOAD_REBOOT="YES", not works if using plusCPU 
+LOAD_CHECK="NO"            # YES or NO, Check system load average and reboot if HIGH_LOAD_REBOOT="YES", not works if using plusCPU 
 
 HIGH_LOAD_REBOOT="NO"       # YES or NO, Set to YES if you want LOAD_CHECK reboot the rig when all load averages (1 min, 5 min and 15 min) are too much higher than normal.
 			    # Works only if not using plusCPU.
-			    
 SYSRQ_REBOOT="NO"           # YES or NO # Use sys request reboot or normal reboot. 
                             # Set "YES", watchdog, tempcontrol and load_check use sysrq reboot to prevent kernel panic and freeze if GPU drops off the bus
-
-WATCHDOG_CYCLE="15"         # Time between watchdog cycle loops to check GPU utilization
+WATCHDOG_CYCLE="20"         # Time between watchdog cycle loops to check GPU utilization
 
 WATCHDOG_USE_COLOR="YES"     # Watchdog log beautifier, use bold text and colors
 
@@ -369,16 +372,17 @@ MINER_TEMP_CONTROL="YES"           # YES or NO # Automatically adjusts the fan s
 
 MANUAL_FAN="NO"                    # YES or NO # Manually set the fans, no auto adjustment. Set this to NO if using the auto MINER_TEMP_CONTROL
 
-FAN_SPEED=75                       # Set fan speed percentage if MANUAL_FAN="YES" (Do not write the % sign)
+FAN_SPEED=70                       # Set fan speed percentage if MANUAL_FAN="YES" (Do not write the % sign)
 
 INDIVIDUAL_TARGET_TEMPS="NO"  # YES or NO, if YES global target temperature is overridden by individual per-GPU setting found later in this file
 
-TARGET_TEMP=65                # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
+TARGET_TEMP=70                # Set the desired global (all GPU's) target temperature in Celsius. Recommended ranges: 55 - 75
 
 HOT_SHUTDOWN="NO"	      # YES or NO, if YES system will shutdown when SHUTDOWN_TEMP is exceeded.
-SHUTDOWN_TEMP=85	      # If HOT_SHUTDOWN is YES then the system will shutdown if this number is exceeded. (Celsius)
 
-TEMP_CONTROL_CYCLE="15"       # Time between Temp control cycle loops, max 30 seconds
+SHUTDOWN_TEMP=90	      # If HOT_SHUTDOWN is YES then the system will shutdown if this number is exceeded. (Celsius)
+
+TEMP_CONTROL_CYCLE="20"       # Time between Temp control cycle loops, max 30 seconds
 
 ALLOWED_TEMP_DIFF=2           # If current temp is 2C below the target temp reduce the fan speed. Works only if current temp is below target temp
 
@@ -409,11 +413,9 @@ TEMPCONTROL_USE_COLOR="YES"               # YES or NO, enables Text output beaut
 
 FOREMAN_MONITOR="NO"          # Enable or Disable Foreman monitoring.
                               # To use Foreman, you must register an account at https://foreman.mn
-
 FOREMAN_CLIENT_ID=""          # After registering, open https://dashboard.foreman.mn/dashboard/profile/ to
                               # get your client ID and API key.  These are needed so your rigs can be
 FOREMAN_API_KEY=""            # correctly associated with your private dashboard
-
 
 ########################################################################################
 # GLOBAL_WORKERNAME implementation Start - DO NOT EDIT this section                    #
@@ -527,15 +529,15 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 
 # Available builtin miners:
 #        Various algos:
-#          "CryptoDredge", "TPccminer", "T_Rex", "XMR_Stak", "ZENEMYminer" "GMiner"
+#          "BMINER", "CryptoDredge", "GMiner", "NBMiner", "TPccminer", "T_Rex", "XMR_Stak", "ZENEMYminer" 
 #        Energi:
 #          "ENERGIMINER"
 #        Equihash:
-#          "DSTM", "EWBF", "BMINER"
+#          "BMINER", "DSTM", "EWBF" 
 #        Ethash:
-#          "CLAYMORE", "ETHMINER", "GENOIL", "BMINER", "PhoenixMiner"
+#          "BMINER", "CLAYMORE", "ETHMINER", "NBMiner", "PhoenixMiner"
 #        Zhash:
-#          "Z_EWBF", "BMINER", "LOLMINER, GMINER"
+#          "BMINER", GMINER", "LOLMINER, "Z_EWBF" 
 
 
 ## BITCORE, TIMETRAVEL10
@@ -750,6 +752,7 @@ plusCPU_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 #
 #            NEWMINER_VERSION="4.2.0"    # default: "recommended", otherwise you can choose "latest" or the exact version number
 #            NEWMINER_OPTS=""            # default: empty
+#            Use miner help command to see available options 
 
 BMINER_OPTS=""                                     # Bminer optional arguments
 BMINER_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
@@ -773,17 +776,26 @@ EWBF_FEE="0"                                       # change fee value to alter d
 EWBF_OPTS=""                                       # EWBF Equihash Miner optional arguments
 EWBF_VERSION="recommended"                         # "latest", "recommended" or the version folder name. If choose 3.3 you should extract 3.3 in miner folder to 3.3 folder
 
-GMINER_OPTS=""
+GMINER_OPTS=""                                     # GMINER optional arguments.
 GMINER_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
 
 LOLMINER_OPTS=""                                   # LOLMINER optional arguments.
 LOLMINER_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
+NBMiner_OPTS=""
+NBMiner_VERSION="recommended"                       # "latest", "recommended" or the version folder name.
+
 PhoenixMiner_OPTS=""                               # PhoenixMiner optional arguments. Read the README file inside PhoenixMiner folder
 PhoenixMiner_VERSION="recommended"                 # "latest", "recommended" or the version folder name.
 
+TPccminer_OPTS=""                                  # ccminer optional arguments
+TPccminer_VERSION="recommended"                    # "latest", "recommended" or the version folder name.
+
 T_REX_OPTS=""                                      # T_REX optional arguments.
 T_REX_VERSION="recommended"                        # "latest", "recommended" or the version folder name.
+
+XMR_Stak_OPTS=""                                   # XMR_Stak optional arguments.
+XMR_Stak_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
 
 Z_EWBF_FEE="0"                                     # EWBF ZHASH Dev fee percent to alter donation percent   
 Z_EWBF_OPTS=""                                     # EWBF ZHASH Miner optional arguments
@@ -791,9 +803,6 @@ Z_EWBF_VERSION="recommended"                       # "latest", "recommended" or 
 
 ZENEMYminer_OPTS=""                                # ZENEMYminer optional arguments
 ZENEMYminer_VERSION="recommended"                  # "latest", "recommended" or the version folder name.
-
-TPccminer_OPTS=""                                  # ccminer optional arguments
-TPccminer_VERSION="recommended"                    # "latest", "recommended" or the version folder name.
 
 ########################################################
 #                                                      #
@@ -1279,7 +1288,6 @@ XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
 XMY_PORT="20479"
 XMY_WORKER="$WORKERNAME"
 XMY_POOL_PROTOCOL="stratum+tcp"
-  
  
 # SnowGem (XSG)
 XSG_ADDRESS="replace_with_your_address"
@@ -1419,7 +1427,6 @@ DUAL_COIN_POOL_PROTOCOL="blake2s"             #Dual Coin Supported algos: "blake
 ########################################################
 
 ## Nicehash autoconverts to BTC: ensure you update NICE_ADDRESS
-
 
 #NICE_CUCKAROO29
 NICE_CUCKAROO29_ADDRESS="$NICE_ADDRESS"
@@ -1858,9 +1865,9 @@ ETHASH_CORE_OVERCLOCK=0                  # Recommended value for some GTX-1060: 
 ETHASH_MEMORY_OVERCLOCK=0                # Recommended value for some GTX-1060: 1600
 
 # HEX
-HEX_POWERLIMIT_WATTS="100" 
-HEX_CORE_OVERCLOCK="0" 
-HEX_MEMORY_OVERCLOCK="0" 
+HEX_POWERLIMIT_WATTS=100 
+HEX_CORE_OVERCLOCK=0 
+HEX_MEMORY_OVERCLOCK=0 
 
 # lyra2v2, Lyura2Rev2
 LYRA2V2_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 65
@@ -2019,6 +2026,7 @@ x11_MEMORY_OVERCLOCK=0                   # Recommended value for some GTX-1060: 
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 # papampi WTM_SWITCHING / PROFIT_CHECK settings        #
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
 WTM_PROFIT_CHECK="NO"      # whattomine.com Profit check for webinfo, only use if AUTO_SWITCH is not WTM_SWITCHING
 
@@ -2053,6 +2061,7 @@ WTM_AUTO_SWITCH_URL="https://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_28
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 # All SALFTER_*_SWITCHING settings                     #
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
 # Change this url to one you use for your own
 PROGRAMATIC_SWITCH_CONFIG_JSON_URL="https://pastebin.com/dl/eLU4B8rK"
