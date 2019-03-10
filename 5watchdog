@@ -62,19 +62,22 @@
 # v=0019 : papampi
 #          Load average check, notify, reboot (1bash setting)
 # v=0020 : papampi
-#          Check Ping if Network couldnt resolve 
+#          Check Ping if Network couldnt resolve
 # v=0021 : papampi
-#          Remove wtm python check 
+#          Remove wtm python check
 # v=0022 : papampi
-#          Optimize first run miner check 
+#          Optimize first run miner check
 # v=0023 : brightskye
 #          Adds support for disabled_gpu
+# v=0024 : papampi
+#          Restart 3main before reboot when GPU lost
+
 
 export DISPLAY=:0
 source ${NVOC}/1bash
 source ${NVOC}/helpers/disabled_gpu.sh
 
-nvOC_wdog_Dev="0023"
+nvOC_wdog_Dev="0024"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
 
 echo "Watchdog for nvOC $nvOC_Ver"
@@ -135,7 +138,7 @@ sleep 2
 
 # Don't send telegram alert after every WTM switch
 if [[ $TELEGRAM_ALERTS == "YES" && $AUTO_SWITCH == "NO" ]]; then
-  bash "${NVOC}/telegram"
+  bash "${NVOC}/telegram" &
 fi
 
 # Initialize vars
@@ -186,7 +189,7 @@ done
 if [[ $DNS > 0 || $PING > 0 ]]
 then
   echo "$(date) - [INFO] - There was a problem with network, now its ok" | tee -a ${LOG_FILE}
-fi  
+fi
 
 # Prevent too high/low cycles
 if (( WATCHDOG_CYCLE < 15 ))
@@ -213,7 +216,7 @@ else
     echo "$(date) - [WARNING] - Miner still not running after reiniting nvOC" | tee -a ${LOG_FILE}
     echo "$(date) - [WARNING] - Check your coin settings, overclock, miner arguments,...." | tee -a ${LOG_FILE}
     echo "$(date) - [WARNING] - Watchdog will now continue its main loop and may reboot your system to solve the problem" | tee -a ${LOG_FILE}
-  fi  
+  fi
 fi
 
 sleep $SLEEP_TIME
@@ -222,7 +225,7 @@ sleep $SLEEP_TIME
 while true
 do
 
-   # Set/increment vars
+  # Set/increment vars
   NUM_GPU_BLW_THRSHLD=0              # Track how many GPU are below threshold
   REBOOTRESET=$((REBOOTRESET + 1))
 
@@ -234,67 +237,52 @@ do
       echo "$(date) - [INFO] - GPU$GPU disabled"
       continue
     fi
-    { IFS=', ' read UTIL CURRENT_TEMP CURRENT_FAN PWRLIMIT POWERDRAW ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu,temperature.gpu,fan.speed,power.limit,power.draw --format=csv,noheader,nounits)
+    { IFS= read UTIL ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu --format=csv,noheader,nounits)
     # echo utilization
     echo "$(date) - [INFO] - GPU$GPU Utilization: $UTIL%"
 
     # Numeric check: if any are not numeric, we have a mining problem
-
-    # Workaround for 1050's reporting "[Not Supported]" or "[Unknown Error]" when power.draw is queried from nvidia-smi
-    if [[ $(nvidia-smi -i $GPU --query-gpu=name --format=csv,noheader,nounits | grep "1050") ]]
+    if ! [[ ( $UTIL =~ $numtest ) ]]
     then
-      if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]
+      # Not numeric so: Help we've lost a GPU
+      echo "$(date) - [CRITICAL] - Lost GPU$GPU restarting 3main, it may solve the issue. Found GPU's:" | tee -a ${LOG_FILE}
+      echo ""
+      # Hope PCI BUS info will help find the faulty GPU
+      nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
+      echo ""
+      if [[ $TELEGRAM_ALERTS == "YES" ]]; then
+        bash "${NVOC}/telegram" &
+      fi
+      # Kill the miner to be sure it's gone
+      ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}' | xargs kill
+      # Best to restart 3main - settings might be adjusted already
+      ps -ef | awk '$NF~"3main" {print $2}' | xargs kill
+      # Give 3main time to restart
+      sleep $SLEEP_TIME
+      echo "$(date) - [INFO] - Back 'on watch' after 3main restart"
+      { IFS= read UTIL ; } < <(nvidia-smi -i $GPU --query-gpu=utilization.gpu --format=csv,noheader,nounits)
+      if !  [[ ( $UTIL =~ $numtest ) ]]
       then
-        # Not numeric so: Help we've lost a GPU, so reboot
-        echo "$(date) - [CRITICAL] - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
-        echo ""
-        # Hope PCI BUS info will help find the faulty GPU
-        nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
-        echo "$(date) - [CRITICAL] - reboot in 10 seconds"  | tee -a ${LOG_FILE}
-        echo ""
+        echo "$(date) - [CRITICAL] - Lost GPU$GPU restarting 3main didnt help, reboot in 5 seconds"  | tee -a ${LOG_FILE}
         if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash "${NVOC}/telegram"
+          bash "${NVOC}/telegram" &
         fi
-        sleep 10
+        sleep 5
         if [[ $SYSRQ_REBOOT == YES ]]
         then
           sudo bash ${NVOC}/sysrq_reboot.sh
         else
           sudo reboot -f
         fi
-      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
-      then
-        echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
-        COUNT=$((COUNT - 1))
-        NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
+      else
+        echo "$(date) - [INFO] - Restarting 3main solved GPU$GPU issue, no need to reboot." | tee -a ${LOG_FILE}
       fi
-    else
-      if ! [[ ( $UTIL =~ $numtest ) && ( $CURRENT_TEMP =~ $numtest ) && ( $CURRENT_FAN =~ $numtest ) && ( $POWERDRAW =~ $numtest ) && ( $PWRLIMIT =~ $numtest ) ]]; then
-        # Not numeric so: Help we've lost a GPU, so reboot
-        echo "$(date) - [CRITICAL] - Lost GPU$GPU so restarting system. Found GPU's:" | tee -a ${LOG_FILE}
-        echo ""
-        # Hope PCI BUS info will help find the faulty GPU
-        nvidia-smi --query-gpu=gpu_bus_id --format=csv | tee -a ${LOG_FILE}
-        echo "$(date) - [CRITICAL] - reboot in 10 seconds"  | tee -a ${LOG_FILE}
-        echo ""
-        if [[ $TELEGRAM_ALERTS == "YES" ]]; then
-          bash "${NVOC}/telegram"
-        fi
-        sleep 10
-        if [[ $SYSRQ_REBOOT == YES ]]
-        then
-          sudo bash ${NVOC}/sysrq_reboot.sh
-        else
-          sudo reboot -f
-        fi
-      elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
-      then
-        echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
-        COUNT=$((COUNT - 1))
-        NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
-      fi
+    elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
+    then
+      echo "$(date) - [WARNING] - GPU${GPU} under ${THRESHOLD}% threshold - UTILIZATION: ${UTIL}%" | tee -a ${LOG_FILE}
+      COUNT=$((COUNT - 1))
+      NUM_GPU_BLW_THRSHLD=$((NUM_GPU_BLW_THRSHLD + 1))
     fi
-
     sleep 0.5    # raise to 0.5 seconds delay until querying the next GPU to lower nvidia-smi impact
   done
 
@@ -349,7 +337,6 @@ do
       fi
 
       ######################## Beginning Pool Check
-      
       source ${NVOC}/1bash
 
       if [[ $COIN == *DUAL* ]] ;   then
@@ -381,17 +368,14 @@ do
             sleep $SLEEP_TIME
           fi
         fi
-
       elif [[ ${AUTO_SWITCH:0:7} == SALFTER ]]
       then
         #Need Stubo check server codes
         echo ""
-
       elif [[ $COIN == *NICE* ]]
       then
         #Need Stubo check server codes
         echo ""
-
       else
         source ${NVOC}/1bash
         COIN_POOL=${COIN}_POOL
@@ -432,9 +416,8 @@ do
           fi
         fi
       fi
-
-      ######################## End of Pool Check
     fi
+    ######################## End of Pool Check
 
     # Look for no miner screen and get right to miner restart
     if ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
@@ -467,7 +450,7 @@ do
         echo ""
         if [[ $TELEGRAM_ALERTS == YES ]]
         then
-          bash "${NVOC}/telegram"
+          bash "${NVOC}/telegram" &
         fi
         sleep 10
         if [[ $SYSRQ_REBOOT == YES ]]
@@ -481,7 +464,7 @@ do
       echo "$(date) - [CRITICAL] - GPU Utilization is too low: restarting 3main..." | tee -a ${LOG_FILE}
       if [[ $TELEGRAM_ALERTS == YES ]]
       then
-        bash "${NVOC}/telegram"
+        bash "${NVOC}/telegram" &
       fi
       # Kill the miner to be sure it's gone
       ps ax | grep -v cpuminer | grep SCREEN | grep miner | awk '"miner" {print $1}' | xargs kill
@@ -512,6 +495,6 @@ do
       REBOOTRESET=0
     fi
   fi
-# Delay until next cycle
+  # Delay until next cycle
   sleep $WATCHDOG_CYCLE
 done
