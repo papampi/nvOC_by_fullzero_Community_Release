@@ -597,7 +597,7 @@ EQUIHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## ETHASH
 ETHASH_MINER="ETHMINER"
-ETHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"       # Use "%2e" instead of "."
+ETHASH_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"       # Some pools require to use "%2e" instead of "." More examples available :https://github.com/ethereum-mining/ethminer/blob/master/docs/POOL_EXAMPLES_ETH.md
 
 ## GROESTL
 GROESTL_INTENSITY="0"
