@@ -602,6 +602,8 @@ echo "GPU Target Temp: "  "<tt style=\"text-align:left; color:white\">" "$TARGET
 
 echo "GPU Minimum Fan Speed: "  "<tt style=\"text-align:left; color:white\">" "$MINIMAL_FAN_SPEED <br> </tt>"
 
+echo "Headless Mode: "  "<tt style=\"text-align:left; color:white\">" "$HEADLESS_MODE <br> </tt>"
+
 echo "$BTC_PRICE " "<tt style=\"text-align:left; color:white\">" "$BTC_PRICE_VALUE $WTM_CURRENCY<br> </tt>"
 
 echo "$WTM_Current_Profitabilty" "<tt style=\"text-align:left; color:white\">" "$P_WTM_PROFIT </tt>"
