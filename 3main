@@ -1040,7 +1040,7 @@ then
         sleep 1
         echo "cpuminer process in guake terminal Tab (f12)"
       else
-        echo "process in screen wdog; 'nvOC cpuminer-log'"
+        echo "process in screen cpuminer; 'nvOC cpuminer-log'"
       fi
       echo
     fi

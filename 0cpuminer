@@ -98,7 +98,7 @@ then
     fi
   fi
 
-  HCD="${mpath}/"${!xversion}"/$(jq -r .hcd ${pm_manifest})"
+  HCD="${mpath}/"${!xversion}"/$(jq -r .cpuminer.hcd ${pm_manifest})"
   eval echo $LAUNCH $HCD $OPTS
   eval $LAUNCH $HCD $OPTS
 
