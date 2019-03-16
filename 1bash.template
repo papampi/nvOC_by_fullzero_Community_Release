@@ -1018,7 +1018,7 @@ GBX_POOL_PROTOCOL="stratum+tcp"
 
 # GrinCoin (GRIN)
 GRIN_ADDRESS="replace_with_your_address"
-GRIN_OPTS=""                                     # If using GMiner add "--algo cuckaroo29" 
+GRIN_OPTS=""                                     # If using GMiner add "--algo cuckaroo29" if NBMiner "--algo cuckaroo" 
 GRIN_POOL="GRIN_POOL"
 GRIN_PORT="GRIN_PORT"
 GRIN_WORKER="$WORKERNAME"
