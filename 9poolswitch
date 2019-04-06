@@ -1,12 +1,12 @@
 #!/bin/bash
 
 ##########################################################################
-####################   nvOC 3.1 - Community Release   ####################
+####################   nvOC 3.2 - Community Release   ####################
 ##########   Based on the original nvOC v0019-1.4 by fullzero   ##########
 ##########################################################################
 
 
-#                              POOL SWITCH for nvOC v0019-2.1 by papampi                                #
+#                              POOL SWITCH for nvOC v0019 by papampi                                #
 # Changelog:                                                                                            #
 # v=0001 : papampi                                                                                      #
 #        : Initial Release            
