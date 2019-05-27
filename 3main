@@ -346,10 +346,9 @@ then
   fi
 fi
 
-sleep 2
-
 if [[ $FOREMAN_MONITOR == YES ]] 
 then
+(
   echo "Running with Foreman integration"
 
   FOREMAN_NVOC=$NVOC/foreman
@@ -397,10 +396,12 @@ then
     $FOREMAN_HOME/pickaxe/bin/pickaxe.sh restart
     $FOREMAN_NVOC/miner-watch &
   fi
+) &
 fi
 
 if [[ $TEAMVIEWER == NO ]]
 then
+(
   running=$(ps -ef | awk '$NF~"teamviewer" {print $2}')
   if [ "$running" != "" ]
   then
@@ -408,10 +409,12 @@ then
     sleep 2
     running=""
   fi
+) &
 fi
 
 if [[ $MINER_TEMP_CONTROL == YES ]]
 then
+(
   if ps ax | grep -q '[6]tempcontrol'; then
     ps -ef | awk '$NF~"6tempcontrol" {print $2}' | xargs kill
   fi
@@ -433,10 +436,12 @@ then
     fi
     echo ""
   fi
+) &
 fi
 
 if [[ $TELEGRAM_MESSAGES == YES ]]
 then
+(
   HCD="${NVOC}/7telegram"
   if ! ps ax | grep -q '[7]telegram'
   then
@@ -444,6 +449,7 @@ then
     sleep 1
     running=""
   fi
+) &
 fi
 
 if (( FAN_SPEED < 40 ))
@@ -1023,6 +1029,7 @@ then
 
   if [[ $plusCPU == YES ]]
   then
+  (
     if ! ps ax | grep -q '[c]puminer'
     then
       echo
@@ -1044,6 +1051,7 @@ then
       fi
       echo
     fi
+  ) &
   fi
 
   while ps ax | grep SCREEN | grep -v cpuminer | grep -q miner ; do
@@ -1055,6 +1063,7 @@ then
 
   if [[ $MINER_WATCHDOG == YES ]]
   then
+  (
     echo ""
     sleep 2
     if ! ps ax | grep -q '[5]watchdog'
@@ -1078,6 +1087,7 @@ then
         echo "process in screen wdog; 'nvOC wdog-log'"
       fi
     fi
+  ) &
   fi
   
   ## If auto_switch is unknown, set it to no and continue mining
