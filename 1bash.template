@@ -174,11 +174,11 @@ nvOC_1bash_last_compatible="0060"
 # ALGO Miningh with Miningpoolhub (Auto convert to any coins in MPH settings web page)
 #########MPH_EQUIHASH, MPH_ETHASH, MPH_SKEIN, MPH_LYRA2Z, MPH_NEOSCRYPT, MPH_LYRA2V2, MPH_CRYPTONIGHTV7, MPH_KECCAK
 
-# CLAYMORE_DUAL (ETHASH + Decred/Siacoin/Lbry/Pascal/Blake2s/Keccak)
-## All supported coins can be added in CLAYMORE_DUAL section
+# CLAYMORE Dual Mining (ETHASH + Decred/Siacoin/Lbry/Pascal/Blake2s/Keccak)
+## All supported coins can be added in CLAYMORE DUAL_* section
 
-# BMINER_DUAL (ETHASH + Decred/Siacoin/Lbry/Pascal/Blake2s/Keccak)
-## All supported coins can be added in BMINER_Dual section
+# BMINER Dual Mining (ETHASH + Decred/Siacoin/Lbry/Pascal/Blake2s/Keccak)
+## All supported coins can be added in BMINER DUAL_* section
 
 # Profit Switchers
 ######### WTM_SWITCHING - Auto Switch based on WhatToMine.com API 
@@ -201,7 +201,7 @@ nvOC_1bash_last_compatible="0060"
 ########################################################
 
 COIN="ZEC"                  # Manual mining, choose the coin to mine (like "ETH", "ZEC", ...)
-			    # Dual mining: "DUAL_CLAYMORE" or "DUAL_BMINER"
+			                      # Dual mining: "DUAL", then set coins in dual mining section
                             # Automatic profit-based switchers below
 
 AUTO_START_MINER="NO"      # YES or NO # Set this to NO when troubleshooting, this will prevent the watchdog restarting the rig
@@ -312,7 +312,7 @@ ALT_POOL="NO"               # YES or NO, Set to YES if you want to enable  pools
                             # Switch to alternate pool if main pool goes down.
                             # Dual mining and salfter auto switch not supported.
                             # If pool goes down, poolswitch will stop/disable wtm auto switch and will enable/start it after pool comes up to prevent coin data mixed up.
-	                    # If main pool use username, alternate pool should use same username and workername. 
+                            # If main pool use username, alternate pool should use same username and workername. 
                             # If anonymous mining with coin address alternate pool should use same. 
                             # If ALT_POOL="YES" add as follow to your coins data (order should be the same).
 
@@ -1382,7 +1382,7 @@ DUALALGO_MINER="CLAYMORE"
 DUAL_OPTS=""                                #Additional arguments if needed
 
 ###################################################
-# Claymore_Dual Mining                            #
+# Claymore Dual Mining                            #
 # Used when DUALALGO_MINER="CLAYMORE"             #  
 
 ###You can use variables like this for both ECOIN and DCOIN (If use variables remeber to set correct values in the coin section above):
@@ -1419,7 +1419,7 @@ MPSW=""                                     #remote monitoring/management passwo
 
 
 ###################################################
-# Bminer_Dual Mining                              #
+# Bminer Dual Mining                              #
 # Used when DUALALGO_MINER="BMINER"               #
 
 MAIN_COIN=""                                  #Main Coin, Ethereum or any Ethash Coin
