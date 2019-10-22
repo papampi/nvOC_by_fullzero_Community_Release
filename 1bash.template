@@ -448,7 +448,7 @@ fi
 #        support it and a compatilbe miner in the next sections.
 #        See the example for NEWCOIN/NEWALGO at the end of this section.
 
-ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 CRYPTONIGHTV8 CRYPTONIGHTR CUCKAROO29 CUCKATOO31 CUCKOOCYCLE DECRED ENERGI EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2RE3 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R X21S X22I XEVAN ZHASH"
+ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 CRYPTONIGHTV8 CRYPTONIGHTR CUCKAROO29 CUCKATOO31 CUCKOOCYCLE DECRED DUALALGO ENERGI EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2RE3 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R X21S X22I XEVAN ZHASH"
 
 BITCORE_COINS="BTX"
 CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
@@ -460,6 +460,7 @@ CUCKOOCYCLE_COINS="AE"
 CUCKAROO29_COINS="GRIN,NICE_CUCKAROO29"
 CUCKATOO31_COINS="GRIN31,NICE_CUCKATOO31"
 DECRED_COINS="DCR"
+DUALALGO_COINS="DUAL"
 ENERGI_COINS="NRG"
 EQUIHASH_COINS="ZEC,ZEN,HUSH,ZCL,BTCP,KMD,ZPOOL_EQUIHASH,MPH_EQUIHASH,NICE_EQUIHASH,VOTE,BTCP,BCI"
 ETHASH_COINS="ETH,ETC,EXP,UBQ,CLO,MUSIC,SOIL,MPH_ETHASH,PIRL,NICE_ETHASH,ETP,CLAYMORE_DUAL"
@@ -582,10 +583,10 @@ CUCKATOO31_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 CUCKOOCYCLE_MINER="GMINER"
 CUCKOOCYCLE_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
-## Decred
-DCR_INTENSITY="0"
-DCR_MINER="TPccminer"
-DCR_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
+## DECRED
+DECRED_INTENSITY="0"
+DECRED_MINER="TPccminer"
+DECRED_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## ENERGI
 ENERGI_MINER="ENERGIMINER"
@@ -1362,48 +1363,56 @@ plusCPU_WORKER="$XMR_WORKER"
 #   NEWCOIN_WORKER="$WORKERNAME"
 #   NEWCOIN_POOL_PROTOCOL="stratum+tcp"
 
+########################################################
+#                                                      #
+# COIN, POOL, PORT info section, sorted alphabetically #
+#                                                      #
+########################################################
+
+DUALALGO_MINER="CLAYMORE"
+
+DUAL_OPTS=""                                #Additional arguments if needed
 
 ###################################################
 # Claymore_Dual Mining                            #
-# Set COIN="CLAYMORE_DUAL"                        #  
-###################################################
+# Used when DUALALGO_MINER="CLAYMORE"             #  
 
 ###You can use variables like this for both ECOIN and DCOIN (If use variables remeber to set correct values in the coin section above):
 ## ECOIN Example:
   #DUAL_ECOIN="ETH"
-  #DUAL_EPOOL="$ETH_POOL"        
-  #DUAL_EPORT="$ETH_PORT"            
-  #DUAL_EWAL="$ETH_ADDRESS"       
-  #DUAL_EPSW="$MINER_PWD"                       
-  #DUAL_EWORKER="$ETH_WORKER"  
+  #DUAL_EPOOL="$ETH_POOL"
+  #DUAL_EPORT="$ETH_PORT"
+  #DUAL_EWAL="$ETH_ADDRESS"
+  #DUAL_EWAL_FORMAT="$ETHASH_WALLET_FORMAT"
+  #DUAL_EPSW="$MINER_PWD"
+  #DUAL_EWORKER="$ETH_WORKER"
 
 DUAL_ECOIN="MAIN COIN"                      #Main Coin, Ethereum or any Ethash Coin
 DUAL_EPOOL="MAIN COIN POOL ADDREES"         #Main Coin pool address, no need to add stratum+tcp://
 DUAL_EPORT="MAIN COIN POOL PORT"            #Main Coin Port Number
 DUAL_EWAL="MAIN COIN WALLET ADDRESS"        #Main Coin Wallet address or pool username
+DUAL_EWAL_FORMAT=""
 DUAL_EPSW="$MINER_PWD"                      #Main Coin worker password on pool
-DUAL_EWORKER="$WORKER"                      #Main Coin Worker Name
+DUAL_EWORKER="$WORKERNAME"                  #Main Coin Worker Name
 
 DUAL_DCOIN="DUAL COIN"                      #select second coin to mine in dual mode. Possible options are "dcr", "sc", "lbc", "pasc", "blake2s", "keccak". Default value is "dcr".
 DUAL_DPOOL="DUAL COIN POOL ADDRESS"         #2nd coin pool address
 DUAL_DPORT="DUAL COIN POOL PORT"            #2nd coin pool address
 DUAL_DWAL="DUAL COIN WALLET ADDRESS"        #2nd coin wallet address or worker name, it depends on pool.
+DUAL_DWAL_FORMAT=""
 DUAL_DPSW="$MINER_PWD"                      #Password for 2nd coin .
-DUAL_DWORKER="$WORKER"                      #Worker name for 2nd coin
+DUAL_DWORKER="$WORKERNAME"                  #Worker name for 2nd coin
 
 DCRI="40"                                   #2nd coin intensity.
 ALL_POOLS="0"                               #0 or 1, Set to 1, if miner does not want to mine on specified pool (because it cannot mine devfee on that pool), but you agree to use some default pools for devfee mining. 
 ALL_COINS="0"                               #0 or 1, Set to 1 to be able to mine Ethereum forks, in this mode miner will use some default pools for devfee Ethereum mining. 
 MPORT="-3333"                               #remote monitoring/management port. Default value is -3333 (read-only mode), specify "-mport 0" to disable remote monitoring/management feature. 
 MPSW=""                                     #remote monitoring/management password.
-DUAL_ADDITIONAL_ARGUMENTS=""                #Additional arguments if needed
 
 
 ###################################################
 # Bminer_Dual Mining                              #
-# Set COIN="BMINER_DUAL"                          #  
-###################################################
-
+# Used when DUALALGO_MINER="BMINER"               #
 
 MAIN_COIN=""                                  #Main Coin, Ethereum or any Ethash Coin
 MAIN_COIN_ADDRESS="replace_with_your_address" #Main Coin wallet address
