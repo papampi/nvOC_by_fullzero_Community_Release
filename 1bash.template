@@ -798,8 +798,8 @@ PhoenixMiner_VERSION="recommended"                 # "latest", "recommended" or 
 TPccminer_OPTS=""                                  # ccminer optional arguments
 TPccminer_VERSION="recommended"                    # "latest", "recommended" or the version folder name.
 
-T_REX_OPTS=""                                      # T_REX optional arguments.
-T_REX_VERSION="recommended"                        # "latest", "recommended" or the version folder name.
+T_Rex_OPTS=""                                      # T_REX optional arguments.
+T_Rex_VERSION="recommended"                        # "latest", "recommended" or the version folder name.
 
 XMR_Stak_OPTS=""                                   # XMR_Stak optional arguments.
 XMR_Stak_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
