@@ -1916,6 +1916,11 @@ X16R_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 
 X16R_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
 X16R_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
 
+# X16RV2
+X16RV2_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
+X16RV2_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
+X16RV2_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+
 # X21S
 X21S_POWERLIMIT_WATTS=100                # No recommended value available
 X21S_CORE_OVERCLOCK=0                    # No recommended value available
