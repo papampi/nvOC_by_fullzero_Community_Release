@@ -415,6 +415,10 @@ elif [[ $ALGO == NEOSCRYPT ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bns_hr%5D=[0-9]*' | cut -f2- -d=)
 
+elif [[ $ALGO == CUCKAROO29 ]] || [[ $ALGO == CUCKAROOD29 ]]
+then
+  WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcr29_hr%5D=[0-9]*' | cut -f2- -d=)
+
 elif [[ $ALGO == CRYPTONIGHTV7 ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bcn7_hr%5D=[0-9]*' | cut -f2- -d=)
@@ -431,7 +435,7 @@ elif [[ $ALGO == BITCORE ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Btt10_hr%5D=[0-9]*' | cut -f2- -d=)
 
-elif [[ $ALGO == X16R ]]
+elif [[ $ALGO == X16R ]] || [[ $ALGO == X16RV2 ]]
 then
   WTM_HASH=$(grep WTM_AUTO_SWITCH_URL ${NVOC}/1bash | grep -o '%5Bx16r_hr%5D=[0-9]*' | cut -f2- -d=)
 
