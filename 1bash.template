@@ -868,13 +868,13 @@ BCI_PORT="replace_with_your_BCI_PORT"
 BCI_WORKER="$WORKERNAME"
 BCI_POOL_PROTOCOL="stratum+tcp"
 
-# Beam (BEAMV2)
-BEAMV2_ADDRESS="replace_with_your_address"
-BEAMV2_OPTS=""
-BEAMV2_POOL="replace_with_your_Beamv2_POOL"
-BEAMV2_PORT="replace_with_your_Beamv2_PORT"
-BEAMV2_WORKER="$WORKERNAME"
-BEAMV2_POOL_PROTOCOL="stratum+tcp"
+# Beam (BEAM)
+BEAM_ADDRESS="replace_with_your_address"
+BEAM_OPTS=""
+BEAM_POOL="replace_with_your_Beamv2_POOL"
+BEAM_PORT="replace_with_your_Beamv2_PORT"
+BEAM_WORKER="$WORKERNAME"
+BEAM_POOL_PROTOCOL="stratum+tcp"
 
 # Bitsend (BSD)
 BSD_ADDRESS="replace_with_your_address"
