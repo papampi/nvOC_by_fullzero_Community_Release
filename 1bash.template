@@ -484,7 +484,7 @@ SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
 SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="XMN,NICE_X16R"
-X16RV2_COINS="RVN"
+X16RV2_COINS="RVN,NICE_X16RV2"
 X21S_COINS="RITO"
 X22I_COINS="SUQA"
 XEVAN_COINS="BSD"
@@ -1567,6 +1567,14 @@ NICE_X11GOST_WORKER="$WORKERNAME"
 NICE_X11GOST_OPTS=""
 NICE_X11GOST_POOL_PROTOCOL="stratum+tcp"  
 
+# NICE_X16R
+NICE_X16R_ADDRESS="$NICE_ADDRESS"
+NICE_X16R_POOL="x16r.eu.nicehash.com"
+NICE_X16R_PORT="3366"
+NICE_X16R_WORKER="$WORKERNAME"
+NICE_X16R_OPTS=""
+NICE_X16R_POOL_PROTOCOL="stratum+tcp"
+
 # NICE_X16RV2
 NICE_X16RV2_ADDRESS="$NICE_ADDRESS"
 NICE_X16RV2_POOL="x16rv2.eu.nicehash.com"
@@ -1940,12 +1948,12 @@ SKUNK_MEMORY_OVERCLOCK=0                 # Recommended value for some GTX-1060: 
 # X16R
 X16R_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
 X16R_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
-X16R_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+X16R_MEMORY_OVERCLOCK=100                  # Recommended value for some GTX-1060: 100
 
 # X16RV2
 X16RV2_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
 X16RV2_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
-X16RV2_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+X16RV2_MEMORY_OVERCLOCK=100                  # Recommended value for some GTX-1060: 100
 
 # X21S
 X21S_POWERLIMIT_WATTS=100                # No recommended value available
