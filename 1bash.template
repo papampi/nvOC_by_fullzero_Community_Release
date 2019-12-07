@@ -1838,6 +1838,11 @@ MEMORY_OVERCLOCK_18=100
 
 # Recommended values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
 
+# BEAMV2
+BEAMHASHII_POWERLIMIT_WATTS=100
+BEAMHASHII_CORE_OVERCLOCK=100
+BEAMHASHII_MEMORY_OVERCLOCK=200
+
 # BITCORE, TIMETRAVEL10
 BITCORE_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 65
 BITCORE_CORE_OVERCLOCK=0                 # Recommended value for some GTX-1060: 150
