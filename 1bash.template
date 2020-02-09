@@ -146,14 +146,16 @@ v0056="papampi;NICE_MTP, Nice_Cuckatoo31 and Nice_Cuckaroo29"
 v0057="papampi;Lyra2REv3"
 v0058="papampi;Allowed fan difference"
 v0059="LuKePicci;x16rv2 algo"
-v0060="LuKePicci;dual mining rework"
+v0060="papampi;beamhashii algo"
 
+# 3.3-dev revisions starts on high numbers to ease merging from stable branch
+v3301="LuKePicci;dual mining rework"
 
 # Do not edit these lines
 nvOC_Ver="v0019-3.3" 
-nvOC_1bash_ver="0059"
+nvOC_1bash_ver="3301"
 nvOC_1bash_least_compatible="0058"
-nvOC_1bash_last_compatible="0060"
+nvOC_1bash_last_compatible="3301"
 
 # Open the terminal to launch miner; will auto launch on boot
 
@@ -450,8 +452,9 @@ fi
 #        support it and a compatilbe miner in the next sections.
 #        See the example for NEWCOIN/NEWALGO at the end of this section.
 
-ALGOS="BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 CRYPTONIGHTV8 CRYPTONIGHTR CUCKAROO29 CUCKATOO31 CUCKOOCYCLE DECRED DUALALGO ENERGI EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2RE3 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R X16RV2 X21S X22I XEVAN ZHASH"
+ALGOS="BEAMHASHII BITCORE CRYPTONIGHT CRYPTONIGHTHEAVY CRYPTONIGHTV7 CRYPTONIGHTV8 CRYPTONIGHTR CUCKAROO29 CUCKATOO31 CUCKOOCYCLE DECRED DUALALGO ENERGI EQUIHASH ETHASH GRS LBRY LYRA2V2 LYRA2RE3 LYRA2Z MYR_GR NEOSCRYPT PASCAL PHI1612 PHI2 SIA SIB SKEIN SKUNK X13 X16R X16RV2 X21S X22I XEVAN ZHASH"
 
+BEAMHASHII_COINS="BEAM,NICE_BEAMHASHII"
 BITCORE_COINS="BTX"
 CRYPTONIGHT_COINS="KRB,NICE_CRYPTONIGHT"
 CRYPTONIGHTV7_COINS="ETN,NICE_CRYPTONIGHTV7"
@@ -484,7 +487,7 @@ SKEIN_COINS="ZPOOL_SKEIN,MPH_SKEIN"
 SKUNK_COINS="SIGT,ZPOOL_SKUNK,ALTCOM,NICE_SKUNKHASH"
 X13_COINS="ONION"
 X16R_COINS="XMN,NICE_X16R"
-X16RV2_COINS="RVN"
+X16RV2_COINS="RVN,NICE_X16RV2"
 X21S_COINS="RITO"
 X22I_COINS="SUQA"
 XEVAN_COINS="BSD"
@@ -543,6 +546,9 @@ MINER_PWD="x"                                    # Set the miner password. Defau
 #        Zhash:
 #          "BMINER", GMINER", "LOLMINER, "Z_EWBF" 
 
+# BEAMHASHII 
+BEAMHASHII_MINER="GMINER"
+BEAMHASHII_WALLET_FORMAT="$WALLET_ADDRESS_FORMAT"
 
 ## BITCORE, TIMETRAVEL10
 BITCORE_INTENSITY="0"
@@ -800,8 +806,8 @@ PhoenixMiner_VERSION="recommended"                 # "latest", "recommended" or 
 TPccminer_OPTS=""                                  # ccminer optional arguments
 TPccminer_VERSION="recommended"                    # "latest", "recommended" or the version folder name.
 
-T_REX_OPTS=""                                      # T_REX optional arguments.
-T_REX_VERSION="recommended"                        # "latest", "recommended" or the version folder name.
+T_Rex_OPTS=""                                      # T_REX optional arguments.
+T_Rex_VERSION="recommended"                        # "latest", "recommended" or the version folder name.
 
 XMR_Stak_OPTS=""                                   # XMR_Stak optional arguments.
 XMR_Stak_VERSION="recommended"                     # "latest", "recommended" or the version folder name.
@@ -864,6 +870,14 @@ BCI_POOL="replace_with_your_BCI_POOL"
 BCI_PORT="replace_with_your_BCI_PORT"
 BCI_WORKER="$WORKERNAME"
 BCI_POOL_PROTOCOL="stratum+tcp"
+
+# Beam (BEAM)
+BEAM_ADDRESS="replace_with_your_address"
+BEAM_OPTS=""
+BEAM_POOL="replace_with_your_Beamv2_POOL"
+BEAM_PORT="replace_with_your_Beamv2_PORT"
+BEAM_WORKER="$WORKERNAME"
+BEAM_POOL_PROTOCOL="stratum+tcp"
 
 # Bitsend (BSD)
 BSD_ADDRESS="replace_with_your_address"
@@ -1445,13 +1459,21 @@ DUAL_COIN_POOL_PROTOCOL="blake2s"             #Dual Coin Supported algos: "blake
 
 ## Nicehash autoconverts to BTC: ensure you update NICE_ADDRESS
 
-#NICE_CUCKAROO29
-NICE_CUCKAROO29_ADDRESS="$NICE_ADDRESS"
-NICE_CUCKAROO29_POOL="grincuckaroo29.eu.nicehash.com"
-NICE_CUCKAROO29_PORT="3371"
-NICE_CUCKAROO29_WORKER="$WORKERNAME"
-NICE_CUCKAROO29_OPTS=""
-NICE_CUCKAROO29_POOL_PROTOCOL="stratum+tcp"  
+#NICE_BEAMHASHII
+NICE_BEAMHASHII_ADDRESS="$NICE_ADDRESS"
+NICE_BEAMHASHII_POOL="beamv2.eu.nicehash.com"
+NICE_BEAMHASHII_PORT="3378"
+NICE_BEAMHASHII_WORKER="$WORKERNAME"
+NICE_BEAMHASHII_OPTS="--algo beamhashii"                        # If use GMINER add "--algo beamhashii"
+NICE_BEAMHASHII_POOL_PROTOCOL="stratum+tcp"
+
+#NICE_CUCKAROOD29
+NICE_CUCKAROOD29_ADDRESS="$NICE_ADDRESS"
+NICE_CUCKAROOD29_POOL="grincuckarood29.eu.nicehash.com"
+NICE_CUCKAROOD29_PORT="3377"
+NICE_CUCKAROOD29_WORKER="$WORKERNAME"
+NICE_CUCKAROOD29_OPTS="--algo cuckarood29"                 # If use GMINER add "--algo cuckarood29"
+NICE_CUCKAROOD29_POOL_PROTOCOL="stratum+tcp" 
 
 #NICE_CUCKATOO31
 NICE_CUCKATOO31_ADDRESS="$NICE_ADDRESS"
@@ -1562,7 +1584,15 @@ NICE_X16R_POOL="x16r.eu.nicehash.com"
 NICE_X16R_PORT="3366"
 NICE_X16R_WORKER="$WORKERNAME"
 NICE_X16R_OPTS=""
-NICE_X16R_POOL_PROTOCOL="stratum+tcp"  
+NICE_X16R_POOL_PROTOCOL="stratum+tcp"
+
+# NICE_X16RV2
+NICE_X16RV2_ADDRESS="$NICE_ADDRESS"
+NICE_X16RV2_POOL="x16rv2.eu.nicehash.com"
+NICE_X16RV2_PORT="3379"
+NICE_X16RV2_WORKER="$WORKERNAME"
+NICE_X16RV2_OPTS=""
+NICE_X16RV2_POOL_PROTOCOL="stratum+tcp"  
 
 # example, adding NICE_NEWALGO:
 #
@@ -1827,6 +1857,11 @@ MEMORY_OVERCLOCK_18=100
 
 # Recommended values are for 1060 check http://krypto-mining.blogspot.co.uk/ for other OC values
 
+# BEAMV2
+BEAMHASHII_POWERLIMIT_WATTS=100
+BEAMHASHII_CORE_OVERCLOCK=100
+BEAMHASHII_MEMORY_OVERCLOCK=200
+
 # BITCORE, TIMETRAVEL10
 BITCORE_POWERLIMIT_WATTS=100             # Recommended value for some GTX-1060: 65
 BITCORE_CORE_OVERCLOCK=0                 # Recommended value for some GTX-1060: 150
@@ -1924,7 +1959,12 @@ SKUNK_MEMORY_OVERCLOCK=0                 # Recommended value for some GTX-1060: 
 # X16R
 X16R_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
 X16R_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
-X16R_MEMORY_OVERCLOCK=0                  # Recommended value for some GTX-1060: 100
+X16R_MEMORY_OVERCLOCK=100                  # Recommended value for some GTX-1060: 100
+
+# X16RV2
+X16RV2_POWERLIMIT_WATTS=100                # Recommended value for some GTX-1060: 65
+X16RV2_CORE_OVERCLOCK=0                    # Recommended value for some GTX-1060: 100
+X16RV2_MEMORY_OVERCLOCK=100                  # Recommended value for some GTX-1060: 100
 
 # X21S
 X21S_POWERLIMIT_WATTS=100                # No recommended value available
