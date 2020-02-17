@@ -232,7 +232,7 @@ LOCALorREMOTE="LOCAL"       # LOCAL or REMOTE # Set to LOCAL if you have local a
 
 TEAMVIEWER="NO"             # YES or NO # If you use Team Viewer to remotely connect to this rig set this to YES
 
-RESOLUTION="1366x768"       # Default system resolution used when connecting through TeamViewer
+RESOLUTION="1366x768"       # 1366x768 or 1280x1024 # Default system resolution used whenconnecting through TeamViewer or VNC
 
 
 SSH="YES"                   # YES or NO # If you use SSH to remotely connect to this rig set this to YES

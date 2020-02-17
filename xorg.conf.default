@@ -52,6 +52,9 @@ Section "Monitor"
     ModelName      "CLB  fit Headless"
     HorizSync       30.0 - 83.0
     VertRefresh     56.0 - 76.0
+    Modeline       "1280x1024_25.00"   41.50  1280 1320 1440 1600  1024 1027 1034 1042 -hsync +vsync
+    Modeline       "1368x768_25.00"   33.25  1368 1408 1536 1704  768 771 781 784 -hsync +vsync
+    Option         "PreferredMode" "1368x768_25.00"
 EndSection
 
 Section "Monitor"
