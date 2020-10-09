@@ -74,10 +74,12 @@
 #	   Add Foreman Monitor
 # v=0028 : papampi
 #	   Miner Schedule
+# v=0029 : papampi
+#	   eth-pill opts
 
 source ${NVOC}/1bash
 
-nvOC_3main_Dev="0028"
+nvOC_3main_Dev="0029"
 nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"             # Do not edit this
 
 #########################################################################
@@ -892,7 +894,7 @@ fi
 if [[ $OhGodAnETHlargementPill == YES && $ALGO == ETHASH ]]
 then
   echo " Launching OhGodAnETHlargementPill"
-  HCD="${NVOC}/OhGodAnETHlargementPill-r2"
+  HCD="${NVOC}/OhGodAnETHlargementPill-r2 $OhGodAnETHlargementPill_OPTS"
   chmod a+x "${NVOC}/OhGodAnETHlargementPill-r2"
   if ! ps ax | grep -q '[O]hGodAnETHlargementPill'
   then

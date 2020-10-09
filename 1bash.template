@@ -147,6 +147,7 @@ v0057="papampi;Lyra2REv3"
 v0058="papampi;Allowed fan difference"
 v0059="LuKePicci;x16rv2 algo"
 v0060="papampi;beamhashii algo"
+v0061="papampi;eth-pill opts"
 
 # 3.3-dev revisions starts on high numbers to ease merging from stable branch
 v3301="LuKePicci;dual mining rework"
@@ -362,7 +363,7 @@ GPUPowerMizerMode_Adjust="NO"      # YES or NO # Use nvidia PowerMizerMode
 GPUPowerMizerMode=1                # Set PowerMizerMode
 
 OhGodAnETHlargementPill="NO"       # YES or NO, Set to YES for mining Ethash algos with 1080 or 1080TI cards
-
+OhGodAnETHlargementPill_OPTS=""    # Variables/Flags for ETH Pill 
 
 ########################################################
 #                                                      #
