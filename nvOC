@@ -237,12 +237,12 @@ StopGnomeTerminal()
   echo -e "${B}Stopping nvOC processes...${N}"; echo
 
   # Kill off the nv_OC processes
-  pkill -ef gnome-terminal
-  pkill -ef 5watchdog
-  pkill -ef 7telegram
-  pkill -ef 6tempcontrol
-  pkill -ef 8wtm
-  pkill -ef screenrc
+  sudo pkill -ef gnome-terminal
+  sudo pkill -ef 5watchdog
+  sudo pkill -ef 7telegram
+  sudo pkill -ef 6tempcontrol
+  sudo pkill -ef 8wtm
+  sudo pkill -ef screenrc
   echo; echo "...done."
 }
 

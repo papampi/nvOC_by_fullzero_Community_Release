@@ -77,6 +77,7 @@
 # v=0029 : papampi
 #	   eth-pill opts
 
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
 nvOC_3main_Dev="0029"

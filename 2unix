@@ -79,4 +79,4 @@ fi
 
 # TODO: if this is a git repo, check updates on current git branch, give warning, start pre-fetching in background, do not pull them automatically
 
-bash "${NVOC}/3main"
+sudo bash "${NVOC}/3main"
