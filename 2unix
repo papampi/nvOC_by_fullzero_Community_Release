@@ -11,6 +11,7 @@ then
     exit
   fi
 fi
+sudo chmod a+rw "${NVOC}/nvoc_logs/"*
 
 # check 1bash for errors
 if [[ ! -e "${NVOC}/1bash" || "$(which shellcheck)" != "" && $(shellcheck -e 2034 -f gcc "${NVOC}/1bash" | grep -c error) != 0 ]]
