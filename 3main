@@ -76,10 +76,13 @@
 #	   Miner Schedule
 # v=0029 : papampi
 #	   eth-pill opts
+# v=0030 : LuKePicci
+#    support running miners as SU for memory tweaking
 
+export NVOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${NVOC}/1bash
 
-nvOC_3main_Dev="0029"
+nvOC_3main_Dev="0030"
 nvOC_3main_ver="$nvOC_ver.$nvOC_3main_Dev"             # Do not edit this
 
 #########################################################################
