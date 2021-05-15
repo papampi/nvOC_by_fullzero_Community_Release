@@ -71,6 +71,8 @@
 #          echo miner command
 # v=0030 : LuKePicci
 #          remove first batch of legacy miners
+# v=0031 : LuKePicci
+#          support running miners as SU for memory tweaking
 
 nvOC_0miner_dev="0030"
 source "${NVOC}/1bash"
@@ -126,11 +128,11 @@ mpath="${NVOC}/miners/${!xminer}"
 
 # List of cuda-8.0 miners
 CUDA_8_MINERS=""
-LAUNCH="screen -c ${NVOC}/screenrc-miner -dmSL miner"
+LAUNCH="NVOC=\"${NVOC}\" screen -c ${NVOC}/screenrc-miner -dmSL miner"
 for miner in $CUDA_8_MINERS
 do
   if [[ ${!xminer} =~ $miner ]]; then
-    LAUNCH="screen -c ${NVOC}/screenrc-miner-cuda-8 -dmSL miner"
+    LAUNCH="NVOC=\"${NVOC}\" screen -c ${NVOC}/screenrc-miner-cuda-8 -dmSL miner"
   fi
 done
 
@@ -198,8 +200,16 @@ then
   else
     HCD="${mpath}/"${!xversion}"/$(jq -r .hcd_dual ${pm_manifest})"
   fi
-  eval echo $LAUNCH $HCD $OPTS | tee -a ${NVOC}/nvoc_logs/screenlog.0
-  eval $LAUNCH $HCD $OPTS
+
+  if [[ $SUDO_MINER == YES ]]
+  then
+    SUDOING_MINER=sudo
+  else
+    SUDOING_MINER=""
+  fi
+
+  eval echo $SUDOING_MINER $LAUNCH $HCD $OPTS | tee -a ${NVOC}/nvoc_logs/screenlog.0
+  eval $SUDOING_MINER $LAUNCH $HCD $OPTS
 
 
   # What happened to all miners? They have been finally ported to PMs !
