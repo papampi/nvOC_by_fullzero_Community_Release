@@ -71,13 +71,14 @@
 #          Adds support for disabled_gpu
 # v=0024 : papampi
 #          Restart 3main before reboot when GPU lost
-
+# v=0025 : LuKePicci
+#          simpler watchdog logic
 
 export DISPLAY=:0
 source ${NVOC}/1bash
 source ${NVOC}/helpers/disabled_gpu.sh
 
-nvOC_wdog_Dev="0024"
+nvOC_wdog_Dev="0025"
 nvOC_wdog_ver="$nvOC_Ver.$nvOC_wdog_Dev"
 
 echo "Watchdog for nvOC $nvOC_Ver"
@@ -234,7 +235,7 @@ do
   REBOOTRESET=$((REBOOTRESET + 1))
 
   #Check for Internet and wait if down
-  echo "$(date) - [WARNING] - GPU under threshold, Checking Internet"
+  echo "$(date) - [WARNING] - Checking Internet"
   if ! nc -vzw1 google.com 443;
   then
     echo "$(date) - [WARNING] - Internet is down, checking..." | tee -a ${LOG_FILE}
@@ -244,15 +245,15 @@ do
     NEED_RESTART=1
     while ! nc -vzw1 google.com 443;
     do
-      echo "$(date) - [WARNING] - Internet is down, checking again in 30 seconds..."
       ## While name resolution not working check ping and restart 3main if ping is ok.
       if ping -c1 8.8.8.8 &> /dev/null
       then
-        echo "$(date) - [WARNING] - Ping ok, but problem in name resolution" | tee -a ${LOG_FILE}
+        echo "$(date) - [WARNING] - Ping ok, but problem in connecting by hostname" | tee -a ${LOG_FILE}
       fi
+      echo "$(date) - [INFO] - Internet is still down, checking again in $SLEEP_TIME seconds..."
       sleep $SLEEP_TIME
     done
-    echo "$(date) - [INFO] - Internet was down, Now it's ok" | tee -a ${LOG_FILE}
+    echo "$(date) - [WARNING] - Internet was down, now it's ok" | tee -a ${LOG_FILE}
   else
     echo "Internet ok"
     INTERNET=1
@@ -273,7 +274,7 @@ do
       POOL=0
       while ! nc -vzw1 ${!COIN_POOL} ${!COIN_PORT}
       do
-        echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
+        echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..." | tee -a ${LOG_FILE}
         sleep 30
       done
     else
@@ -283,7 +284,7 @@ do
     #If pool is up but was down before check if miner is running and give time out or start if not
     if  nc -vzw1 ${!COIN_POOL}t2 ${!COIN_PORT} && [[ $POOL == 0 ]]
     then
-      echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  # | tee -a $LOG_FILE
+      echo "$(date) - [WARNING] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok" | tee -a $LOG_FILE
       #When pool comes up, reset counters to skip additional checks until the next time through the loop
       REBOOTRESET=0; RESTART=0; COUNT=$((6 * ACTIVE_GPU_COUNT)); POOL=1
       if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]]
@@ -291,7 +292,7 @@ do
         echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
       elif  [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]]
       then
-        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running: restarting 3main"
+        echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running: restarting 3main" | tee -a ${LOG_FILE}
         pkill -f 3main
         sleep $SLEEP_TIME
       fi
@@ -321,7 +322,7 @@ do
       else
         while !  nc -vzw1 ${!COIN_POOL} ${!COIN_PORT}
         do
-          echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..."
+          echo "$(date) - [WARNING] - Can not reach mining pool ${!COIN_POOL}:${!COIN_PORT} checking every 30 seconds..." | tee -a ${LOG_FILE}
           sleep 30
         done
       fi
@@ -332,7 +333,7 @@ do
     #If pool is up but was down before, check if miner is running and give time out or start if not
     if nc -vzw1 ${!COIN_POOL} ${!COIN_PORT} && [[ $POOL == 0 ]]
     then
-      echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  | tee -a $LOG_FILE
+      echo "$(date) - [WARNING] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} was down, Now it's ok"  | tee -a $LOG_FILE
       #When pool comes up, reset counters to skip additional checks until the next time through the loop
       REBOOTRESET=0; RESTART=0; COUNT=$((6 * ACTIVE_GPU_COUNT)); POOL=1
       if [[ -n $(ps ax | grep -i screen | grep miner| grep -v cpuminer) ]]
@@ -340,7 +341,7 @@ do
         echo "$(date) - [INFO] - Mining Pool ${!COIN_POOL}:${!COIN_PORT} is up now, and miner is running"
       elif [[ -z $(ps ax | grep -i screen | grep miner | grep -v cpuminer) ]]
       then
-        echo "$(date) - [WARNING] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running: restarting 3main"
+        echo "$(date) - [WARNING] - Mining Pool ${!COIN_POOL} ${!COIN_PORT} is up now, but miner is not running: restarting 3main" | tee -a ${LOG_FILE}
         pkill -f 3main
         sleep $SLEEP_TIME
       fi
@@ -395,7 +396,7 @@ do
           sudo reboot -f
         fi
       else
-        echo "$(date) - [INFO] - Restarting 3main solved GPU$GPU issue, no need to reboot." | tee -a ${LOG_FILE}
+        echo "$(date) - [WARNING] - Restarting 3main solved GPU$GPU issue, no need to reboot." | tee -a ${LOG_FILE}
       fi
     elif (( UTIL < THRESHOLD )) # If utilization is lower than threshold, decrement counter
     then
@@ -451,7 +452,7 @@ do
       echo "$(date) - [CRITICAL] - GPU Utilization is too low: marking 3main for restart (attempt ${RESTART}/4)..." | tee -a ${LOG_FILE}
       NEED_RESTART=1
     else
-      echo "$(date) - [WARNING] - Low Utilization Detected: will restart 3main if $COUNT more consecutive failures"
+      echo "$(date) - [WARNING] - Low Utilization Detected: will restart 3main if $COUNT more consecutive failures" | tee -a ${LOG_FILE}
       echo ""
     fi
   else
@@ -464,7 +465,7 @@ do
   if ! ps ax | grep SCREEN | grep -v cpuminer | grep -q miner
   then
     NEED_RESTART=1
-    echo "$(date) - [WARNING] - Found no miner: marking 3main restart as required"
+    echo "$(date) - [WARNING] - Found no running miner: marking 3main restart as required" | tee -a ${LOG_FILE}
   fi
 
   if [[ $NEED_RESTART == 1 ]]
